@@ -32,7 +32,8 @@ namespace VLB
         /// </summary>
         public ColorMode colorMode
         {
-            get {
+            get
+            {
                 if (Config.Instance.featureEnabledColorGradient == FeatureEnabledColorGradient.Off) return ColorMode.Flat;
                 return m_ColorMode;
             }
@@ -165,7 +166,8 @@ namespace VLB
         /// <summary>
         /// End radius of the cone geometry
         /// </summary>
-        public float coneRadiusEnd {
+        public float coneRadiusEnd
+        {
             get { return Utils.ComputeConeRadiusEnd(maxGeometryDistance, spotAngle); }
             set { spotAngle = Utils.ComputeSpotAngle(maxGeometryDistance, value); }
         }
@@ -189,7 +191,7 @@ namespace VLB
             else
             {
                 float value = ((maxGeometryDistance * ratioRadius) / (1 - ratioRadius));
-                if(counterApplyScaleForUnscalableBeam && !scalable) value /= GetLossyScale().z;
+                if (counterApplyScaleForUnscalableBeam && !scalable) value /= GetLossyScale().z;
                 return value;
             }
         }
@@ -202,7 +204,8 @@ namespace VLB
         /// - True when there is no Unity Light attached to the same GameObject, so you will be able to scale your beam easily.
         /// - False when there is a Unity Light attached to the same GameObject, because the Unity Light are NOT scalable: this way you beam will always fit the Unity Light size.
         /// </summary>
-        public bool scalable {
+        public bool scalable
+        {
             get { return m_Scalable; }
             set { if (m_Scalable != value) { m_Scalable = value; SetPropertyDirty(DirtyProps.Attenuation); } }
         }
@@ -409,7 +412,7 @@ namespace VLB
         [SerializeField] int m_RaymarchingQualityID = -1;
         [SerializeField] float m_JitteringFactor = Consts.Beam.HD.JitteringFactorDefault;
         [SerializeField] int m_JitteringFrameRate = Consts.Beam.HD.JitteringFrameRateDefault;
-        [MinMaxRange(0.0f, 1.0f)] [SerializeField] MinMaxRangeFloat m_JitteringLerpRange = Consts.Beam.HD.JitteringLerpRange;
+        [MinMaxRange(0.0f, 1.0f)][SerializeField] MinMaxRangeFloat m_JitteringLerpRange = Consts.Beam.HD.JitteringLerpRange;
         [SerializeField] NoiseMode m_NoiseMode = Consts.Beam.NoiseModeDefault;
         [SerializeField] float m_NoiseIntensity = Consts.Beam.NoiseIntensityDefault;
         [SerializeField] bool m_NoiseScaleUseGlobal = true;
@@ -459,7 +462,7 @@ namespace VLB
 
         public float GetInsideBeamFactorFromObjectSpacePos(Vector3 posOS)
         {
-            if(GetDimensions() == Dimensions.Dim2D)
+            if (GetDimensions() == Dimensions.Dim2D)
             {
                 posOS = new Vector3(posOS.z, posOS.y, posOS.x);
             }
@@ -484,7 +487,7 @@ namespace VLB
         /// </summary>
         public override void GenerateGeometry()
         {
-            if(pluginVersion == -1)
+            if (pluginVersion == -1)
             {
                 // Applied default quality to newly created beams
                 raymarchingQualityID = Config.Instance.defaultRaymarchingQualityUniqueID;
@@ -601,9 +604,9 @@ namespace VLB
             if (beamSrc is VolumetricLightBeamSD)
             {
                 var beamSD = beamSrc as VolumetricLightBeamSD;
-                if (beamProps.HasFlag(BeamProps.Color))         { colorMode = beamSD.colorMode; colorFlat = beamSD.color; colorGradient = beamSD.colorGradient; }
-                if (beamProps.HasFlag(BeamProps.BlendingMode))  { blendingMode = beamSD.blendingMode; }
-                if (beamProps.HasFlag(BeamProps.Intensity))     { intensity = beamSD.intensityGlobal; intensityMultiplier = beamSD.intensityMultiplier; }
+                if (beamProps.HasFlag(BeamProps.Color)) { colorMode = beamSD.colorMode; colorFlat = beamSD.color; colorGradient = beamSD.colorGradient; }
+                if (beamProps.HasFlag(BeamProps.BlendingMode)) { blendingMode = beamSD.blendingMode; }
+                if (beamProps.HasFlag(BeamProps.Intensity)) { intensity = beamSD.intensityGlobal; intensityMultiplier = beamSD.intensityMultiplier; }
                 if (beamProps.HasFlag(BeamProps.FallOffAttenuation))
                 {
                     attenuationEquation = UtilsBeamProps.ConvertAttenuation(beamSD.attenuationEquation);
@@ -625,9 +628,9 @@ namespace VLB
             else if (beamSrc is VolumetricLightBeamHD)
             {
                 var beamHD = beamSrc as VolumetricLightBeamHD;
-                if (beamProps.HasFlag(BeamProps.Color))         { colorMode = beamHD.colorMode; colorFlat = beamHD.colorFlat; colorGradient = beamHD.colorGradient; }
-                if (beamProps.HasFlag(BeamProps.BlendingMode))  { blendingMode = beamHD.blendingMode; }
-                if (beamProps.HasFlag(BeamProps.Intensity))     { intensity = beamHD.intensity; intensityMultiplier = beamHD.intensityMultiplier; }
+                if (beamProps.HasFlag(BeamProps.Color)) { colorMode = beamHD.colorMode; colorFlat = beamHD.colorFlat; colorGradient = beamHD.colorGradient; }
+                if (beamProps.HasFlag(BeamProps.BlendingMode)) { blendingMode = beamHD.blendingMode; }
+                if (beamProps.HasFlag(BeamProps.Intensity)) { intensity = beamHD.intensity; intensityMultiplier = beamHD.intensityMultiplier; }
                 if (beamProps.HasFlag(BeamProps.FallOffAttenuation))
                 {
                     attenuationEquation = beamHD.attenuationEquation;
@@ -659,7 +662,7 @@ namespace VLB
             m_IntensityMultiplier = Consts.Beam.MultiplierDefault;
 
             m_HDRPExposureWeight = Consts.Beam.HDRPExposureWeightDefault;
-            
+
             m_BlendingMode = Consts.Beam.BlendingModeDefault;
 
             m_SpotAngle = Consts.Beam.SpotAngleDefault;
@@ -764,8 +767,6 @@ namespace VLB
         {
             if (serializedVersion == -1) return;            // freshly new spawned entity: nothing to do
             if (serializedVersion == newVersion) return;    // same version: nothing to do
-
-            // TODO
 
             Utils.MarkCurrentSceneDirty();
         }

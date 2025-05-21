@@ -77,7 +77,7 @@ v2f vertShared(vlb_appdata v)
     UNITY_SETUP_INSTANCE_ID(v);
 
     #if VLB_STEREO_INSTANCING
-      #ifndef VLB_SRP_API // TODO CHECK THAT WE DON'T NEED THIS WITH SRP
+      #ifndef VLB_SRP_API
         UNITY_INITIALIZE_OUTPUT(v2f, o);
       #endif
         UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
@@ -102,7 +102,6 @@ v2f vertShared(vlb_appdata v)
 
     o.posWorldSpace = VLBObjectToWorldPos(vertexOS);
     o.posClipSpace = VLBObjectToClipPos(vertexOS.xyz);
-    // TODO Should create and use VLBWorldToClipPos instead
     //o.posClipSpace = VLBWorldToClipPos(o.posWorldSpace.xyz);
 
 #if defined(VLBWorldToViewPos)
