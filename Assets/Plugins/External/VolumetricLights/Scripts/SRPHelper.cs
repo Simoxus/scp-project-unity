@@ -30,15 +30,15 @@ namespace VLB
         {
             get
             {
-            #if VLB_BUILTIN
+#if VLB_BUILTIN
                 return "VLB_BUILTIN";
-            #elif VLB_URP
+#elif VLB_URP
                 return "VLB_URP";
-            #elif VLB_HDRP
+#elif VLB_HDRP
                 return "VLB_HDRP";
-            #else
+#else
                 return "NO VLB Symbols";
-            #endif
+#endif
             }
         }
 
@@ -62,46 +62,45 @@ namespace VLB
         static RenderPipeline ComputeRenderPipeline()
         {
 #if VLB_SRP_SUPPORT
-        var rp = UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline;
-        if (rp)
-        {
-            var name = rp.GetType().ToString();
-            if (name.Contains("Universal"))     return RenderPipeline.URP;
-            if (name.Contains("Lightweight"))   return RenderPipeline.URP;
-            if (name.Contains("HD"))            return RenderPipeline.HDRP;
-        }
+            var rp = UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline;
+            if (rp)
+            {
+                var name = rp.GetType().ToString();
+                if (name.Contains("Universal")) return RenderPipeline.URP;
+                if (name.Contains("Lightweight")) return RenderPipeline.URP;
+                if (name.Contains("HD")) return RenderPipeline.HDRP;
+            }
 #endif
             return RenderPipeline.BuiltIn;
         }
 
 #if VLB_SRP_SUPPORT
-    public static bool IsUsingCustomRenderPipeline()
-    {
-        // TODO: optimize and use renderPipelineType
-        return AliasCurrentPipeline.currentPipeline != null || UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline != null;
-    }
-
-    public static void RegisterOnBeginCameraRendering(CallbackType cb)
-    {
-        if (IsUsingCustomRenderPipeline())
+        public static bool IsUsingCustomRenderPipeline()
         {
-            AliasCameraEvents.beginCameraRendering -= cb;
-            AliasCameraEvents.beginCameraRendering += cb;
+            return AliasCurrentPipeline.currentPipeline != null || UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline != null;
         }
-    }
 
-    public static void UnregisterOnBeginCameraRendering(CallbackType cb)
-    {
-        if (IsUsingCustomRenderPipeline())
+        public static void RegisterOnBeginCameraRendering(CallbackType cb)
         {
-            AliasCameraEvents.beginCameraRendering -= cb;
+            if (IsUsingCustomRenderPipeline())
+            {
+                AliasCameraEvents.beginCameraRendering -= cb;
+                AliasCameraEvents.beginCameraRendering += cb;
+            }
         }
-    }
 
-    #if UNITY_EDITOR
+        public static void UnregisterOnBeginCameraRendering(CallbackType cb)
+        {
+            if (IsUsingCustomRenderPipeline())
+            {
+                AliasCameraEvents.beginCameraRendering -= cb;
+            }
+        }
+
+#if UNITY_EDITOR
         static void AppendScriptingDefineSymbols(string[] symbolsToRemove, string symbolToAdd)
         {
-        #if UNITY_2021_2_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
             var namedBuildTarget = UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
             string[] scriptingDefineSymbolsArray = null;
             PlayerSettings.GetScriptingDefineSymbols(namedBuildTarget, out scriptingDefineSymbolsArray);
@@ -124,7 +123,7 @@ namespace VLB
             {
                 PlayerSettings.SetScriptingDefineSymbols(namedBuildTarget, scriptingDefineSymbolsList.ToArray());
             }
-        #else
+#else
             var scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
             if (scriptingDefineSymbols == null)
                 scriptingDefineSymbols = "";
@@ -152,9 +151,9 @@ namespace VLB
                 scriptingDefineSymbols = scriptingDefineSymbols.Replace(";;", ";");
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, scriptingDefineSymbols);
             }
-        #endif // UNITY_2021_2_OR_NEWER
+#endif // UNITY_2021_2_OR_NEWER
 
-            if(hasChanged)
+            if (hasChanged)
             {
                 Debug.LogWarningFormat("Volumetric Light Beam: '{0}' symbol has been added to the Scripting Define Symbols. Please save your project!", symbolToAdd);
             }
@@ -165,13 +164,13 @@ namespace VLB
             var allSymbols = new List<string> { "VLB_BUILTIN", "VLB_URP", "VLB_HDRP" };
             int enumValueCount = System.Enum.GetNames(typeof(RenderPipeline)).Length;
             Debug.Assert(allSymbols.Count == enumValueCount);
-            string defineSymbol = allSymbols[(int)renderPipeline];      
+            string defineSymbol = allSymbols[(int)renderPipeline];
 
             allSymbols.Remove(defineSymbol);
 
             AppendScriptingDefineSymbols(allSymbols.ToArray(), defineSymbol);
         }
-    #endif // UNITY_EDITOR
+#endif // UNITY_EDITOR
 #else
         public static bool IsUsingCustomRenderPipeline() { return false; }
 #endif
