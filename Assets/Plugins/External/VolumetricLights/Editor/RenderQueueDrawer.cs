@@ -55,7 +55,7 @@ namespace VLB
                 }
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Utils._EditorSetAllBeamGeomDirty(); // TODO switch sd / hd ?
+                    Utils._EditorSetAllBeamGeomDirty();
                 }
             }
         }

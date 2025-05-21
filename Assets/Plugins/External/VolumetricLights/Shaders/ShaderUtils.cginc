@@ -60,7 +60,7 @@ inline float Depth_PS_GetSceneDepthFromEye(float4 uv, float3 posViewSpace)
     float linearDepthPersp = VLBLinearEyeDepth(rawDepth);
 
     // transform perspective depth from near plane to distance based on the eye
-    float acosViewDirZ = abs(normalize(posViewSpace.xyz).z); // TODO precompute that in VS?
+    float acosViewDirZ = abs(normalize(posViewSpace.xyz).z);
     linearDepthPersp /= acosViewDirZ;
 
     float linearDepthOrtho = Depth_PS_GetLinearDepthOrtho(rawDepth);
