@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f369e1856bd12d43ba8e7f730cbfd39, type: 3}
-  m_Name: hz_tesla_RoomData
+  m_Name: sz_gateb_ent_RoomData
   m_EditorClassIdentifier: 
-  roomPrefab: {fileID: 3563635794195295648, guid: 1b8309112dd846842b08c5c417c611f8, type: 3}
-  roomID: hz_tesla
-  roomDisplayID: HCZ Hallway (Tesla)
-  description: Heavy Containment Zone tesla gate.
-  zoneLocation: 3
-  roomType: 3
-  roomRequired: 0
+  roomPrefab: {fileID: 0}
+  roomID: sz_gateb_ent
+  roomDisplayID: Surface Gate B Entrance
+  description: Surface Zone entrance for Gate B.
+  zoneLocation: 0
+  roomType: 4
+  roomRequired: 1
   roomRarity: 0
   allowedConnectDirections:
     north: 0
     east: 0
     south: 0
     west: 0
-  featuresEvent: 1
+  featuresEvent: 0
   featuredEvent: {fileID: 0}
   customAmbience: 0
   customAmbienceAudio: {fileID: 0}
