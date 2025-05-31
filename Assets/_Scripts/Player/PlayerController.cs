@@ -7,12 +7,12 @@ using Cysharp.Threading.Tasks;
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("References")]
+    [Header("Camera Refs")]
     public GameObject CameraRoot;
     public GameObject CameraBrain;
     public CinemachineCamera CameraMain;
 
-    [Header("Movement Settings")]
+    [Header("Char Move")]
     public bool IsMoving;
 
     public float WalkSpeed = 17f;
@@ -20,29 +20,31 @@ public class PlayerController : MonoBehaviour
 
     private bool _hasPlayedFootstep;
 
-    [Header("Camera Settings")]
+    [Header("Camera Look")]
     public float Sensitivity = 1.5f;
     public float FieldOfView = 75f;
 
     public float TopClamp = 70.0f;
     public float BottomClamp = -75.0f;
 
-    [Header("Gravity Settings")]
-    public float JumpHeight = 0f;
-    public float JumpTimeout = 0f;
+    [Header("Gravity")]
     public float GravityPull = -1250f;
     public float FallTimeout = 0f;
 
-    [Header("Ground Detection")]
+    [Header("Jump")]
+    public float JumpHeight = 0f;
+    public float JumpTimeout = 0f;
+
+    [Header("Ground Verify")]
     public bool Grounded = true;
     public float GroundedOffset = 4.5f;
     public float GroundedRadius = 3.2f;
     public LayerMask GroundLayers;
 
-    // Private Vars: Cinemachine
+    // Private Vars: Camera Refs
     private float _cinemachineTargetPitch;
 
-    // Private Vars: Player
+    // Private Vars: Movement
     private float _speed;
     private float _rotationVelocity;
     private float _verticalVelocity;
