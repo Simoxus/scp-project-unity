@@ -1,36 +1,61 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
-public class CreateCustomChildren : MonoBehaviour
+public class CreateCustomChildren : EditorWindow
 {
-    [MenuItem("GameObject/Create Custom Children", false, 10)]
-    static void CreateChildren()
-    {
-        Transform parent = Selection.activeTransform;
+    private string childNamesInput = "Child1\nChild2\nChild3";
 
-        if (parent == null)
+    [MenuItem("Tools/Create Named Children")]
+    public static void ShowWindow()
+    {
+        GetWindow<CreateCustomChildren>("Create Named Children");
+    }
+
+    private void OnGUI()
+    {
+        EditorGUILayout.LabelField("Create Named Empty Children", EditorStyles.boldLabel);
+        EditorGUILayout.HelpBox("Select GameObjects in the hierarchy and input child names (one per line).", MessageType.Info);
+
+        EditorGUILayout.LabelField("Child Names (one per line):");
+        childNamesInput = EditorGUILayout.TextArea(childNamesInput, GUILayout.Height(100));
+
+        if (GUILayout.Button("Create Children"))
         {
-            Debug.LogWarning("You must select a GameObject in the Hierarchy first.");
+            CreateChildren();
+        }
+    }
+
+    private void CreateChildren()
+    {
+        string[] names = childNamesInput.Split(new[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
+        GameObject[] selectedObjects = Selection.gameObjects;
+
+        if (selectedObjects.Length == 0)
+        {
+            EditorUtility.DisplayDialog("No Selection", "Please select one or more GameObjects in the Hierarchy.", "OK");
             return;
         }
 
-        CreateChild("Interacts", parent);
-        CreateChild("Lights", parent);
-        CreateChild("Props", parent);
-    }
+        if (names.Length == 0)
+        {
+            EditorUtility.DisplayDialog("No Names", "Please enter at least one name for the children.", "OK");
+            return;
+        }
 
-    static void CreateChild(string name, Transform parent)
-    {
-        GameObject go = new GameObject(name);
-        Undo.RegisterCreatedObjectUndo(go, "Create " + name); // Makes it undoable
-        go.transform.SetParent(parent);
-        go.transform.localPosition = Vector3.zero; // Optional: resets local position
-    }
+        Undo.IncrementCurrentGroup();
+        int undoGroup = Undo.GetCurrentGroup();
 
-    // Ensures the menu item only appears if a GameObject is selected
-    [MenuItem("GameObject/Create Custom Children", true)]
-    static bool ValidateCreateChildren()
-    {
-        return Selection.activeTransform != null;
+        foreach (GameObject parent in selectedObjects)
+        {
+            foreach (string childName in names)
+            {
+                GameObject child = new GameObject(childName.Trim());
+                Undo.RegisterCreatedObjectUndo(child, "Create Named Child");
+                child.transform.SetParent(parent.transform);
+                child.transform.localPosition = Vector3.zero;
+            }
+        }
+
+        Undo.CollapseUndoOperations(undoGroup);
     }
 }
