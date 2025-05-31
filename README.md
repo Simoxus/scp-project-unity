@@ -1,4 +1,6 @@
 # SCP: Project Unity 
+[![Unity Version](https://img.shields.io/badge/Unity-6000.0%20LTS%2B-blueviolet?logo=unity)](https://unity3d.com/get-unity/download)
+[![Unity Pipeline Support (URP)](https://img.shields.io/badge/URP_✔️-blue?logo=unity)](https://unity3d.com/get-unity/download)
 
 SCP: Project Unity is a remake of the iconic indie horror game, SCP - Containment Breach, released in 2012.
 
