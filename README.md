@@ -1,7 +1,4 @@
 # SCP: Project Unity 
-[![Unity Version](https://img.shields.io/badge/Unity-6000.0%20LTS%2B-blueviolet?logo=unity)](https://unity3d.com/get-unity/download)
-[![Unity Pipeline Support (URP)](https://img.shields.io/badge/URP_✔️-blue?logo=unity)](https://unity3d.com/get-unity/download)
-
 SCP: Project Unity is a remake of the iconic indie horror game, SCP - Containment Breach, released in 2012.
 
 This Unity engine remake of SCP - Containment Breach is licensed under [Creative Commons Attribution-Sharealike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
@@ -47,7 +44,7 @@ This Unity engine remake of SCP - Containment Breach is licensed under [Creative
 
 ### **Why make this?**
 
-SCP - Containment Breach was originally built on Blitz3D, a circa-2002 engine that has received no official feature updates since 2003 (bruh). As a consequence, when such an old game using an outdated engine not designed for newer systems is executed on modern hardware, it exhibits significantly worse performance and bugs that were not observable during active development.
+SCP - Containment Breach was originally built on Blitz3D, a circa-2002 engine that has received no official feature updates since 2003. As a consequence, when such an old game using an outdated engine not designed for newer systems is executed on modern hardware, it exhibits significantly worse performance and bugs that were not observable during active development.
 
 ### **How do I play the latest releases?**
 
