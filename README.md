@@ -49,7 +49,7 @@ SCP - Containment Breach was originally built on Blitz3D, a circa-2002 engine th
 
 ### **How do I play the latest releases?**
 
-The #builds channel in the [Discord](https://discord.gg/AmQP58PTBC), or the releases published on GitHub. If a build is tagged as extremely stable in the Discord #builds channel, you will also be able to find it on [Itch](https://simoxus.itch.io/scp-project-unity).
+The #builds channel in the [Discord](https://discord.gg/dVdY4PuGfp), or the releases published on GitHub. If a build is tagged as extremely stable in the Discord #builds channel, you will also be able to find it on [Itch](https://simoxus.itch.io/scp-project-unity).
 
 ### **Will Project Unity be available on the Steam Store?**
 
