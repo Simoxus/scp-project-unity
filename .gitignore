@@ -39,7 +39,12 @@ ExportedObj/
 *.pdb.meta
 *.mdb.meta
 
-# Ignore unwanted plugins (removed since repository is currently set to private)
+# Unwanted plugins (removed since repository is currently set to private)
+
+# FMOD Studio temporary files
+/Middleware/FMOD/.cache/
+/Middleware/FMOD/Build/
+/Middleware/FMOD/.unsaved/
 
 # Unity3D generated file on crash reports
 sysinfo.txt
