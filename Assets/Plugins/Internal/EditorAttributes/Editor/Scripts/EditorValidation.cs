@@ -8,6 +8,10 @@ using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using EditorAttributes.Editor.Utility;
 
+#if HAS_ADDRESSABLES_PACKAGE
+using UnityEditor.AddressableAssets;
+#endif
+
 namespace EditorAttributes.Editor
 {
 	[InitializeOnLoad]
@@ -69,7 +73,10 @@ namespace EditorAttributes.Editor
 			{
 				string scenePath = AssetDatabase.GUIDToAssetPath(sceneGuid);
 
-				if (IsPackageAsset(scenePath) || SceneUtility.GetBuildIndexByScenePath(scenePath) == -1)
+				if (IsPackageAsset(scenePath))
+					continue;
+
+				if (SceneUtility.GetBuildIndexByScenePath(scenePath) == -1 && !IsAddressable(sceneGuid))
 					continue;
 
 				var openedScene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
@@ -81,6 +88,26 @@ namespace EditorAttributes.Editor
 			}
 
 			Debug.Log($"Scenes Validated: <b>(Failed: {failedValidations}, Succeeded: {successfulValidations}, Total: {failedValidations + successfulValidations})</b>");
+		}
+
+		private static bool IsAddressable(string guid)
+		{
+#if HAS_ADDRESSABLES_PACKAGE
+			var settings = AddressableAssetSettingsDefaultObject.Settings;
+
+			foreach (var group in settings.groups)
+			{
+				if (group == null || group.entries.Count == 0)
+					continue;
+
+				foreach (var entry in group.entries)
+				{
+					if (entry.guid == guid)
+						return true;
+				}
+			}
+#endif
+			return false;
 		}
 
 		/// <summary>
