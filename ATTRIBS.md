@@ -68,3 +68,5 @@ SCP-1162 is based on "SCP-1162-ARC - A Hole in the Wall", by "Dedaluminus"
 SCP-1499 is based on "SCP-1499 - The Gas Mask", by "Trasknari"
 
 The Anomalous Ducks are based on "Log of Anomalous Ducks", by "Skara Brae"
+
+The "Substation 9" location is based on "Substation 9", by "The Great Hippo"
