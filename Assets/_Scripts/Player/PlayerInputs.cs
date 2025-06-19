@@ -3,70 +3,67 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputs : MonoBehaviour
 {
-	[Header("Character Input Values")]
-	public Vector2 move;
-	public Vector2 look;
-	public bool IsJumping;
-	public bool IsSprinting;
+	[Header("Input Actions")]
+    [SerializeField] private InputActionAsset playerInputAsset;
 
-	[Header("Movement Settings")]
-	public bool analogMovement;
+    public Vector2 moveInput { get; private set; }
+    public Vector2 lookInput { get; private set; }
+    public bool sprintHeld { get; private set; }
+    public bool crouchHeld { get; private set; }
+    public bool blinkPressed { get; private set; }
 
-	[Header("Mouse Cursor Settings")]
-	public bool cursorLocked = true;
-	public bool cursorInputForLook = true;
+    private InputActionMap _playerActionMap;
+    private InputAction _moveAction;
+    private InputAction _lookAction;
+    private InputAction _sprintAction;
+    private InputAction _blinkAction;
+    private InputAction _crouchAction;
 
-	public void OnMove(InputValue value)
-	{
-		MoveInput(value.Get<Vector2>());
-	}
+    private void Awake() // Cache input actions to get better performance
+    {
+        _playerActionMap = playerInputAsset.FindActionMap("Player");
 
-	public void OnLook(InputValue value)
-	{
-		if (cursorInputForLook)
-		{
-			LookInput(value.Get<Vector2>());
-		}
-	}
+        _moveAction = _playerActionMap.FindAction("Move");
+        _lookAction = _playerActionMap.FindAction("Look");
+        _sprintAction = _playerActionMap.FindAction("Sprint");
+        _blinkAction = _playerActionMap.FindAction("Crouch");
+        _crouchAction = _playerActionMap.FindAction("Blink");
+    }
 
-	public void OnJump(InputValue value)
-	{
-		JumpInput(value.isPressed);
-	}
+    private void OnEnable() // Function to connect events after enabling
+    {
+        _playerActionMap.Enable();
 
-	public void OnSprint(InputValue value)
-	{
-		SprintInput(value.isPressed);
-	}
+        _sprintAction.performed += ctx => sprintHeld = true;
+        _sprintAction.canceled += ctx => sprintHeld = false;
 
+        _blinkAction.performed += ctx => blinkPressed = true;
 
-	public void MoveInput(Vector2 newMoveDirection)
-	{
-		move = newMoveDirection;
-	}
+        _crouchAction.performed += ctx => crouchHeld = true;
+        _crouchAction.canceled += ctx => crouchHeld = false;
+    }
 
-	public void LookInput(Vector2 newLookDirection)
-	{
-		look = newLookDirection;
-	}
+    private void OnDisable() // Function to disconnect events before disabling
+    {
+        _sprintAction.performed -= ctx => sprintHeld = true;
+        _sprintAction.canceled -= ctx => sprintHeld = false;
 
-	public void JumpInput(bool newJumpState)
-	{
-		IsJumping = newJumpState;
-	}
+        _blinkAction.performed -= ctx => blinkPressed = true;
 
-	public void SprintInput(bool newSprintState)
-	{
-		IsSprinting = newSprintState;
-	}
+        _crouchAction.performed -= ctx => crouchHeld = true;
+        _crouchAction.canceled -= ctx => crouchHeld = false;
 
-	private void OnApplicationFocus(bool hasFocus)
-	{
-		SetCursorState(cursorLocked);
-	}
+        _playerActionMap.Disable();
+    }
 
-	private void SetCursorState(bool newState)
-	{
-		Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
-	}
+    private void Update() // Constantly read the values of the player's controls
+    {
+        moveInput = _moveAction.ReadValue<Vector2>();
+        lookInput = _lookAction.ReadValue<Vector2>();
+    }
+
+    public void ResetBlink()
+    {
+        blinkPressed = false;
+    }
 }
