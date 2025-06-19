@@ -1,0 +1,74 @@
+using System;
+using UnityEngine;
+using EditorAttributes;
+
+public class PlayerHealth : MonoBehaviour
+{
+    [Header("Health Settings")]
+    [SerializeField, ReadOnly] private HealthLevel healthLevel = HealthLevel.Healthy;
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float currentHealth = 100f;
+
+    // Broadcasts currentHealth/maxHealth when it changes
+    public event Action<float, float> OnHealthChanged;
+    public event Action<HealthLevel> OnHealthLevelChanged;
+
+    public enum HealthLevel
+    {
+        Healthy,
+        Injured,
+        Critical,
+        NearDeath,
+        Dead
+    }
+
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+        BroadcastHealth();
+    }
+
+    public void TakeDamage(float amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth - amount, 0f, maxHealth);
+        BroadcastHealth();
+    }
+
+    public void HealDamage(float amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0f, maxHealth);
+        BroadcastHealth();
+    }
+
+    private void BroadcastHealth()
+    {
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+        var newLevel = GetHealthLevel();
+
+        if (newLevel != healthLevel)
+        {
+            healthLevel = newLevel;
+            OnHealthLevelChanged?.Invoke(newLevel);
+        }
+    }
+
+    private HealthLevel GetHealthLevel() // Edit ratios here :)
+    {
+        float ratio = currentHealth / maxHealth;
+
+        if (currentHealth <= 0f)
+            return HealthLevel.Dead;
+        if (ratio <= 0.25f)
+            return HealthLevel.NearDeath;
+        if (ratio <= 0.5f)
+            return HealthLevel.Critical;
+        if (ratio <= 0.75f)
+            return HealthLevel.Injured;
+        return HealthLevel.Healthy;
+    }
+
+    public float GetHealth() => currentHealth;
+    public float GetMaxHealth() => maxHealth;
+    public float GetHealthPercent() => currentHealth / maxHealth;
+}
