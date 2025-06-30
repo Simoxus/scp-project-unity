@@ -1,0 +1,72 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class SceneCommand : ConsoleBase
+{
+    public override string CommandWord => "scene";
+    public override string Description => "Loads a specific scene by name or build index. Usage: scene <sceneName|sceneIndex>";
+
+    private static readonly List<string> _availableScenes = new List<string>();
+
+    public static void PopulateAvailableScenes()
+    {
+        _availableScenes.Clear();
+
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            string sceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+            if (!string.IsNullOrEmpty(sceneName) && !_availableScenes.Contains(sceneName))
+            {
+                _availableScenes.Add(sceneName);
+            }
+        }
+        Debug.Log($"SceneCommand: Loaded {_availableScenes.Count} scenes for autocomplete.");
+    }
+
+    public override void Execute(string[] args)
+    {
+        if (args.Length != 1)
+        {
+            ConsoleManager.LogToConsole("<color=red>Usage: scene <sceneName|sceneIndex></color>");
+            return;
+        }
+
+        string sceneIdentifier = args[0];
+
+        if (int.TryParse(sceneIdentifier, out int sceneIndex))
+        {
+            if (sceneIndex >= 0 && sceneIndex < SceneManager.sceneCountInBuildSettings)
+            {
+                SceneManager.LoadScene(sceneIndex);
+                ConsoleManager.LogToConsole($"<color=green>Loading scene by index: {sceneIndex}...</color>");
+            }
+            else
+            {
+                ConsoleManager.LogToConsole($"<color=red>Error: Scene index {sceneIndex} is out of build settings range (0 to {SceneManager.sceneCountInBuildSettings - 1}).</color>");
+            }
+        }
+        else
+        {
+            if (_availableScenes.Contains(sceneIdentifier))
+            {
+                try
+                {
+                    SceneManager.LoadScene(sceneIdentifier);
+                    ConsoleManager.LogToConsole($"<color=green>Loading scene by name: '{sceneIdentifier}'...</color>");
+                }
+                catch (System.Exception e)
+                {
+                    ConsoleManager.LogToConsole($"<color=red>Error loading scene '{sceneIdentifier}': {e.Message}. Ensure it's in Build Settings and spelled correctly.</color>");
+                    Debug.LogError($"Error loading scene '{sceneIdentifier}': {e}");
+                }
+            }
+            else
+            {
+                ConsoleManager.LogToConsole($"<color=red>Error: Scene '{sceneIdentifier}' not found or not in available scenes list. Please check spelling or use a valid build index.</color>");
+            }
+        }
+    }
+}
