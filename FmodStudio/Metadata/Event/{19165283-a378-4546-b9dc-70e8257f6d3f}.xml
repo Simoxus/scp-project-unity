@@ -115,6 +115,9 @@
 		<property name="start">
 			<value>1</value>
 		</property>
+		<property name="pitch">
+			<value>-0.5</value>
+		</property>
 		<relationship name="sounds">
 			<destination>{49a16c32-f070-4497-b119-328c7fecd304}</destination>
 			<destination>{06aaff86-e1fc-4fef-a81c-be9beecdcec8}</destination>
@@ -122,6 +125,9 @@
 		</relationship>
 	</object>
 	<object class="MultiSound" id="{918a4786-af32-4ceb-9637-0f3e18564320}">
+		<property name="pitch">
+			<value>-0.5</value>
+		</property>
 		<relationship name="sounds">
 			<destination>{3c3e6df5-3333-4573-9463-fcc221e320c5}</destination>
 			<destination>{a0f250c0-b013-4f9b-9870-7ca05707d276}</destination>
@@ -206,7 +212,10 @@
 	</object>
 	<object class="SpatialiserEffect" id="{a43f537b-9cc6-465c-ad27-35b6fcc9a5ce}">
 		<property name="maximumDistance">
-			<value>9.19999981</value>
+			<value>55</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{576e5b38-dd05-4617-9390-784f70dadb3a}" />
