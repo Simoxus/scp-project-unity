@@ -5,7 +5,7 @@ using UnityEngine;
 public class HealthCommand : ConsoleBase
 {
     public override string CommandWord => "health";
-    public override string Description => "Modifies the player's health. Usage: health <method (set|heal|damage)> <value>";
+    public override string Description => "Modifies the player's health. Usage: health <set|heal|damage> <value>";
 
     public override void Execute(string[] args)
     {
