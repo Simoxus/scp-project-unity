@@ -1,0 +1,87 @@
+using Cysharp.Threading.Tasks;
+using System;
+using System.Collections.Generic; // Required for IEnumerable
+using System.Linq; // Required for Enumerable.Empty
+using UnityEngine;
+
+public class InfoCommand : ConsoleBase
+{
+    public override string CommandWord => "info";
+    public override string Description => "Display runtime information. Usage: info <game|metrics|device|all>";
+
+    public override void Execute(string[] args)
+    {
+        if (args.Length != 1)
+        {
+            ConsoleManager.LogToConsole("<color=red>Usage: info <game|metrics|device|all></color>");
+            return;
+        }
+
+        string category = args[0].ToLowerInvariant();
+
+        switch (category)
+        {
+            case "game":
+                ConsoleManager.LogToConsole("<color=#00ffffff>--- Game Information ---</color>");
+
+                GetGameInfo();
+
+                break;
+
+            case "metrics":
+                ConsoleManager.LogToConsole("<color=#00ffffff>--- Metrics Information ---</color>");
+
+                GetMetricsInfo();
+
+                break;
+
+            case "device":
+                ConsoleManager.LogToConsole("<color=#00ffffff>--- Device Information ---</color>");
+
+                GetDeviceInfo();
+
+                break;
+
+            case "all":
+                ConsoleManager.LogToConsole("<color=#00ffffff>--- Game/Metrics/Device Information ---</color>");
+
+                GetGameInfo();
+                ConsoleManager.LogToConsole("<color=#00ffffff>----------------------------------------</color>");
+                GetMetricsInfo();
+                ConsoleManager.LogToConsole("<color=#00ffffff>----------------------------------------</color>");
+                GetDeviceInfo();
+
+                break;
+
+            default:
+                // If the category is not recognized, log an error.
+                ConsoleManager.LogToConsole($"<color=red>Unknown info method '{category}'. Use 'game', 'metrics', 'device', or 'all'.</color>");
+                break;
+        }
+    }
+
+    private void GetGameInfo()
+    {
+        ConsoleManager.LogToConsole($"<b>Game Name</b>: {Application.productName}");
+        ConsoleManager.LogToConsole($"<b>Version</b>: {Application.version}");
+        ConsoleManager.LogToConsole($"<b>Is In Editor?</b>: {Application.isEditor}");
+    }
+
+    private void GetMetricsInfo()
+    {
+        ConsoleManager.LogToConsole($"<b>Delta Time</b>: {Time.deltaTime:F4}s");
+        ConsoleManager.LogToConsole($"<b>Time Scale</b>: {Time.timeScale}");
+        ConsoleManager.LogToConsole($"<b>Estimated FPS</b>: {(int)(1.0f / Time.deltaTime)}");
+    }
+
+    private void GetDeviceInfo()
+    {
+        ConsoleManager.LogToConsole($"<b>Device Type</b>: {SystemInfo.deviceType}");
+        ConsoleManager.LogToConsole($"<b>Operating System</b>: {SystemInfo.operatingSystem}");
+        ConsoleManager.LogToConsole($"<b>Graphics Device Name</b>: {SystemInfo.graphicsDeviceName}");
+        ConsoleManager.LogToConsole($"<b>Graphics Memory Size</b>: {SystemInfo.graphicsMemorySize} MB");
+        ConsoleManager.LogToConsole($"<b>Processor Type</b>: {SystemInfo.processorType}");
+        ConsoleManager.LogToConsole($"<b>Processor Count</b>: {SystemInfo.processorCount}");
+        ConsoleManager.LogToConsole($"<b>System Memory Size</b>: {SystemInfo.systemMemorySize} MB");
+    }
+}
