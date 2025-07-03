@@ -39,11 +39,13 @@ public class ConsoleManager : MonoBehaviour
         RegisterCommand(new SanityCommand());
         RegisterCommand(new KillCommand());
         RegisterCommand(new MavCommand());
-        RegisterCommand(new RuntimeInfoCommand());
+        RegisterCommand(new InfoCommand());
         RegisterCommand(new EffectCommand());
         RegisterCommand(new TimeCommand());
         RegisterCommand(new LogCommand());
         RegisterCommand(new MidgetCommand());
+        RegisterCommand(new FmodCommand());
+        RegisterCommand(new QuitCommand());
         RegisterCommand(new SceneCommand());
 
         SceneCommand.PopulateAvailableScenes();
