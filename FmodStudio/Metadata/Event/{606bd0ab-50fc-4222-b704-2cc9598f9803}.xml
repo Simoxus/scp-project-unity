@@ -8,7 +8,7 @@
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{f089a1cf-0b00-4054-971e-46ac10ecbc37}</destination>
+			<destination>{35c5a0fa-4c9e-48f5-819d-78cd4f4e972d}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{90c2ab22-60b5-447b-b0c3-a8f843c79233}</destination>
@@ -331,6 +331,16 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{cb578d16-5d4c-4747-8d9c-f08753c9f848}" />
-	<object class="SFXReverbEffect" id="{71fec4ed-68cc-4287-b7c5-55d355615499}" />
+	<object class="SFXReverbEffect" id="{71fec4ed-68cc-4287-b7c5-55d355615499}">
+		<property name="earlyDelay">
+			<value>7</value>
+		</property>
+		<property name="wetLevel">
+			<value>-3</value>
+		</property>
+		<property name="dryLevel">
+			<value>0.5</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{b6be467e-a12c-45ee-9708-fef9a6d33fcd}" />
 </objects>
