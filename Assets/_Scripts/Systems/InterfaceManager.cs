@@ -3,10 +3,11 @@ using UnityEngine;
 using PrimeTween;
 using Cysharp.Threading.Tasks;
 using UnityEngine.UIElements;
+using System.Threading.Tasks;
 
-public class DisplayManager : MonoBehaviour
+public class InterfaceManager : MonoBehaviour
 {
-    public static DisplayManager Instance { get; private set; }
+    public static InterfaceManager Instance { get; private set; }
 
     [Header("UI-related References")]
     [SerializeField] private GameObject playerUI;
@@ -30,7 +31,7 @@ public class DisplayManager : MonoBehaviour
     public async void MakePlayerBlink() 
     {
         _blinkTween = FadeCanvasGroup(blinkOverlayGroup, from: 0, to: 1, duration: 0.15f, ease: Ease.Linear, false);
-        await UniTask.WaitForSeconds(0.4f);
+        await UniTask.WaitForSeconds(0.6f, ignoreTimeScale: false);
         _blinkTween = FadeCanvasGroup(blinkOverlayGroup, from: 1, to: 0, duration: 0.15f, ease: Ease.Linear, false);
     }
 
