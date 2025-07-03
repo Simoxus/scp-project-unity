@@ -11,7 +11,7 @@ public static class FbxBlenderOpeningProcessor
     // Set this variable to your installation path. 
     // If the path was added to your "PATH" system environment variable, it should be 
     // possible to just use "blender" as path
-    private static readonly string blenderPath = @"C:\Program Files\Blender Foundation\Blender 4.3\blender.exe";
+    private static readonly string blenderPath = @"C:\Program Files\Blender Foundation\Blender 4.4\blender.exe";
 
     [OnOpenAsset]
     public static bool OnOpenAsset(int instanceId, int line)
