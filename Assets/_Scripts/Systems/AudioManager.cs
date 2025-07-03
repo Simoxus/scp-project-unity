@@ -1,14 +1,14 @@
-using UnityEngine;
+using FMODUnity;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
 
-    [SerializeField] private AudioSource sfxSource;
-    [SerializeField] private AudioSource musicSource;
-    [SerializeField] private AudioSource ambientSource;
-    private Dictionary<string, AudioClip> clipCache = new();
+    [Header("FMOD Pause Emitters")]
+    public StudioEventEmitter[] excludedStudioEventEmitters; // This array contains which sounds you don't want to pause :)
 
     private void Awake()
     {
@@ -16,18 +16,21 @@ public class AudioManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void PlaySFX(AudioClip sfx, float volumeScale)
+    public void ToggleSounds(bool doPause)
     {
-        if (sfx != null)
-        {
-            sfxSource.PlayOneShot(sfx, volumeScale);
-        }
-    }
+        // Fetch all StudioEventEmitters in the scene
+        StudioEventEmitter[] allEmitters = FindObjectsByType<StudioEventEmitter>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
-    public void PlayAmbience(AudioClip music, bool loop = true)
-    {
-        musicSource.clip = music;
-        musicSource.loop = loop;
-        musicSource.Play();
+        foreach (var emitter in allEmitters)
+        {
+            if (excludedStudioEventEmitters.Any(e => e != null && e.gameObject == emitter.gameObject)) continue;
+
+            var instance = emitter.EventInstance;
+
+            if (instance.isValid())
+            {
+                instance.setPaused(doPause); // Pause or unpause the event
+            }
+        }
     }
 }
