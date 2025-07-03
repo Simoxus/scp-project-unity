@@ -13,7 +13,7 @@ public class PlayerAccess : MonoBehaviour
     public PlayerSanity playerSanity;
     public PlayerFootsteps playerFootsteps;
     public PlayerInteract playerInteract;
-    public PlayerCutscenes playerCutscenes;
+    public PlayerFreecam playerFreecam;
 
     [Header("Components")]
     public CharacterController characterController;
@@ -24,7 +24,8 @@ public class PlayerAccess : MonoBehaviour
     public CinemachineImpulseListener cameraImpulseListener;
     public CinemachineImpulseSource cameraImpulseSource;
 
-    private void Reset() // Auto assignment
+    // Auto assignment
+    private void Reset()
     {
         playerController = GetComponent<PlayerController>();
         playerInputs = GetComponent<PlayerInputs>();
@@ -33,7 +34,7 @@ public class PlayerAccess : MonoBehaviour
         playerBobbing = GetComponent<PlayerBobbing>();
         playerFootsteps = GetComponent<PlayerFootsteps>();
         playerInteract = GetComponent<PlayerInteract>();
-        playerCutscenes = GetComponent<PlayerCutscenes>();
+        playerFreecam = GetComponent<PlayerFreecam>();
 
         characterController = GetComponent<CharacterController>();
         footstepEmitter = GetComponentInChildren<StudioEventEmitter>();
