@@ -28,15 +28,21 @@ public class PlayerHealth : MonoBehaviour
         BroadcastHealth();
     }
 
-    public void TakeDamage(float amount)
+    public void Take(float amount)
     {
         currentHealth = Mathf.Clamp(currentHealth - amount, 0f, maxHealth);
         BroadcastHealth();
     }
 
-    public void HealDamage(float amount)
+    public void Heal(float amount)
     {
         currentHealth = Mathf.Clamp(currentHealth + amount, 0f, maxHealth);
+        BroadcastHealth();
+    }
+
+    public void Set(float amount)
+    {
+        currentHealth = Mathf.Clamp(amount, 0f, maxHealth);
         BroadcastHealth();
     }
 
