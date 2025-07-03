@@ -11,7 +11,7 @@ public class MaterialSubmeshValidator : EditorWindow
     private bool autoFix = false;
     private List<string> issues = new();
 
-    [MenuItem("Tools/Validation/Material vs SubMesh Checker")]
+    [MenuItem("Tools/Production Tools/Validation/Material vs SubMesh Checker")]
     public static void ShowWindow()
     {
         GetWindow<MaterialSubmeshValidator>("Material/SubMesh Validator");

@@ -16,10 +16,10 @@ public class LargeTriangleFixer : EditorWindow
 
     private List<ProblemMesh> problemMeshes = new();
 
-    [MenuItem("Tools/Mesh Checker/Large Triangle Scanner + Fixer")]
+    [MenuItem("Tools/Production Tools/Large Triangle Scanner")]
     public static void ShowWindow()
     {
-        GetWindow<LargeTriangleFixer>("Large Triangle Scanner + Fixer");
+        GetWindow<LargeTriangleFixer>("Large Triangle Scanner");
     }
 
     private void OnGUI()

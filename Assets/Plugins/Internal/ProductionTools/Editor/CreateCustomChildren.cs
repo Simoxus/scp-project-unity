@@ -5,7 +5,7 @@ public class CreateCustomChildren : EditorWindow
 {
     private string childNamesInput = "Child1\nChild2\nChild3";
 
-    [MenuItem("Tools/Create Named Children")]
+    [MenuItem("Tools/Production Tools/Create Named Children")]
     public static void ShowWindow()
     {
         GetWindow<CreateCustomChildren>("Create Named Children");

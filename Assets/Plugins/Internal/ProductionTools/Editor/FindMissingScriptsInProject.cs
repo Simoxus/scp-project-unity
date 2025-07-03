@@ -4,7 +4,7 @@ using System.IO;
 
 public class FindMissingScriptsInProject : MonoBehaviour
 {
-    [MenuItem("Tools/Find Missing Scripts in Project Prefabs")]
+    [MenuItem("Tools/Production Tools/Find Missing Scripts in Project Prefabs")]
     public static void FindMissingScriptsInPrefabs()
     {
         string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab");

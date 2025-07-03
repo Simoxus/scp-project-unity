@@ -4,7 +4,7 @@ using System.IO;
 
 public class RenameFoldersToPrefabName
 {
-    [MenuItem("Tools/Rename Folders To Prefab Name")]
+    [MenuItem("Tools/Production Tools/Rename Folders To Prefab Name")]
     public static void RenameSelectedFolders()
     {
         var selectedGuids = Selection.assetGUIDs;

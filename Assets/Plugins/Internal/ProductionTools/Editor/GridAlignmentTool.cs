@@ -12,7 +12,7 @@ public class GridAlignmentTool : EditorWindow
 
     private Dictionary<GameObject, Vector3> originalPositions = new();
 
-    [MenuItem("Tools/Grid Align Tool")]
+    [MenuItem("Tools/Production Tools/Grid Align Tool")]
     public static void ShowWindow()
     {
         GetWindow<GridAlignmentTool>("Grid Align Tool");
