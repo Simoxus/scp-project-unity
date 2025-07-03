@@ -4,7 +4,7 @@ using System.IO;
 
 public static class BatchRenameAssets
 {
-    [MenuItem("Assets/Rename Selected Assets to Source", false)]
+    [MenuItem("Assets/Production Tools/Rename Selected Assets to Source", false)]
     public static void RenameScriptableObjects()
     {
         Object[] selected = Selection.objects;
