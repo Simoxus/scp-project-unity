@@ -42,7 +42,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 7833122117494664109}
   - {fileID: 8738636004954402189}
-  m_RendererFeatureMap: ad6b866f10d7b46c8dedbeb025df4579
+  - {fileID: 8615442186151613196}
+  m_RendererFeatureMap: ad6b866f10d7b46c8dedbeb025df45790c537b9005339077
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -94,6 +95,22 @@ MonoBehaviour:
     BlurQuality: 0
     Falloff: 100
     SampleCount: -1
+--- !u!114 &8615442186151613196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bcc9d2f43c2474e8c7f28c9277e133, type: 3}
+  m_Name: AutoExposureRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  renderPassEvent: 550
+  renderShader: {fileID: 4800000, guid: 256ec172ad7d4c42ba5eb57998652d2b, type: 3}
+  computeShader: {fileID: 7200000, guid: e32ce64cfa44489d93b01d3b779759a3, type: 3}
 --- !u!114 &8738636004954402189
 MonoBehaviour:
   m_ObjectHideFlags: 0

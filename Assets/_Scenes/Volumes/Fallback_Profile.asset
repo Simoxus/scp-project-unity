@@ -465,6 +465,7 @@ MonoBehaviour:
   - {fileID: -6288072647309666549}
   - {fileID: 7518938298396184218}
   - {fileID: -1410297666881709256}
+  - {fileID: 8208042722842095692}
 --- !u!114 &853819529557874667
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -922,6 +923,37 @@ MonoBehaviour:
   scale:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &8208042722842095692
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4100329e4588497eb2079d472550f955, type: 3}
+  m_Name: AutoExposure
+  m_EditorClassIdentifier: 
+  active: 1
+  framesPerCompute:
+    m_OverrideState: 1
+    m_Value: 5
+  brightnessLimit:
+    m_OverrideState: 1
+    m_Value: 15
+  whitePoint:
+    m_OverrideState: 1
+    m_Value: 3
+  exposureRange:
+    m_OverrideState: 1
+    m_Value: {x: -2.5, y: 0.6}
+  increaseSpeed:
+    m_OverrideState: 1
+    m_Value: 5
+  decreaseSpeed:
+    m_OverrideState: 1
+    m_Value: 5
 --- !u!114 &9001657382290151224
 MonoBehaviour:
   m_ObjectHideFlags: 3
