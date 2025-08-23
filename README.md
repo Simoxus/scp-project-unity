@@ -4,10 +4,10 @@ SCP: Project Unity is a remake of the iconic indie horror game, SCP - Containmen
 This Unity engine remake of SCP - Containment Breach is licensed under [Creative Commons Attribution-Sharealike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
 
 ## Social Media
-<a href="https://bsky.app/profile/scppuofficial.com"><img src="https://i.imgur.com/XBGjoho.png" alt="Bluesky"  width="200" style="margin-right:4px;"></a>
-<a href="https://discord.gg/AmQP58PTBC"><img src="https://i.imgur.com/4lcTJHI.png" alt="Discord" width="200" style="margin-right:4px;"></a>
-<a href="https://www.reddit.com/r/scpprojectunity/"><img src="https://i.imgur.com/GMPcd3p.png" alt="Reddit"  width="200" style="margin-right:4px;"></a>
-<a href="https://www.youtube.com/@scppuofficial"><img src="https://i.imgur.com/D6jxd3g.png" alt="YouTube" width="200"></a>
+<a href="https://bsky.app/profile/scppuofficial.com"><img src="https://github.com/user-attachments/assets/54c21e0c-6934-4466-9874-3bd735f119a6" alt="Bluesky"  width="200" style="margin-right:4px;"></a>
+<a href="https://discord.gg/dVdY4PuGfp"><img src="https://github.com/user-attachments/assets/70c480f9-99a3-4868-bee7-39476ed4a038" alt="Discord" width="200" style="margin-right:4px;"></a>
+<a href="https://www.reddit.com/r/scpprojectunity/"><img src="https://github.com/user-attachments/assets/51cb9f6b-e8c1-40d0-aee4-f433c7deaf21" alt="Reddit"  width="200" style="margin-right:4px;"></a>
+<a href="https://www.youtube.com/@scppuofficial"><img src="https://github.com/user-attachments/assets/7f64541a-176e-4625-8e4a-173ac49a772b" alt="YouTube" width="200"></a>
 
 ## Contribution Guidelines
 
@@ -18,7 +18,7 @@ This Unity engine remake of SCP - Containment Breach is licensed under [Creative
 
 * **Version 0.0.1-0.1.0**: Framework of the original game
 * **Version 0.1.0-0.9.0**: Additional changes, new systems, new UI
-* **Version 1.4.0**: Modding API, full release
+* **Version 1.4.0**: Modding API, full release :D
 
 ## Planned Features
 
@@ -53,3 +53,4 @@ The #builds channel in the [Discord](https://discord.gg/dVdY4PuGfp), or the rele
 ### **Will Project Unity be available on the Steam Store?**
 
 Yes, the game will be on Steam. Not only that, but there is also going to be Steam Workshop support.
+
