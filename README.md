@@ -1,7 +1,11 @@
 # SCP: Project Unity 
+
 SCP: Project Unity is a remake of the iconic indie horror game, SCP - Containment Breach, released in 2012.
 
-This Unity engine remake of SCP - Containment Breach is licensed under [Creative Commons Attribution-Sharealike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
+This is a Unity engine remake of SCP - Containment Breach, and is licensed under [Creative Commons Attribution-Sharealike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
+
+## Showcase
+https://github.com/user-attachments/assets/449e926a-f46f-4d1e-89a9-9e3fbebdf99d
 
 ## Social Media
 <a href="https://bsky.app/profile/scppuofficial.com"><img src="https://github.com/user-attachments/assets/54c21e0c-6934-4466-9874-3bd735f119a6" alt="Bluesky"  width="200" style="margin-right:4px;"></a>
@@ -9,48 +13,86 @@ This Unity engine remake of SCP - Containment Breach is licensed under [Creative
 <a href="https://www.reddit.com/r/scpprojectunity/"><img src="https://github.com/user-attachments/assets/51cb9f6b-e8c1-40d0-aee4-f433c7deaf21" alt="Reddit"  width="200" style="margin-right:4px;"></a>
 <a href="https://www.youtube.com/@scppuofficial"><img src="https://github.com/user-attachments/assets/7f64541a-176e-4625-8e4a-173ac49a772b" alt="YouTube" width="200"></a>
 
-## Contribution Guidelines
-
-* Following the [best practices for formatting in Unity](https://unity.com/how-to/formatting-best-practices-c-scripting-unity)
-* Making sure any external assets are under a [Creative Commons compatible license](https://westernsydney.pressbooks.pub/cclicensingattribution/chapter/understanding-cc-licence-compatibility/)
-
 ## Development Roadmap
 
-* **Version 0.0.1-0.1.0**: Framework of the original game
-* **Version 0.1.0-0.9.0**: Additional changes, new systems, new UI
-* **Version 1.4.0**: Modding API, full release :D
+* **Version 0.0.1 - 0.1.0**: Core game framework, like basic movement, item interaction, and enemy AI
+* **Version 0.1.0 - 0.9.0**: More advanced features and polish, like new systems (e.g., sound occlusion, proximity chat), a complete UI redesign, and game mechanics that expand upon SCP - Containment Breach
+* **Version 1.4.0**: Full release, including a comprehensive modding API and all other planned features that may surface throughout development :D
 
 ## Planned Features
 
-* An easy to use modding API
-* More rooms
-* More items
-* Better performance
+<sub>none of this was AI i just like writing :(</sub>
 
-## Implemented Features
-
-* Smoothly transitioning cameras
-* Recreation of the player controller's functionality
-* PBR Textures
-* New props
-* GPU Instancing
-
-## Technical Stack
-
-* **Unity Version**: Unity 6
-* **Unity Pipeline**: Universal Render Pipeline
+* **An easy-to-use modding API**
+* **Better performance and optimization**
+* **More rooms, events, and interesting environments**
+* **More items and SCPs**
+* **Improved AI behavior** (smarter SCPs, more dynamic pathfinding)
+* **Enhanced sound design using FMOD's API and FMOD Studio** (already sorta implemented)
+* **Expanded difficulty options to pick from** (like Apollyon)
+* **Overhauled lighting and rendering** (using URP's post-processing)
+* **Save/Load system** (with multiple slots and quicksaving capability)
+* **Rewritten inventory system** (stacking support, drag & drop, item hotkeys)
+* **Accessibility options** (colorblind support, scalable UI, input mapping)
+* **Achievements and progression tracking using Steamworks** (when it's published haha)
+* **Localization support** (for menus, UI, item names, subtitles, etc.)
+* **Improved animations and player controller mechanics**
+* **Steam Workshop integration** (with an awesome modding API)
+* **Expanded lore content using templates** (documents, terminals, SCP documents)
+* **Custom game launcher** (like the one you see used in SCP - Containment Breach)
 
 ## Frequently Asked Questions
 
-### **Why make this?**
+* ### **Why make this?**
 
-SCP - Containment Breach was originally built on Blitz3D, a circa-2002 engine that has received no official feature updates since 2003. As a consequence, when such an old game using an outdated engine not designed for newer systems is executed on modern hardware, it exhibits significantly worse performance and bugs that were not observable during active development.
+SCP - Containment Breach was originally developed using Blitz3D, a game engine from 2002 that hasn't received any official updates since 2003. Because of this, running the game on modern hardware often leads to poor performance and new bugs that weren’t present during its original development. The developers of the original game worked very hard to optimize the game, but the limitations of such an outdated engine made it difficult to improve it any further. An attempt was made to port the game to a new engine for the planned 1.4 update, but unfortunately, was cancelled in early 2022.
 
-### **How do I play the latest releases?**
+* ### **How do I play the latest releases?**
 
-The #builds channel in the [Discord](https://discord.gg/dVdY4PuGfp), or the releases published on GitHub. If a build is tagged as extremely stable in the Discord #builds channel, you will also be able to find it on [Itch](https://simoxus.itch.io/scp-project-unity).
+The #builds channel in the [Discord](https://discord.gg/dVdY4PuGfp). If a build is tagged as extremely stable in the Discord #builds channel, you will also be able to find it on [Itch](https://simoxus.itch.io/scp-project-unity).
 
-### **Will Project Unity be available on the Steam Store?**
+* ### **What platforms does Project Unity support?**
 
-Yes, the game will be on Steam. Not only that, but there is also going to be Steam Workshop support.
+SCP: Project Unity supports **Windows**, **Linux**, and **macOS**.
+
+* ### **I want to make a bug report or suggestion. How do I make one?**
+
+You can make a bug report OR suggestion in GitHub Issues on the repository, but preferably in the [Discord](https://discord.gg/dVdY4PuGfp).
+
+* ### **Will Project Unity be free to play?**
+
+Yes, SCP: Project Unity is completely free and the majority of content included in the game is licensed under CC BY-SA 4.0, although there are some exceptions, which will be outlined in the README as they are added.
+
+## For Developers
+
+#### **1. Getting the Project**
+
+1.  Click the green **"Code"** button on the GitHub page and select **"Download ZIP"**.
+2.  Extract the downloaded `.ZIP` file to your desired location.
+
+#### **2. Opening the Project in Unity**
+
+1.  Launch **Unity Hub**.
+2.  Click the **"Add"** button and select **"Add project from disk"**.
+3.  Find and select the folder you extracted in the previous step.
+
+#### **3. Installing the Unity Editor and Modules**
+
+You will need the correct version of the Unity Editor to open the project. If you don't have it installed, Unity Hub will prompt you to download the recommended version.
+
+* **Platform Modules:** Ensure you also install the necessary **Build Support** modules for the platforms you plan to compile for (e.g., Windows, Linux, macOS).
+
+#### **4. Building the Project**
+
+Before building, confirm the correct scenes are included in your build settings.
+
+1.  Open the project in the Unity Editor.
+2.  Navigate to **File** > **Build Settings**.
+3.  In the **"Scenes In Build"** section, verify that the following scenes are checked:
+    * `_Scenes/MainMenu`
+    * `_Scenes/MainMenu_Credits`
+    * `_Scenes/Facility`
+    * `_Scenes/Facility_Exterior`
+4. Hit "**Build**" or "**Build and Run**".
+
 
