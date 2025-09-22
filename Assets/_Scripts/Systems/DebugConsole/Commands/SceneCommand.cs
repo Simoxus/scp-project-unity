@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class SceneCommand : ConsoleBase
 {
     public override string CommandWord => "scene";
-    public override string Description => "Loads a specific scene by name or build index. Usage: scene <sceneName|sceneIndex>";
+    public override string Description => "Loads a specific scene by name or build index. Usage: scene <sceneName|sceneIndex> [optional: reload]";
 
     private static readonly List<string> _availableScenes = new List<string>();
 
@@ -28,13 +28,23 @@ public class SceneCommand : ConsoleBase
 
     public override void Execute(string[] args)
     {
-        if (args.Length != 1)
+        if (args.Length == 0)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: scene <sceneName|sceneIndex></color>");
+            ConsoleManager.LogToConsole("<color=red>Usage: scene <sceneName|sceneIndex> [optional: reload]</color>");
             return;
         }
 
+        bool reload = args.Contains("reload");
         string sceneIdentifier = args[0];
+
+        if (sceneIdentifier.ToLower() == "reload")
+        {
+            // Just reload current scene
+            string currentScene = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(currentScene);
+            ConsoleManager.LogToConsole($"<color=green>Reloading current scene '{currentScene}'...</color>");
+            return;
+        }
 
         if (int.TryParse(sceneIdentifier, out int sceneIndex))
         {
@@ -42,6 +52,12 @@ public class SceneCommand : ConsoleBase
             {
                 SceneManager.LoadScene(sceneIndex);
                 ConsoleManager.LogToConsole($"<color=green>Loading scene by index: {sceneIndex}...</color>");
+
+                if (reload)
+                {
+                    SceneManager.LoadScene(sceneIndex);
+                    ConsoleManager.LogToConsole($"<color=yellow>Reloading scene index {sceneIndex}...</color>");
+                }
             }
             else
             {
@@ -56,6 +72,12 @@ public class SceneCommand : ConsoleBase
                 {
                     SceneManager.LoadScene(sceneIdentifier);
                     ConsoleManager.LogToConsole($"<color=green>Loading scene by name: '{sceneIdentifier}'...</color>");
+
+                    if (reload)
+                    {
+                        SceneManager.LoadScene(sceneIdentifier);
+                        ConsoleManager.LogToConsole($"<color=yellow>Reloading scene '{sceneIdentifier}'...</color>");
+                    }
                 }
                 catch (System.Exception e)
                 {
