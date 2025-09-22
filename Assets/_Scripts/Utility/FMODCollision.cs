@@ -1,9 +1,10 @@
 using UnityEngine;
 using FMODUnity;
+using System;
 
 public class FMODCollision : MonoBehaviour
 {
-    [SerializeField] private PlayerAccess player;
+    [SerializeField] private Player player;
 
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private EventReference fmodEvent;
@@ -19,6 +20,11 @@ public class FMODCollision : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();
     }
 
+    private void Start()
+    {
+        player = player != null ? player : Player.Instance;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         // Only proceed if this GameObject has a Rigidbody
@@ -27,24 +33,36 @@ public class FMODCollision : MonoBehaviour
             return;
         }
 
+        if (transform == null || player == null || player.transform == null || player.cameraImpulseSource == null)
+        {
+            return;
+        }
+
         float collisionMagnitude = collision.relativeVelocity.magnitude * rigidBody.mass / 10f;
 
         if (shakePlayerCamera)
         {
-            // Calculate distance to player
-            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
-            // Only shake if within the specified maximum distance
-            if (distanceToPlayer <= shakeMaxDistance)
+            try
             {
-                float distanceFactor = 1f - (distanceToPlayer / shakeMaxDistance);
-                distanceFactor = Mathf.Clamp01(distanceFactor);
+                // Calculate distance to player
+                float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-                // Apply a final impulse velocity that scales with collision magnitude and distance
-                Vector3 finalImpulseVelocity = new Vector3(
-                    collisionMagnitude, collisionMagnitude) * distanceFactor * shakeIntensityMultiplier;
+                // Only shake if within the specified maximum distance
+                if (distanceToPlayer <= shakeMaxDistance)
+                {
+                    float distanceFactor = 1f - (distanceToPlayer / shakeMaxDistance);
+                    distanceFactor = Mathf.Clamp01(distanceFactor);
 
-                player.cameraImpulseSource.GenerateImpulseWithVelocity(finalImpulseVelocity);
+                    // Apply a final impulse velocity that scales with collision magnitude and distance
+                    Vector3 finalImpulseVelocity = new Vector3(
+                        collisionMagnitude, collisionMagnitude) * distanceFactor * shakeIntensityMultiplier;
+
+                    player.cameraImpulseSource.GenerateImpulseWithVelocity(finalImpulseVelocity);
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                Debug.LogWarning($"Collision camera shake failed: {ex}", this);
             }
         }
 

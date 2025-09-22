@@ -6,6 +6,9 @@ public class ObjectLifetime : MonoBehaviour
 
     void Start()
     {
-        Destroy(gameObject, lifetime);
+        if (gameObject != null)
+        {
+            Destroy(gameObject, lifetime);
+        }
     }
 }
