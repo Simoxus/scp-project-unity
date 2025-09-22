@@ -179,6 +179,9 @@ public class PlayerInteract : MonoBehaviour
 
     private void Awake()
     {
+        // Check for player and if there's no player, try to find the singleton/instance
+        player = player != null ? player : Player.Instance;
+
         InitializeInteractionSprites();
         // It's generally good practice to set up references here if possible
         // If cameraBrain is not set in inspector, try to find it here instead of Start.
@@ -190,8 +193,6 @@ public class PlayerInteract : MonoBehaviour
 
     private void Start()
     {
-        player = player != null ? player : Player.Instance;
-
         // If cameraBrain was already set in Awake or Inspector, this is skipped.
         if (cameraBrain == null)
         {

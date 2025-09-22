@@ -32,6 +32,9 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
 
+        // Check for player and if there's no player, try to find the singleton/instance
+        player = player != null ? player : Player.Instance;
+
         Time.timeScale = 1.0f;
         gamePaused = false;
         pauseRequestCount = 0;
@@ -39,8 +42,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        player = player != null ? player : Player.Instance;
-
         // Disable annoying ass PrimeTween warns
         PrimeTweenConfig.warnTweenOnDisabledTarget = false;
         PrimeTweenConfig.warnZeroDuration = false;

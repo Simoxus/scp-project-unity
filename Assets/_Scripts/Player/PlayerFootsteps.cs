@@ -29,6 +29,9 @@ public class PlayerFootsteps : MonoBehaviour
 
     private void Awake()
     {
+        // Check for player and if there's no player, try to find the singleton/instance
+        player = player != null ? player : Player.Instance;
+
         _surfaceDefinitionsByTextureID.Clear();
 
         foreach (FootstepData surface in footstepSurfaces)
@@ -53,11 +56,6 @@ public class PlayerFootsteps : MonoBehaviour
         }  
 
         _lastFootstepTime = -footstepCooldown; // Initialize to allow immediate footstep
-    }
-
-    private void Start()
-    {
-        player = player != null ? player : Player.Instance;
     }
 
     // Removed Update() from PlayerFootsteps, as PlayerController will now drive it.

@@ -29,10 +29,14 @@ public class PlayerBobbing : MonoBehaviour
     private Vector3 _currentPositionVelocity;
     private float _currentTiltVelocity;
 
+    private void Awake()
+    {
+        // Check for player and if there's no player, try to find the singleton/instance
+        player = player != null ? player : Player.Instance;
+    }
+
     private void Start()
     {
-        player = player != null ? player : Player.Instance;
-
         if (player.cameraRoot.transform != null)
         {
             _originalCameraLocalPosition = player.cameraRoot.transform.localPosition;

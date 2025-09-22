@@ -48,6 +48,9 @@ public class ButtonGateController : MonoBehaviour
 
     private void Awake()
     {
+        // Check for player and if there's no player, try to find the singleton/instance
+        player = player != null ? player : Player.Instance;
+
         // Get layer ID
         _debrisLayer = LayerMask.NameToLayer("Debris");
 
@@ -62,11 +65,6 @@ public class ButtonGateController : MonoBehaviour
         _token = _cts.Token;
 
         if (isOpen) { _ = ToggleDoor(); }
-    }
-
-    private void Start()
-    {
-        player = player != null ? player : Player.Instance;
     }
 
     [ContextMenu("Toggle Gate")]

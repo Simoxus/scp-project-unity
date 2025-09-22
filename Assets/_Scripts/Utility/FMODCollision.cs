@@ -16,13 +16,11 @@ public class FMODCollision : MonoBehaviour
 
     private void Awake()
     {
+        // Check for player and if there's no player, try to find the singleton/instance
+        player = player != null ? player : Player.Instance;
+
         // Get the Rigidbody component from the GameObject this script is attached to
         rigidBody = GetComponent<Rigidbody>();
-    }
-
-    private void Start()
-    {
-        player = player != null ? player : Player.Instance;
     }
 
     private void OnCollisionEnter(Collision collision)

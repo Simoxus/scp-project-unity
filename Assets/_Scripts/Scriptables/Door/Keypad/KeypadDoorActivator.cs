@@ -48,15 +48,13 @@ public class KeypadDoorActivator : MonoBehaviour, IInteractable
 
     private void Awake()
     {
+        // Check for player and if there's no player, try to find the singleton/instance
+        player = player != null ? player : Player.Instance;
+
         if (activatorCollider == null && secondActivatorCollider == null)
         {
             Debug.LogWarning($"{GetType()} on '{gameObject.name}' has no colliders assigned. It will not be detectable.", this);
         }
-    }
-
-    private void Start()
-    {
-        player = player != null ? player : Player.Instance;
     }
 
     private void OnEnable()

@@ -65,11 +65,17 @@ public class PlayerController : MonoBehaviour
     private Vector3 _forceRotateTarget = Vector3.zero;
     private bool _isForceRotating = false;
 
-    private void Start()
+    private void Awake()
     {
+        // Check for player and if there's no player, try to find the singleton/instance
         player = player != null ? player : Player.Instance;
 
         GameManager.Instance.UpdateCursorVisiblity();
+    }
+
+    private void Start()
+    {
+        //GameManager.Instance.UpdateCursorVisiblity();
         _currentCharacterHeight = player.characterController.height;
         standingHeight = _currentCharacterHeight;
 
