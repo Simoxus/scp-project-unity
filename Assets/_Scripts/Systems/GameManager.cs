@@ -1,5 +1,6 @@
 using PrimeTween;
 using UnityEngine;
+using static UnityEngine.EventSystems.StandaloneInputModule;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,13 +12,15 @@ public class GameManager : MonoBehaviour
     public bool hidePlayerHUD = false;
 
     [Header("Player References")]
-    public PlayerAccess player;
+    public Player player;
 
     [Header("Inherited QOL")]
     public bool inventoryPausesGame;
     public bool skipIntroSequence;
+    public bool cameraShaking = true;
 
     public int pauseRequestCount = 0; // Public just in case another script needs to read this amount
+    public int disableControlsRequestCount = 0;
 
     private void Awake()
     {
@@ -36,6 +39,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        player = player != null ? player : Player.Instance;
+
         // Disable annoying ass PrimeTween warns
         PrimeTweenConfig.warnTweenOnDisabledTarget = false;
         PrimeTweenConfig.warnZeroDuration = false;
@@ -43,7 +48,7 @@ public class GameManager : MonoBehaviour
 
         Screen.SetResolution(1920, 1080, SettingsManager.Instance.fullScreenMode);
 
-        TogglePlayerControls(disablePlayerInputs); // Makes sure the controls are enabled
+        RequestDisableControls(shouldDisable: disablePlayerInputs);
     }
 
     // Call this when needing to pause the game
@@ -81,7 +86,7 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.ToggleSounds(gamePaused); // Call AudioManager with explicit bool :D
         Time.timeScale = gamePaused ? 0f : 1.0f;
 
-        TogglePlayerControls(gamePaused);
+        GameManager.Instance.RequestDisableControls(shouldDisable: gamePaused);
         UpdateCursorVisiblity();
     }
 
@@ -91,19 +96,43 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.ToggleSounds(gamePaused);
         Time.timeScale = gamePaused ? 0f : 1.0f;
 
-        TogglePlayerControls(gamePaused);
+        GameManager.Instance.RequestDisableControls(shouldDisable: gamePaused);
         UpdateCursorVisiblity();
     }
 
-    public void TogglePlayerControls(bool shouldDisable)
+    public void RequestDisableControls(bool shouldDisable)
     {
-        this.disablePlayerInputs = shouldDisable; // Update the public flag
+        if (shouldDisable)
+        {
+            disableControlsRequestCount++;
+        }
+        else
+        {
+            disableControlsRequestCount--;
+            if (disableControlsRequestCount < 0)
+            {
+                disableControlsRequestCount = 0;
+            }
+        }
+
+        bool newState = disableControlsRequestCount > 0;
+        if (newState != disablePlayerInputs)
+        {
+            // Only update the state if it has actually changed
+            TogglePlayerControls(newState);
+            UpdateCursorVisiblity();
+        }
+    }
+
+    private void TogglePlayerControls(bool shouldDisable)
+    {
+        disablePlayerInputs = shouldDisable;
 
         bool enableComponents = !shouldDisable;
 
         if (player != null)
         {
-            player.playerInputs.enabled = enableComponents;
+            // player.playerInputs.enabled = enableComponents;
             player.playerController.enabled = enableComponents;
             player.playerBobbing.enabled = enableComponents;
 
@@ -118,9 +147,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UpdateCursorVisiblity()
+    public void UpdateCursorVisiblity(bool? forceDisable = null)
     {
-        Cursor.lockState = disablePlayerInputs ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = disablePlayerInputs;
+        if (forceDisable == null)
+        {
+            Cursor.lockState = disablePlayerInputs ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = disablePlayerInputs;
+        } 
+        else
+        {
+            Cursor.lockState = disablePlayerInputs ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = disablePlayerInputs;
+        }
+        
     }
 }
