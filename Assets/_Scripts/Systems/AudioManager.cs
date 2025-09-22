@@ -1,36 +1,31 @@
+using FMOD.Studio;
 using FMODUnity;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
 
-    [Header("FMOD Pause Emitters")]
-    public StudioEventEmitter[] excludedStudioEventEmitters; // This array contains which sounds you don't want to pause :)
+    private Bus _gameplayBus;
+    private Bus _uiBus;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        _gameplayBus = RuntimeManager.GetBus("bus:/Gameplay");
+        _uiBus = RuntimeManager.GetBus("bus:/UI");
     }
 
     public void ToggleSounds(bool doPause)
     {
-        // Fetch all StudioEventEmitters in the scene
-        StudioEventEmitter[] allEmitters = FindObjectsByType<StudioEventEmitter>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        _gameplayBus.setPaused(doPause);
+    }
 
-        foreach (var emitter in allEmitters)
-        {
-            if (excludedStudioEventEmitters.Any(e => e != null && e.gameObject == emitter.gameObject)) continue;
-
-            var instance = emitter.EventInstance;
-
-            if (instance.isValid())
-            {
-                instance.setPaused(doPause); // Pause or unpause the event
-            }
-        }
+    public void SetBusVolume(float volume, string busName)
+    {
+        Bus requestedBus = RuntimeManager.GetBus(busName);
+        requestedBus.setVolume(volume);
     }
 }
