@@ -1,9 +1,6 @@
-﻿using System.Collections;
+﻿using PrimeTween;
 using UnityEngine;
-using PrimeTween;
-using Cysharp.Threading.Tasks;
-using UnityEngine.UIElements;
-using System.Threading.Tasks;
+using UnityEngine.EventSystems;
 
 public class InterfaceManager : MonoBehaviour
 {
@@ -12,15 +9,20 @@ public class InterfaceManager : MonoBehaviour
     [Header("UI-related References")]
     [SerializeField] private GameObject playerUI;
     [SerializeField] private GameObject playerUIOverlays;
-    [SerializeField] private GameObject playerUIIndicators;
+    [SerializeField] private CanvasGroup indicatorsGroup;
     [SerializeField] private CanvasGroup blinkOverlayGroup;
+
+    [Header("Cursor References")]
+    public Texture2D normalCursor;
+    public Texture2D clickCursor;
+    public Vector2 hotspot = Vector2.zero; // pivot point of the cursor
 
     // Tweens
     private Tween _blinkTween;
     private Tween _hudTween;
 
-    // Other
-    private GameManager _gameManager => GameManager.Instance;
+    // States
+    //private bool _isClickingUI;
 
     private void Awake()
     {
@@ -28,38 +30,38 @@ public class InterfaceManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public async void MakePlayerBlink() 
+    private void Start()
     {
-        _blinkTween = FadeCanvasGroup(blinkOverlayGroup, from: 0, to: 1, duration: 0.15f, ease: Ease.Linear, false);
-        await UniTask.WaitForSeconds(0.6f, ignoreTimeScale: false);
-        _blinkTween = FadeCanvasGroup(blinkOverlayGroup, from: 1, to: 0, duration: 0.15f, ease: Ease.Linear, false);
+        Cursor.SetCursor(normalCursor, hotspot, CursorMode.Auto);
     }
 
-    public void TogglePlayerHUD()
+    private void Update()
     {
-        _gameManager.hidePlayerHUD = !_gameManager.hidePlayerHUD;
-        CanvasGroup playerUIIndicatorGroup = playerUIIndicators.GetComponent<CanvasGroup>();
+        if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject()) // LMB pressed
+        {
+            Cursor.SetCursor(clickCursor, hotspot, CursorMode.Auto);
+            //_isClickingUI = true;
+        }
 
+        if (Input.GetMouseButtonUp(0)) // LMB released
+        {
+            Cursor.SetCursor(normalCursor, hotspot, CursorMode.Auto);
+            //_isClickingUI = false;
+        }
+    }
+
+    public void TogglePlayerHUD(float duration = 0.8f)
+    {
+        if (indicatorsGroup == null) return;
+
+        // Toggle the state
+        GameManager.Instance.hidePlayerHUD = !GameManager.Instance.hidePlayerHUD;
+
+        // Stop any ongoing tween to prevent jumping
         _hudTween.Stop();
-        if (_gameManager.hidePlayerHUD == true)
-        {
-            _hudTween = FadeCanvasGroup(playerUIIndicatorGroup, from: 1, to: 0, duration: 0.8f, ease: Ease.InOutCubic, true);
-        }
-        else
-        {
-            _hudTween = FadeCanvasGroup(playerUIIndicatorGroup, from: 0, to: 1, duration: 0.8f, ease: Ease.InOutCubic, true);
-        }
-    }
 
-    private Tween FadeCanvasGroup(CanvasGroup group, float from, float to, float duration, Ease ease, bool useUnscaledTime)
-    {
-        return Tween.Custom(
-            from,
-            to,
-            duration: duration,
-            ease: ease,
-            onValueChange: val => group.alpha = val,
-            useUnscaledTime: true
-        );
+        // Start a new tween based on the new state
+        float targetAlpha = GameManager.Instance.hidePlayerHUD ? 0 : 1;
+        _hudTween = Tween.Alpha(indicatorsGroup, targetAlpha, duration, Ease.InOutCubic);
     }
 }
