@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerFootsteps : MonoBehaviour
 {
     [Header("References")]
-    public PlayerAccess player; // Assumes PlayerAccess has a reference to PlayerFootsteps
+    public Player player;
 
     [Header("FMOD Setup")]
     public StudioEventEmitter footstepEventEmitter;
@@ -55,11 +55,17 @@ public class PlayerFootsteps : MonoBehaviour
         _lastFootstepTime = -footstepCooldown; // Initialize to allow immediate footstep
     }
 
+    private void Start()
+    {
+        player = player != null ? player : Player.Instance;
+    }
+
     // Removed Update() from PlayerFootsteps, as PlayerController will now drive it.
 
     public void RequestFootstep()
     {
-        // Check cooldown
+        // Check cooldown/values
+        if (!player.playerController.isMoving) return;
         if (Time.time < _lastFootstepTime + footstepCooldown) { return; }
 
         // If not on cooldown, proceed to detect and play

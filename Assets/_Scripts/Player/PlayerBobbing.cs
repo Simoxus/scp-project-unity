@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerBobbing : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerAccess player;
+    [SerializeField] private Player player = Player.Instance;
 
     [Header("Bob Settings")]
     public bool doBob = true;
@@ -31,6 +31,8 @@ public class PlayerBobbing : MonoBehaviour
 
     private void Start()
     {
+        player = player != null ? player : Player.Instance;
+
         if (player.cameraRoot.transform != null)
         {
             _originalCameraLocalPosition = player.cameraRoot.transform.localPosition;

@@ -7,7 +7,7 @@ using PrimeTween;
 public class PlayerInteract : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerAccess player;
+    [SerializeField] private Player player;
     [SerializeField] private Camera cameraBrain;
 
     [Header("UI Settings")]
@@ -150,16 +150,25 @@ public class PlayerInteract : MonoBehaviour
 
     private void OnDisable()
     {
-        /*
-        BasicInteract.OnObjectInteracted -= HandleObjectInteracted;
-        DoorActivator.OnObjectInteracted -= HandleObjectInteracted;
-        */
-
         // Unsubscribe from the PlayerInputs' interact event
         if (player != null && player.playerInputs != null)
         {
             player.playerInputs.OnInteractPressed -= CheckInteractionInput;
         }
+
+        HideAllUI();
+    }
+
+    private void HideAllUI()
+    {
+        // Ensure that both on-screen and off-screen UI elements are immediately
+        // hidden and their icons are cleared.
+        onScreenInteractionUI.HideUI();
+        offScreenInteractionUI.HideUI();
+
+        // Reset the current target to null
+        _currentTarget = null;
+        _currentTargetTransform = null;
     }
 
     // This method now directly calls the local tweening logic
@@ -181,6 +190,8 @@ public class PlayerInteract : MonoBehaviour
 
     private void Start()
     {
+        player = player != null ? player : Player.Instance;
+
         // If cameraBrain was already set in Awake or Inspector, this is skipped.
         if (cameraBrain == null)
         {
