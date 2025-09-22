@@ -18,6 +18,7 @@ public class PlayerInputs : MonoBehaviour
     public event Action OnPauseInputPerformed;
 
     private InputActionMap _playerActionMap;
+    private InputActionMap _keypadActionMap;
     private InputActionMap _uiActionMap;
 
     private InputAction _moveAction;
@@ -28,9 +29,15 @@ public class PlayerInputs : MonoBehaviour
     private InputAction _pauseAction;
     private InputAction _interactAction;
 
+    public event Action<string> OnKeypadInput;
+    private InputAction _keypadNumberAction;
+    private InputAction _keypadEnterAction;
+    private InputAction _keypadClearAction;
+
     private void Awake()
     {
         _playerActionMap = playerInputAsset.FindActionMap("Player");
+        _keypadActionMap = playerInputAsset.FindActionMap("Keypad");
         _uiActionMap = playerInputAsset.FindActionMap("UI");
 
         _moveAction = _playerActionMap.FindAction("Move");
@@ -40,12 +47,17 @@ public class PlayerInputs : MonoBehaviour
         _crouchAction = _playerActionMap.FindAction("Crouch");
         _interactAction = _playerActionMap.FindAction("Interact");
 
+        _keypadNumberAction = _keypadActionMap.FindAction("Number");
+        _keypadEnterAction = _keypadActionMap.FindAction("Enter");
+        _keypadClearAction = _keypadActionMap.FindAction("Clear");
+
         _pauseAction = _uiActionMap.FindAction("Pause");
     }
 
     private void OnEnable()
     {
         _playerActionMap.Enable();
+        _keypadActionMap.Disable();
         _uiActionMap.Enable();
 
         _sprintAction.performed += OnSprintPerformed;
@@ -59,6 +71,12 @@ public class PlayerInputs : MonoBehaviour
         _interactAction.performed += OnInteractPerformed;
 
         _pauseAction.performed += OnPausePerformedHandler;
+
+        // Subscribe to keypad events
+        _keypadNumberAction.performed += OnKeypadNumberPerformed;
+        _keypadEnterAction.performed += OnKeypadEnterPerformed;
+        _keypadClearAction.performed += OnKeypadClearPerformed;
+
     }
 
     private void OnDisable()
@@ -75,8 +93,18 @@ public class PlayerInputs : MonoBehaviour
 
         _pauseAction.performed -= OnPausePerformedHandler;
 
+        _keypadNumberAction.performed -= OnKeypadNumberPerformed;
+        _keypadEnterAction.performed -= OnKeypadEnterPerformed;
+        _keypadClearAction.performed -= OnKeypadClearPerformed;
+
         _playerActionMap.Disable();
         _uiActionMap.Disable();
+    }
+
+    private void Start()
+    {
+        EnableGameplayInputs();
+        EnableUIAssistedInputs();
     }
 
     private void Update()
@@ -97,6 +125,9 @@ public class PlayerInputs : MonoBehaviour
 
     public void EnableGameplayInputs() => _playerActionMap.Enable();
     public void DisableGameplayInputs() => _playerActionMap.Disable();
+
+    public void EnableKeypadInputs() => _keypadActionMap.Enable();
+    public void DisableKeypadInputs() => _keypadActionMap.Disable();
 
     public void EnableUIAssistedInputs() => _uiActionMap.Enable();
     public void DisableUIAssistedInputs() => _uiActionMap.Disable();
@@ -121,5 +152,20 @@ public class PlayerInputs : MonoBehaviour
     private void OnPausePerformedHandler(InputAction.CallbackContext ctx)
     {
         OnPauseInputPerformed?.Invoke();
+    }
+
+    private void OnKeypadNumberPerformed(InputAction.CallbackContext ctx)
+    {
+        OnKeypadInput?.Invoke(ctx.control.name);
+    }
+
+    private void OnKeypadEnterPerformed(InputAction.CallbackContext ctx)
+    {
+        OnKeypadInput?.Invoke("Enter");
+    }
+
+    private void OnKeypadClearPerformed(InputAction.CallbackContext ctx)
+    {
+        OnKeypadInput?.Invoke("Clear");
     }
 }
