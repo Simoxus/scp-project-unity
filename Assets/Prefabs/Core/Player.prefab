@@ -62,7 +62,7 @@ MonoBehaviour:
     FieldOfView: 75
     OrthographicSize: 10
     NearClipPlane: 0.01
-    FarClipPlane: 300
+    FarClipPlane: 100
     Dutch: 0
     ModeOverride: 0
     PhysicalProperties:
@@ -119,7 +119,7 @@ MonoBehaviour:
   NoiseProfile: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   PivotOffset: {x: 0, y: 0, z: 0}
   AmplitudeGain: 1
-  FrequencyGain: 1
+  FrequencyGain: 0.2
   m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!114 &4173263037985968180
 MonoBehaviour:
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 3622525049317278363}
   m_Layer: 0
   m_Name: ImpulseSource
-  m_TagString: Untagged
+  m_TagString: ImpulseListener
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -263,105 +263,6 @@ Transform:
   - {fileID: 8050014540779147981}
   m_Father: {fileID: 8083589854920794216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5525478775424288390
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1290988309839889934}
-  - component: {fileID: 2210221413615237583}
-  - component: {fileID: 2073972897938607869}
-  m_Layer: 0
-  m_Name: CameraFree
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1290988309839889934
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5525478775424288390}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.8035714, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8083589854920794216}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2210221413615237583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5525478775424288390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Priority:
-    Enabled: 1
-    m_Value: 9
-  OutputChannel: 1
-  StandbyUpdate: 2
-  m_StreamingVersion: 20241001
-  m_LegacyPriority: 0
-  Target:
-    TrackingTarget: {fileID: 8083589854920794216}
-    LookAtTarget: {fileID: 0}
-    CustomLookAtTarget: 0
-  Lens:
-    FieldOfView: 75
-    OrthographicSize: 10
-    NearClipPlane: 0.01
-    FarClipPlane: 300
-    Dutch: 0
-    ModeOverride: 0
-    PhysicalProperties:
-      GateFit: 2
-      SensorSize: {x: 21.946, y: 16.002}
-      LensShift: {x: 0, y: 0}
-      FocusDistance: 10
-      Iso: 200
-      ShutterSpeed: 0.005
-      Aperture: 16
-      BladeCount: 5
-      Curvature: {x: 2, y: 11}
-      BarrelClipping: 0.25
-      Anamorphism: 0
-  BlendHint: 0
---- !u!114 &2073972897938607869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5525478775424288390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b76c61cbbeca0b47a96d91d5bcec73f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 6969650758551764498}
-  cameraFree: {fileID: 2210221413615237583}
-  speed: 10
-  crouchSpeed: 5
-  sprintSpeed: 40
-  doLookInvert: 0
-  doSmoothLook: 0
-  lookSmoothTime: 0.08
-  lookSpeed: 2.5
-  minLookX: -90
-  maxLookX: 90
 --- !u!1 &7989190535436660184
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,7 +304,6 @@ Transform:
   m_Children:
   - {fileID: 4523302754700446076}
   - {fileID: 323695527166178131}
-  - {fileID: 1290988309839889934}
   - {fileID: 4333172753920780342}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -427,7 +327,7 @@ MonoBehaviour:
   playerSanity: {fileID: 4411909080681021200}
   playerFootsteps: {fileID: 1189419969090933863}
   playerInteract: {fileID: 1900300680731127074}
-  playerFreecam: {fileID: 2073972897938607869}
+  playerFreecam: {fileID: 0}
   characterController: {fileID: 3084800393523803307}
   footstepEmitter: {fileID: 5409845578693797145}
   cameraRoot: {fileID: 4863580433871097859}
@@ -725,7 +625,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 300
+  far clip plane: 100
   field of view: 75
   orthographic: 0
   orthographic size: 10
