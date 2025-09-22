@@ -40,7 +40,6 @@ public class ConsoleManager : MonoBehaviour
         RegisterCommand(new KillCommand());
         RegisterCommand(new MavCommand());
         RegisterCommand(new InfoCommand());
-        RegisterCommand(new EffectCommand());
         RegisterCommand(new TimeCommand());
         RegisterCommand(new LogCommand());
         RegisterCommand(new MidgetCommand());
