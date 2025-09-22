@@ -2,18 +2,21 @@ using UnityEngine;
 using Unity.Cinemachine;
 using FMODUnity;
 
-public class PlayerAccess : MonoBehaviour
+public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
     [Header("Scripts")]
     public PlayerController playerController;
     public PlayerInputs playerInputs;
+    public PlayerStats playerStats;
     public PlayerHealth playerHealth;
     public PlayerEffects playerEffects;
     public PlayerBobbing playerBobbing;
     public PlayerSanity playerSanity;
     public PlayerFootsteps playerFootsteps;
     public PlayerInteract playerInteract;
-    public PlayerFreecam playerFreecam;
+    public UIIndicators uiIndicators;
 
     [Header("Components")]
     public CharacterController characterController;
@@ -24,17 +27,40 @@ public class PlayerAccess : MonoBehaviour
     public CinemachineImpulseListener cameraImpulseListener;
     public CinemachineImpulseSource cameraImpulseSource;
 
-    // Auto assignment
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     private void Reset()
+    {
+        AutoAssignReferences();
+    }
+    
+    private void OnValidate()
+    {
+        AutoAssignReferences();
+    }
+
+    // (attempt an) Auto assignment
+    private void AutoAssignReferences()
     {
         playerController = GetComponent<PlayerController>();
         playerInputs = GetComponent<PlayerInputs>();
+        playerStats = GetComponent<PlayerStats>();
         playerHealth = GetComponent<PlayerHealth>();
         playerEffects = GetComponent<PlayerEffects>();
         playerBobbing = GetComponent<PlayerBobbing>();
+        playerSanity = GetComponent<PlayerSanity>();
         playerFootsteps = GetComponent<PlayerFootsteps>();
         playerInteract = GetComponent<PlayerInteract>();
-        playerFreecam = GetComponent<PlayerFreecam>();
 
         characterController = GetComponent<CharacterController>();
         footstepEmitter = GetComponentInChildren<StudioEventEmitter>();
