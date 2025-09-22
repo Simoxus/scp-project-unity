@@ -1,12 +1,11 @@
-using Unity.Cinemachine;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerAccess player;
+    [SerializeField] private Player player;
 
     [Header("Move Settings")]
     [SerializeField] private float walkSpeed = 5f;
@@ -62,8 +61,14 @@ public class PlayerController : MonoBehaviour
     private float _currentStepTimeInterval;
     private Vector3 _lastFootstepPosition; // To track distance moved
 
+    private Vector3 _forceMoveTarget = Vector3.zero;
+    private Vector3 _forceRotateTarget = Vector3.zero;
+    private bool _isForceRotating = false;
+
     private void Start()
     {
+        player = player != null ? player : Player.Instance;
+
         GameManager.Instance.UpdateCursorVisiblity();
         _currentCharacterHeight = player.characterController.height;
         standingHeight = _currentCharacterHeight;
@@ -74,17 +79,49 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.disablePlayerInputs) return;
+        if (GameManager.Instance.gamePaused) return;
 
-        HandleSprint();
-        HandleCrouch();
-        HandleMove();
-        HandleLook();
-        HandleFootsteps();
+        bool canMove = !GameManager.Instance.disablePlayerInputs;
+
+        if (canMove && !_isForceRotating)
+        {
+            HandleCrouch();
+            HandleMove();
+            HandleLook();
+            HandleFootsteps();
+            SetHeadbobMultipliers();
+        }
+        else if (_isForceRotating)
+        {
+            HandleForcedRotate();
+        }
+
+        // Get states from the components
+        bool isMoving = player.playerInputs.moveInput.sqrMagnitude > 0.01f;
+        bool isCrouching = player.playerInputs.crouchHeld;
+        bool isSprinting = player.playerStats.currentSprint > 0 && player.playerInputs.sprintHeld;
+
+        // Pass the state to the PlayerStats component for passive logic
+        player.playerStats.SetCurrentState(isSprinting, isMoving, isCrouching);
+
+        // Pass the data to UIIndicators for visualization
+        PlayerState playerState = PlayerState.Walking;
+        if (isSprinting)
+        {
+            playerState = PlayerState.Sprinting;
+        }
+        else if (isCrouching)
+        {
+            playerState = PlayerState.Crouching;
+        }
+
+        player.uiIndicators.UpdateIndicators(
+            currentSprint: player.playerStats.currentSprint,
+            maxSprint: 1f,
+            playerState: playerState
+        );
 
         SetHeadbobMultipliers();
-
-        HandleDebugKeys(); // REMOVE!!! (eventually)
     }
 
     private void HandleMove()
@@ -130,18 +167,6 @@ public class PlayerController : MonoBehaviour
         //player.cameraMain.transform.localEulerAngles = new Vector3(_rotationX, 0f, currentEuler.z);
 
         player.cameraMain.transform.localRotation = Quaternion.Euler(_rotationX, 0f, 0f);
-    }
-
-    private void HandleSprint()
-    {
-        bool sprintHeld = player.playerInputs.sprintHeld;
-        isSprinting = sprintHeld && isMoving && !isCrouching;
-
-        // If currently crouching, force sprint off
-        if (isCrouching)
-        {
-            isSprinting = false;
-        }
     }
 
     private void HandleCrouch()
@@ -223,14 +248,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void HandleForcedRotate()
+    {
+        // Immediately set the rotation.
+        transform.rotation = Quaternion.Euler(_forceRotateTarget);
+        player.cameraMain.transform.localRotation = Quaternion.Euler(_forceRotateTarget);
+        _isForceRotating = false;
+    }
+
     private void HandleDebugKeys()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Making the player blink!");
-            InterfaceManager.Instance.MakePlayerBlink();
-        }
-
         if (Keyboard.current.f3Key.wasPressedThisFrame)
         {
             doSmoothLook = !doSmoothLook;
@@ -273,6 +300,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ForceRotate(Vector3 targetRotation)
+    {
+        _forceRotateTarget = targetRotation;
+        _isForceRotating = true;
+    }
+
     public bool ToggleMidget()
     {
         float standModifier = 1.8f;
@@ -295,12 +328,10 @@ public class PlayerController : MonoBehaviour
 
     public float DetermineCurrentSpeed()
     {
-        if (isCrouching)
-            return crouchSpeed;
-
-        if (isSprinting)
-            return sprintSpeed;
-
+        //if (player.playerStats.isCrouching) return crouchSpeed;
+        //if (player.playerStats.isSprinting) return sprintSpeed;
+        if (player.playerInputs.crouchHeld) { return crouchSpeed; }
+        if (player.playerInputs.sprintHeld) { return sprintSpeed; }
         return walkSpeed;
     }
 }
