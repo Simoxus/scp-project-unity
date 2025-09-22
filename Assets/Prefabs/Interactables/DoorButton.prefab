@@ -263,13 +263,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f39d9bff050f7c4cbf474e8dedbb88a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSecondButton: 1
   interactionType: Hand
   brokenColor: {r: 0.8745098, g: 0.34509805, b: 0.34117648, a: 1}
-  enableSecondButton: 1
+  activatorCollider: {fileID: 1093441495106647388}
   secondActivatorCollider: {fileID: 7743182148627425156}
   buttonTweener: {fileID: 4703638293659675676}
   targetDoorController: {fileID: 4701545856813341347}
-  activatorCollider: {fileID: 1093441495106647388}
   buttonSoundEvent:
     Guid:
       Data1: 695519176
@@ -456,7 +456,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.00000093776725, y: 0.7071068, z: 0.7071068, w: 0.00000093776725}
   m_LocalPosition: {x: 0.15260541, y: 0.016193792, z: 0.000000002782837}
-  m_LocalScale: {x: 1.072, y: 1.072, z: 0.7}
+  m_LocalScale: {x: 1.079, y: 1.072, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6768618817064287087}
@@ -477,7 +477,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1748720959962392118}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 2
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -633,7 +633,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0.34191167, y: 0.43755946, z: 0.000000049237656}
-  m_LocalScale: {x: 1.072, y: 1.072, z: 0.7}
+  m_LocalScale: {x: 1.079, y: 1.072, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6768618817064287087}
@@ -654,7 +654,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1760905437655375447}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 2
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -823,13 +823,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f39d9bff050f7c4cbf474e8dedbb88a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableSecondButton: 1
   interactionType: Hand
   brokenColor: {r: 0.8745098, g: 0.34509805, b: 0.34117648, a: 1}
-  enableSecondButton: 1
+  activatorCollider: {fileID: 7743182148627425156}
   secondActivatorCollider: {fileID: 1093441495106647388}
   buttonTweener: {fileID: 8460821153784989021}
   targetDoorController: {fileID: 4701545856813341347}
-  activatorCollider: {fileID: 7743182148627425156}
   buttonSoundEvent:
     Guid:
       Data1: 695519176
@@ -1725,13 +1725,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4913767070261252184}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -1.16, y: -11.6, z: 25.5}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6768618817064287087}
   - {fileID: 8319670614098286335}
+  - {fileID: 2453213886246428081}
   - {fileID: 7371267921512768668}
   - {fileID: 5670445539758857907}
   m_Father: {fileID: 0}
@@ -1748,7 +1749,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77641409cddf6914f97a0fd28cdd9f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  startOpened: 0
+  chanceToStartOpened: 0
+  percentChanceToStartOpened: 0.241
+  breakableByEnvironment: 1
   doorSoundEvent:
     Guid:
       Data1: 420893315
@@ -1769,17 +1773,22 @@ MonoBehaviour:
   doorBack: {fileID: 1748720959962392118}
   doorFrontButton: {fileID: 5672968631468447608}
   doorBackButton: {fileID: 9205019811930832219}
-  doorActivator1: {fileID: 1047820412657310347}
-  doorActivator2: {fileID: 2425506925560712729}
+  doorActivator1: {fileID: 1847297730972559618}
+  doorActivator2: {fileID: 4118614224293821418}
+  sparksEmitter: {fileID: 456249211804499422}
   doorFrontOpenOffset: {x: -4.3, y: 0, z: 0}
   doorBackOpenOffset: {x: 4.3, y: 0, z: 0}
   doorFrontCloseOffset: {x: 0, y: 0, z: 0}
   doorBackCloseOffset: {x: 0, y: 0, z: 0}
   doorFrontBrokenOffset: {x: 0, y: 8, z: 0}
   doorBackBrokenOffset: {x: 0, y: -8, z: 0}
-  isOpen: 0
-  isMoving: 0
-  isBroken: 0
+  doorMoveDuration: 1.5
+  doorBreakForce: 27
+  doorBreakDownwardForce: 15
+  doorBreakTorque: 35
+  easeStyle: 7
+  impulseVelocityRange: {x: 1, y: 2}
+  currentState: 2
 --- !u!1 &5359586857963300391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1970,11 +1979,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonMesh: {fileID: 1151612672777548314}
   buttonScreen: {fileID: 3439993199295838926}
-  buttonScreenText: {fileID: 3251152773711727637}
+  buttonScreenTextObject: {fileID: 3251152773711727637}
+  buttonScreenText: {fileID: 7008425750419957974}
   buttonEmission: {fileID: 8886006954224717576}
   buttonScreenLogo: {fileID: 3815116873497863848}
-  tweenPushTime: 0.15
-  meshPushedOffset: -0.05
+  tweenPushTime: 0.154
+  meshPushedOffset: -0.04
 --- !u!1 &6720704830965436036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2167,8 +2177,80 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonMesh: {fileID: 5359586857963300391}
   buttonScreen: {fileID: 6720704830965436036}
-  buttonScreenText: {fileID: 4137717538197112139}
+  buttonScreenTextObject: {fileID: 4137717538197112139}
+  buttonScreenText: {fileID: 3517471805077129596}
   buttonEmission: {fileID: 6521475968211182108}
   buttonScreenLogo: {fileID: 4613017428130911797}
-  tweenPushTime: 0.15
-  meshPushedOffset: -0.05
+  tweenPushTime: 0.154
+  meshPushedOffset: -0.04
+--- !u!1001 &3079264747627988636
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4468076487805463121}
+    m_Modifications:
+    - target: {fileID: 339450640537112087, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_Range
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 523823111421953390, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_Name
+      value: SparksEmitter
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+--- !u!198 &456249211804499422 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 3237897661236869954, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+  m_PrefabInstance: {fileID: 3079264747627988636}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2453213886246428081 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 626053060547435309, guid: 79168a53c3f1f214b97a043aaa6399a1, type: 3}
+  m_PrefabInstance: {fileID: 3079264747627988636}
+  m_PrefabAsset: {fileID: 0}
