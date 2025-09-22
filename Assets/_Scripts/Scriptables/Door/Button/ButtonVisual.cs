@@ -10,7 +10,8 @@ public class ButtonVisual : MonoBehaviour
     [Header("Button Settings")]
     public GameObject buttonMesh;
     public GameObject buttonScreen;
-    public GameObject buttonScreenText;
+    public GameObject buttonScreenTextObject;
+    public TextMeshPro buttonScreenText;
     public Light buttonEmission;
     public MeshRenderer buttonScreenLogo;
 
@@ -18,8 +19,7 @@ public class ButtonVisual : MonoBehaviour
     public float tweenPushTime = 0.15f;
     public float meshPushedOffset = 0.01f;
 
-    // Change to store local Z position
-    private float _originalMeshLocalPositionZ;
+    private float _originalMeshLocalPositionZ; // Change to store local Z position
 
     private void Start()
     {
@@ -27,50 +27,65 @@ public class ButtonVisual : MonoBehaviour
         _originalMeshLocalPositionZ = buttonMesh.transform.localPosition.z;
     }
 
-    public async void PlayTween()
+    public async UniTask PlayTween()
     {
         // When tweening, use localPosition instead of global position
         await Tween.LocalPositionZ(
             buttonMesh.transform,
             _originalMeshLocalPositionZ + meshPushedOffset,
             duration: tweenPushTime
-            );
-        await UniTask.WaitForSeconds(tweenPushTime + 0.015f, ignoreTimeScale: false);
+        );
 
+        await UniTask.WaitForSeconds(tweenPushTime + 0.015f, ignoreTimeScale: false);
 
         await Tween.LocalPositionZ( // Use LocalPositionZ here as well
             buttonMesh.transform,
             _originalMeshLocalPositionZ,
             duration: tweenPushTime
-            );
+        );
     }
 
     public void ToggleLogo(bool enabled)
     {
-        buttonScreenLogo.enabled = enabled;
+        if (buttonScreenLogo != null)
+        {
+            buttonScreenLogo.enabled = enabled;
+        }
     }
 
     public void ToggleText(bool enabled)
     {
-        buttonScreenText.SetActive(enabled);
+        if (buttonScreenTextObject != null)
+        {
+            buttonScreenTextObject.SetActive(enabled);
+        }
     }
 
     public void ChangeScreenText(string requestedText)
     {
-        buttonScreenText.GetComponent<TextMeshPro>().text = requestedText;
+        if (buttonScreenTextObject != null)
+        {
+            buttonScreenText.text = requestedText;
+        }
     }
 
-    public async void ChangeScreenColor(Color requestedColor, bool doTweenChange)
+    public async void ChangeScreenColor(Color requestedColor, bool doTweenChange, float tweenChangeDuration = 0.35f)
     {
         if (doTweenChange)
         {
             await Tween.LightColor(
                 buttonEmission,
                 requestedColor,
-                0.20f,
+                tweenChangeDuration,
                 Ease.Linear
-                );
+            );
         }
-        buttonEmission.color = requestedColor;
+        else
+        {
+            if (buttonEmission != null)
+            {
+                buttonEmission.color = requestedColor;
+            }
+        }
     }
 }

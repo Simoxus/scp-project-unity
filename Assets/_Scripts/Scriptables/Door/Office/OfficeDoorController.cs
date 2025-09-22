@@ -8,9 +8,6 @@ using UnityEngine;
 
 public class OfficeDoorController : MonoBehaviour
 {
-    [Header("References")]
-    public PlayerAccess player;
-
     [Header("FMOD Settings")]
     public EventReference doorSoundEvent;
     public string fmodParameterName = "State";

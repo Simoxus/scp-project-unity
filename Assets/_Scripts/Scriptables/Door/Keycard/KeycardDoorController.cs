@@ -1,12 +1,12 @@
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
+using EditorAttributes;
 using FMODUnity;
 using PrimeTween;
 using System;
 using System.Threading;
 using UnityEngine;
-using EditorAttributes;
 
-public class ButtonDoorController : MonoBehaviour
+public class KeycardDoorController : MonoBehaviour
 {
     public enum DoorState
     {
@@ -37,9 +37,9 @@ public class ButtonDoorController : MonoBehaviour
     public GameObject doorBack;
     public GameObject doorFrontButton;
     public GameObject doorBackButton;
-    public ButtonDoorActivator doorActivator1;
-    public ButtonDoorActivator doorActivator2;
-    public ParticleSystem sparksEmitter;    
+    public KeycardDoorActivator doorActivator1;
+    public KeycardDoorActivator doorActivator2;
+    public ParticleSystem sparksEmitter;
 
     [Header("Door Offsets")]
     public Vector3 doorFrontOpenOffset = new Vector3(-4.3f, 0f, 0f);
@@ -240,6 +240,33 @@ public class ButtonDoorController : MonoBehaviour
                 backRigidbody.isKinematic = false;
                 backRigidbody.AddForce(door.transform.forward * doorBreakForce + Vector3.down * doorBreakDownwardForce, ForceMode.Impulse);
                 backRigidbody.AddTorque(UnityEngine.Random.insideUnitSphere * doorBreakTorque, ForceMode.Impulse);
+            }
+        }
+    }
+
+    public void UpdateActivatorVisuals(bool success, string clearanceLevel)
+    {
+        if (doorActivator1 != null)
+        {
+            if (success)
+            {
+                doorActivator1.DisplayGranted(clearanceLevel);
+            }
+            else
+            {
+                doorActivator1.DisplayDenied(clearanceLevel);
+            }
+        }
+
+        if (doorActivator2 != null)
+        {
+            if (success)
+            {
+                doorActivator2.DisplayGranted(clearanceLevel);
+            }
+            else
+            {
+                doorActivator2.DisplayDenied(clearanceLevel);
             }
         }
     }

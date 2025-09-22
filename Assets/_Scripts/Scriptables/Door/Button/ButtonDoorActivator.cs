@@ -1,21 +1,25 @@
-using System;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
+using FMODUnity;
 
 public class ButtonDoorActivator : MonoBehaviour, IInteractable
 {
-    //public static event Action OnObjectInteracted;
-
     [Header("Button Settings")]
+    [SerializeField] private bool enableSecondButton;
     [SerializeField] private string interactionType = "Hand";
     [SerializeField] private Color brokenColor = new(233, 88, 87);
-    [SerializeField] private bool enableSecondButton;
+
+    [Header("Collider References")]
+    public BoxCollider activatorCollider;
     public BoxCollider secondActivatorCollider;
+
+    [Header("Script References")]
     public ButtonVisual buttonTweener;
     public ButtonDoorController targetDoorController;
-    public BoxCollider activatorCollider;
-    public FMODUnity.EventReference buttonSoundEvent;
-    public FMODUnity.EventReference buttonFailSoundEvent;
+
+    [Header("FMOD Events")]
+    public EventReference buttonSoundEvent;
+    public EventReference buttonFailSoundEvent;
 
     private void Awake()
     {
@@ -24,10 +28,12 @@ public class ButtonDoorActivator : MonoBehaviour, IInteractable
             Debug.LogWarning($"DoorActivator on '{gameObject.name}' is missing a Collider component. It will not be detectable.", this);
         }
     }
+
     public Transform GetTransform()
     {
         return transform;
     }
+
     public string GetInteractionType()
     {
         return interactionType;
@@ -35,43 +41,42 @@ public class ButtonDoorActivator : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (targetDoorController != null) 
+        if (targetDoorController == null) return;
+
+        buttonTweener.PlayTween().Forget();
+
+        if (targetDoorController.currentState != ButtonDoorController.DoorState.Broken)
         {
-            //OnObjectInteracted?.Invoke();
-            buttonTweener.PlayTween();
+            FMODUnity.RuntimeManager.PlayOneShot(buttonSoundEvent, transform.position);
+            targetDoorController.ToggleDoor().Forget();
+        }
+        else
+        {
+            FMODUnity.RuntimeManager.PlayOneShot(buttonFailSoundEvent, transform.position);
+        }
+    }
 
-            if (targetDoorController.isBroken == false)
-            {
-                FMODUnity.RuntimeManager.PlayOneShot(buttonSoundEvent, transform.position);
-                activatorCollider.enabled = false; // We reenable this in the door controller script :)
-                if (enableSecondButton) { secondActivatorCollider.enabled = false; } // We reenable this in the door controller script :)
+    public void SetButtonState(bool enabled)
+    {
+        if (activatorCollider != null)
+        {
+            activatorCollider.enabled = enabled;
+        }
 
-                targetDoorController.ToggleDoor().Forget(); // Discard cause we don't need to wait
-            }
-            else
-            {
-                FMODUnity.RuntimeManager.PlayOneShot(buttonFailSoundEvent, transform.position);
-            }
+        if (enableSecondButton && secondActivatorCollider != null)
+        {
+            secondActivatorCollider.enabled = enabled;
         }
     }
 
     public void BreakButton()
     {
-        /*
-        activatorCollider.enabled = false;
-        secondActivatorCollider.enabled = false;
-        if (enableSecondButton && secondActivatorCollider != null)
-        {
-            secondActivatorCollider.enabled = false;
-        }
-        */
-
         buttonTweener.ToggleLogo(false);
         buttonTweener.ToggleText(true);
         buttonTweener.ChangeScreenColor(brokenColor, true);
         buttonTweener.ChangeScreenText(
             "-- CODE 4 --" +
             "Technician dispatched"
-            );
+        );
     }
 }
