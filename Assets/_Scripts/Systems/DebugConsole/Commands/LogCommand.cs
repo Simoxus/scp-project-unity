@@ -1,17 +1,16 @@
-using System.Collections.Generic; // Required for IEnumerable
-using System.Linq; // Required for .Where, .OrderBy, .Skip, .ToArray
-using UnityEngine; // Required for Debug.Log (indirectly via ConsoleManager)
+using System.Linq;
+using UnityEngine;
 
 public class LogCommand : ConsoleBase
 {
     public override string CommandWord => "log";
-    public override string Description => "Logs a custom message to the console with a specified type. Usage: log <type (error|warning|info)> <message>";
+    public override string Description => "Logs a custom message to the console with a specified type. Usage: log <type (error|warning|log|info)> <message>";
 
     public override void Execute(string[] args)
     {
         if (args.Length < 2)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: log <type (error|warning|info)> <message></color>");
+            ConsoleManager.LogToConsole("<color=red>Usage: log <type (error|warning|log|info)> <message></color>");
             return;
         }
 
@@ -26,12 +25,14 @@ public class LogCommand : ConsoleBase
             case "warning":
                 Debug.LogWarning($"[Forced Warning]: {message}");
                 break;
-            case "info":
             case "log":
                 Debug.Log($"[Forced Log]: {message}");
                 break;
+            case "info":
+                Debug.Log($"[Forced Info]: {message}");
+                break;
             default:
-                ConsoleManager.LogToConsole("<color=red>Invalid log type. Use 'error', 'warning', or 'info'.</color>");
+                ConsoleManager.LogToConsole("<color=red>Invalid log type. Use 'error', 'warning', 'log', or 'info'.</color>");
                 break;
         }
     }
