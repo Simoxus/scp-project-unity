@@ -38,7 +38,7 @@ public class ButtonGateActivator : MonoBehaviour, IInteractable
         if (targetGateController != null) 
         {
             //OnObjectInteracted?.Invoke();
-            buttonTweener.PlayTween();
+            buttonTweener.PlayTween().Forget();
 
             if (targetGateController.isBroken == false)
             {

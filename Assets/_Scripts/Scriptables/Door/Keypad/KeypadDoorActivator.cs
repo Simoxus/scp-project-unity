@@ -102,7 +102,7 @@ public class KeypadDoorActivator : MonoBehaviour, IInteractable
         player.playerInputs.EnableKeypadInputs();
 
         // Rotate the player
-        Player.Instance.playerController.ForceRotate(keypadCamera.transform.rotation.eulerAngles, false);
+        Player.Instance.playerController.ForceRotate(keypadCamera.transform.rotation.eulerAngles);
 
         GameManager.Instance.RequestDisableControls(shouldDisable: true);
 

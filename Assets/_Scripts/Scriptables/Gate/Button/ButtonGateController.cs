@@ -8,7 +8,7 @@ using UnityEngine;
 public class ButtonGateController : MonoBehaviour
 {
     [Header("References")]
-    public PlayerAccess player;
+    public Player player;
 
     [Header("FMOD Settings")]
     public EventReference gateSoundEvent;
@@ -62,6 +62,11 @@ public class ButtonGateController : MonoBehaviour
         _token = _cts.Token;
 
         if (isOpen) { _ = ToggleDoor(); }
+    }
+
+    private void Start()
+    {
+        player = player != null ? player : Player.Instance;
     }
 
     [ContextMenu("Toggle Gate")]
