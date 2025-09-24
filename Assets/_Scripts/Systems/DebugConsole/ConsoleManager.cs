@@ -46,6 +46,7 @@ public class ConsoleManager : MonoBehaviour
         RegisterCommand(new FmodCommand());
         RegisterCommand(new QuitCommand());
         RegisterCommand(new SceneCommand());
+        RegisterCommand(new FpsCommand());
 
         SceneCommand.PopulateAvailableScenes();
     }
