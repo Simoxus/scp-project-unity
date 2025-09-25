@@ -103,6 +103,7 @@ public class KeypadDoorActivator : MonoBehaviour, IInteractable
         Player.Instance.playerController.ForceRotate(keypadCamera.transform.rotation.eulerAngles);
 
         GameManager.Instance.RequestDisableControls(shouldDisable: true);
+        GameManager.Instance.UpdateCursorVisiblity(forceDisable: true);
 
         // Set the keypad virtual camera's priority higher than the player's
         _previousTransitionTime = CameraManager.Instance.cameraBrain.DefaultBlend.Time;
