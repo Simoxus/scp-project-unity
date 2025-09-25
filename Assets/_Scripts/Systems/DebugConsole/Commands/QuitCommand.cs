@@ -7,11 +7,11 @@ public class QuitCommand : ConsoleBase
 
     public override void Execute(string[] args)
     {
-        ConsoleManager.LogToConsole($"Quitting {Application.productName}....");
+        ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Quitting {Application.productName}.... :(");
 
         if (Application.isEditor)
         {
-            ConsoleManager.LogToConsole($"<color=red>Attempt to quit {Application.productName} failed because you are in the editor!</color>");
+            ConsoleManager.LogToConsole($"<color=#FF0000FF>Attempt to quit {Application.productName} failed because you are in the editor!</color>");
         } 
         else
         {

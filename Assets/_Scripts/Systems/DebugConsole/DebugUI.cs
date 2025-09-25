@@ -162,17 +162,17 @@ public class DebugUI : MonoBehaviour
         {
             case LogType.Error:
             case LogType.Exception:
-                colorTag = "<color=red>";
+                colorTag = "<color=#FF0000FF>";
                 break;
             case LogType.Warning:
-                colorTag = "<color=orange>";
+                colorTag = "<color=#FFA500FF>";
                 break;
             case LogType.Assert:
-                colorTag = "<color=yellow>";
+                colorTag = "<color=#ADD8E6FF>";
                 break;
             case LogType.Log:
             default:
-                colorTag = "<color=white>";
+                colorTag = "<color=#FFFFFF>";
                 break;
         }
 

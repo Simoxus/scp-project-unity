@@ -10,7 +10,7 @@ public class FmodCommand : ConsoleBase
     {
         if (args.Length != 2)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: fmod <play|stop> <eventName></color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: fmod <play|stop> <eventName></color>");
             return; 
         }
 
@@ -22,16 +22,16 @@ public class FmodCommand : ConsoleBase
         {
             case "play":
                 RuntimeManager.PlayOneShot($":/{eventName}");
-                ConsoleManager.LogToConsole($"Attempted to play FMOD event {eventName}");
+                ConsoleManager.LogToConsole($"<color=#33CC33>Attempted to play FMOD event '{eventName}'</color>");
                 break;
 
             case "stop":
-                ConsoleManager.LogToConsole($"Attempted to stop FMOD event {eventName}");
+                ConsoleManager.LogToConsole($"<color=#33CC33>Attempted to stop FMOD event '{eventName}'</color>");
                 break;
 
             default:
                 // If the action is not recognized, log an error.
-                ConsoleManager.LogToConsole($"<color=red>Unknown FMOD method '{action}'. Use 'play' or 'stop'.</color>");
+                ConsoleManager.LogToConsole($"<color=#FF0000FF>Unknown FMOD method '{action}'. Use 'play' or 'stop'.</color>");
                 break;
         }
     }

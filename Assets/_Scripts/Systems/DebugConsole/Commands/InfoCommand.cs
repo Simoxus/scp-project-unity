@@ -13,7 +13,7 @@ public class InfoCommand : ConsoleBase
     {
         if (args.Length != 1)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: info <game|metrics|device|all></color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: info <game|metrics|device|all></color>");
             return;
         }
 
@@ -22,40 +22,40 @@ public class InfoCommand : ConsoleBase
         switch (category)
         {
             case "game":
-                ConsoleManager.LogToConsole("<color=#00ffffff>--- Game Information ---</color>");
+                ConsoleManager.LogToConsole("<color=#00FFFFFF>--- Game Information ---</color>");
 
                 GetGameInfo();
 
                 break;
 
             case "metrics":
-                ConsoleManager.LogToConsole("<color=#00ffffff>--- Metrics Information ---</color>");
+                ConsoleManager.LogToConsole("<color=#00FFFFFF>--- Metrics Information ---</color>");
 
                 GetMetricsInfo();
 
                 break;
 
             case "device":
-                ConsoleManager.LogToConsole("<color=#00ffffff>--- Device Information ---</color>");
+                ConsoleManager.LogToConsole("<color=#00FFFFFF>--- Device Information ---</color>");
 
                 GetDeviceInfo();
 
                 break;
 
             case "all":
-                ConsoleManager.LogToConsole("<color=#00ffffff>--- Game/Metrics/Device Information ---</color>");
+                ConsoleManager.LogToConsole("<color=#00FFFFFF>--- Game/Metrics/Device Information ---</color>");
 
                 GetGameInfo();
-                ConsoleManager.LogToConsole("<color=#00ffffff>----------------------------------------</color>");
+                ConsoleManager.LogToConsole("<color=#00FFFFFF>----------------------------------------</color>");
                 GetMetricsInfo();
-                ConsoleManager.LogToConsole("<color=#00ffffff>----------------------------------------</color>");
+                ConsoleManager.LogToConsole("<color=#00FFFFFF>----------------------------------------</color>");
                 GetDeviceInfo();
 
                 break;
 
             default:
                 // If the category is not recognized, log an error.
-                ConsoleManager.LogToConsole($"<color=red>Unknown info method '{category}'. Use 'game', 'metrics', 'device', or 'all'.</color>");
+                ConsoleManager.LogToConsole($"<color=#FF0000FF>Unknown info method '{category}'. Use 'game', 'metrics', 'device', or 'all'.</color>");
                 break;
         }
     }

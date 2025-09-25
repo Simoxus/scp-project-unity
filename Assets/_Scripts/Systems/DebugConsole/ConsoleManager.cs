@@ -102,13 +102,12 @@ public class ConsoleManager : MonoBehaviour
             }
             catch (Exception ex)
             {
-                LogToConsole($"<color=red>Error executing '{commandWord}': {ex.Message}</color>");
-                Debug.LogError($"Error executing command '{commandWord}': {ex}");
+                LogToConsole($"<color=#FF0000FF>Error executing '{commandWord}': {ex.Message}</color>");
             }
         }
         else
         {
-            LogToConsole($"<color=orange>Unknown command: '{commandWord}'. Type 'help' for a list of commands.</color>");
+            LogToConsole($"<color=#FFA500FF>Unknown command: '{commandWord}'. Type 'help' for a list of commands.</color>");
             Debug.LogWarning($"Unknown command: '{commandWord}'");
         }
     }

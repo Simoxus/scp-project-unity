@@ -12,7 +12,7 @@ public class TimeCommand : ConsoleBase
         // Require at least a method argument
         if (args.Length < 1)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: time <method (get|set)> [value]</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: time <method (get|set)> [value]</color>");
             return;
         }
 
@@ -24,7 +24,7 @@ public class TimeCommand : ConsoleBase
         {
             if (args.Length > 1)
             {
-                ConsoleManager.LogToConsole($"<color=orange>Warning: 'get' method does not require a value. Ignoring '{args[1]}'.</color>");
+                ConsoleManager.LogToConsole($"<color=#FFA500FF>Warning: 'get' method does not require a value. Ignoring '{args[1]}'.</color>");
             }
             ConsoleManager.LogToConsole($"Current timeScale: {Time.timeScale}");
         }
@@ -33,14 +33,14 @@ public class TimeCommand : ConsoleBase
             // 'set' method requires a value
             if (args.Length < 2)
             {
-                ConsoleManager.LogToConsole("<color=red>Usage: time set <value></color>");
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: time set <value></color>");
                 return;
             }
 
             // Try to parse the value argument for 'set'
             if (!float.TryParse(args[1], out value))
             {
-                ConsoleManager.LogToConsole("<color=red>Invalid value for 'set'. Please enter a number.</color>");
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid value for 'set'. Please enter a number.</color>");
                 return;
             }
 
@@ -50,7 +50,7 @@ public class TimeCommand : ConsoleBase
         }
         else
         {
-            ConsoleManager.LogToConsole("<color=red>Unknown time method. Use 'get' or 'set'.</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Unknown time method. Use 'get' or 'set'.</color>");
             return;
         }
     }

@@ -10,15 +10,15 @@ public class HelpCommand : ConsoleBase
     {
         if (ConsoleManager.Instance == null)
         {
-            ConsoleManager.LogToConsole("<color=red>ConsoleManager not initialized. Cannot display 'help'.</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>ConsoleManager not initialized. Cannot display 'help'.</color>");
             return;
         }
 
-        ConsoleManager.LogToConsole("<color=lightblue>--- Available Commands ---</color>");
+        ConsoleManager.LogToConsole("<color=#00FFFFFF>--- Available Commands ---</color>");
         foreach (var commandEntry in ConsoleManager.Instance.GetCommands().OrderBy(c => c.Key))
         {
             ConsoleManager.LogToConsole($"<b>{commandEntry.Value.CommandWord}</b>: {commandEntry.Value.Description}");
         }
-        ConsoleManager.LogToConsole("<color=lightblue>--------------------------</color>");
+        ConsoleManager.LogToConsole("<color=#00FFFFFF>--------------------------</color>");
     }
 }

@@ -10,7 +10,7 @@ public class FpsCommand : ConsoleBase
     {
         if (args.Length < 1)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: fps <rate></color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: fps <rate></color>");
             return;
         }
 
@@ -18,7 +18,7 @@ public class FpsCommand : ConsoleBase
         {
             if (targetFPS < -1)
             {
-                ConsoleManager.LogToConsole("<color=red>Invalid FPS value. Must be -1 or greater.</color>");
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid FPS value. Must be -1 or greater.</color>");
                 return;
             }
 
@@ -26,16 +26,16 @@ public class FpsCommand : ConsoleBase
 
             if (targetFPS == -1)
             {
-                ConsoleManager.LogToConsole($"<color=lime>Frame rate has been unlocked.</color>");
+                ConsoleManager.LogToConsole($"<color=#33CC33>Frame rate limit has been unlocked.</color>");
             }
             else
             {
-                ConsoleManager.LogToConsole($"<color=lime>Frame rate set to {targetFPS} FPS.</color>");
+                ConsoleManager.LogToConsole($"<color=#33CC33>Frame rate limit set to {targetFPS} FPS.</color>");
             }
         }
         else
         {
-            ConsoleManager.LogToConsole("<color=red>Invalid integer. Please provide a valid number.</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid integer. Please provide a valid number.</color>");
         }
     }
 }

@@ -134,7 +134,7 @@ public class ConsoleUI : MonoBehaviour
         }
         else
         {
-            AppendToConsole("<color=red>Error: ConsoleCommandManager not found!</color>");
+            AppendToConsole("<color=#FF0000FF>Error: ConsoleCommandManager not found!</color>");
         }
 
         ClearAutocompleteSuggestions(); // Clear suggestions after processing command
@@ -172,7 +172,7 @@ public class ConsoleUI : MonoBehaviour
             consoleOutputText.text = "";
             AppendToConsole(
                 _initalOutputText +
-                "<color=yellow>Console cleared.</color>"
+                "<color=#ADD8E6FF>Console cleared.</color>"
                 );
         }
         else

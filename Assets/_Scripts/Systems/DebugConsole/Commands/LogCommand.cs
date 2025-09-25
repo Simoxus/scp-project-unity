@@ -10,7 +10,7 @@ public class LogCommand : ConsoleBase
     {
         if (args.Length < 2)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: log <type (error|warning|log|info)> <message></color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: log <type (error|warning|log|info)> <message></color>");
             return;
         }
 
@@ -32,7 +32,7 @@ public class LogCommand : ConsoleBase
                 Debug.Log($"[Forced Info]: {message}");
                 break;
             default:
-                ConsoleManager.LogToConsole("<color=red>Invalid log type. Use 'error', 'warning', 'log', or 'info'.</color>");
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid log type. Use 'error', 'warning', 'log', or 'info'.</color>");
                 break;
         }
     }

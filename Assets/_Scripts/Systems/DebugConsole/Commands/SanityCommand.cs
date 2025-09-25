@@ -12,7 +12,7 @@ public class SanityCommand : ConsoleBase
         // Require at least a method argument
         if (args.Length < 1)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: sanity <method (get|set|reset)> [value]</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: sanity <method (get|set|reset)> [value]</color>");
             return;
         }
 
@@ -24,7 +24,7 @@ public class SanityCommand : ConsoleBase
         {
             if (args.Length > 1)
             {
-                ConsoleManager.LogToConsole($"<color=orange>Warning: '{method}' method does not require a value. Ignoring '{args[1]}'.</color>");
+                ConsoleManager.LogToConsole($"<color=#FFA500FF>Warning: '{method}' method does not require a value. Ignoring '{args[1]}'.</color>");
             }
         }
         else if (method == "set")
@@ -32,20 +32,20 @@ public class SanityCommand : ConsoleBase
             // 'set' method requires a value
             if (args.Length < 2)
             {
-                ConsoleManager.LogToConsole("<color=red>Usage: sanity set <value></color>");
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: sanity set <value></color>");
                 return;
             }
 
             // Try to parse the value argument for 'set'
             if (!float.TryParse(args[1], out value))
             {
-                ConsoleManager.LogToConsole("<color=red>Invalid value for 'set'. Please enter a number.</color>");
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid value for 'set'. Please enter a number.</color>");
                 return;
             }
         }
         else
         {
-            ConsoleManager.LogToConsole("<color=red>Unknown sanity method. Use 'get', 'set', or 'reset'.</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Unknown sanity method. Use 'get', 'set', or 'reset'.</color>");
             return;
         }
 
@@ -53,14 +53,14 @@ public class SanityCommand : ConsoleBase
         GameObject player = GameObject.FindWithTag("Player");
         if (player == null)
         {
-            ConsoleManager.LogToConsole("<color=red>Error: Player GameObject not found (ensure it has the 'Player' tag).</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Error: Player GameObject not found (ensure it has the 'Player' tag).</color>");
             return;
         }
 
         PlayerSanity playerSanity = player.GetComponent<PlayerSanity>();
         if (playerSanity == null)
         {
-            ConsoleManager.LogToConsole("<color=red>Error: PlayerSanity component not found on Player GameObject.</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Error: PlayerSanity component not found on Player GameObject.</color>");
             return;
         }
 
@@ -70,21 +70,21 @@ public class SanityCommand : ConsoleBase
                 // Assuming playerSanity.CurrentSanity exists
                 //float currentSanity = playerSanity.CurrentSanity;
                 //ConsoleManager.LogToConsole($"Player sanity is currently at {currentSanity}.");
-                ConsoleManager.LogToConsole($"Player sanity is currently at [PlayerSanity.CurrentSanity placeholder].");
+                ConsoleManager.LogToConsole($"<color=#33CC33>Player sanity is currently at [PlayerSanity.CurrentSanity placeholder].</color>");
                 break;
             case "set":
                 // Assuming playerSanity.Set(value) exists
                 //playerSanity.Set(value);
-                ConsoleManager.LogToConsole($"Player sanity has been set to {value}.");
+                ConsoleManager.LogToConsole($"<color=#33CC33>Player sanity has been set to {value}.</color>");
                 break;
             case "reset":
                 // Assuming playerSanity.Set(100f) exists or a similar reset method
                 //playerSanity.Set(100f);
-                ConsoleManager.LogToConsole($"Player sanity has been reset to default (100).");
+                ConsoleManager.LogToConsole($"<color=#33CC33>Player sanity has been reset to default (100).</color>");
                 break;
             default:
                 // This case should ideally not be reached if previous checks are robust, but kept for safety.
-                ConsoleManager.LogToConsole("<color=red>Unknown sanity method. Use 'get', 'set', or 'reset'.</color>");
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Unknown sanity method. Use 'get', 'set', or 'reset'.</color>");
                 break;
         }
     }

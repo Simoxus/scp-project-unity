@@ -12,7 +12,7 @@ public class MavCommand : ConsoleBase
     {
         if (args.Length > 0)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: mav (no arguments)</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: mav (no arguments)</color>");
             return;
         }
 

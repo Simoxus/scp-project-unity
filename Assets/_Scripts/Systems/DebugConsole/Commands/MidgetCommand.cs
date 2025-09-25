@@ -11,7 +11,7 @@ public class MidgetCommand : ConsoleBase
         PlayerController playerController = player.GetComponent<PlayerController>();
 
         bool playerIsMidget = playerController.ToggleMidget(); // Returns a bool :)
-        if (playerIsMidget) { ConsoleManager.LogToConsole("Player has been midgetified :D"); }
-        if (!playerIsMidget) { ConsoleManager.LogToConsole("Player has been unmidgetified D:"); }
+        if (playerIsMidget) { ConsoleManager.LogToConsole("<color=#33CC33>Player has been midgetified :D</color>"); }
+        if (!playerIsMidget) { ConsoleManager.LogToConsole("<color=#33CC33>Player has been unmidgetified D:</color>"); }
     }
 }

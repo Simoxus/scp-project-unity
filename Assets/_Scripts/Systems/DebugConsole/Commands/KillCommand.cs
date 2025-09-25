@@ -11,21 +11,21 @@ public class KillCommand : ConsoleBase
     {
         if (args.Length > 0)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: kill (no arguments)</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: kill (no arguments)</color>");
             return;
         }
 
         GameObject player = GameObject.FindWithTag("Player");
         if (player == null)
         {
-            ConsoleManager.LogToConsole("<color=red>Error: Player GameObject not found (ensure it has the 'Player' tag).</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Error: Player GameObject not found (ensure it has the 'Player' tag).</color>");
             return;
         }
 
         PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
         if (playerHealth == null)
         {
-            ConsoleManager.LogToConsole("<color=red>Error: PlayerHealth component not found on Player GameObject.</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Error: PlayerHealth component not found on Player GameObject.</color>");
             return;
         }
 

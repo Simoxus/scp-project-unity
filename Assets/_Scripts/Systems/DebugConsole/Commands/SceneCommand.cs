@@ -30,7 +30,7 @@ public class SceneCommand : ConsoleBase
     {
         if (args.Length == 0)
         {
-            ConsoleManager.LogToConsole("<color=red>Usage: scene <sceneName|sceneIndex> [optional: reload]</color>");
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: scene <sceneName|sceneIndex> [optional: reload]</color>");
             return;
         }
 
@@ -42,7 +42,7 @@ public class SceneCommand : ConsoleBase
             // Just reload current scene
             string currentScene = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentScene);
-            ConsoleManager.LogToConsole($"<color=green>Reloading current scene '{currentScene}'...</color>");
+            ConsoleManager.LogToConsole($"<color=#33CC33>Reloading current scene '{currentScene}'...</color>");
             return;
         }
 
@@ -51,17 +51,17 @@ public class SceneCommand : ConsoleBase
             if (sceneIndex >= 0 && sceneIndex < SceneManager.sceneCountInBuildSettings)
             {
                 SceneManager.LoadScene(sceneIndex);
-                ConsoleManager.LogToConsole($"<color=green>Loading scene by index: {sceneIndex}...</color>");
+                ConsoleManager.LogToConsole($"<color=#33CC33>Loading scene by index: {sceneIndex}...</color>");
 
                 if (reload)
                 {
                     SceneManager.LoadScene(sceneIndex);
-                    ConsoleManager.LogToConsole($"<color=yellow>Reloading scene index {sceneIndex}...</color>");
+                    ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Reloading scene index {sceneIndex}...</color>");
                 }
             }
             else
             {
-                ConsoleManager.LogToConsole($"<color=red>Error: Scene index {sceneIndex} is out of build settings range (0 to {SceneManager.sceneCountInBuildSettings - 1}).</color>");
+                ConsoleManager.LogToConsole($"<color=#FF0000FF>Error: Scene index {sceneIndex} is out of build settings range (0 to {SceneManager.sceneCountInBuildSettings - 1}).</color>");
             }
         }
         else
@@ -71,23 +71,23 @@ public class SceneCommand : ConsoleBase
                 try
                 {
                     SceneManager.LoadScene(sceneIdentifier);
-                    ConsoleManager.LogToConsole($"<color=green>Loading scene by name: '{sceneIdentifier}'...</color>");
+                    ConsoleManager.LogToConsole($"<color=#33CC33>Loading scene by name: '{sceneIdentifier}'...</color>");
 
                     if (reload)
                     {
                         SceneManager.LoadScene(sceneIdentifier);
-                        ConsoleManager.LogToConsole($"<color=yellow>Reloading scene '{sceneIdentifier}'...</color>");
+                        ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Reloading scene '{sceneIdentifier}'...</color>");
                     }
                 }
                 catch (System.Exception e)
                 {
-                    ConsoleManager.LogToConsole($"<color=red>Error loading scene '{sceneIdentifier}': {e.Message}. Ensure it's in Build Settings and spelled correctly.</color>");
+                    ConsoleManager.LogToConsole($"<color=#FF0000FF>Error loading scene '{sceneIdentifier}': {e.Message}. Ensure it's in Build Settings and spelled correctly.</color>");
                     Debug.LogError($"Error loading scene '{sceneIdentifier}': {e}");
                 }
             }
             else
             {
-                ConsoleManager.LogToConsole($"<color=red>Error: Scene '{sceneIdentifier}' not found or not in available scenes list. Please check spelling or use a valid build index.</color>");
+                ConsoleManager.LogToConsole($"<color=#FF0000FF>Error: Scene '{sceneIdentifier}' not found or not in available scenes list. Please check spelling or use a valid build index.</color>");
             }
         }
     }
