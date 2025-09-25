@@ -1,8 +1,6 @@
-using Cysharp.Threading.Tasks;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 // Attach to any keycard prefab thingy
 public class KeycardVisual : MonoBehaviour

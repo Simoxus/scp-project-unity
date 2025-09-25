@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 // Attach to any button
 public class ButtonVisual : MonoBehaviour
