@@ -55,7 +55,7 @@ public class KeypadDoorController : MonoBehaviour
     public float doorBreakDownwardForce = 15f;
     public float doorBreakTorque = 35f;
     public Ease easeStyle = Ease.InOutQuad;
-    public Vector2 impulseVelocityRange = new Vector2(1f, 2f);
+    public Vector2 impulseVelocityRange = new Vector2(1.6f, 2f);
 
     [Header("State Values"), EditorAttributes.ReadOnly]
     public DoorState currentState = DoorState.Closed;
