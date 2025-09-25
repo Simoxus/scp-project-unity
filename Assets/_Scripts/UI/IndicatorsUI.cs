@@ -10,7 +10,7 @@ public enum PlayerState
     Crouching
 }
 
-public class UIIndicators : MonoBehaviour
+public class IndicatorsUI : MonoBehaviour
 {
     [Header("UI References")]
     public GameObject blinkMeter;
