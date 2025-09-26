@@ -1,23 +1,39 @@
-# SCP: Project Unity 
+# SCP: Project Unity
 
 SCP: Project Unity is a remake of the iconic indie horror game, SCP - Containment Breach, released in 2012.
 
 This is a Unity engine remake of SCP - Containment Breach, and is licensed under [Creative Commons Attribution-Sharealike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
 
+---
+
+### [Changelog](UPDATES.md)
+### [Attributions](ATTRIBS.md)
+### [Credits](CREDITS.md)
+
+---
+
+## Social Media
+<div style="display: flex; align-items: center; gap: 4px;">
+  <a href="https://bsky.app/profile/scppuofficial.com"><img src="https://github.com/user-attachments/assets/54c21e0c-6934-4466-9874-3bd735f119a6" alt="Bluesky" width="200"></a>
+  <a href="https://discord.gg/dVdY4PuGfp"><img src="https://github.com/user-attachments/assets/70c480f9-99a3-4868-bee7-39476ed4a038" alt="Discord" width="200"></a>
+  <a href="https://www.reddit.com/r/scpprojectunity/"><img src="https://github.com/user-attachments/assets/51cb9f6b-e8c1-40d0-aee4-f433c7deaf21" alt="Reddit" width="200"></a>
+  <a href="https://www.youtube.com/@simoxusofficial"><img src="https://github.com/user-attachments/assets/7f64541a-176e-4625-8e4a-173ac49a772b" alt="YouTube" width="200"></a>
+</div>
+
+---
+
 ## Showcase
 https://github.com/user-attachments/assets/449e926a-f46f-4d1e-89a9-9e3fbebdf99d
 
-## Social Media
-<a href="https://bsky.app/profile/scppuofficial.com"><img src="https://github.com/user-attachments/assets/54c21e0c-6934-4466-9874-3bd735f119a6" alt="Bluesky"  width="200" style="margin-right:4px;"></a>
-<a href="https://discord.gg/dVdY4PuGfp"><img src="https://github.com/user-attachments/assets/70c480f9-99a3-4868-bee7-39476ed4a038" alt="Discord" width="200" style="margin-right:4px;"></a>
-<a href="https://www.reddit.com/r/scpprojectunity/"><img src="https://github.com/user-attachments/assets/51cb9f6b-e8c1-40d0-aee4-f433c7deaf21" alt="Reddit"  width="200" style="margin-right:4px;"></a>
-<a href="https://www.youtube.com/@scppuofficial"><img src="https://github.com/user-attachments/assets/7f64541a-176e-4625-8e4a-173ac49a772b" alt="YouTube" width="200"></a>
+---
 
 ## Development Roadmap
 
 * **Version 0.0.1 - 0.1.0**: Core game framework, like basic movement, item interaction, and enemy AI
 * **Version 0.1.0 - 0.9.0**: More advanced features and polish, like new systems (e.g., sound occlusion, proximity chat), a complete UI redesign, and game mechanics that expand upon SCP - Containment Breach
 * **Version 1.4.0**: Full release, including a comprehensive modding API and all other planned features that may surface throughout development :D
+
+---
 
 ## Planned Features
 
@@ -41,11 +57,13 @@ https://github.com/user-attachments/assets/449e926a-f46f-4d1e-89a9-9e3fbebdf99d
 * **Expanded lore content using templates** (documents, terminals, SCP documents)
 * **Custom game launcher** (like the one you see used in SCP - Containment Breach)
 
+---
+
 ## Frequently Asked Questions
 
 * ### **Why make this?**
 
-SCP - Containment Breach was originally developed using Blitz3D, a game engine from 2002 that hasn't received any official updates since 2003. Because of this, running the game on modern hardware often leads to poor performance and new bugs that weren’t present during its original development. The developers of the original game worked very hard to optimize the game, but the limitations of such an outdated engine made it difficult to improve it any further. An attempt was made to port the game to a new engine for the planned 1.4 update, but unfortunately, was cancelled in early 2022.
+SCP - Containment Breach was originally developed on an engine known as Blitz3D, and it's very cranky.
 
 * ### **How do I play the latest releases?**
 
@@ -63,6 +81,8 @@ You can make a bug report OR suggestion in GitHub Issues on the repository, but 
 
 Yes, SCP: Project Unity is completely free and the majority of content included in the game is licensed under CC BY-SA 4.0, although there are some exceptions, which will be outlined in the README as they are added.
 
+---
+
 ## For Developers
 
 #### **1. Getting the Project**
@@ -78,7 +98,7 @@ Yes, SCP: Project Unity is completely free and the majority of content included 
 
 #### **3. Installing the Unity Editor and Modules**
 
-You will need the correct version of the Unity Editor to open the project. If you don't have it installed, Unity Hub will prompt you to download the recommended version.
+You will need the correct version of the Unity Editor to open the project. (if you don't have it installed, Unity Hub will prompt you to download the recommended version)
 
 * **Platform Modules:** Ensure you also install the necessary **Build Support** modules for the platforms you plan to compile for (e.g., Windows, Linux, macOS).
 
@@ -94,5 +114,7 @@ Before building, confirm the correct scenes are included in your build settings.
     * `_Scenes/Facility`
     * `_Scenes/Facility_Exterior`
 4. Hit "**Build**" or "**Build and Run**".
+
+---
 
 
