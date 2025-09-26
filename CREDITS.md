@@ -1,4 +1,12 @@
-The game is based on the works of the [SCP Foundation community](http://www.scp-wiki.net/). This game and the source code are licensed under the [Creative Commons Attribution-ShareAlike 3.0 License](http://creativecommons.org/licenses/by-sa/3.0/).
+# Credits
+
+Thank you to everyone who contributed in making Project Unity! Without your help, it may not be in the state it's in today :)
+
+---
+
+The game is based on the works of the [SCP Foundation community](http://www.scp-wiki.net/). This game and the source code are licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/).
+
+---
 
 # Modelers
 
