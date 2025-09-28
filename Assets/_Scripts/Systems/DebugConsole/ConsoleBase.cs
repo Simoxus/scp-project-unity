@@ -14,5 +14,8 @@ public abstract class ConsoleBase : IConsoleCommand
 {
     public abstract string CommandWord { get; }
     public abstract string Description { get; }
+    protected virtual string RawUsage => CommandWord;
+    public string Usage => $"Usage: {RawUsage}";
+
     public abstract void Execute(string[] args);
 }

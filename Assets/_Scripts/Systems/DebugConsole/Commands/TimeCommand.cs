@@ -2,56 +2,56 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class TimeCommand : ConsoleBase
+namespace Console.Commands
 {
-    public override string CommandWord => "time";
-    public override string Description => "Modifies the scene's timeScale. Usage: time <method (get|set)> [value]";
-
-    public override void Execute(string[] args)
+    public class TimeCommand : ConsoleBase
     {
-        // Require at least a method argument
-        if (args.Length < 1)
-        {
-            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: time <method (get|set)> [value]</color>");
-            return;
-        }
+        public override string CommandWord => "time";
+        public override string Description => "Modifies the scene's timeScale.";
+        protected override string RawUsage => "time <get|set> [value]";
 
-        string method = args[0].ToLower(); // Get the method (e.g., "get", "set")
-        float value = 0f; // Default value, used only for 'set'
-
-        // Handle 'get' which does not require a value
-        if (method == "get")
+        public override void Execute(string[] args)
         {
-            if (args.Length > 1)
+            if (args.Length < 1)
             {
-                ConsoleManager.LogToConsole($"<color=#FFA500FF>Warning: 'get' method does not require a value. Ignoring '{args[1]}'.</color>");
-            }
-            ConsoleManager.LogToConsole($"Current timeScale: {Time.timeScale}");
-        }
-        else if (method == "set")
-        {
-            // 'set' method requires a value
-            if (args.Length < 2)
-            {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: time set <value></color>");
+                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
                 return;
             }
 
-            // Try to parse the value argument for 'set'
-            if (!float.TryParse(args[1], out value))
+            string method = args[0].ToLower();
+            float value = 0f;
+
+            if (method == "get")
             {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid value for 'set'. Please enter a number.</color>");
+                if (args.Length > 1)
+                {
+                    ConsoleManager.LogToConsole($"<color=#FFA500FF>Warning: 'get' method does not require a value. Ignoring '{args[1]}'.</color>");
+                }
+                ConsoleManager.LogToConsole($"Current timeScale: {Time.timeScale}");
+            }
+            else if (method == "set")
+            {
+                if (args.Length < 2)
+                {
+                    ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: time set <value></color>");
+                    return;
+                }
+
+                if (!float.TryParse(args[1], out value))
+                {
+                    ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid value for 'set'. Please enter a number.</color>");
+                    return;
+                }
+
+                // Set the timeScale
+                Time.timeScale = value;
+                ConsoleManager.LogToConsole($"TimeScale set to {value}.");
+            }
+            else
+            {
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Unknown time method. Use 'get' or 'set'.</color>");
                 return;
             }
-
-            // Set the game's timeScale
-            Time.timeScale = value;
-            ConsoleManager.LogToConsole($"TimeScale set to {value}.");
-        }
-        else
-        {
-            ConsoleManager.LogToConsole("<color=#FF0000FF>Unknown time method. Use 'get' or 'set'.</color>");
-            return;
         }
     }
 }

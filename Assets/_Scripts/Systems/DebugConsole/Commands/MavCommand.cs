@@ -1,28 +1,29 @@
-using System.Collections.Generic; // Required for IEnumerable
-using System.Linq; // Required for Enumerable.Empty
-using UnityEngine;
-using Cysharp.Threading.Tasks; // Ensure you have UniTask imported if using this.
+using Cysharp.Threading.Tasks;
 
-public class MavCommand : ConsoleBase
+namespace Console.Commands
 {
-    public override string CommandWord => "mav";
-    public override string Description => "Error! Memory access violation (just kidding haha)";
-
-    public override void Execute(string[] args)
+    public class MavCommand : ConsoleBase
     {
-        if (args.Length > 0)
+        public override string CommandWord => "mav";
+        public override string Description => "Error! Memory access violation (just kidding haha)";
+        protected override string RawUsage => "mav";
+
+        public override void Execute(string[] args)
         {
-            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: mav (no arguments)</color>");
-            return;
+            if (args.Length > 0)
+            {
+                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                return;
+            }
+
+            ConsoleManager.LogToConsole($"Memory access violation (JUST KIDDING GET PRANKED LOSER)");
+            SpookyMessage().Forget();
         }
 
-        ConsoleManager.LogToConsole($"Memory access violation (JUST KIDDING GET PRANKED LOSER)");
-        SpookyMessage().Forget(); // Discard UniTask
-    }
-
-    private async UniTask SpookyMessage()
-    {
-        await UniTask.WaitForSeconds(3f, ignoreTimeScale: true);
-        ConsoleManager.LogToConsole($"Seriously though.. <i>I will</i> generate a memory access violation.");
+        private async UniTask SpookyMessage()
+        {
+            await UniTask.WaitForSeconds(3f, ignoreTimeScale: true);
+            ConsoleManager.LogToConsole($"Seriously though.. <i>I will</i> generate a memory access violation.");
+        }
     }
 }

@@ -1,17 +1,21 @@
 using UnityEngine;
 
-public class MidgetCommand : ConsoleBase
+namespace Console.Commands
 {
-    public override string CommandWord => "midget";
-    public override string Description => "Transforms the player into/out of being a midget.";
-
-    public override void Execute(string[] args)
+    public class MidgetCommand : ConsoleBase
     {
-        GameObject player = GameObject.FindWithTag("Player");
-        PlayerController playerController = player.GetComponent<PlayerController>();
+        public override string CommandWord => "midget";
+        public override string Description => "Transforms the player into/out of being a midget.";
+        protected override string RawUsage => "midget";
 
-        bool playerIsMidget = playerController.ToggleMidget(); // Returns a bool :)
-        if (playerIsMidget) { ConsoleManager.LogToConsole("<color=#33CC33>Player has been midgetified :D</color>"); }
-        if (!playerIsMidget) { ConsoleManager.LogToConsole("<color=#33CC33>Player has been unmidgetified D:</color>"); }
+        public override void Execute(string[] args)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            PlayerController playerController = player.GetComponent<PlayerController>();
+
+            bool playerIsMidget = playerController.ToggleMidget();
+            if (playerIsMidget) { ConsoleManager.LogToConsole("<color=#33CC33>Player has been midgetified :D</color>"); }
+            if (!playerIsMidget) { ConsoleManager.LogToConsole("<color=#33CC33>Player has been unmidgetified D:</color>"); }
+        }
     }
 }

@@ -83,10 +83,6 @@ public class ConsoleUI : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Tab))
             {
                 CycleSuggestions();
-                // Consume the event to prevent tabbing to other UI elements.
-                // Event.current.Use() is typically used in OnGUI, but leaving a comment
-                // here as a reminder of intent. For Update, direct input blocking
-                // or correct EventSystem setup is more reliable if needed.
             }
         }
     }
@@ -218,11 +214,6 @@ public class ConsoleUI : MonoBehaviour
         ClearAutocompleteSuggestions(); // Clear suggestions when cycling history
     }
 
-    /// <summary>
-    /// Populates and displays autocomplete suggestions based on the current input.
-    /// This version only handles command word autocompletion.
-    /// </summary>
-    /// <param name="currentInput">The current text in the input field.</param>
     private void PopulateSuggestions(string currentInput)
     {
         if (autocompleteSuggestionsText == null || ConsoleManager.Instance == null)
@@ -252,10 +243,6 @@ public class ConsoleUI : MonoBehaviour
         DisplaySuggestions();
     }
 
-    /// <summary>
-    /// Cycles through the available autocomplete suggestions when the Tab key is pressed.
-    /// This version replaces the entire input field with the selected command word.
-    /// </summary>
     private void CycleSuggestions()
     {
         if (_currentSuggestions.Count == 0)
@@ -273,10 +260,6 @@ public class ConsoleUI : MonoBehaviour
         DisplaySuggestions(); // Update display to show highlight
     }
 
-    /// <summary>
-    /// Updates the autocomplete suggestions text element with the current suggestions.
-    /// Highlights the currently selected suggestion if any.
-    /// </summary>
     private void DisplaySuggestions()
     {
         if (autocompleteSuggestionsText == null) return;
@@ -308,9 +291,6 @@ public class ConsoleUI : MonoBehaviour
         autocompleteSuggestionsText.text = suggestionsString;
     }
 
-    /// <summary>
-    /// Clears the autocomplete suggestions display and internal list.
-    /// </summary>
     private void ClearAutocompleteSuggestions()
     {
         if (autocompleteSuggestionsText != null)

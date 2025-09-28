@@ -2,40 +2,44 @@ using System.Collections.Generic; // Required for IEnumerable
 using System.Linq; // Required for Enumerable.Empty
 using UnityEngine;
 
-public class KillCommand : ConsoleBase
+namespace Console.Commands
 {
-    public override string CommandWord => "kill";
-    public override string Description => "Kills the player.";
-
-    public override void Execute(string[] args)
+    public class KillCommand : ConsoleBase
     {
-        if (args.Length > 0)
-        {
-            ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: kill (no arguments)</color>");
-            return;
-        }
+        public override string CommandWord => "kill";
+        public override string Description => "Kills the player.";
+        protected override string RawUsage => "kill";
 
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player == null)
+        public override void Execute(string[] args)
         {
-            ConsoleManager.LogToConsole("<color=#FF0000FF>Error: Player GameObject not found (ensure it has the 'Player' tag).</color>");
-            return;
-        }
+            if (args.Length > 0)
+            {
+                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                return;
+            }
 
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth == null)
-        {
-            ConsoleManager.LogToConsole("<color=#FF0000FF>Error: PlayerHealth component not found on Player GameObject.</color>");
-            return;
-        }
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player == null)
+            {
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Error: Player GameObject not found (ensure it has the 'Player' tag).</color>");
+                return;
+            }
 
-        if (playerHealth.GetHealth() <= 0) // Changed to <= 0 for robustness
-        {
-            ConsoleManager.LogToConsole($"Player is already dead.");
-            return;
-        }
+            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            if (playerHealth == null)
+            {
+                ConsoleManager.LogToConsole("<color=#FF0000FF>Error: PlayerHealth component not found on Player GameObject.</color>");
+                return;
+            }
 
-        playerHealth.Set(0f);
-        ConsoleManager.LogToConsole($"Player has been killed.");
+            if (playerHealth.GetHealth() <= 0)
+            {
+                ConsoleManager.LogToConsole($"Player is already dead.");
+                return;
+            }
+
+            playerHealth.Set(0f);
+            ConsoleManager.LogToConsole($"Player has been killed.");
+        }
     }
 }

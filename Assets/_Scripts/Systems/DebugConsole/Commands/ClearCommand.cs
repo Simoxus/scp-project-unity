@@ -1,13 +1,17 @@
 using System.Collections.Generic; // Required for IEnumerable
 using System.Linq; // Required for Enumerable.Empty
 
-public class ClearCommand : ConsoleBase
+namespace Console.Commands
 {
-    public override string CommandWord => "clear";
-    public override string Description => "Clears the console output.";
-
-    public override void Execute(string[] args)
+    public class ClearCommand : ConsoleBase
     {
-        ConsoleManager.LogToConsole("<CMD_CLEAR_CONSOLE>");
+        public override string CommandWord => "clear";
+        public override string Description => "Clears the console output.";
+        protected override string RawUsage => "clear";
+
+        public override void Execute(string[] args)
+        {
+            ConsoleManager.LogToConsole("<CMD_CLEAR_CONSOLE>");
+        }
     }
 }

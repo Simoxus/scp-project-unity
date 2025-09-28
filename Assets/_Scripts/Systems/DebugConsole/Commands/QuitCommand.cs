@@ -1,21 +1,25 @@
 using UnityEngine;
 
-public class QuitCommand : ConsoleBase
+namespace Console.Commands
 {
-    public override string CommandWord => "quit";
-    public override string Description => "Quits the game.";
-
-    public override void Execute(string[] args)
+    public class QuitCommand : ConsoleBase
     {
-        ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Quitting {Application.productName}.... :(");
+        public override string CommandWord => "quit";
+        public override string Description => "Quits the game.";
+        protected override string RawUsage => "quit";
 
-        if (Application.isEditor)
+        public override void Execute(string[] args)
         {
-            ConsoleManager.LogToConsole($"<color=#FF0000FF>Attempt to quit {Application.productName} failed because you are in the editor!</color>");
-        } 
-        else
-        {
-            Application.Quit();
+            ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Quitting {Application.productName}.... :(");
+
+            if (Application.isEditor)
+            {
+                ConsoleManager.LogToConsole($"<color=#FF0000FF>Attempt to quit {Application.productName} failed because you are in the editor!</color>");
+            }
+            else
+            {
+                Application.Quit();
+            }
         }
     }
 }
