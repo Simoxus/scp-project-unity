@@ -1,6 +1,3 @@
-using System.Collections.Generic; // Required for IEnumerable
-using System.Linq; // Required for Enumerable.Empty
-
 namespace Console.Commands
 {
     public class ClearCommand : ConsoleBase
