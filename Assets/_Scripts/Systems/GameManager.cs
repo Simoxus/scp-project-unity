@@ -1,6 +1,6 @@
 using PrimeTween;
 using UnityEngine;
-using static UnityEngine.EventSystems.StandaloneInputModule;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -150,16 +150,11 @@ public class GameManager : MonoBehaviour
 
     public void UpdateCursorVisiblity(bool? forceDisable = null)
     {
-        if (forceDisable == null)
-        {
-            Cursor.lockState = disablePlayerInputs ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = disablePlayerInputs;
-        } 
-        else
-        {
-            Cursor.lockState = disablePlayerInputs ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = disablePlayerInputs;
-        }
-        
+        bool showCursor = forceDisable.HasValue
+            ? !forceDisable.Value   // forceDisable = true -> hide
+            : disablePlayerInputs;  // disable inputs = true -> show
+
+        Cursor.lockState = showCursor ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = showCursor;
     }
 }
