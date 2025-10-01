@@ -20,6 +20,11 @@ public static class FMODHelper
         instance.release(); // Fire-and-forget
     }
 
+    public static void PlayOneShot(EventReference fmodEvent)
+    {
+        RuntimeManager.PlayOneShot(fmodEvent);
+    }
+
     public static void PlayOneShot3D(EventReference fmodEvent, Vector3 position)
     {
         RuntimeManager.PlayOneShot(fmodEvent, position);
