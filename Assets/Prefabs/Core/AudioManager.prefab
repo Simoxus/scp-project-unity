@@ -45,13 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9468c5f457ace64f8d4df6d642b107f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LoadEvent: 1
-  UnloadEvent: 2
+  LoadEvent: 7
+  UnloadEvent: 8
   Banks:
-  - Desktop/Master
-  - Desktop/Ambient
-  - Desktop/Music
-  - Desktop/SFX
+  - Master
+  - Ambient
+  - Music
+  - SFX
+  - VO
   CollisionTag: 
   PreloadSamples: 1
 --- !u!114 &3377270935731706834
@@ -66,4 +67,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 576af10d9f414184c9dde3effb912642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  excludedStudioEventEmitters: []
