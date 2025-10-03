@@ -1,6 +1,8 @@
 using Cysharp.Threading.Tasks;
 using PrimeTween;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 
@@ -30,6 +32,12 @@ public class KeypadVisual : MonoBehaviour
     private Dictionary<GameObject, float> _originalMeshLocalPositionZ;
     private float _originalEnterMeshLocalPositionZ;
     private float _originalClearMeshLocalPositionZ;
+    private CancellationToken _destroyToken;
+
+    private void Awake()
+    {
+        _destroyToken = this.GetCancellationTokenOnDestroy();
+    }
 
     private void Start()
     {
@@ -104,21 +112,32 @@ public class KeypadVisual : MonoBehaviour
 
     public async void ChangeScreenColor(Color requestedColor, bool doTweenChange, float tweenChangeDuration = 0.35f)
     {
-        if (doTweenChange)
+        if (keypadEmission == null) return;
+
+        try
         {
-            await Tween.LightColor(
-                keypadEmission,
-                requestedColor,
-                tweenChangeDuration,
-                Ease.Linear
-            );
-        }
-        else
-        {
-            if (keypadEmission != null)
+            if (doTweenChange)
             {
-                keypadEmission.color = requestedColor;
+                await Tween.LightColor(
+                    keypadEmission,
+                    requestedColor,
+                    tweenChangeDuration,
+                    Ease.Linear
+                ).ToYieldInstruction().ToUniTask(cancellationToken: _destroyToken);
             }
+            else
+            {
+                if (keypadEmission != null)
+                {
+                    keypadEmission.color = requestedColor;
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+#if UNITY_EDITOR
+            Debug.Log($"ChangeScreenColor was canceled because object was destroyed or scene changed.");
+#endif
         }
     }
 }
