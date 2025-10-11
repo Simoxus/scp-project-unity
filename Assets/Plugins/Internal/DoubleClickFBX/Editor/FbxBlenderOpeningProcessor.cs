@@ -1,4 +1,3 @@
-// Place inside an "Editor" folder
 #if PLATFORM_STANDALONE_WIN
 using System;
 using System.IO;
@@ -8,9 +7,6 @@ using UnityEngine;
 
 public static class FbxBlenderOpeningProcessor
 {
-    // Set this variable to your installation path. 
-    // If the path was added to your "PATH" system environment variable, it should be 
-    // possible to just use "blender" as path
     private static readonly string blenderPath = @"C:\Program Files (x86)\Steam\steamapps\common\Blender\blender.exe";
 
     [OnOpenAsset]
@@ -21,24 +17,24 @@ public static class FbxBlenderOpeningProcessor
         if (string.Equals(Path.GetExtension(assetPath), ".fbx", StringComparison.OrdinalIgnoreCase)
             && obj is GameObject)
         {
-            Debug.Log($"Open FBX file \"{assetPath}\" in Blender");
+            Debug.Log($"Opening FBX file \"{assetPath}\" in Blender");
             OpenAsFbxInBlender(assetPath);
             return true; // Prevent Unity from further processing the opening task
         }
-        return false; // Continue builtin handling 
+        return false;
     }
 
     private static void OpenAsFbxInBlender(string assetPath)
     {
         string assetPathPythonFull = Path.GetFullPath(assetPath).Replace("\\", "/");
-        // Delete default cube and import fbx:
+
+        // Delete default cube and import FBX file
         string[] instructions = new string[]
         {
             "import bpy",
-            //"bpy.data.objects['Cube'].select_set(True)",
-            //"bpy.ops.object.delete()",
             $"bpy.ops.import_scene.fbx( filepath = '{assetPathPythonFull}' )"
         };
+
         string pythonLoadFbxArgument = CreatePythonExpressionArgument(instructions);
         StartBlenderWithArguments(pythonLoadFbxArgument);
     }
