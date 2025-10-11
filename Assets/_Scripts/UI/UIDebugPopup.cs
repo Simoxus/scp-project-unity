@@ -1,75 +1,75 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class UIDebugPopup : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] private Player player;
     [SerializeField] private UIAccess uiAccess;
-    [SerializeField] private GameObject debugCanvas;
-
-    [Header("Input Settings")]
-    [SerializeField] private InputActionAsset inputActions;
-    public string actionMapName = "Debug";
-    public string toggleActionName = "Popup";
-
-    private InputAction _toggleAction;
-    private InputActionMap _currentActionMap;
 
     void Awake()
     {
-        _currentActionMap = inputActions.FindActionMap(actionMapName);
-        if (_currentActionMap == null)
+        if (player == null)
         {
-            enabled = false;
-            return;
+            player = Player.Instance;
         }
 
-        _toggleAction = _currentActionMap.FindAction(toggleActionName);
-        if (_toggleAction == null)
+        if (uiAccess == null)
         {
-            enabled = false;
-            return;
+            uiAccess = UIAccess.Instance;
         }
 
-        debugCanvas.SetActive(false);
+        uiAccess.canvasDebuggers.SetActive(false);
     }
 
     void OnEnable()
     {
-        if (_toggleAction != null)
-        {
-            _toggleAction.performed += OnTogglePerformed;
-            _currentActionMap.Enable();
-        }
+        player.playerInputs.OnDebugUI += ToggleDebugMenu;
     }
 
     void OnDisable()
     {
-        if (_toggleAction != null)
+        player.playerInputs.OnDebugUI -= ToggleDebugMenu;
+
+        if (GameManager.Instance != null && GameManager.Instance.HasPauseRequest(this))
         {
-            _toggleAction.performed -= OnTogglePerformed;
-            _currentActionMap.Disable();
+            GameManager.Instance.ReleasePause(this);
         }
     }
 
-    private void OnTogglePerformed(InputAction.CallbackContext context)
+    public void ToggleDebugMenu()
     {
-        if (context.action == _toggleAction)
-        {
-            // Determine if the console is currently active or not
-            bool canvasIsActive = debugCanvas.activeSelf;
+        bool canvasIsActive = uiAccess.canvasDebuggers.activeSelf;
 
-            if (!canvasIsActive) // Console is currently inactive, so we want to open it
-            {
-                debugCanvas.SetActive(true); // Activate the UI
-                uiAccess.consoleUI.FocusOnInput(); // Focus on the input field
-                GameManager.Instance.RequestPause();
-            }
-            else // Console is currently active, so we want to close it
-            {
-                debugCanvas.SetActive(false);
-                GameManager.Instance.ReleasePause();
-            }
+        if (!canvasIsActive)
+        {
+            OpenDebugMenu();
+        }
+        else
+        {
+            CloseDebugMenu();
+        }
+    }
+
+    private void OpenDebugMenu()
+    {
+        uiAccess.canvasDebuggers.SetActive(true);
+        uiAccess.consoleUI.FocusOnInput();
+        
+        GameManager.Instance.RequestPause(this);
+    }
+
+    private void CloseDebugMenu()
+    {
+        uiAccess.canvasDebuggers.SetActive(false);
+
+        GameManager.Instance.ReleasePause(this);
+    }
+
+    public void ForceClose()
+    {
+        if (uiAccess.canvasDebuggers.activeSelf)
+        {
+            CloseDebugMenu();
         }
     }
 }

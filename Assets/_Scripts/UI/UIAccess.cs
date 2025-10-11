@@ -1,7 +1,6 @@
 using FMODUnity;
-using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class UIAccess : MonoBehaviour
 {
@@ -11,14 +10,21 @@ public class UIAccess : MonoBehaviour
     public GameObject canvasOverlays;
     public GameObject canvasIndicators;
     public GameObject canvasInventory;
+    public GameObject canvasTelemetry;
     public GameObject canvasPauseMenu;
     public GameObject canvasDebuggers;
+    public GameObject canvasInteract;
+
+    [Header("For Settings")]
+    public Image crosshair;
+    public FPSCounterUI fpsCounter;
 
     [Header("Main UI Scripts")]
     // put indicator stuff here
     public ConsoleUI consoleUI;
     public DebugUI debugUI;
     public IndicatorsUI indicatorsUI;
+    public UIDebugPopup uiDebugPopup;
 
     [Header("Sounds")]
     public EventReference uiPressEvent;
@@ -28,7 +34,7 @@ public class UIAccess : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
         else
         {
@@ -43,6 +49,7 @@ public class UIAccess : MonoBehaviour
         canvasInventory = GameObject.Find("Inventory");
         canvasPauseMenu = GameObject.Find("Indicators");
         canvasDebuggers = GameObject.Find("Debuggers");
+        canvasInteract = GameObject.Find("InteractScreen");
 
         consoleUI = GetComponentInChildren<ConsoleUI>();
         debugUI = GetComponentInChildren<DebugUI>();
