@@ -1,13 +1,14 @@
+using System.Collections.Generic;
+using EditorAttributes;
 using PrimeTween;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
     [Header("Global Values")]
-    public bool gamePaused = false; // Now reflects the current paused state, derived from pauseRequestCount
+    public bool gamePaused = false;
     public bool disablePlayerInputs = false;
     public bool hidePlayerHUD = false;
 
@@ -19,8 +20,12 @@ public class GameManager : MonoBehaviour
     public bool skipIntroSequence;
     public bool cameraShaking = true;
 
-    public int pauseRequestCount = 0; // Public just in case another script needs to read this amount
-    public int disableControlsRequestCount = 0;
+    [ReadOnly] public int pauseRequestCount = 0;
+    [ReadOnly] public int disableControlsRequestCount = 0;
+
+    // Variables that track which scripts have requested pause/disable
+    private readonly HashSet<object> _pauseRequesters = new HashSet<object>();
+    private readonly HashSet<object> _disableControlsRequesters = new HashSet<object>();
 
     private void Awake()
     {
@@ -32,12 +37,12 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
 
-        // Check for player and if there's no player, try to find the singleton/instance
         player = player != null ? player : Player.Instance;
 
         Time.timeScale = 1.0f;
         gamePaused = false;
         pauseRequestCount = 0;
+        disableControlsRequestCount = 0;
     }
 
     private void Start()
@@ -47,82 +52,111 @@ public class GameManager : MonoBehaviour
         PrimeTweenConfig.warnZeroDuration = false;
         PrimeTweenConfig.warnEndValueEqualsCurrent = false;
 
-        Screen.SetResolution(1920, 1080, SettingsManager.Instance.fullScreenMode);
-
-        RequestDisableControls(shouldDisable: disablePlayerInputs);
+        RequestDisableControls(this, shouldDisable: disablePlayerInputs);
     }
 
-    // Call this when needing to pause the game
-    public void RequestPause()
+    public void RequestPause(object requester)
     {
-        pauseRequestCount++;
-
-        // If the game wasn't already paused, apply the pause effects
-        if (!gamePaused)
+        if (requester == null)
         {
-            ApplyPauseState(true);
+            Log.VerboseWarning("RequestPause was called, but with no requester provided!");
+            return;
+        }
+
+        if (_pauseRequesters.Add(requester))
+        {
+            pauseRequestCount = _pauseRequesters.Count;
+
+            if (pauseRequestCount == 1)
+            {
+                ApplyPauseState(true);
+            }
         }
     }
 
-    // Call this when you no longer are needing to pause the game
-    public void ReleasePause()
+    public void ReleasePause(object requester)
     {
-        if (pauseRequestCount > 0) // Prevent going below zero
+        if (requester == null)
         {
-            pauseRequestCount--;
+            Log.VerboseWarning("ReleasePause was called, but with no requester provided!");
+            return;
         }
 
-        // Only unpause if no more active pause requests AND the game is currently paused
-        if (pauseRequestCount == 0 && gamePaused)
+        if (_pauseRequesters.Remove(requester))
         {
-            ApplyPauseState(false);
+            pauseRequestCount = _pauseRequesters.Count;
+
+            if (pauseRequestCount == 0 && gamePaused)
+            {
+                ApplyPauseState(false);
+            }
         }
     }
 
-    // Internal method to apply the actual pause/unpause
     private void ApplyPauseState(bool shouldPause)
     {
-        gamePaused = shouldPause; // Update the public flag/source of truth for the scene's run state
+        gamePaused = shouldPause;
 
-        AudioManager.Instance.ToggleSounds(gamePaused); // Call AudioManager with explicit bool :D
+        AudioManager.Instance.ToggleGameSounds(gamePaused);
         Time.timeScale = gamePaused ? 0f : 1.0f;
 
-        GameManager.Instance.RequestDisableControls(shouldDisable: gamePaused);
+        GameManager.Instance.RequestDisableControls(this, shouldDisable: gamePaused);
         UpdateCursorVisiblity();
     }
 
-    public void PauseGame()
+    public void RequestDisableControls(object requester, bool shouldDisable)
     {
-        gamePaused = !gamePaused;
-        AudioManager.Instance.ToggleSounds(gamePaused);
-        Time.timeScale = gamePaused ? 0f : 1.0f;
+        if (requester == null)
+        {
+            Log.VerboseWarning("RequestDisableControls was called, but with no requester provided!");
+            return;
+        }
 
-        GameManager.Instance.RequestDisableControls(shouldDisable: gamePaused);
-        UpdateCursorVisiblity();
-    }
+        bool wasInList = _disableControlsRequesters.Contains(requester);
+        bool stateChanged = false;
 
-    public void RequestDisableControls(bool shouldDisable)
-    {
         if (shouldDisable)
         {
-            disableControlsRequestCount++;
+            if (_disableControlsRequesters.Add(requester))
+            {
+                stateChanged = _disableControlsRequesters.Count == 1;
+            }
         }
         else
         {
-            disableControlsRequestCount--;
-            if (disableControlsRequestCount < 0)
+            if (_disableControlsRequesters.Remove(requester))
             {
-                disableControlsRequestCount = 0;
+                stateChanged = _disableControlsRequesters.Count == 0;
             }
         }
 
-        bool newState = disableControlsRequestCount > 0;
-        if (newState != disablePlayerInputs)
+        disableControlsRequestCount = _disableControlsRequesters.Count;
+
+        if (stateChanged)
         {
-            // Only update the state if it has actually changed
-            TogglePlayerControls(newState);
+            TogglePlayerControls(shouldDisable: disableControlsRequestCount > 0);
             UpdateCursorVisiblity();
         }
+    }
+
+    public void ForceResetPauseState()
+    {
+        _pauseRequesters.Clear();
+        _disableControlsRequesters.Clear();
+        pauseRequestCount = 0;
+        disableControlsRequestCount = 0;
+
+        ApplyPauseState(false);
+    }
+
+    public bool HasPauseRequest(object requester)
+    {
+        return _pauseRequesters.Contains(requester);
+    }
+
+    public bool HasDisableControlsRequest(object requester)
+    {
+        return _disableControlsRequesters.Contains(requester);
     }
 
     private void TogglePlayerControls(bool shouldDisable)
@@ -133,18 +167,10 @@ public class GameManager : MonoBehaviour
 
         if (player != null)
         {
-            // player.playerInputs.enabled = enableComponents;
             player.playerController.enabled = enableComponents;
             player.playerBobbing.enabled = enableComponents;
-
-            if (player.playerInteract != null)
-            {
-                player.playerInteract.enabled = enableComponents;
-            }
-            if (player.playerFootsteps != null)
-            {
-                player.playerFootsteps.enabled = enableComponents;
-            }
+            player.playerInteract.enabled = enableComponents;
+            player.playerFootsteps.enabled = enableComponents;
         }
     }
 
