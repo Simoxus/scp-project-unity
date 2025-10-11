@@ -1,41 +1,86 @@
+﻿using FMODUnity;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using FMODUnity;
 
 public class SnappingSlider : MonoBehaviour
 {
-    public Slider targetSlider;
-    public float[] snapPoints; // Array of desired snap values
-    public float snapThreshold = 0.1f; // How close the slider needs to be to snap
+    [System.Serializable]
+    public class SnapPoint
+    {
+        public float value;
+        public RectTransform marker;
+    }
 
-    public EventReference snapSound; // Sound to play on snap
+    public Slider targetSlider;
+    public SnapPoint[] snapPoints;
+    public EventReference snapSound;
+
+    [Header("Marker Animation Settings")]
+    public float scaleUpSize = 1.3f;
+    public float scaleThreshold = 0.1f; 
+
+    private int _lastActiveIndex = -1;
 
     private void Awake()
     {
         targetSlider = GetComponent<Slider>();
-        targetSlider.onValueChanged.AddListener(delegate { SnapToNearestPoint(); });
+
+        targetSlider.onValueChanged.AddListener(OnSliderValueChange);
+
+        foreach (var snapPoint in snapPoints)
+        {
+            if (snapPoint.marker != null)
+            { snapPoint.marker.localScale = Vector3.one; }
+        }
+
+        OnSliderValueChange(targetSlider.value); // Initialize marker states
     }
 
-    public void SnapToNearestPoint()
+    public void OnSliderValueChange(float currentValue)
     {
-        float currentValue = targetSlider.value;
-        float nearestSnapPoint = snapPoints[0];
-        float minDistance = Mathf.Abs(currentValue - nearestSnapPoint);
+        // Find the nearest marker
+        int nearestIndex = -1;
+        float minDistance = float.MaxValue;
 
-        foreach (float snapPoint in snapPoints)
+        for (int i = 0; i < snapPoints.Length; i++)
         {
-            float distance = Mathf.Abs(currentValue - snapPoint);
+            float distance = Mathf.Abs(currentValue - snapPoints[i].value);
             if (distance < minDistance)
             {
                 minDistance = distance;
-                nearestSnapPoint = snapPoint;
+                nearestIndex = i;
             }
         }
 
-        if (minDistance <= snapThreshold)
+        // Only scale if within the specific threshold
+        if (minDistance <= scaleThreshold)
         {
-            FMODHelper.PlayOneShot(snapSound);
-            targetSlider.value = nearestSnapPoint;
+            // Play the snap sound ONLY if snapping to a new different marker
+            if (nearestIndex != _lastActiveIndex)
+                FMODHelper.PlayOneShot(snapSound);
+
+            UpdateMarkers(nearestIndex);
         }
+        else
+        {
+            UpdateMarkers(-1);
+        }
+    }
+
+    private void UpdateMarkers(int activeIndex)
+    {
+        if (_lastActiveIndex == activeIndex) return;
+
+        for (int i = 0; i < snapPoints.Length; i++)
+        {
+            if (snapPoints[i].marker != null)
+            {
+                Vector3 targetScale = (i == activeIndex) ? Vector3.one * scaleUpSize : Vector3.one;
+                snapPoints[i].marker.localScale = targetScale;
+            }
+        }
+
+        _lastActiveIndex = activeIndex;
     }
 }
