@@ -8,12 +8,14 @@ public class RigidbodyPush : MonoBehaviour
 
 	private void OnControllerColliderHit(ControllerColliderHit hit)
 	{
-		if (canPush) PushRigidBodies(hit);
+		if (canPush)
+		{
+			PushRigidBodies(hit);
+		}
 	}
 
 	private void PushRigidBodies(ControllerColliderHit hit)
 	{
-		// Verify rigidbody isn't kinematic
 		Rigidbody body = hit.collider.attachedRigidbody;
 		if (body == null || body.isKinematic) return;
 
