@@ -20,6 +20,11 @@ At the start of this project, I didn't know nearly as much about C# (the coding 
 * Reworked/rewrote every manager system
 * Settings manager that uses JSON serialization instead of PlayerPrefs (cause PlayerPrefs sucks)
 * Made head bobbing sync to footsteps, and also closer to Containment Breach's original code for it
+* Added pause menu
+* Fixed GameManager controls/pause desync that would cause a softlock
+* Fixed framerate-tied smooth look
+* Added a crosshair
+* Made player interaction better by removing the world UI and instead only using screen UI
 
 ### World Environment
 * Added new materials
@@ -36,6 +41,8 @@ At the start of this project, I didn't know nearly as much about C# (the coding 
 * An FMOD helper class with a ton of functions to more easily call different types of playing
 * Spatialization to a ton of door/button events I forgot to add them to
 * Numerous functions to the FMOD helper class for static and dynamic occulsion, more instance management, etc.
+* FMOD collisions for rigidbodies using dynamic occulsion (if it's available/enabled)
+* FMOD reverb zone helper
 
 ### Debug Console
 * Rewrote command identification system for the debug console using Reflection
@@ -45,7 +52,6 @@ At the start of this project, I didn't know nearly as much about C# (the coding 
 * Removed clanker 'sanity' command until I rewrite PlayerSanity
 * Fixed the 'fmod' command and added an optional argument called 'list' that you can also manually refresh
 * Renamed 'info' command to 'sysinfo'
-* Renamed 'midget' command to 'squish'
 * Added a new line to the debugger
 * Added 'fpscap' command
 * Added 'clearprefs' command
