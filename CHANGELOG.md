@@ -1,6 +1,6 @@
-# Updates
+# Changelog
 
-All notable changes to this project will be documented here.
+All notable changes to Project Unity will be documented here.
 Any updates that are currently in progress may feature some of their contents.
 Unless the version is considered to be major (x.x), it will not have a nickname for the version :(
 
@@ -8,15 +8,18 @@ Unless the version is considered to be major (x.x), it will not have a nickname 
 
 ## **v0.0.2** | xxx Git commits | TBD (To be Decided)
 
-*A bit less spaghetti (and clanker code)! Settings are a work-in-progress but it's going great so far.*
+*A bit less spaghetti (and clanker code)!*
+*Settings are finished, and also work in the main menu!*
 
 ### PLEASE KNOW
-At the start of this project, I didn't know nearly as much about C# (the coding language) as I do now. So, for many things, I used AI "tools" to "help" me write my code. I'm moving away from it completely, as I want all my code to be made by me. I want to apologize for even using it in the first place, because it has made me need to waste a lot more time refactoring and improving upon the clanker code than if I were to just write it authentically. Also, no! The README is not at all written by AI (anymore lol), and I've put a ton of effort into making it look presentable >:(
+At the start of this project, I didn't know nearly as much about C# (the coding language) as I do now. So, for many things, I used AI "tools" to "help" me write my code. I'm moving away from it completely, as I want all my code to be made by me. I want to apologize for even using it in the first place, because it has made me need to waste a lot more time refactoring and improving upon the clanker code than if I were to just write it authentically. Also, no! The README is not at all written by AI (anymore lol), and I've just put a ton of effort into making it look presentable >:(
 
 ### General
 * More interactable objects
 * Reworked/rewrote every player system
 * Reworked/rewrote every manager system
+* Settings manager that uses JSON serialization instead of PlayerPrefs (cause PlayerPrefs sucks)
+* Made head bobbing sync to footsteps, and also closer to Containment Breach's original code for it
 
 ### World Environment
 * Added new materials
@@ -25,11 +28,14 @@ At the start of this project, I didn't know nearly as much about C# (the coding 
 * Rewrote all door code to make it more fail-safe
 * Reorganize door folders and responsibilties
 * New sparks particle that is emitted from doors, broken panels, and more
+* Room events that are (decently) modular and easy to set up
+* Simple form of map generation that's based off of [Virtual's map generator](https://github.com/VirtualBrightPlayz/SCPCBRE/blob/master/Assets/Scripts/Map/MapGenerator.cs)
 
 ### Audio
 * Reorganized the FMOD project once more
-* Added a FMOD helper class with a ton of functions to more easily call different types of playing
-* Add spatialization to a ton of door/button events I forgot to add them to
+* An FMOD helper class with a ton of functions to more easily call different types of playing
+* Spatialization to a ton of door/button events I forgot to add them to
+* Numerous functions to the FMOD helper class for static and dynamic occulsion, more instance management, etc.
 
 ### Debug Console
 * Rewrote command identification system for the debug console using Reflection
@@ -39,6 +45,7 @@ At the start of this project, I didn't know nearly as much about C# (the coding 
 * Removed clanker 'sanity' command until I rewrite PlayerSanity
 * Fixed the 'fmod' command and added an optional argument called 'list' that you can also manually refresh
 * Renamed 'info' command to 'sysinfo'
+* Renamed 'midget' command to 'squish'
 * Added a new line to the debugger
 * Added 'fpscap' command
 * Added 'clearprefs' command
@@ -47,9 +54,14 @@ At the start of this project, I didn't know nearly as much about C# (the coding 
 * Added 'uptime' command that tells you how long the game has been running
 * Added 'physics' command that gives you a bunch of different stats on physics simulation
 * Added 'freecam' command that connects with the work-in-progress PlayerFreecam/filmmaker
+* Added 'door' command that allows you to either toggle or break any door using its activator
 
 ### Miscellanous
 * Updated a ton of packages
+* Switched over to methods that don't rely on the Asset Store, like scoped registries or Git URLs (for packages that support it, obviously)
+* Better performance
+* Organized project folder
+* Better .gitignore
 
 ## v0.0.1 | 153 Git commits | 2025-7-9 (July 9th, 2025)
 
@@ -74,7 +86,7 @@ At the start of this project, I didn't know nearly as much about C# (the coding 
 
 ### Debug Console
 * Added a debug console
-* Added midget command :D
+* Added ~~midget~~ command :D (this is still midget in v0.0.1, as i lost the exact commit for it. sorry!)
 * Added effect command
 * Added FMOD event handler command
 * Added health command
