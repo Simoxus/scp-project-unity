@@ -4,8 +4,8 @@ using System;
 
 public class FMODCollision : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private Player player;
-
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private EventReference fmodEvent;
 
@@ -16,21 +16,13 @@ public class FMODCollision : MonoBehaviour
 
     private void Awake()
     {
-        // Check for player and if there's no player, try to find the singleton/instance
         player = player != null ? player : Player.Instance;
-
-        // Get the Rigidbody component from the GameObject this script is attached to
         rigidBody = GetComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Only proceed if this GameObject has a Rigidbody
-        if (rigidBody == null)
-        {
-            return;
-        }
-
+        if (rigidBody == null) return;
         if (transform == null || player == null || player.transform == null || player.cameraImpulseSource == null)
         {
             return;
@@ -51,7 +43,6 @@ public class FMODCollision : MonoBehaviour
                     float distanceFactor = 1f - (distanceToPlayer / shakeMaxDistance);
                     distanceFactor = Mathf.Clamp01(distanceFactor);
 
-                    // Apply a final impulse velocity that scales with collision magnitude and distance
                     Vector3 finalImpulseVelocity = new Vector3(
                         collisionMagnitude, collisionMagnitude) * distanceFactor * shakeIntensityMultiplier;
 
@@ -60,10 +51,21 @@ public class FMODCollision : MonoBehaviour
             }
             catch (NullReferenceException ex)
             {
-                Debug.LogWarning($"Collision camera shake failed: {ex}", this);
+                Log.VerboseInfo($"Collision camera shake failed: {ex}");
             }
         }
 
-        FMODHelper.PlayOneShot3D(fmodEvent, gameObject.transform.position);
+        if (AudioManager.Instance)
+        {
+            FMODHelper.PlayOneShotWithDynamicOcclusion(
+                fmodEvent,
+                gameObject.transform.position,
+                1.5f
+            );
+        }
+        else
+        {
+            FMODHelper.PlayOneShot3D(fmodEvent, gameObject.transform.position);
+        }
     }
 }
