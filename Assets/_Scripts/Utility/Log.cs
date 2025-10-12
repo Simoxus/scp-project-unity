@@ -65,14 +65,14 @@ public static class Log
     public static void VerboseWarning(object message)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"[VERBOSE] {message}");
+        Debug.LogWarning($"[VERBOSE] {message}");
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseWarning(object message, Object context)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"[VERBOSE] {message}", context);
+        Debug.LogWarning($"[VERBOSE] {message}", context);
     }
 
     // Conditional logging methods
