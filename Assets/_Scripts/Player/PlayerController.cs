@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
     private float _rotationX;
 
     private float _currentCharacterHeight;
-    private bool _currentlyMidget;
     private float _heightVelocity;
 
     private float _footstepTimer;
@@ -310,26 +309,6 @@ public class PlayerController : MonoBehaviour
     {
         _forceRotateTarget = targetRotation;
         _isForceRotating = true;
-    }
-
-    public bool ToggleMidget()
-    {
-        float standModifier = 1.8f;
-        float crouchModifier = 1.1f;
-
-        if (_currentlyMidget)
-        {
-            standingHeight += standModifier;
-            crouchHeight += crouchModifier;
-        }
-        else
-        {
-            standingHeight -= standModifier;
-            crouchHeight -= crouchModifier;
-        }
-
-        _currentlyMidget = !_currentlyMidget; // Inverse bool
-        return _currentlyMidget;
     }
 
     public float DetermineCurrentSpeed()
