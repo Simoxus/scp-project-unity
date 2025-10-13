@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Newtonsoft.Json;
 
 [Serializable]
 public class SettingSetting
@@ -33,16 +34,17 @@ public class SettingsManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            InitializeSettings();
-        }
-        else
-        {
+            Log.VerboseWarning($"Duplicate instance of {GetType().Name} found. Destroying the new one.");
             Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        InitializeSettings();
     }
 
     private void InitializeSettings()
@@ -61,7 +63,7 @@ public class SettingsManager : MonoBehaviour
             try
             {
                 string json = File.ReadAllText(settingsFilePath);
-                settingsData = JsonUtility.FromJson<SettingsData>(json);
+                settingsData = JsonConvert.DeserializeObject<SettingsData>(json);
 
                 if (settingsData == null || settingsData.categories == null)
                 {
@@ -83,11 +85,13 @@ public class SettingsManager : MonoBehaviour
     private SettingCategory GetOrCreateCategory(string categoryName)
     {
         var category = settingsData.categories.Find(c => c.categoryName == categoryName);
+
         if (category == null)
         {
             category = new SettingCategory { categoryName = categoryName };
             settingsData.categories.Add(category);
         }
+
         return category;
     }
 
@@ -109,6 +113,7 @@ public class SettingsManager : MonoBehaviour
     private string GetValue(string category, string key, string defaultValue)
     {
         var cat = settingsData.categories.Find(c => c.categoryName == category);
+
         if (cat != null)
         {
             var setting = cat.settings.Find(s => s.key == key);
@@ -117,6 +122,7 @@ public class SettingsManager : MonoBehaviour
                 return setting.value;
             }
         }
+
         return defaultValue;
     }
 
@@ -167,12 +173,12 @@ public class SettingsManager : MonoBehaviour
     {
         try
         {
-            string json = JsonUtility.ToJson(settingsData, true);
+            string json = JsonConvert.SerializeObject(settingsData, Formatting.Indented);
             File.WriteAllText(settingsFilePath, json);
         }
         catch (Exception)
         {
-
+            
         }
     }
 
@@ -183,6 +189,7 @@ public class SettingsManager : MonoBehaviour
         if (File.Exists(settingsFilePath))
         {
             File.Delete(settingsFilePath);
+            Log.VerboseInfo($"Settings file has been deleted successfully.");
         }
     }
 
@@ -195,7 +202,7 @@ public class SettingsManager : MonoBehaviour
             settingsData.categories.Remove(category);
             Save();
 
-            Log.VerboseInfo($"Category '{categoryName}' has been reset.");
+            Log.VerboseInfo($"Settings category '{categoryName}' has been reset.");
         }
     }
 
@@ -209,11 +216,13 @@ public class SettingsManager : MonoBehaviour
         if (Directory.Exists(settingsFolder))
         {
             Application.OpenURL("file://" + settingsFolder);
+            Log.VerboseInfo("Requesting that path to settings.json is opened.");
         }
     }
 
     public string GetSettingsFolderPath()
     {
+        Log.VerboseInfo($"Current settings.json folder path: {settingsFolder}");
         return settingsFolder;
     }
 }
