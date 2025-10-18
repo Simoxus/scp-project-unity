@@ -1,10 +1,22 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using FMODUnity;
+using EditorAttributes;
+
+public enum PlayerState
+{
+    Idle,
+    Walking,
+    Sprinting,
+    Crouching,
+    Freefall
+}
 
 public class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; }
+
+    [ReadOnly] public PlayerState currentState = PlayerState.Idle;
 
     [Header("Scripts")]
     public PlayerController playerController;
@@ -16,11 +28,10 @@ public class Player : MonoBehaviour
     public PlayerSanity playerSanity;
     public PlayerFootsteps playerFootsteps;
     public PlayerInteract playerInteract;
-    public UIIndicators uiIndicators;
+    public PlayerFreecam playerFreecam;
 
     [Header("Components")]
     public CharacterController characterController;
-    public StudioEventEmitter footstepEmitter;
     public GameObject cameraRoot;
     public Camera cameraBrain;
     public CinemachineCamera cameraMain;
@@ -43,13 +54,7 @@ public class Player : MonoBehaviour
     {
         AutoAssignReferences();
     }
-    
-    private void OnValidate()
-    {
-        AutoAssignReferences();
-    }
 
-    // (attempt an) Auto assignment
     private void AutoAssignReferences()
     {
         playerController = GetComponent<PlayerController>();
@@ -61,11 +66,12 @@ public class Player : MonoBehaviour
         playerSanity = GetComponent<PlayerSanity>();
         playerFootsteps = GetComponent<PlayerFootsteps>();
         playerInteract = GetComponent<PlayerInteract>();
+        playerFreecam = GetComponent<PlayerFreecam>();
 
         characterController = GetComponent<CharacterController>();
-        footstepEmitter = GetComponentInChildren<StudioEventEmitter>();
         cameraBrain = GetComponentInChildren<Camera>();
         cameraMain = GetComponentInChildren<CinemachineCamera>();
+        cameraRoot = cameraBrain.transform.parent.gameObject;
         cameraImpulseListener = GetComponentInChildren<CinemachineImpulseListener>();
         cameraImpulseSource = GetComponentInChildren<CinemachineImpulseSource>();
     }

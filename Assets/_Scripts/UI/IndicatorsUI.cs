@@ -2,14 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public enum PlayerState
-{
-    Idle,
-    Walking,
-    Sprinting,
-    Crouching
-}
-
 public class IndicatorsUI : MonoBehaviour
 {
     [Header("UI References")]
