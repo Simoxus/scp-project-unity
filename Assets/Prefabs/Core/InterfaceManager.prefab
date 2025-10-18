@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8328436560589905427}
   - component: {fileID: 6383964176985081878}
   m_Layer: 0
-  m_Name: DisplayManager
+  m_Name: InterfaceManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 611096080531058956}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -46,5 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerUI: {fileID: 0}
   playerUIOverlays: {fileID: 0}
-  playerUIIndicators: {fileID: 0}
+  indicatorsGroup: {fileID: 0}
   blinkOverlayGroup: {fileID: 0}
+  normalCursor: {fileID: 2800000, guid: d29c9ac7f3b375b4b97cc1ef8b1be2d1, type: 3}
+  clickCursor: {fileID: 2800000, guid: 8f607de57737e33469317314dc68e6ee, type: 3}
+  hotspot: {x: 0, y: 0}
