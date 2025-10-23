@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class SysInfoCommand : ConsoleBase
+    public class SysInfoCommand : BaseConsole
     {
         public override string CommandWord => "sysinfo";
         public override string Description => "Display system/runtime information.";

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class HealthCommand : ConsoleBase
+    public class HealthCommand : BaseConsole
     {
         public override string CommandWord => "health";
         public override string Description => "Modifies the player's health.";

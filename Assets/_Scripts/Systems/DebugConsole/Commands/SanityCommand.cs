@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class SanityCommand : ConsoleBase
+    public class SanityCommand : BaseConsole
     {
         public override string CommandWord => "sanity";
         public override string Description => "Modifies the player's sanity.";

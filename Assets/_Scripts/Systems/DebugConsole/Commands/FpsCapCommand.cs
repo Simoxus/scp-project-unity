@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class FpsCapCommand : ConsoleBase
+    public class FpsCapCommand : BaseConsole
     {
         public override string CommandWord => "fpscap";
         public override string Description => "Sets the target frame rate limit.";

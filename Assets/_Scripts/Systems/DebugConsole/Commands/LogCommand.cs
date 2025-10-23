@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class LogCommand : ConsoleBase
+    public class LogCommand : BaseConsole
     {
         public override string CommandWord => "log";
         public override string Description => "Logs a custom message to the console with a specified type.";
@@ -23,16 +23,16 @@ namespace Console.Commands
             switch (logType)
             {
                 case "error":
-                    Debug.LogError($"[Forced Error]: {message}");
+                    Log.Error($"[Forced Error]: {message}");
                     break;
                 case "warning":
-                    Debug.LogWarning($"[Forced Warning]: {message}");
+                    Log.Warning($"[Forced Warning]: {message}");
                     break;
                 case "log":
-                    Debug.Log($"[Forced Log]: {message}");
+                    Log.Info($"[Forced Log]: {message}");
                     break;
                 case "info":
-                    Debug.Log($"[Forced Info]: {message}");
+                    Log.Info($"[Forced Info]: {message}");
                     break;
                 default:
                     ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid log type. Use 'error', 'warning', 'log', or 'info'.</color>");

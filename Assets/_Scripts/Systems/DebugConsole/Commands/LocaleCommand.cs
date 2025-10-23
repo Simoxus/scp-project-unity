@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class LocaleCommand : ConsoleBase
+    public class LocaleCommand : BaseConsole
     {
         public override string CommandWord => "locale";
         public override string Description => "Displays the system language being used.";

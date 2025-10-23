@@ -14,17 +14,17 @@ public class ConsoleManager : MonoBehaviour
 
     private void Awake()
     {
-        // Implement Singleton pattern.
-        if (Instance == null)
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            InitializeCommands();
-        }
-        else
-        {
+            Log.VerboseWarning($"Duplicate instance of {GetType().Name} found. Destroying the new one.");
             Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        InitializeCommands();
     }
 
     private void InitializeCommands()
@@ -44,7 +44,7 @@ public class ConsoleManager : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.LogError($"ConsoleManager: Failed to register command {type.Name}: {ex}");
+                Log.Error($"Failed to register console command {type.Name}: {ex}");
             }
         }
 
@@ -60,13 +60,13 @@ public class ConsoleManager : MonoBehaviour
 
         if (commands.ContainsKey(key))
         {
-            Debug.LogWarning($"ConsoleManager: Command '{key}' has already been registered. Overwriting.");
+            Log.VerboseWarning($"Console command '{key}' has already been registered. Overwriting.");
             commands[key] = command;
         }
         else
         {
             commands.Add(key, command);
-            Debug.Log($"ConsoleManager: Registered command '{key}'.");
+            Log.VerboseInfo($"Registered console command '{key}'.");
         }
     }
 
@@ -74,14 +74,14 @@ public class ConsoleManager : MonoBehaviour
     {
         if (commands.Remove(commandWord.ToLower()))
         {
-            Debug.Log($"ConsoleManager: Unregistered command '{commandWord}'.");
+            Log.VerboseInfo($"Unregistered console command '{commandWord}'.", this);
         }
     }
 
     public void ProcessCommand(string input)
     {
         input = input.Trim();
-        if (string.IsNullOrEmpty(input)) { return; }
+        if (string.IsNullOrEmpty(input)) return;
 
         string[] parts = input.Split(' ');
         string commandWord = parts[0].ToLower();

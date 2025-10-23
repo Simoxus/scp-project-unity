@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class FmodCommand : ConsoleBase
+    public class FmodCommand : BaseConsole
     {
         public override string CommandWord => "fmod";
         public override string Description => "Debug FMOD events.";

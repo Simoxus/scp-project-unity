@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace Console.Commands
 {
-    public class HelpCommand : ConsoleBase
+    public class HelpCommand : BaseConsole
     {
         public override string CommandWord => "help";
         public override string Description => "Lists all available commands or shows usage for a specific command.";

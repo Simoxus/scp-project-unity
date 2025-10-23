@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class FreecamCommand : ConsoleBase
+    public class FreecamCommand : BaseConsole
     {
         public override string CommandWord => "freecam";
         public override string Description => "Detaches the player's camera from their character.";

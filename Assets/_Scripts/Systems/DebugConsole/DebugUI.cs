@@ -21,13 +21,11 @@ public class DebugUI : MonoBehaviour
     public TextMeshProUGUI logsOutputText;
     public ScrollRect logsScrollRect;
 
-    [Header("Log Settings")] // New header for log-specific settings
-    public int maxLogLines = 200; // NEW: Max number of lines to display, adjustable in Inspector
+    [Header("Log Settings")]
+    public int maxLogLines = 200;
 
     private StringBuilder logBuffer = new StringBuilder();
-    private const float SCROLL_BOTTOM_THRESHOLD = 0.01f;
-    private string _initalLogText; // To keep the snarky ass line
-    private List<string> _currentLogLines = new List<string>(); // NEW: To manage lines for trimming
+    private List<string> _initialLogLines = new List<string>();
 
     private void Awake()
     {
@@ -45,18 +43,14 @@ public class DebugUI : MonoBehaviour
             buttonLogsText.color = Color.gray;
         }
 
-        _initalLogText = logsOutputText.text;
-
-        // Add the initial text to our line buffer
-        // Split and add line by line to handle multi-line initial text correctly
-        string[] initialLines = _initalLogText.Split(new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
+        // Store the initial text permanently
+        string initialText = logsOutputText.text;
+        string[] initialLines = initialText.Split(new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
         foreach (string line in initialLines)
         {
-            _currentLogLines.Add(line);
+            _initialLogLines.Add(line);
         }
 
-        // Initialize the logBuffer with the initial text.
-        // We do this here once, and then `HandleLog` will update `logsOutputText.text` directly from `_currentLogLines`.
         RebuildLogBufferAndDisplayText();
     }
 
@@ -75,7 +69,7 @@ public class DebugUI : MonoBehaviour
             buttonLogs.onClick.AddListener(ShowLogs);
         }
 
-        Application.logMessageReceived += HandleLog;
+        RefreshLogs();
     }
 
     private void OnDisable()
@@ -92,8 +86,6 @@ public class DebugUI : MonoBehaviour
         {
             buttonLogs.onClick.RemoveListener(ShowLogs);
         }
-
-        Application.logMessageReceived -= HandleLog;
     }
 
     public void ShowConsole()
@@ -142,6 +134,9 @@ public class DebugUI : MonoBehaviour
                 buttonLogsText.color = Color.white;
             }
         }
+
+        RefreshLogs();
+
         if (logsScrollRect != null)
         {
             LayoutRebuilder.ForceRebuildLayoutImmediate(logsOutputText.rectTransform);
@@ -149,60 +144,32 @@ public class DebugUI : MonoBehaviour
         }
     }
 
-    void HandleLog(string logString, string stackTrace, LogType type)
+    private void RefreshLogs()
     {
-        bool atBottom = false;
-        if (logsScrollRect != null)
+        if (DebugManager.Instance != null)
         {
-            atBottom = logsScrollRect.verticalNormalizedPosition <= SCROLL_BOTTOM_THRESHOLD;
-        }
-
-        string colorTag = "";
-        switch (type)
-        {
-            case LogType.Error:
-            case LogType.Exception:
-                colorTag = "<color=#FF0000FF>";
-                break;
-            case LogType.Warning:
-                colorTag = "<color=#FFA500FF>";
-                break;
-            case LogType.Assert:
-                colorTag = "<color=#ADD8E6FF>";
-                break;
-            case LogType.Log:
-            default:
-                colorTag = "<color=#FFFFFF>";
-                break;
-        }
-
-        string formattedLog = $"{colorTag}[{type}] {logString}</color>"; // No newline here, it's added during join
-
-        // Add new log to the list
-        _currentLogLines.Add(formattedLog);
-
-        while (_currentLogLines.Count > maxLogLines)
-        {
-            _currentLogLines.RemoveAt(0); // Remove the oldest line
-        }
-
-        RebuildLogBufferAndDisplayText();
-
-        if (logsScrollRect != null && atBottom)
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(logsOutputText.rectTransform);
-            logsScrollRect.verticalNormalizedPosition = 0f;
+            RebuildLogBufferAndDisplayText();
         }
     }
 
-    // NEW: Helper method to rebuild the StringBuilder and update the TextMeshPro text
     private void RebuildLogBufferAndDisplayText()
     {
         logBuffer.Clear();
-        // Append all current lines from the list, adding a newline after each
-        for (int i = 0; i < _currentLogLines.Count; i++)
+
+        // Always add initial lines first
+        for (int i = 0; i < _initialLogLines.Count; i++)
         {
-            logBuffer.AppendLine(_currentLogLines[i]);
+            logBuffer.AppendLine(_initialLogLines[i]);
+        }
+
+        // Then add logs from DebugManager
+        if (DebugManager.Instance != null)
+        {
+            List<string> logs = DebugManager.Instance.GetLogs();
+            for (int i = 0; i < logs.Count; i++)
+            {
+                logBuffer.AppendLine(logs[i]);
+            }
         }
 
         if (logsOutputText != null)
@@ -215,25 +182,21 @@ public class DebugUI : MonoBehaviour
     {
         PlayPressSound();
 
-        _currentLogLines.Clear(); // Clears all logs, including initial text for a moment
-
-        // Re-add the initial text
-        string[] initialLines = _initalLogText.Split(new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
-        foreach (string line in initialLines)
+        if (DebugManager.Instance != null)
         {
-            _currentLogLines.Add(line);
+            DebugManager.Instance.ClearLogs();
         }
 
-        RebuildLogBufferAndDisplayText(); // Update display with only initial text
+        RebuildLogBufferAndDisplayText();
 
         if (logsScrollRect != null)
         {
-            logsScrollRect.verticalNormalizedPosition = 1f; // Scroll to top on clear
+            logsScrollRect.verticalNormalizedPosition = 1f;
         }
     }
 
     private void PlayPressSound()
     {
-        RuntimeManager.PlayOneShot(uiAccess.uiPressEvent);
+        FMODHelper.PlayOneShot(uiAccess.uiPressEvent);
     }
 }

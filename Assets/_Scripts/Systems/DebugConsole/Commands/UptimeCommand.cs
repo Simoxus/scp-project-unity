@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class UptimeCommand : ConsoleBase
+    public class UptimeCommand : BaseConsole
     {
         public override string CommandWord => "uptime";
         public override string Description => "Displays how long the game has been running.";

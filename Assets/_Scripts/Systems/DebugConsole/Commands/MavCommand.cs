@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Console.Commands
 {
-    public class MavCommand : ConsoleBase
+    public class MavCommand : BaseConsole
     {
         public override string CommandWord => "mav";
         public override string Description => "Error! Memory access violation (just kidding haha)";

@@ -10,7 +10,7 @@ using System.Linq;
  * INPUT: #FFFFFF
 */
 
-public abstract class ConsoleBase : IConsoleCommand
+public abstract class BaseConsole : IConsoleCommand
 {
     public abstract string CommandWord { get; }
     public abstract string Description { get; }

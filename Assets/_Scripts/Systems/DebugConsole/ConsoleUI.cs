@@ -35,21 +35,21 @@ public class ConsoleUI : MonoBehaviour
     {
         if (commandInputField == null)
         {
-            Debug.LogError("ConsoleUI: commandInputField is not assigned!", this);
+            Log.Warning("commandInputField is not assigned!");
             return;
         }
         if (consoleOutputText == null)
         {
-            Debug.LogError("ConsoleUI: consoleOutputText is not assigned!", this);
+            Log.Warning("consoleOutputText is not assigned!");
             return;
         }
         if (scrollRect == null)
         {
-            Debug.LogWarning("ConsoleUI: scrollRect is not assigned. Autoscrolling will not work.", this);
+            Log.Warning("scrollRect is not assigned. Autoscrolling will not work.");
         }
         if (autocompleteSuggestionsText == null)
         {
-            Debug.LogWarning("ConsoleUI: autocompleteSuggestionsText is not assigned. Autocomplete suggestions will not be displayed.", this);
+            Log.Warning("autocompleteSuggestionsText is not assigned. Autocomplete suggestions will not be displayed.");
         }
 
         _initalOutputText = consoleOutputText.text;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class TimeCommand : ConsoleBase
+    public class TimeCommand : BaseConsole
     {
         public override string CommandWord => "time";
         public override string Description => "Modifies the scene's timeScale.";

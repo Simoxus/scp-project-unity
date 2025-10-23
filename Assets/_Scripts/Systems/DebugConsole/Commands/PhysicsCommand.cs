@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class PhysicsCommand : ConsoleBase
+    public class PhysicsCommand : BaseConsole
     {
         public override string CommandWord => "physics";
         public override string Description => "Displays core physics settings.";
-        protected override string RawUsage => "uptime";
+        protected override string RawUsage => "physics";
 
         public override void Execute(string[] args)
         {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class QuitCommand : ConsoleBase
+    public class QuitCommand : BaseConsole
     {
         public override string CommandWord => "quit";
         public override string Description => "Quits the game.";

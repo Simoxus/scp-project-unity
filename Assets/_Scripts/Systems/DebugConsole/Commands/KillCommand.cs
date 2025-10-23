@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Console.Commands
 {
-    public class KillCommand : ConsoleBase
+    public class KillCommand : BaseConsole
     {
         public override string CommandWord => "kill";
         public override string Description => "Kills the player.";
