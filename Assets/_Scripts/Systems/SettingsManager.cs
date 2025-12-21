@@ -1,8 +1,10 @@
+using FMOD;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
-using Newtonsoft.Json;
 
 [Serializable]
 public class SettingSetting
@@ -26,11 +28,14 @@ public class SettingsData
 
 public class SettingsManager : MonoBehaviour
 {
+    private const string SETTINGS_FILE_NAME = "settings.json";
+
     public static SettingsManager Instance { get; private set; }
 
     private SettingsData settingsData;
     private string settingsFolder;
     private string settingsFilePath;
+    private Dictionary<string, int> categoryPriorityMap = new Dictionary<string, int>();
 
     private void Awake()
     {
@@ -51,7 +56,7 @@ public class SettingsManager : MonoBehaviour
     {
         string buildFolder = Directory.GetParent(Application.dataPath).FullName;
         settingsFolder = buildFolder;
-        settingsFilePath = Path.Combine(settingsFolder, "settings.json");
+        settingsFilePath = Path.Combine(settingsFolder, SETTINGS_FILE_NAME);
 
         LoadFromFile();
     }
@@ -72,7 +77,7 @@ public class SettingsManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                Log.Error($"Failed to load settings: {e.Message}");
+                Log.Error($"Failed to load settings file {SETTINGS_FILE_NAME}: {e.Message}");
                 settingsData = new SettingsData();
             }
         }
@@ -173,6 +178,12 @@ public class SettingsManager : MonoBehaviour
     {
         try
         {
+            settingsData.categories = settingsData.categories
+                .OrderByDescending(c => categoryPriorityMap.ContainsKey(c.categoryName)
+                    ? categoryPriorityMap[c.categoryName]
+                    : int.MinValue)
+                .ToList();
+
             string json = JsonConvert.SerializeObject(settingsData, Formatting.Indented);
             File.WriteAllText(settingsFilePath, json);
         }
@@ -182,15 +193,14 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
-    public void ResetAllSettings()
+    public void RegisterCategory(string categoryName, int priority)
     {
-        settingsData = new SettingsData();
-
-        if (File.Exists(settingsFilePath))
+        if (!categoryPriorityMap.ContainsKey(categoryName))
         {
-            File.Delete(settingsFilePath);
-            Log.VerboseInfo($"Settings file has been deleted successfully.");
+            categoryPriorityMap[categoryName] = priority;
         }
+
+        GetOrCreateCategory(categoryName);
     }
 
     public void ResetCategory(string categoryName)
@@ -206,6 +216,17 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    public void ResetAllSettings()
+    {
+        settingsData = new SettingsData();
+
+        if (File.Exists(settingsFilePath))
+        {
+            File.Delete(settingsFilePath);
+            Log.VerboseInfo($"'{SETTINGS_FILE_NAME}' has been deleted successfully.");
+        }
+    }
+
     private void OnApplicationQuit()
     {
         Save();
@@ -216,13 +237,13 @@ public class SettingsManager : MonoBehaviour
         if (Directory.Exists(settingsFolder))
         {
             Application.OpenURL("file://" + settingsFolder);
-            Log.VerboseInfo("Requesting that path to settings.json is opened.");
+            Log.VerboseInfo($"Requesting that path to '{SETTINGS_FILE_NAME}' is opened.");
         }
     }
 
     public string GetSettingsFolderPath()
     {
-        Log.VerboseInfo($"Current settings.json folder path: {settingsFolder}");
+        Log.VerboseInfo($"Current '{SETTINGS_FILE_NAME}' folder path: {settingsFolder}");
         return settingsFolder;
     }
 }
