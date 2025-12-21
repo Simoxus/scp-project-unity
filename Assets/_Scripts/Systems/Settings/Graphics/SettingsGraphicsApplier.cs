@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
-public class SettingsGraphicsApplier : MonoBehaviour
+public class SettingsGraphicsApplier : BaseSettingsApplier
 {
-    public bool inBatchMode = false;
-
     [Header("References")]
     [SerializeField] private SettingsGraphics settingsGraphics;
 
-    private void Awake()
+    protected override void InitializeReferences()
     {
         if (settingsGraphics == null)
         {
@@ -16,13 +15,41 @@ public class SettingsGraphicsApplier : MonoBehaviour
         }
     }
 
-    private void Reset()
+    private void OnEnable()
     {
-        settingsGraphics = GetComponent<SettingsGraphics>();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        ReapplyCameraSettings();
+    }
+
+    private void ReapplyCameraSettings()
+    {
+        if (settingsGraphics == null || SettingsManager.Instance == null) return;
+
+        // Get saved settings and reapply them
+        int antiAliasingValue = SettingsManager.Instance.LoadInt(settingsGraphics.CATEGORY, "AntiAliasing", 2);
+        float renderScaleValue = SettingsManager.Instance.LoadFloat(settingsGraphics.CATEGORY, "RenderScale", 1f);
+
+        inBatchMode = true;
+
+        ApplyAntiAliasing(antiAliasingValue);
+        ApplyRenderScale(renderScaleValue);
+
+        inBatchMode = false;
     }
 
     public void ApplyWindowResolution(int index)
     {
+        if (index < 0 || index >= settingsGraphics.availableResolutions.Length) return;
+
         Resolution chosenResolution = settingsGraphics.availableResolutions[index];
         Screen.SetResolution(chosenResolution.width, chosenResolution.height, Screen.fullScreenMode);
 
@@ -68,7 +95,12 @@ public class SettingsGraphicsApplier : MonoBehaviour
 
     public void ApplyRenderScale(float value)
     {
-        settingsGraphics.urpAsset.renderScale = Mathf.Clamp(value, 0.1f, 1.0f);
+        float clampedValue = Mathf.Clamp(value, 0.1f, 1.0f);
+
+        if (settingsGraphics.urpAsset != null)
+        {
+            settingsGraphics.urpAsset.renderScale = clampedValue;
+        }
 
         if (inBatchMode == false) { settingsGraphics.SaveSettingsWithDelay(); }
     }
@@ -83,7 +115,11 @@ public class SettingsGraphicsApplier : MonoBehaviour
     public void ApplyFramerateLimit(int index)
     {
         int[] framerates = { -1, 30, 60, 90, 120, 150, 180, 210, 240 };
-        Application.targetFrameRate = framerates[index];
+
+        if (index >= 0 && index < framerates.Length)
+        {
+            Application.targetFrameRate = framerates[index];
+        }
 
         if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
     }
@@ -92,53 +128,15 @@ public class SettingsGraphicsApplier : MonoBehaviour
     {
         switch (index)
         {
-            case 0: QualitySettings.globalTextureMipmapLimit = 2; break; // Quarter
-            case 1: QualitySettings.globalTextureMipmapLimit = 1; break; // Half
-            case 2: QualitySettings.globalTextureMipmapLimit = 0; break; // Full
-        }
-
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
-    }
-
-    public void ApplyShadowQuality(int index)
-    {
-        UniversalRenderPipelineAsset urpAsset = settingsGraphics.urpAsset;
-
-        // Off
-        if (index == 0)
-        {
-            QualitySettings.shadows = UnityEngine.ShadowQuality.Disable;
-            return;
-        }
-
-        // Low
-        if (index == 1)
-        {
-            QualitySettings.shadows = UnityEngine.ShadowQuality.HardOnly;
-            if (urpAsset != null)
-            {
-                urpAsset.mainLightShadowmapResolution = (int)UnityEngine.Rendering.Universal.ShadowResolution._512;
-            }
-        }
-        // Medium
-        else if (index == 2)
-        {
-            QualitySettings.shadows = UnityEngine.ShadowQuality.All;
-            QualitySettings.shadowResolution = UnityEngine.ShadowResolution.Low;
-            if (urpAsset != null)
-            {
-                urpAsset.mainLightShadowmapResolution = (int)UnityEngine.Rendering.Universal.ShadowResolution._1024;
-            }
-        }
-        // High
-        else if (index == 3)
-        {
-            QualitySettings.shadows = UnityEngine.ShadowQuality.All;
-            QualitySettings.shadowResolution = UnityEngine.ShadowResolution.High;
-            if (urpAsset != null)
-            {
-                urpAsset.mainLightShadowmapResolution = (int)UnityEngine.Rendering.Universal.ShadowResolution._2048;
-            }
+            case 0: // Quarter
+                QualitySettings.globalTextureMipmapLimit = 2;
+                break;
+            case 1: // Half
+                QualitySettings.globalTextureMipmapLimit = 1;
+                break;
+            case 2: // Full
+                QualitySettings.globalTextureMipmapLimit = 0;
+                break;
         }
 
         if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
@@ -146,39 +144,55 @@ public class SettingsGraphicsApplier : MonoBehaviour
 
     public void ApplyAntiAliasing(int index)
     {
-        UniversalRenderPipelineAsset urpAsset = settingsGraphics.urpAsset;
+        if (Player.Instance == null) return;
+        if (Player.Instance.cameraBrain == null) return;
+
         Camera cameraBrain = Player.Instance.cameraBrain;
+        UniversalAdditionalCameraData cameraData = cameraBrain.GetUniversalAdditionalCameraData();
+        UniversalRenderPipelineAsset urpAsset = settingsGraphics.urpAsset;
 
-        if (cameraBrain != null)
+        if (urpAsset != null)
         {
-            var cameraData = cameraBrain.GetUniversalAdditionalCameraData();
-
-            if (urpAsset != null)
-            {
-                urpAsset.msaaSampleCount = (index == 0) ? 1 : 1;
-            }
-
-            if (cameraData != null)
-            {
-                switch (index)
-                {
-                    case 0: // None
-                        cameraData.antialiasing = AntialiasingMode.None;
-                        break;
-                    case 1: // FXAA
-                        cameraData.antialiasing = AntialiasingMode.FastApproximateAntialiasing;
-                        cameraData.antialiasingQuality = AntialiasingQuality.High;
-                        break;
-                    case 2: // SMAA
-                        cameraData.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
-                        cameraData.antialiasingQuality = AntialiasingQuality.High;
-                        break;
-                    case 3: // TAA
-                        cameraData.antialiasing = AntialiasingMode.TemporalAntiAliasing;
-                        break;
-                }
-            }
+            urpAsset.msaaSampleCount = (index == 4) ? 4 : 1;
         }
+
+        switch (index)
+        {
+            case 0: // None
+                cameraData.antialiasing = AntialiasingMode.None;
+                break;
+
+            case 1: // FXAA
+                cameraData.antialiasing = AntialiasingMode.FastApproximateAntialiasing;
+                cameraData.antialiasingQuality = AntialiasingQuality.High;
+                break;
+
+            case 2: // SMAA
+                cameraData.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+                cameraData.antialiasingQuality = AntialiasingQuality.High;
+                break;
+
+            case 3: // TAA
+                cameraData.antialiasing = AntialiasingMode.TemporalAntiAliasing;
+                break;
+
+            case 4: // MSAA
+                cameraData.antialiasing = AntialiasingMode.None;
+                break;
+        }
+
+        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+    }
+
+    public void ApplyRenderShadows(bool enabled)
+    {
+        if (Player.Instance == null) return;
+        if (Player.Instance.cameraBrain == null) return;
+
+        Camera cameraBrain = Player.Instance.cameraBrain;
+        UniversalAdditionalCameraData cameraData = cameraBrain.GetUniversalAdditionalCameraData();
+
+        cameraData.renderShadows = enabled;
 
         if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
     }

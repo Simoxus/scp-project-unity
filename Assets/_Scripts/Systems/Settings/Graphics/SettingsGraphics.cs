@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-public class SettingsGraphics : MonoBehaviour
+public class SettingsGraphics : BaseSettings
 {
-    public const string CATEGORY = "Graphics";
+    public override string CATEGORY => "Graphics";
 
     [HideInInspector]
     public UniversalRenderPipelineAsset urpAsset;
@@ -17,18 +16,34 @@ public class SettingsGraphics : MonoBehaviour
     [Header("References")]
     public SettingsGraphicsApplier applier;
 
+    [Header("UI Elements")]
     public TMP_Dropdown graphicsAPIDropdown;
     public TMP_Dropdown windowResolutionDropdown;
     public TMP_Dropdown windowModeDropdown;
     public Slider renderScaleSlider;
     public Toggle vSyncToggle;
     public TMP_Dropdown framerateDropdown;
-
     public TMP_Dropdown textureQualityDropdown;
-    public TMP_Dropdown shadowQualityDropdown;
     public TMP_Dropdown antiAliasingDropdown;
+    public Toggle renderShadowsToggle;
 
-    private bool _isWaitingToSave = false;
+    protected override void InitializeReferences()
+    {
+        if (applier == null)
+        {
+            applier = GetComponent<SettingsGraphicsApplier>();
+        }
+
+        if (windowResolutionDropdown != null)
+        {
+            PopulateResolutionDropdown();
+        }
+
+        GetURPAsset();
+        SetGraphicsAPIOption();
+
+        QualitySettings.vSyncCount = 0;
+    }
 
     public UniversalRenderPipelineAsset GetURPAsset()
     {
@@ -36,58 +51,38 @@ public class SettingsGraphics : MonoBehaviour
         return urpAsset;
     }
 
-    private void Start()
+    public override void SaveSettings()
     {
-        if (applier == null)
-        {
-            applier = GetComponent<SettingsGraphicsApplier>();
-        }
+        SettingsManager settingsManager = SettingsManager.Instance;
+        if (settingsManager == null) return;
 
-        GetURPAsset();
-        SetGraphicsAPIOption();
+        settingsManager.SaveInt(CATEGORY, "WindowMode", windowModeDropdown.value);
+        settingsManager.SaveInt(CATEGORY, "WindowResolution", windowResolutionDropdown.value);
+        settingsManager.SaveFloat(CATEGORY, "RenderScale", renderScaleSlider.value);
+        settingsManager.SaveBool(CATEGORY, "VSync", vSyncToggle.isOn);
+        settingsManager.SaveInt(CATEGORY, "Framerate", framerateDropdown.value);
+        settingsManager.SaveInt(CATEGORY, "TextureQuality", textureQualityDropdown.value);
+        settingsManager.SaveInt(CATEGORY, "AntiAliasing", antiAliasingDropdown.value);
+        settingsManager.SaveBool(CATEGORY, "RenderShadows", renderShadowsToggle.isOn);
 
-        if (windowResolutionDropdown != null)
-        {
-            PopulateResolutionDropdown();
-        }
-
-        QualitySettings.vSyncCount = 0;
-
-        LoadSettings();
+        settingsManager.Save();
     }
 
-    public void SaveSettings()
+    public override void LoadSettings()
     {
-        var sm = SettingsManager.Instance;
-
-        sm.SaveInt(CATEGORY, "WindowMode", windowModeDropdown.value);
-        sm.SaveInt(CATEGORY, "WindowResolution", windowResolutionDropdown.value);
-        sm.SaveFloat(CATEGORY, "RenderScale", renderScaleSlider.value);
-        sm.SaveBool(CATEGORY, "VSync", vSyncToggle.isOn);
-        sm.SaveInt(CATEGORY, "Framerate", framerateDropdown.value);
-
-        sm.SaveInt(CATEGORY, "TextureQuality", textureQualityDropdown.value);
-        sm.SaveInt(CATEGORY, "ShadowQuality", shadowQualityDropdown.value);
-        sm.SaveInt(CATEGORY, "AntiAliasing", antiAliasingDropdown.value);
-
-        sm.Save();
-    }
-
-    public void LoadSettings()
-    {
-        var sm = SettingsManager.Instance;
-
-        windowModeDropdown.value = sm.LoadInt(CATEGORY, "WindowMode", 0);
-        windowResolutionDropdown.value = sm.LoadInt(CATEGORY, "WindowResolution", windowResolutionDropdown.value);
-        renderScaleSlider.value = sm.LoadFloat(CATEGORY, "RenderScale", 1f);
-        vSyncToggle.isOn = sm.LoadBool(CATEGORY, "VSync", false);
-        framerateDropdown.value = sm.LoadInt(CATEGORY, "Framerate", 0);
-
-        textureQualityDropdown.value = sm.LoadInt(CATEGORY, "TextureQuality", 2);
-        shadowQualityDropdown.value = sm.LoadInt(CATEGORY, "ShadowQuality", 3);
-        antiAliasingDropdown.value = sm.LoadInt(CATEGORY, "AntiAliasing", 2);
+        SettingsManager settingsManager = SettingsManager.Instance;
+        if (settingsManager == null) return;
 
         applier.inBatchMode = true;
+
+        windowModeDropdown.value = settingsManager.LoadInt(CATEGORY, "WindowMode", 0);
+        windowResolutionDropdown.value = settingsManager.LoadInt(CATEGORY, "WindowResolution", windowResolutionDropdown.value);
+        renderScaleSlider.value = settingsManager.LoadFloat(CATEGORY, "RenderScale", 1f);
+        vSyncToggle.isOn = settingsManager.LoadBool(CATEGORY, "VSync", false);
+        framerateDropdown.value = settingsManager.LoadInt(CATEGORY, "Framerate", 0);
+        textureQualityDropdown.value = settingsManager.LoadInt(CATEGORY, "TextureQuality", 2);
+        antiAliasingDropdown.value = settingsManager.LoadInt(CATEGORY, "AntiAliasing", 2);
+        renderShadowsToggle.isOn = settingsManager.LoadBool(CATEGORY, "RenderShadows", true);
 
         applier.ApplyWindowMode(windowModeDropdown.value);
         applier.ApplyWindowResolution(windowResolutionDropdown.value);
@@ -95,46 +90,16 @@ public class SettingsGraphics : MonoBehaviour
         applier.ApplyVSync(vSyncToggle.isOn);
         applier.ApplyFramerateLimit(framerateDropdown.value);
         applier.ApplyTextureQuality(textureQualityDropdown.value);
-        applier.ApplyShadowQuality(shadowQualityDropdown.value);
         applier.ApplyAntiAliasing(antiAliasingDropdown.value);
+        applier.ApplyRenderShadows(renderShadowsToggle.isOn);
 
         applier.inBatchMode = false;
-
-        SaveSettings();
-    }
-
-    public void ResetCategorySettings()
-    {
-        if (SettingsManager.Instance == null) return;
-
-        SettingsManager.Instance.ResetCategory(CATEGORY);
-
-        LoadSettings();
-        SaveSettings();
-    }
-
-    public async void SaveSettingsWithDelay(float delay = 0.5f)
-    {
-        if (_isWaitingToSave) { return; }
-
-        _isWaitingToSave = true;
-
-        float elapsedTime = 0f;
-        while (elapsedTime < delay)
-        {
-            await UniTask.Yield();
-            elapsedTime += Time.unscaledDeltaTime;
-
-            // If another call comes in, reset the saving timer
-            if (!_isWaitingToSave) { return; }
-        }
-
-        SaveSettings();
-        _isWaitingToSave = false;
     }
 
     public void SetGraphicsAPIOption()
     {
+        if (graphicsAPIDropdown == null) return;
+
         string currentAPI = SystemInfo.graphicsDeviceType.ToString();
 
         switch (currentAPI)
@@ -165,10 +130,8 @@ public class SettingsGraphics : MonoBehaviour
         List<string> options = new List<string>();
         List<Resolution> uniqueResolutions = new List<Resolution>();
 
-        // Clear any existing options (there shouldn't be anyway tho)
         windowResolutionDropdown.ClearOptions();
 
-        // Filter to unique resolutions (by width and height only)
         HashSet<string> seenResolutions = new HashSet<string>();
 
         for (int i = 0; i < allResolutions.Length; i++)
@@ -176,7 +139,6 @@ public class SettingsGraphics : MonoBehaviour
             Resolution res = allResolutions[i];
             string resKey = $"{res.width}x{res.height}";
 
-            // Only add if we haven't seen this resolution before
             if (!seenResolutions.Contains(resKey))
             {
                 seenResolutions.Add(resKey);
@@ -185,7 +147,6 @@ public class SettingsGraphics : MonoBehaviour
             }
             else
             {
-                // If this resolution has been seen, keep the one with the highest refresh rate
                 int existingIndex = uniqueResolutions.FindIndex(r => r.width == res.width && r.height == res.height);
                 if (existingIndex >= 0)
                 {
