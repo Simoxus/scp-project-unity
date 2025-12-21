@@ -1,23 +1,16 @@
 ﻿using UnityEngine;
 
-public class SettingsAudioApplier : MonoBehaviour
+public class SettingsAudioApplier : BaseSettingsApplier
 {
-    public bool inBatchMode = false;
-
     [Header("References")]
     [SerializeField] private SettingsAudio settingsAudio;
 
-    private void Awake()
+    protected override void InitializeReferences()
     {
         if (settingsAudio == null)
         {
             settingsAudio = GetComponent<SettingsAudio>();
         }
-    }
-
-    private void Reset()
-    {
-        settingsAudio = GetComponent<SettingsAudio>();
     }
 
     public void ApplyMasterVolume(float value)
@@ -62,5 +55,26 @@ public class SettingsAudioApplier : MonoBehaviour
         }
 
         if (inBatchMode == false) { settingsAudio.SaveSettingsWithDelay(); }
+    }
+
+    public void ApplyInterfaceVolume(float value)
+    {
+        if (AudioManager.Instance != null)
+        {
+            float clampedVolumeValue = Mathf.Clamp(value, 0.0f, 1.0f);
+            AudioManager.Instance.SetUIVolume(clampedVolumeValue);
+        }
+
+        if (inBatchMode == false) { settingsAudio.SaveSettingsWithDelay(); }
+    }
+
+    public void ApplyRealtimeOcclusion(bool enabled)
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.SetOcclusionEnabled(enabled);
+        }
+
+        if (inBatchMode == false) { settingsAudio.SaveSettings(); }
     }
 }

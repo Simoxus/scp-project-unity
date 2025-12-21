@@ -1,91 +1,65 @@
-﻿using Cysharp.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingsAudio : MonoBehaviour
+public class SettingsAudio : BaseSettings
 {
-    public const string CATEGORY = "Audio";
+    public override string CATEGORY => "Audio";
 
     [Header("References")]
     public SettingsAudioApplier applier;
 
+    [Header("UI Elements")]
     public Slider masterVolumeSlider;
     public Slider soundVolumeSlider;
     public Slider musicVolumeSlider;
     public Slider voiceoverVolumeSlider;
+    public Slider interfaceVolumeSlider;
+    public Toggle realtimeOcclusionToggle;
 
-    private bool _isWaitingToSave = false;
-
-    private void Start()
+    protected override void InitializeReferences()
     {
         if (applier == null)
         {
             applier = GetComponent<SettingsAudioApplier>();
         }
-
-        LoadSettings();
     }
 
-    public void SaveSettings()
+    public override void SaveSettings()
     {
-        var sm = SettingsManager.Instance;
+        SettingsManager settingsManager = SettingsManager.Instance;
+        if (settingsManager == null) return;
 
-        sm.SaveFloat(CATEGORY, "MasterVolume", masterVolumeSlider.value);
-        sm.SaveFloat(CATEGORY, "SoundVolume", soundVolumeSlider.value);
-        sm.SaveFloat(CATEGORY, "MusicVolume", musicVolumeSlider.value);
-        sm.SaveFloat(CATEGORY, "VoiceoverVolume", voiceoverVolumeSlider.value);
+        settingsManager.SaveFloat(CATEGORY, "MasterVolume", masterVolumeSlider.value);
+        settingsManager.SaveFloat(CATEGORY, "SoundVolume", soundVolumeSlider.value);
+        settingsManager.SaveFloat(CATEGORY, "MusicVolume", musicVolumeSlider.value);
+        settingsManager.SaveFloat(CATEGORY, "VoiceoverVolume", voiceoverVolumeSlider.value);
+        settingsManager.SaveFloat(CATEGORY, "InterfaceVolume", interfaceVolumeSlider.value);
+        settingsManager.SaveBool(CATEGORY, "RealtimeOcclusion", realtimeOcclusionToggle.isOn);
 
-        sm.Save();
+        settingsManager.Save();
     }
 
-    public void LoadSettings()
+    public override void LoadSettings()
     {
-        var sm = SettingsManager.Instance;
-
-        masterVolumeSlider.value = sm.LoadFloat(CATEGORY, "MasterVolume", 1f);
-        soundVolumeSlider.value = sm.LoadFloat(CATEGORY, "SoundVolume", 1f);
-        musicVolumeSlider.value = sm.LoadFloat(CATEGORY, "MusicVolume", 1f);
-        voiceoverVolumeSlider.value = sm.LoadFloat(CATEGORY, "VoiceoverVolume", 1f);
+        SettingsManager settingsManager = SettingsManager.Instance;
+        if (settingsManager == null) return;
 
         applier.inBatchMode = true;
+
+        masterVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "MasterVolume", 1f);
+        soundVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "SoundVolume", 1f);
+        musicVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "MusicVolume", 1f);
+        voiceoverVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "VoiceoverVolume", 1f);
+        interfaceVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "InterfaceVolume", 1f);
+        realtimeOcclusionToggle.isOn = settingsManager.LoadBool(CATEGORY, "InterfaceVolume", true);
 
         applier.ApplyMasterVolume(masterVolumeSlider.value);
         applier.ApplySoundVolume(soundVolumeSlider.value);
         applier.ApplyMusicVolume(musicVolumeSlider.value);
         applier.ApplyVoiceoverVolume(voiceoverVolumeSlider.value);
+        applier.ApplyInterfaceVolume(interfaceVolumeSlider.value);
+        applier.ApplyRealtimeOcclusion(realtimeOcclusionToggle.isOn);
 
         applier.inBatchMode = false;
-
-        SaveSettings();
-    }
-
-    public void ResetCategorySettings()
-    {
-        if (SettingsManager.Instance == null) return;
-
-        SettingsManager.Instance.ResetCategory(CATEGORY);
-
-        LoadSettings();
-        SaveSettings();
-    }
-
-    public async void SaveSettingsWithDelay(float delay = 0.5f)
-    {
-        if (_isWaitingToSave) { return; }
-
-        _isWaitingToSave = true;
-
-        float elapsedTime = 0f;
-        while (elapsedTime < delay)
-        {
-            await UniTask.Yield();
-            elapsedTime += Time.unscaledDeltaTime;
-
-            // If another call comes in, reset the saving timer
-            if (!_isWaitingToSave) { return; }
-        }
-
-        SaveSettings();
-        _isWaitingToSave = false;
     }
 }
