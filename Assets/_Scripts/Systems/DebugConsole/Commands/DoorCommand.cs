@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using FMODUnity;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -38,15 +39,44 @@ namespace Console.Commands
             Ray ray = new(cameraMain.transform.position, cameraMain.transform.forward);
             if (!Physics.Raycast(ray, out RaycastHit hit, 15f)) return;
 
-            // Try to get references
-            ButtonDoorActivator buttonActivator = hit.collider.GetComponent<ButtonDoorActivator>();
-            KeycardDoorActivator keycardActivator = hit.collider.GetComponent<KeycardDoorActivator>();
-            KeypadDoorActivator keypadActivator = hit.collider.GetComponent<KeypadDoorActivator>();
+            // Try to find any door or gate activator
+            MonoBehaviour activator = FindActivator(hit.collider.gameObject);
+            BaseDoorController doorController = null;
 
-            // Check if we hit anything valid
-            bool hasActivator = buttonActivator != null || keycardActivator != null || keypadActivator != null;
+            // If no activator, try to find door controller directly (for cell doors)
+            if (activator == null)
+            {
+                doorController = FindDoorController(hit.collider.gameObject);
+            }
 
-            if (!hasActivator)
+            // If no activator found, check if it's a door part with FMOD Collision and Rigidbody
+            if (activator == null && doorController == null)
+            {
+                StudioEventEmitter fmodCollision = hit.collider.GetComponent<StudioEventEmitter>();
+                Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+
+                if (fmodCollision != null && rb != null)
+                {
+                    // Try to find activator in grandparent
+                    Transform grandparent = hit.collider.transform.parent?.parent;
+                    if (grandparent != null)
+                    {
+                        activator = FindActivator(grandparent.gameObject);
+
+                        if (activator == null)
+                        {
+                            doorController = FindDoorController(grandparent.gameObject);
+                        }
+
+                        if (activator != null || doorController != null)
+                        {
+                            ConsoleManager.LogToConsole("<color=#ADD8E6FF>Found door controller in grandparent object.</color>");
+                        }
+                    }
+                }
+            }
+
+            if (activator == null && doorController == null)
             {
                 ConsoleManager.LogToConsole("<color=#ADD8E6FF>The object hit is not a valid door activator.</color>");
                 return;
@@ -55,11 +85,17 @@ namespace Console.Commands
             switch (action)
             {
                 case "toggle":
-                    await HandleToggle(buttonActivator, keycardActivator, keypadActivator);
+                    if (activator != null)
+                        await HandleToggle(activator);
+                    else
+                        await HandleToggleController(doorController);
                     break;
 
                 case "break":
-                    await HandleBreak(buttonActivator, keycardActivator, keypadActivator);
+                    if (activator != null)
+                        await HandleBreak(activator);
+                    else
+                        await HandleBreakController(doorController);
                     break;
 
                 default:
@@ -68,53 +104,134 @@ namespace Console.Commands
             }
         }
 
-        private async UniTask HandleToggle(
-            ButtonDoorActivator buttonActivator, KeycardDoorActivator keycardActivator, KeypadDoorActivator keypadActivator)
+        private MonoBehaviour FindActivator(GameObject obj)
         {
-            // Handle activators
-            if (buttonActivator != null)
+            // Try to find BaseDoorActivator first
+            var doorActivator = obj.GetComponentInChildren<BaseDoorActivator>();
+            if (doorActivator != null) return doorActivator;
+
+            // Try to find BaseGateActivator
+            var gateActivator = obj.GetComponentInChildren<BaseGateActivator>();
+            return gateActivator;
+        }
+
+        private BaseDoorController FindDoorController(GameObject obj)
+        {
+            // Check hit object first
+            var controller = obj.GetComponent<BaseDoorController>();
+            if (controller != null) return controller;
+
+            // Check children
+            controller = obj.GetComponentInChildren<BaseDoorController>();
+            return controller;
+        }
+
+        private async UniTask HandleToggle(MonoBehaviour activator)
+        {
+            if (activator is BaseDoorActivator doorActivator)
             {
-                ConsoleManager.LogToConsole($"<color=#33CC33>Button door toggled.</color>");
-                await buttonActivator.targetDoorController.ToggleDoor();
-                return;
+                var controllerField = doorActivator.GetType().GetField("targetDoorController");
+                if (controllerField != null)
+                {
+                    var controller = controllerField.GetValue(doorActivator);
+                    if (controller != null)
+                    {
+                        var method = controller.GetType().GetMethod("ToggleDoor");
+                        if (method != null)
+                        {
+                            string activatorType = doorActivator.GetType().Name.Replace("DoorActivator", "");
+                            ConsoleManager.LogToConsole($"<color=#33CC33>{activatorType} door toggled.</color>");
+                            await (UniTask)method.Invoke(controller, null);
+                            return;
+                        }
+                    }
+                }
             }
-            if (keycardActivator != null)
+            else if (activator is BaseGateActivator gateActivator)
             {
-                ConsoleManager.LogToConsole($"<color=#33CC33>Keycard door toggled.</color>");
-                await keycardActivator.targetDoorController.ToggleDoor();
-                return;
+                var controllerField = gateActivator.GetType().GetField("targetGateController");
+                if (controllerField != null)
+                {
+                    var controller = controllerField.GetValue(gateActivator);
+                    if (controller != null)
+                    {
+                        var method = controller.GetType().GetMethod("ToggleGate");
+                        if (method != null)
+                        {
+                            string activatorType = gateActivator.GetType().Name.Replace("GateActivator", "");
+                            ConsoleManager.LogToConsole($"<color=#33CC33>{activatorType} gate toggled.</color>");
+                            await (UniTask)method.Invoke(controller, null);
+                            return;
+                        }
+                    }
+                }
             }
-            if (keypadActivator != null)
+
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Could not find controller for activator.</color>");
+        }
+
+        private async UniTask HandleBreak(MonoBehaviour activator)
+        {
+            if (activator is BaseDoorActivator doorActivator)
             {
-                ConsoleManager.LogToConsole($"<color=#33CC33>Keypad door toggled.</color>");
-                await keypadActivator.targetDoorController.ToggleDoor();
-                return;
+                var controllerField = doorActivator.GetType().GetField("targetDoorController");
+                if (controllerField != null)
+                {
+                    var controller = controllerField.GetValue(doorActivator);
+                    if (controller != null)
+                    {
+                        var method = controller.GetType().GetMethod("BreakDoor");
+                        if (method != null)
+                        {
+                            string activatorType = doorActivator.GetType().Name.Replace("DoorActivator", "");
+                            ConsoleManager.LogToConsole($"<color=#33CC33>{activatorType} door broken.</color>");
+                            await (UniTask)method.Invoke(controller, null);
+                            return;
+                        }
+                    }
+                }
+            }
+            else if (activator is BaseGateActivator gateActivator)
+            {
+                var controllerField = gateActivator.GetType().GetField("targetGateController");
+                if (controllerField != null)
+                {
+                    var controller = controllerField.GetValue(gateActivator);
+                    if (controller != null)
+                    {
+                        var method = controller.GetType().GetMethod("ToggleGate");
+                        if (method != null)
+                        {
+                            string activatorType = gateActivator.GetType().Name.Replace("GateActivator", "");
+                            ConsoleManager.LogToConsole($"<color=#33CC33>{activatorType} gate toggled.</color>");
+                            await (UniTask)method.Invoke(controller, null);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            ConsoleManager.LogToConsole("<color=#FF0000FF>Could not find controller for activator.</color>");
+        }
+
+        private async UniTask HandleToggleController(BaseDoorController controller)
+        {
+            var method = controller.GetType().GetMethod("ToggleDoor");
+            if (method != null)
+            {
+                ConsoleManager.LogToConsole($"<color=#33CC33>Cell door toggled.</color>");
+                await (UniTask)method.Invoke(controller, null);
             }
         }
 
-        private async UniTask HandleBreak(
-            ButtonDoorActivator buttonActivator, KeycardDoorActivator keycardActivator, KeypadDoorActivator keypadActivator)
+        private async UniTask HandleBreakController(BaseDoorController controller)
         {
-            // Handle activators
-            if (buttonActivator != null)
+            var method = controller.GetType().GetMethod("BreakDoor");
+            if (method != null)
             {
-                ConsoleManager.LogToConsole($"<color=#33CC33>Button door broken.</color>");
-                await buttonActivator.targetDoorController.BreakDoor();
-                return;
-            }
-            if (keycardActivator != null)
-            {
-                ConsoleManager.LogToConsole($"<color=#33CC33>Keycard door broken.</color>");
-                await keycardActivator.targetDoorController.BreakDoor();
-                return;
-            }
-            if (keypadActivator != null)
-            {
-                ConsoleManager.LogToConsole($"<color=#33CC33>Keypad door broken.</color>");
-                await keypadActivator.targetDoorController.BreakDoor();
-                return;
+                ConsoleManager.LogToConsole($"<color=#33CC33>Cell door broken.</color>");
+                await (UniTask)method.Invoke(controller, null);
             }
         }
     }
 }
-
