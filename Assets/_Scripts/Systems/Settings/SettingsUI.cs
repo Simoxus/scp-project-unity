@@ -1,8 +1,8 @@
+using FMODUnity;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using FMODUnity;
-using TMPro;
 
 public class SettingsUI : MonoBehaviour
 {
@@ -13,7 +13,6 @@ public class SettingsUI : MonoBehaviour
         public GameObject panel;    // panel this button controls
         public Button button;       // existing button in scene
         public TMP_Text buttonText;
-        public Outline buttonOutline;
     }
 
     [SerializeField] private EventReference uiPressEvent;
@@ -35,10 +34,6 @@ public class SettingsUI : MonoBehaviour
             // Hide all panels by default
             if (tabs[i].panel != null)
                 tabs[i].panel.SetActive(false);
-
-            // Ensure Outline is initially disabled
-            if (tabs[i].buttonOutline != null)
-                tabs[i].buttonOutline.enabled = false;
 
             int capturedIndex = i;
             tabs[i].button.onClick.AddListener(() => ShowTab(capturedIndex));
@@ -72,12 +67,6 @@ public class SettingsUI : MonoBehaviour
                 {
                     tabs[i].buttonText.fontStyle = FontStyles.Normal;
                 }
-            }
-
-            if (tabs[i].buttonOutline != null)
-            {
-                // Enable outline for the active tab, disable for others
-                tabs[i].buttonOutline.enabled = isActiveTab;
             }
         }
 
