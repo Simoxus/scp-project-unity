@@ -1,74 +1,61 @@
-﻿using Cysharp.Threading.Tasks;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingsControls : MonoBehaviour
+public class SettingsControls : BaseSettings
 {
-    public const string CATEGORY = "Controls";
+    public override string CATEGORY => "Controls";
 
     [Header("References")]
     public SettingsControlsApplier applier;
     public Player player;
 
+    [Header("UI Elements")]
     public Toggle invertYAxisToggle;
-
     public Slider mouseSensitivitySlider;
     public Toggle cameraSmoothingToggle;
-
     public Slider controllerSensitivitySlider;
     public Toggle controllerSmoothingToggle;
     public Toggle controllerRumbleToggle;
-
     public TMP_Dropdown headbobbingStyleDropdown;
 
-    private bool _isWaitingToSave = false;
-
-    private void Awake()
+    protected override void InitializeReferences()
     {
-        player = player != null ? player : Player.Instance;
+        if (player == null) player = Player.Instance;
+        if (applier == null) applier = GetComponent<SettingsControlsApplier>();
     }
 
-    private void Start()
+    public override void SaveSettings()
     {
-        if (applier == null)
-        {
-            applier = GetComponent<SettingsControlsApplier>();
-        }
+        SettingsManager settingsManager = SettingsManager.Instance;
+        if (settingsManager == null) return;
 
-        LoadSettings();
+        settingsManager.SaveBool(CATEGORY, "InvertYAxis", invertYAxisToggle.isOn);
+        settingsManager.SaveFloat(CATEGORY, "MouseSensitivity", mouseSensitivitySlider.value);
+        settingsManager.SaveBool(CATEGORY, "CameraSmoothing", cameraSmoothingToggle.isOn);
+        settingsManager.SaveFloat(CATEGORY, "ControllerSensitivity", controllerSensitivitySlider.value);
+        settingsManager.SaveBool(CATEGORY, "ControllerSmoothing", controllerSmoothingToggle.isOn);
+        settingsManager.SaveBool(CATEGORY, "ControllerRumble", controllerRumbleToggle.isOn);
+
+        settingsManager.Save();
     }
 
-    public void SaveSettings()
+    public override void LoadSettings()
     {
-        var sm = SettingsManager.Instance;
+        SettingsManager settingsManager = SettingsManager.Instance;
+        if (settingsManager == null) return;
 
-        sm.SaveBool(CATEGORY, "InvertYAxis", invertYAxisToggle.isOn);
-
-        sm.SaveFloat(CATEGORY, "MouseSensitivity", mouseSensitivitySlider.value);
-        sm.SaveBool(CATEGORY, "CameraSmoothing", cameraSmoothingToggle.isOn);
-
-        sm.SaveFloat(CATEGORY, "ControllerSensitivity", controllerSensitivitySlider.value);
-        sm.SaveBool(CATEGORY, "ControllerSmoothing", controllerSmoothingToggle.isOn);
-        sm.SaveBool(CATEGORY, "ControllerRumble", controllerRumbleToggle.isOn);
-
-        sm.Save();
-    }
-
-    public void LoadSettings()
-    {
-        var sm = SettingsManager.Instance;
-
-        invertYAxisToggle.isOn = sm.LoadBool(CATEGORY, "InvertYAxis", false);
-
-        mouseSensitivitySlider.value = sm.LoadFloat(CATEGORY, "MouseSensitivity", 2.5f);
-        cameraSmoothingToggle.isOn = sm.LoadBool(CATEGORY, "CameraSmoothing", true);
-
-        controllerSensitivitySlider.value = sm.LoadFloat(CATEGORY, "ControllerSensitivity", 2f);
-        controllerSmoothingToggle.isOn = sm.LoadBool(CATEGORY, "ControllerSmoothing", true);
-        controllerRumbleToggle.isOn = sm.LoadBool(CATEGORY, "ControllerRumble", true);
+        if (player == null) player = Player.Instance;
+        if (player == null) return;
 
         applier.inBatchMode = true;
+
+        invertYAxisToggle.isOn = settingsManager.LoadBool(CATEGORY, "InvertYAxis", false);
+        mouseSensitivitySlider.value = settingsManager.LoadFloat(CATEGORY, "MouseSensitivity", 2.5f);
+        cameraSmoothingToggle.isOn = settingsManager.LoadBool(CATEGORY, "CameraSmoothing", true);
+        controllerSensitivitySlider.value = settingsManager.LoadFloat(CATEGORY, "ControllerSensitivity", 2f);
+        controllerSmoothingToggle.isOn = settingsManager.LoadBool(CATEGORY, "ControllerSmoothing", true);
+        controllerRumbleToggle.isOn = settingsManager.LoadBool(CATEGORY, "ControllerRumble", true);
 
         applier.ApplyInvertYAxis(invertYAxisToggle.isOn);
         applier.ApplyMouseSensitivity(mouseSensitivitySlider.value);
@@ -78,37 +65,5 @@ public class SettingsControls : MonoBehaviour
         applier.ApplyControllerRumble(controllerRumbleToggle.isOn);
 
         applier.inBatchMode = false;
-
-        SaveSettings();
-    }
-
-    public void ResetCategorySettings()
-    {
-        if (SettingsManager.Instance == null) return;
-
-        SettingsManager.Instance.ResetCategory(CATEGORY);
-
-        LoadSettings();
-        SaveSettings();
-    }
-
-    public async void SaveSettingsWithDelay(float delay = 0.5f)
-    {
-        if (_isWaitingToSave) { return; }
-
-        _isWaitingToSave = true;
-
-        float elapsedTime = 0f;
-        while (elapsedTime < delay)
-        {
-            await UniTask.Yield();
-            elapsedTime += Time.unscaledDeltaTime;
-
-            // If another call comes in, reset the saving timer
-            if (!_isWaitingToSave) { return; }
-        }
-
-        SaveSettings();
-        _isWaitingToSave = false;
     }
 }

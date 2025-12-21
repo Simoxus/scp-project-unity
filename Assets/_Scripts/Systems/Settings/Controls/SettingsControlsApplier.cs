@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 
-public class SettingsControlsApplier : MonoBehaviour
+public class SettingsControlsApplier : BaseSettingsApplier
 {
-    public bool inBatchMode = false;
-
     [Header("References")]
     [SerializeField] private SettingsControls settingsControls;
 
-    private void Awake()
+    protected override void InitializeReferences()
     {
         if (settingsControls == null)
         {
@@ -15,50 +13,57 @@ public class SettingsControlsApplier : MonoBehaviour
         }
     }
 
-    private void Reset()
-    {
-        settingsControls = GetComponent<SettingsControls>();
-    }
-
     public void ApplyInvertYAxis(bool enabled)
     {
+        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
+
         settingsControls.player.playerController.doLookInvert = enabled;
 
-        if (inBatchMode == false) { settingsControls.SaveSettings(); }
+        if (!inBatchMode) settingsControls.SaveSettings();
     }
 
     public void ApplyMouseSensitivity(float value)
     {
+        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
+
         settingsControls.player.playerController.lookSpeed = Mathf.Clamp(value, 0.1f, 5f);
 
-        if (inBatchMode == false) { settingsControls.SaveSettingsWithDelay(); }
+        if (!inBatchMode) settingsControls.SaveSettingsWithDelay();
     }
 
     public void ApplyCameraSmoothing(bool enabled)
     {
+        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
+
         settingsControls.player.playerController.doSmoothLook = enabled;
 
-        if (inBatchMode == false) { settingsControls.SaveSettings(); }
+        if (!inBatchMode) settingsControls.SaveSettings();
     }
 
     public void ApplyControllerSensitivity(float value)
     {
-        //settingsControls.player.playerController.lookSpeed = Mathf.Clamp(value, 0.1f, 5f);
+        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
 
-        if (inBatchMode == false) { settingsControls.SaveSettingsWithDelay(); }
+        // TODO: Implement controller sensitivity
+
+        if (!inBatchMode) settingsControls.SaveSettingsWithDelay();
     }
 
     public void ApplyControllerSmoothing(bool enabled)
     {
-        //settingsControls.player.playerController.doSmoothLook = enabled;
+        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
 
-        if (inBatchMode == false) { settingsControls.SaveSettings(); }
+        // TODO: Implement controller smoothing
+
+        if (!inBatchMode) settingsControls.SaveSettings();
     }
 
     public void ApplyControllerRumble(bool enabled)
     {
-        //settingsControls.player.playerController.rumble = enabled;
+        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
 
-        if (inBatchMode == false) { settingsControls.SaveSettings(); }
+        // TODO: Implement controller rumble
+
+        if (!inBatchMode) settingsControls.SaveSettings();
     }
 }
