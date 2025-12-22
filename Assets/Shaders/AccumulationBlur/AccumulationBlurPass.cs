@@ -14,10 +14,12 @@ public class AccumulationBlurPass : ScriptableRenderPass
     private static readonly int AccumulationTexID = Shader.PropertyToID("_AccumulationTex");
     private static readonly int CurrentFrameID = Shader.PropertyToID("_CurrentFrame");
     private static readonly int BlurPowerID = Shader.PropertyToID("_BlurPower");
+    private static readonly int DecayID = Shader.PropertyToID("_Decay");
+    private static readonly int DecayStrengthID = Shader.PropertyToID("_DecayStrength");
     private static readonly int DesaturationID = Shader.PropertyToID("_Desaturation");
     private static readonly int TintColorID = Shader.PropertyToID("_TintColor");
 
-    private bool isFirstFrame = true;
+    private bool _isFirstFrame = true;
 
     private class PassData
     {
@@ -27,6 +29,8 @@ public class AccumulationBlurPass : ScriptableRenderPass
         public TextureHandle temp;
         public TextureHandle destination;
         public float blurPower;
+        public float decay;
+        public float decayStrength;
         public float desaturation;
         public Color tintColor;
     }
@@ -53,7 +57,7 @@ public class AccumulationBlurPass : ScriptableRenderPass
 
         if (effect == null || !effect.IsActive())
         {
-            isFirstFrame = true;
+            _isFirstFrame = true;
             accumulationTexture?.Release();
             accumulationTexture = null;
             return;
@@ -65,7 +69,6 @@ public class AccumulationBlurPass : ScriptableRenderPass
         desc.msaaSamples = 1;
         desc.useMipMap = false;
         desc.autoGenerateMips = false;
-        // Use a color format that won't cause color shifts
         desc.colorFormat = RenderTextureFormat.DefaultHDR;
 
         RenderingUtils.ReAllocateHandleIfNeeded(
@@ -77,9 +80,9 @@ public class AccumulationBlurPass : ScriptableRenderPass
         );
 
         // First frame: Initialize accumulation buffer with current frame
-        if (isFirstFrame)
+        if (_isFirstFrame)
         {
-            isFirstFrame = false;
+            _isFirstFrame = false;
 
             TextureHandle accumulationHandle = renderGraph.ImportTexture(accumulationTexture);
 
@@ -101,13 +104,13 @@ public class AccumulationBlurPass : ScriptableRenderPass
             return;
         }
 
-        // Normal operation: Blend accumulated frames with current frame
+        // Normal operation: Apply decay to accumulated frame, then blend with current
         TextureHandle accumulationHandle2 = renderGraph.ImportTexture(accumulationTexture);
         TextureHandle tempHandle = UniversalRenderer.CreateRenderGraphTexture(
             renderGraph, desc, "_TempAccumulation", false
         );
 
-        // Step 1: Blend previous accumulated frame with current frame
+        // Step 1: Apply decay and effects to accumulated buffer, then blend with current frame
         using (var builder = renderGraph.AddRasterRenderPass<PassData>(PROFILER_TAG, out var passData))
         {
             passData.material = material;
@@ -115,6 +118,8 @@ public class AccumulationBlurPass : ScriptableRenderPass
             passData.accumulation = accumulationHandle2;
             passData.temp = tempHandle;
             passData.blurPower = effect.blurPower.value;
+            passData.decay = effect.decay.value;
+            passData.decayStrength = effect.decayStrength.value;
             passData.desaturation = effect.desaturation.value;
             passData.tintColor = effect.tintColor.value;
 
@@ -126,8 +131,10 @@ public class AccumulationBlurPass : ScriptableRenderPass
 
             builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
             {
-                // Blend current frame with accumulated using lerp (prevents brightness accumulation)
+                // Apply decay, desaturation, tint, then blend with current frame
                 data.material.SetFloat(BlurPowerID, data.blurPower);
+                data.material.SetFloat(DecayID, data.decay);
+                data.material.SetFloat(DecayStrengthID, data.decayStrength);
                 data.material.SetFloat(DesaturationID, data.desaturation);
                 data.material.SetColor(TintColorID, data.tintColor);
                 data.material.SetTexture(AccumulationTexID, data.accumulation);
