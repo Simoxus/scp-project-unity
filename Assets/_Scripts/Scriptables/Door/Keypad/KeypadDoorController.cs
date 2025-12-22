@@ -1,301 +1,161 @@
 using Cysharp.Threading.Tasks;
-using EditorAttributes;
-using FMODUnity;
-using PrimeTween;
-using System;
-using System.Threading;
 using UnityEngine;
 
-public class KeypadDoorController : MonoBehaviour
+public class KeypadDoorController : BaseDoorController
 {
-    public enum DoorState
-    {
-        Moving,
-        Opened,
-        Closed,
-        Broken
-    }
+    [Header("Door Specific")]
+    public string correctCode = "6767";
+    public int maxCodeLength = 4;
+    public float codeResetDelay = 2f;
 
-    [Header("Initial State")]
-    public bool startOpened = false;
-    [SerializeField, ShowField(nameof(startOpened))]
-    public bool chanceToStartOpened = false;
-    [SerializeField, ShowField(nameof(chanceToStartOpened)), Range(0, 1)]
-    public float percentChanceToStartOpened = 0.5f;
-
-    [Header("Environment Settings")]
-    public bool breakableByEnvironment = true;
-
-    [Header("FMOD Settings")]
-    public EventReference doorSoundEvent;
-    public EventReference doorBreakSoundEvent;
-    public string fmodParameterName = "State";
-
-    [Header("Door Visuals")]
-    public GameObject door;
-    public GameObject doorFront;
-    public GameObject doorBack;
-    public GameObject doorFrontKeypad;
-    public GameObject doorBackKeypad;
     public KeypadDoorActivator doorActivator1;
     public KeypadDoorActivator doorActivator2;
-    public ParticleSystem sparksEmitter;
 
-    [Header("Door Offsets")]
-    public Vector3 doorFrontOpenOffset = new Vector3(-4.3f, 0f, 0f);
-    public Vector3 doorBackOpenOffset = new Vector3(4.3f, 0f, 0f);
-    public Vector3 doorFrontCloseOffset;
-    public Vector3 doorBackCloseOffset;
-    public Vector3 doorFrontBrokenOffset;
-    public Vector3 doorBackBrokenOffset;
-
-    [Header("Tweening & Physics")]
-    public float doorMoveDuration = 1.5f;
-    public float doorBreakForce = 27f;
-    public float doorBreakDownwardForce = 15f;
-    public float doorBreakTorque = 35f;
-    public Ease easeStyle = Ease.InOutQuad;
-    public Vector2 impulseVelocityRange = new Vector2(1.6f, 2f);
-
-    [Header("State Values"), EditorAttributes.ReadOnly]
-    public DoorState currentState = DoorState.Closed;
-
-    private int _debrisLayer;
-    private Vector3 _initialFrontLocalPosition;
-    private Vector3 _initialBackLocalPosition;
-
-    private CancellationTokenSource _cts;
-
-    private void Awake()
+    protected override void OnSetActivatorsState(bool enabled)
     {
-        // Get layer ID
-        _debrisLayer = LayerMask.NameToLayer("Debris");
-
-        if (doorFront != null)
-        {
-            _initialFrontLocalPosition = doorFront.transform.localPosition;
-        }
-
-        if (doorBack != null)
-        {
-            _initialBackLocalPosition = doorBack.transform.localPosition;
-        }
-
-        if (startOpened && currentState is not (DoorState.Opened or DoorState.Broken))
-        {
-            bool shouldOpen = true;
-
-            if (chanceToStartOpened)
-            {
-                // Generate random float between 0.0 and 1.0
-                float randomValue = UnityEngine.Random.Range(0f, 1f);
-
-                // Check if random value is greater than the percentage chance
-                if (randomValue > percentChanceToStartOpened) { shouldOpen = false; }
-            }
-
-            if (shouldOpen)
-            {
-                currentState = DoorState.Opened;
-                doorFront.transform.localPosition = _initialFrontLocalPosition + doorFrontOpenOffset;
-                doorBack.transform.localPosition = _initialBackLocalPosition + doorBackOpenOffset;
-            }
-        }
-
-        // Initalize cancellation token
-        _cts = new CancellationTokenSource();
-    }
-
-    private void OnDestroy()
-    {
-        _cts?.Cancel();
-        _cts?.Dispose();
-        _cts = null;
-    }
-
-    [ContextMenu("Toggle Door")]
-    public async UniTask ToggleDoor()
-    {
-        if (currentState == DoorState.Moving || currentState == DoorState.Broken || door == null)
-        {
-            return;
-        }
-
-        bool shouldOpen = currentState == DoorState.Closed;
-        float fmodParameterValue = shouldOpen ? 1.0f : 0.0f; // Set FMOD parameter based on action
-
-        await SetActivatorsState(enabled: false);
-
-        FMODHelper.PlayOneShotWithParameters(
-            doorSoundEvent,
-            door.transform.position,
-            (fmodParameterName, fmodParameterValue)
-        );
-
-        SetDoorState(DoorState.Moving);
-        await SetActivatorsState(false);
-
-        try
-        {
-            if (shouldOpen)
-            {
-                await OpenDoorAsync(_cts.Token);
-            }
-            else
-            {
-                await CloseDoorAsync(_cts.Token);
-            }
-
-            await SetActivatorsState(true);
-        }
-        catch (OperationCanceledException)
-        {
-            Debug.Log($"ToggleDoor operation was cancelled.", this);
-            SetDoorState(shouldOpen ? DoorState.Closed : DoorState.Opened);
-
-            await SetActivatorsState(true);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"ToggleDoor operation failed: {ex}", this);
-            SetDoorState(shouldOpen ? DoorState.Closed : DoorState.Opened);
-
-            await SetActivatorsState(true);
-        }
-    }
-
-    private async UniTask OpenDoorAsync(CancellationToken token)
-    {
-        if (doorFront == null || doorBack == null) { return; }
-
-        Vector3 targetPosFront = _initialFrontLocalPosition + doorFrontOpenOffset;
-        Vector3 targetPosBack = _initialBackLocalPosition + doorBackOpenOffset;
-
-        await UniTask.WhenAll(
-            Tween.LocalPosition(doorFront.transform, targetPosFront, doorMoveDuration, easeStyle).ToYieldInstruction().ToUniTask(),
-            Tween.LocalPosition(doorBack.transform, targetPosBack, doorMoveDuration, easeStyle).ToYieldInstruction().ToUniTask()
-        ).AttachExternalCancellation(token);
-
-        CameraManager.Instance.GenerateShakeWithVector3(UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(0.06f, 0.04f));
-
-        SetDoorState(DoorState.Opened);
-    }
-
-    private async UniTask CloseDoorAsync(CancellationToken token)
-    {
-        if (doorFront == null || doorBack == null) { return; }
-
-        Vector3 targetPosFront = _initialFrontLocalPosition + doorFrontCloseOffset;
-        Vector3 targetPosBack = _initialBackLocalPosition + doorBackCloseOffset;
-
-        await UniTask.WhenAll(
-            Tween.LocalPosition(doorFront.transform, targetPosFront, doorMoveDuration, easeStyle).ToYieldInstruction().ToUniTask(),
-            Tween.LocalPosition(doorBack.transform, targetPosBack, doorMoveDuration, easeStyle).ToYieldInstruction().ToUniTask()
-        ).AttachExternalCancellation(token);
-
-        CameraManager.Instance.GenerateShakeWithVector3(UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(0.04f, 0.06f));
-
-        SetDoorState(DoorState.Closed);
-    }
-
-    [ContextMenu("Break Door")]
-    public async UniTask BreakDoor()
-    {
-        if (doorFront == null || doorBack == null) { return; }
-        if (currentState == DoorState.Broken) { return; }
-
-        _cts.Cancel(); // Cancels any ongoing door tweens
-        SetDoorState(DoorState.Broken);
-
-        // Deactivate buttons
         if (doorActivator1 != null)
         {
-            doorActivator1?.BreakButton();
-            doorActivator1?.ForceExitKeypad();
+            doorActivator1.SetButtonState(enabled);
         }
         if (doorActivator2 != null)
         {
-            doorActivator2?.BreakButton();
-            doorActivator2?.ForceExitKeypad();
+            doorActivator2.SetButtonState(enabled);
         }
+    }
 
-        // Play sound and generate camera shake
-        if (door != null)
+    protected override void OnApplyLockedVisuals(Color color, string message)
+    {
+        if (doorActivator1 != null)
         {
-            FMODHelper.PlayOneShot3D(doorBreakSoundEvent, door.transform.position);
-            CameraManager.Instance.GenerateShakeWithVector3(UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(impulseVelocityRange.x, impulseVelocityRange.y));
+            doorActivator1.keypadTweener.ToggleLogo(false);
+            doorActivator1.keypadTweener.ToggleText(true);
+            doorActivator1.keypadTweener.ChangeScreenText(message);
+        }
+        if (doorActivator2 != null)
+        {
+            doorActivator2.keypadTweener.ToggleLogo(false);
+            doorActivator2.keypadTweener.ToggleText(true);
+            doorActivator2.keypadTweener.ChangeScreenText(message);
+        }
+    }
 
-            sparksEmitter?.Play();
+    protected override void OnApplyBrokenVisuals(Color color)
+    {
+        string brokenMessage = "-- CODE 4 --Technician dispatched";
 
-            // Get Rigidbody components
-            Rigidbody frontRigidbody = doorFront.GetComponent<Rigidbody>();
-            Rigidbody backRigidbody = doorBack.GetComponent<Rigidbody>();
+        if (doorActivator1 != null)
+        {
+            doorActivator1.keypadTweener.ToggleLogo(false);
+            doorActivator1.keypadTweener.ToggleText(true);
+            doorActivator1.keypadTweener.ChangeScreenColor(color, true);
+            doorActivator1.keypadTweener.ChangeScreenText(brokenMessage);
+        }
+        if (doorActivator2 != null)
+        {
+            doorActivator2.keypadTweener.ToggleLogo(false);
+            doorActivator2.keypadTweener.ToggleText(true);
+            doorActivator2.keypadTweener.ChangeScreenColor(color, true);
+            doorActivator2.keypadTweener.ChangeScreenText(brokenMessage);
+        }
+    }
 
-            await UniTask.WaitForSeconds(0.4f, ignoreTimeScale: false);
+    protected override void OnResetActivatorVisuals(Color color)
+    {
+        if (doorActivator1 != null)
+        {
+            doorActivator1.keypadTweener.ChangeScreenColor(color, true, 0.4f);
+        }
+        if (doorActivator2 != null)
+        {
+            doorActivator2.keypadTweener.ChangeScreenColor(color, true, 0.4f);
+        }
+    }
 
-            // Enable physics and apply force/torque
-            if (frontRigidbody != null)
-            {
-                doorFront.layer = _debrisLayer;
-                frontRigidbody.isKinematic = false;
-                frontRigidbody.AddForce(door.transform.forward * doorBreakForce + Vector3.down * doorBreakDownwardForce, ForceMode.Impulse);
-                frontRigidbody.AddTorque(UnityEngine.Random.insideUnitSphere * doorBreakTorque, ForceMode.Impulse);
-            }
+    protected override void OnStopActivatorsPulse()
+    {
+        if (doorActivator1 != null)
+        {
+            doorActivator1.StopPulseEffect();
+        }
+        if (doorActivator2 != null)
+        {
+            doorActivator2.StopPulseEffect();
+        }
+    }
 
-            if (backRigidbody != null)
-            {
-                doorBack.layer = _debrisLayer;
-                backRigidbody.isKinematic = false;
-                backRigidbody.AddForce(door.transform.forward * doorBreakForce + Vector3.down * doorBreakDownwardForce, ForceMode.Impulse);
-                backRigidbody.AddTorque(UnityEngine.Random.insideUnitSphere * doorBreakTorque, ForceMode.Impulse);
-            }
+    protected override void OnStartActivatorsPulse(Color color, float? customDuration = null, float? customIntensity = null)
+    {
+        if (doorActivator1 != null)
+        {
+            doorActivator1.StartPulseEffect(color, customDuration, customIntensity);
+        }
+        if (doorActivator2 != null)
+        {
+            doorActivator2.StartPulseEffect(color, customDuration, customIntensity);
         }
     }
 
     public void UpdateActivatorVisuals(bool success, string clearanceLevel)
     {
-        if (doorActivator1 != null)
+        if (success)
         {
-            if (success)
-            {
-                doorActivator1.DisplayGranted(clearanceLevel);
-            }
-            else
-            {
-                doorActivator1.DisplayDenied(clearanceLevel);
-            }
+            ApplyGrantedVisuals();
         }
-
-        if (doorActivator2 != null)
+        else
         {
-            if (success)
-            {
-                doorActivator2.DisplayGranted(clearanceLevel);
-            }
-            else
-            {
-                doorActivator2.DisplayDenied(clearanceLevel);
-            }
+            ApplyDeniedVisuals();
         }
     }
 
-    private void SetDoorState(DoorState newState)
+    private void ApplyGrantedVisuals()
     {
-        currentState = newState;
-    }
-
-    private async UniTask SetActivatorsState(bool enabled)
-    {
-        await UniTask.WaitForSeconds(0.09f, ignoreTimeScale: false);
-
         if (doorActivator1 != null)
         {
-            doorActivator1.SetButtonState(enabled);
+            doorActivator1.keypadTweener.ToggleLogo(false);
+            doorActivator1.keypadTweener.ToggleText(true);
+            doorActivator1.keypadTweener.ChangeScreenColor(grantedColor, true, 0.5f);
+            doorActivator1.keypadTweener.ChangeScreenText("ACCESS\nGRANTED");
+            doorActivator1.ResetButtonDisplay().Forget();
         }
-
         if (doorActivator2 != null)
         {
-            doorActivator2.SetButtonState(enabled);
+            doorActivator2.keypadTweener.ToggleLogo(false);
+            doorActivator2.keypadTweener.ToggleText(true);
+            doorActivator2.keypadTweener.ChangeScreenColor(grantedColor, true, 0.5f);
+            doorActivator2.keypadTweener.ChangeScreenText("ACCESS\nGRANTED");
+            doorActivator2.ResetButtonDisplay().Forget();
+        }
+    }
+
+    private void ApplyDeniedVisuals()
+    {
+        if (doorActivator1 != null)
+        {
+            doorActivator1.keypadTweener.ToggleLogo(false);
+            doorActivator1.keypadTweener.ToggleText(true);
+            doorActivator1.keypadTweener.ChangeScreenColor(deniedColor, true, 0.5f);
+            doorActivator1.keypadTweener.ChangeScreenText("ACCESS\nDENIED");
+            doorActivator1.ResetButtonDisplay().Forget();
+        }
+        if (doorActivator2 != null)
+        {
+            doorActivator2.keypadTweener.ToggleLogo(false);
+            doorActivator2.keypadTweener.ToggleText(true);
+            doorActivator2.keypadTweener.ChangeScreenColor(deniedColor, true, 0.5f);
+            doorActivator2.keypadTweener.ChangeScreenText("ACCESS\nDENIED");
+            doorActivator2.ResetButtonDisplay().Forget();
+        }
+    }
+
+    protected override void OnTransitionToPulse(Color targetColor, float transitionDuration)
+    {
+        if (doorActivator1 != null)
+        {
+            doorActivator1.TransitionToPulseEffect(targetColor, transitionDuration, 0.6f, 1.2f);
+        }
+        if (doorActivator2 != null)
+        {
+            doorActivator2.TransitionToPulseEffect(targetColor, transitionDuration, 0.6f, 1.2f);
         }
     }
 }

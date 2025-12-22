@@ -1,162 +1,73 @@
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using FMODUnity;
-
-public class KeycardDoorActivator : MonoBehaviour, IInteractable
+using UnityEngine;
+public class KeycardDoorActivator : BaseDoorActivator
 {
-    [Header("Button Settings")]
-    [SerializeField] private bool enableSecondButton;
-    [SerializeField] private string interactionType = "Hand";
-    [SerializeField] private Color defaultColor = new(191, 191, 191);
-    [SerializeField] private Color brokenColor = new(233, 88, 87);
-    [SerializeField] private Color grantedColor = new(88, 233, 87);
-    [SerializeField] private Color deniedColor = new(157, 88, 87);
-
-    [Header("Collider References")]
-    public BoxCollider activatorCollider;
-    public BoxCollider secondActivatorCollider;
-
     [Header("Script References")]
-    public KeycardVisual buttonTweener;
+    public KeycardDoorVisual buttonVisual;
     public KeycardDoorController targetDoorController;
-
     [Header("FMOD Events")]
     public EventReference keycardSoundEvent;
     public EventReference keycardFailSoundEvent;
-
-    private void Awake()
-    {
-        if (GetComponent<Collider>() == null)
-        {
-            Debug.LogWarning($"DoorActivator on '{gameObject.name}' is missing a Collider component. It will not be detectable.", this);
-        }
-    }
-
-    public Transform GetTransform()
-    {
-        return transform;
-    }
-
-    public string GetInteractionType()
-    {
-        return interactionType;
-    }
-
-    public void Interact()
+    public override void Interact()
     {
         if (targetDoorController == null) return;
-
         if (targetDoorController.currentState == KeycardDoorController.DoorState.Broken)
         {
-            RuntimeManager.PlayOneShot(keycardFailSoundEvent, transform.position);
+            FMODHelper.PlayOneShot3D(keycardFailSoundEvent, transform.position);
             return;
         }
-
+        if (targetDoorController.locked)
+        {
+            FMODHelper.PlayOneShot3D(keycardFailSoundEvent, transform.position);
+            return;
+        }
         SetButtonState(false);
-
-        // bool keycardCheckSuccessful = CheckKeycard(); -- Eventually :)
-
-        bool keycardCheckSuccessful = true;
-        int keycardClearanceLevel = 4;
-
+        bool keycardCheckSuccessful = IsCorrectKeycardLevel(playerKeycardLevel: 1);
         FMODHelper.PlayOneShotWithParameters(
             keycardSoundEvent,
             transform.position,
             ("Result", keycardCheckSuccessful ? 0.0f : 1.0f)
         );
-
         if (keycardCheckSuccessful)
         {
             targetDoorController.ToggleDoor().Forget();
         }
-
-        targetDoorController.UpdateActivatorVisuals(keycardCheckSuccessful, keycardClearanceLevel.ToString());
+        targetDoorController.UpdateActivatorVisuals(keycardCheckSuccessful, targetDoorController.requiredKeycardLevel.ToString());
     }
-
-    public void SetButtonState(bool enabled)
+    public bool IsCorrectKeycardLevel(int playerKeycardLevel)
     {
-        if (activatorCollider != null)
-        {
-            activatorCollider.enabled = enabled;
-        }
-
-        if (enableSecondButton && secondActivatorCollider != null)
-        {
-            secondActivatorCollider.enabled = enabled;
-        }
+        return playerKeycardLevel >= targetDoorController.requiredKeycardLevel;
     }
-
     public async UniTask ResetButtonDisplay()
     {
         await UniTask.WaitForSeconds(1.6f, ignoreTimeScale: false);
-
-        buttonTweener.ToggleLogo(true);
-        buttonTweener.ToggleText(false);
-        buttonTweener.ChangeScreenColor(defaultColor, true, 0.8f);
-        buttonTweener.ChangeScreenText(
-            "HI"
-        );
-
+        buttonVisual.ToggleLogo(true);
+        buttonVisual.ToggleText(false);
+        buttonVisual.ChangeScreenColor(targetDoorController.defaultColor, true, 0.8f);
+        buttonVisual.ChangeScreenText("HI");
         await UniTask.WaitForSeconds(0.15f, ignoreTimeScale: false);
-
         SetButtonState(true);
     }
-
-    public void BreakButton()
+    public override void StartPulseEffect(Color startColor, float? customDuration = null, float? customIntensity = null)
     {
-        buttonTweener.ToggleLogo(false);
-        buttonTweener.ToggleText(true);
-        buttonTweener.ChangeScreenColor(brokenColor, true);
-        buttonTweener.ChangeScreenText(
-            "-- CODE 4 --" +
-            "Technician dispatched"
-        );
-    }
-
-    public void DisplayGranted(string clearanceLevel)
-    {
-        buttonTweener.ToggleLogo(false);
-        buttonTweener.ToggleText(true);
-        buttonTweener.ChangeScreenColor(grantedColor, true, 1f);
-        buttonTweener.ChangeScreenText(
-            $"LEVEL {clearanceLevel} DETECTED"
-        );
-
-        ResetButtonDisplay().Forget();
-    }
-
-    public void DisplayDenied(string clearanceLevel)
-    {
-        buttonTweener.ToggleLogo(false);
-        buttonTweener.ToggleText(true);
-        buttonTweener.ChangeScreenColor(deniedColor, true, 1f);
-        buttonTweener.ChangeScreenText(
-            $"LEVEL {clearanceLevel} REQUIRED"
-        );
-
-        ResetButtonDisplay().Forget();
-    }
-
-    public void DisplayLocked(string optionalError)
-    {
-        buttonTweener.ToggleLogo(false);
-        buttonTweener.ToggleText(true);
-
-        if (optionalError != null)
+        if (buttonVisual != null)
         {
-            buttonTweener.ChangeScreenText(
-                "-- LOCKED: UNKNOWN --" +
-                "PLEASE CONTACT NEAREST FACILITY TECHNICIAN"
-            );
+            buttonVisual.StartPulse(startColor, customDuration, customIntensity);
         }
-        else
+    }
+    public override void StopPulseEffect()
+    {
+        if (buttonVisual != null)
         {
-            buttonTweener.ChangeScreenText(
-                "-- LOCKED: --" +
-                $"{optionalError}"
-            );
+            buttonVisual.StopPulse();
         }
-
-        ResetButtonDisplay().Forget();
+    }
+    public void TransitionToPulseEffect(Color targetColor, float transitionDuration, float pulseDuration, float pulseIntensity)
+    {
+        if (buttonVisual != null)
+        {
+            buttonVisual.TransitionToPulse(targetColor, transitionDuration, pulseDuration, pulseIntensity);
+        }
     }
 }

@@ -1,82 +1,52 @@
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using FMODUnity;
-
-public class ButtonDoorActivator : MonoBehaviour, IInteractable
+using UnityEngine;
+public class ButtonDoorActivator : BaseDoorActivator
 {
-    [Header("Button Settings")]
-    [SerializeField] private bool enableSecondButton;
-    [SerializeField] private string interactionType = "Hand";
-    [SerializeField] private Color brokenColor = new(233, 88, 87);
-
-    [Header("Collider References")]
-    public BoxCollider activatorCollider;
-    public BoxCollider secondActivatorCollider;
-
     [Header("Script References")]
-    public ButtonVisual buttonTweener;
+    public ButtonDoorVisual buttonVisual;
     public ButtonDoorController targetDoorController;
-
     [Header("FMOD Events")]
     public EventReference buttonSoundEvent;
     public EventReference buttonFailSoundEvent;
-
-    private void Awake()
-    {
-        if (GetComponent<Collider>() == null)
-        {
-            Debug.LogWarning($"DoorActivator on '{gameObject.name}' is missing a Collider component. It will not be detectable.", this);
-        }
-    }
-
-    public Transform GetTransform()
-    {
-        return transform;
-    }
-
-    public string GetInteractionType()
-    {
-        return interactionType;
-    }
-
-    public void Interact()
+    public override void Interact()
     {
         if (targetDoorController == null) return;
-
-        buttonTweener.PlayTween().Forget();
-
+        buttonVisual.PlayTween().Forget();
+        if (targetDoorController.locked)
+        {
+            FMODHelper.PlayOneShot3D(buttonFailSoundEvent, transform.position);
+            return;
+        }
         if (targetDoorController.currentState != ButtonDoorController.DoorState.Broken)
         {
-            FMODUnity.RuntimeManager.PlayOneShot(buttonSoundEvent, transform.position);
+            FMODHelper.PlayOneShot3D(buttonSoundEvent, transform.position);
             targetDoorController.ToggleDoor().Forget();
         }
         else
         {
-            FMODUnity.RuntimeManager.PlayOneShot(buttonFailSoundEvent, transform.position);
+            FMODHelper.PlayOneShot3D(buttonFailSoundEvent, transform.position);
         }
     }
-
-    public void SetButtonState(bool enabled)
+    public override void StartPulseEffect(Color startColor, float? customDuration = null, float? customIntensity = null)
     {
-        if (activatorCollider != null)
+        if (buttonVisual != null)
         {
-            activatorCollider.enabled = enabled;
-        }
-
-        if (enableSecondButton && secondActivatorCollider != null)
-        {
-            secondActivatorCollider.enabled = enabled;
+            buttonVisual.StartPulse(startColor, customDuration, customIntensity);
         }
     }
-
-    public void BreakButton()
+    public override void StopPulseEffect()
     {
-        buttonTweener.ToggleLogo(false);
-        buttonTweener.ToggleText(true);
-        buttonTweener.ChangeScreenColor(brokenColor, true);
-        buttonTweener.ChangeScreenText(
-            "-- CODE 4 --" +
-            "Technician dispatched"
-        );
+        if (buttonVisual != null)
+        {
+            buttonVisual.StopPulse();
+        }
+    }
+    public void TransitionToPulseEffect(Color targetColor, float transitionDuration, float pulseDuration, float pulseIntensity)
+    {
+        if (buttonVisual != null)
+        {
+            buttonVisual.TransitionToPulse(targetColor, transitionDuration, pulseDuration, pulseIntensity);
+        }
     }
 }
