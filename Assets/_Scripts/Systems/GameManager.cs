@@ -1,11 +1,14 @@
-using System.Collections.Generic;
 using EditorAttributes;
 using PrimeTween;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+
+    [HideInInspector] public bool IsInMainMenu => SceneManager.GetActiveScene().name == "MainMenu";
 
     [Header("Global Values")]
     public bool gamePaused = false;
@@ -31,6 +34,7 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
+            Log.VerboseWarning($"Duplicate instance of {GetType().Name} found. Destroying the new one.");
             Destroy(gameObject);
             return;
         }
@@ -52,7 +56,15 @@ public class GameManager : MonoBehaviour
         PrimeTweenConfig.warnZeroDuration = false;
         PrimeTweenConfig.warnEndValueEqualsCurrent = false;
 
-        RequestDisableControls(this, shouldDisable: disablePlayerInputs);
+        if (IsInMainMenu)
+        {
+            Log.VerboseInfo("GameManager detected player is in MainMenu scene. Ensuring that cursor is shown.");
+            UpdateCursorVisiblity(forceDisable: false);
+        }
+        else
+        {
+            RequestDisableControls(this, shouldDisable: disablePlayerInputs);
+        }
     }
 
     public void RequestPause(object requester)
