@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8348960288205851712
 Transform:
@@ -45,17 +45,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 576af10d9f414184c9dde3effb912642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  occlusionEnabled: 1
   occlusionParameterName: Occlusion
   occlusionLayers:
     serializedVersion: 2
     m_Bits: 256
   updateInterval: 0.15
-  smoothSpeed: 8.67
-  raysPerSound: 3
-  raySpread: 30
+  smoothSpeed: 8
+  defaultRaysPerSound: 2
+  defaultRaySpread: 22
+  defaultMaxDistance: 50
+  occlusionDeadzone: 0.05
+  occlusionFalloffDistance: 5
+  closeProximityMultiplier: 0.75
+  materialTransitionSpeed: 5.64
+  occlusionMaterials:
+  - tag: Tile
+    occlusionAmount: 0.2
+  - tag: Metal
+    occlusionAmount: 0.34
+  - tag: Concrete
+    occlusionAmount: 0.5
+  - tag: Glass
+    occlusionAmount: 0.1
+  - tag: GateFrame
+    occlusionAmount: 0.268
+  defaultOcclusionAmount: 0.4
+  useImmediateCheck: 1
+  immediateCheckInterval: 0.035
   showDebugRays: 0
-  minOcclusion: 0
-  maxOcclusion: 0.3
+  showOcclusionDebug: 0
 --- !u!114 &7698426704425015211
 MonoBehaviour:
   m_ObjectHideFlags: 0

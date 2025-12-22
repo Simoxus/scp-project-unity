@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4173263037985968180}
   m_Layer: 0
   m_Name: CameraMain
-  m_TagString: Untagged
+  m_TagString: ImpulseListener
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59,10 +59,10 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 75
+    FieldOfView: 72
     OrthographicSize: 10
     NearClipPlane: 0.01
-    FarClipPlane: 100
+    FarClipPlane: 149
     Dutch: 0
     ModeOverride: 0
     PhysicalProperties:
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 3622525049317278363}
   m_Layer: 0
   m_Name: ImpulseSource
-  m_TagString: ImpulseListener
+  m_TagString: ImpulseSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -275,12 +275,14 @@ GameObject:
   - component: {fileID: 6969650758551764498}
   - component: {fileID: 3303578035313515851}
   - component: {fileID: 8923427205051015749}
+  - component: {fileID: 5867371172417033057}
   - component: {fileID: 2952845768212316805}
   - component: {fileID: 1900300680731127074}
   - component: {fileID: 6702291545312606249}
   - component: {fileID: 1189419969090933863}
   - component: {fileID: 4411909080681021200}
   - component: {fileID: 7100720009754110944}
+  - component: {fileID: 6479974962862822255}
   - component: {fileID: 3084800393523803307}
   m_Layer: 7
   m_Name: Player
@@ -319,17 +321,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2f776b536f44d4c90454358c22b9ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
   playerController: {fileID: 3303578035313515851}
   playerInputs: {fileID: 8923427205051015749}
+  playerStats: {fileID: 5867371172417033057}
   playerHealth: {fileID: 2952845768212316805}
   playerEffects: {fileID: 7100720009754110944}
   playerBobbing: {fileID: 6702291545312606249}
   playerSanity: {fileID: 4411909080681021200}
   playerFootsteps: {fileID: 1189419969090933863}
   playerInteract: {fileID: 1900300680731127074}
-  playerFreecam: {fileID: 0}
+  playerFreecam: {fileID: 6479974962862822255}
   characterController: {fileID: 3084800393523803307}
-  footstepEmitter: {fileID: 5409845578693797145}
   cameraRoot: {fileID: 4863580433871097859}
   cameraBrain: {fileID: 473945264047167352}
   cameraMain: {fileID: 2116979898301904093}
@@ -348,29 +351,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 6969650758551764498}
-  walkSpeed: 10
-  sprintSpeed: 16
-  crouchSpeed: 4
-  gravity: 140
+  walkSpeed: 12
+  sprintSpeed: 20
+  crouchSpeed: 5
+  gravity: 400
   doLookInvert: 0
   doSmoothLook: 1
   lookSmoothTime: 0.1
   lookSpeed: 2.5
-  minLookX: -80
-  maxLookX: 80
+  minLookX: -75
+  maxLookX: 75
   standingHeight: 2.6
-  crouchHeight: 1.6
-  crouchTransitionSpeed: 8
+  crouchHeight: 1.4
+  crouchTransitionSpeed: 9
   crouchCheckOffset: 0.1
-  walkStepTimeInterval: 0.67
-  sprintStepTimeInterval: 0.4
-  crouchStepTimeInterval: 0.98
-  walkBobMultiplier: 1
-  walkTiltMultiplier: 0.6
-  sprintBobMultiplier: 1.2
-  sprintTiltMultiplier: 1
-  crouchBobMultiplier: 1.3
-  crouchTiltMultiplier: 1.3
   isMoving: 0
   isSprinting: 0
   isBlinking: 0
@@ -388,7 +382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInputAsset: {fileID: -944628639613478452, guid: 4419d82f33d36e848b3ed5af4c8da37e, type: 3}
---- !u!114 &2952845768212316805
+--- !u!114 &5867371172417033057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -397,12 +391,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 7989190535436660184}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dfafc39cdc0b3c4aa0e4251390d5506, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 6969650758551764498}
+  indicatorsUI: {fileID: 0}
+  uiAccess: {fileID: 0}
+  sprintDrainRate: 0.26
+  sprintRegenRateMoving: 0.194
+  sprintRegenRateIdle: 0.2
+  minSprintThreshold: 0
+  allowBlinkHold: 1
+  blinkFrequency: 15.43
+  blinkingTime: 0.18
+  tiredBreathingSound:
+    Guid:
+      Data1: -71319878
+      Data2: 1244155867
+      Data3: 544662946
+      Data4: -1058864526
+    Path: event:/Player/Player_Tired
+  tiredSoundThreshold: 0.1
+  currentSprint: 1
+  currentBlink: 1
+--- !u!114 &2952845768212316805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7989190535436660184}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d65c0ec664b0c409d10161b45b4a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   healthLevel: 0
   maxHealth: 100
   currentHealth: 100
+  injuryFactor: 0
+  maxInjuryFactor: 3
 --- !u!114 &1900300680731127074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,35 +443,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382216fd00d17a94c86d08b93577d8ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6969650758551764498}
-  cameraBrain: {fileID: 473945264047167352}
-  useFading: 1
-  borderPadding: 50
-  fadeSpeed: 3
-  onScreenFrustumAngle: 180
-  onScreenInteractionUI:
-    uiTransform: {fileID: 0}
-    iconImage: {fileID: 0}
-    canvasGroup: {fileID: 0}
-  offScreenInteractionUI:
-    uiTransform: {fileID: 0}
-    iconImage: {fileID: 0}
-    canvasGroup: {fileID: 0}
-  interactionRange: 4
-  fadeStartDistance: 2.5
-  uiHeightOffset: 0
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  easingStyle1: 2
-  easingStyle2: 3
-  onScreenTweenScale1: 0.14
-  onScreenTweenScale2: 0.17
-  offScreenTweenScale1: 0.75
-  offScreenTweenScale2: 0.85
-  tweenDuration1: 0.1
-  tweenDuration2: 0.1
-  delayBetweenTweens: 0.121
   interactionSpriteData:
   - type: Hand
     sprite: {fileID: 21300000, guid: 67848e7bed236bd40bfa62ecf2e87c5c, type: 3}
@@ -451,6 +450,36 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 27af56e137291b6449470981a88fddb0, type: 3}
   - type: Flip
     sprite: {fileID: 21300000, guid: 73a3a8668059d584eb604777a7d39069, type: 3}
+  player: {fileID: 6969650758551764498}
+  cameraBrain: {fileID: 473945264047167352}
+  interactionUI:
+    uiTransform: {fileID: 0}
+    iconTransform: {fileID: 0}
+    iconImage: {fileID: 0}
+    canvasGroup: {fileID: 0}
+  interactionRange: 4
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 257
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  baseHorizontalPadding: -140
+  baseVerticalPadding: -140
+  referenceAspect: 1.7777778
+  cornerLerpSpeed: 40
+  edgeThreshold: 0.2
+  disableFading: 1
+  fadeSpeed: 3
+  fadeStartDistance: 2.5
+  minAlpha: 0.4
+  easingStyle1: 2
+  easingStyle2: 3
+  tweenIdleScale: 0.7
+  tweenDownScale: 0.6
+  tweenDuration1: 0.1
+  tweenDuration2: 0.1
+  delayBetweenTweens: 0.121
 --- !u!114 &6702291545312606249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,17 +493,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 6969650758551764498}
-  doBob: 1
-  bobMultiplier: 1
-  bobSpeed: 3
-  bobAmountX: 0.02
-  bobAmountY: 0.01
-  doTilt: 1
-  tiltMultiplier: 1
-  tiltSpeed: 5
-  tiltMaxAngle: 1.5
-  transitionTime: 0.2
-  transitionStopTime: 0.15
+  enableBobbing: 1
+  enableTilt: 1
+  walkState:
+    bobSpeed: 7
+    bobAmount: 0.05
+    upDownDivisor: 20
+    rotationStrength: 0.7
+    maxRotationAngle: 1.15
+    rotationSpeed: 0.5
+  sprintState:
+    bobSpeed: 12.6
+    bobAmount: 0.04
+    upDownDivisor: 45
+    rotationStrength: 0.8
+    maxRotationAngle: 1.3
+    rotationSpeed: 0.5
+  crouchState:
+    bobSpeed: 6.5
+    bobAmount: 0.08
+    upDownDivisor: 70
+    rotationStrength: 0.5
+    maxRotationAngle: 4
+    rotationSpeed: 0.5
+  injuryBobMultiplier: 0.15
+  injuryTiltMultiplier: 0.283
+  stateTransitionSpeed: 9
+  bobbingLerpSpeed: 12
 --- !u!114 &1189419969090933863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -488,13 +533,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 6969650758551764498}
-  footstepEventEmitter: {fileID: 5409845578693797145}
-  surfaceParameterName: Surface
-  raycastOrigin: {fileID: 8083589854920794216}
-  raycastDistance: 4
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
   footstepSurfaces:
   - {fileID: 11400000, guid: c8e0cd3818aec1845bee6d4a608f6d19, type: 2}
   - {fileID: 11400000, guid: ac69084b451c20744a3fff424d50ed31, type: 2}
@@ -502,7 +540,28 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 40067c83acd66bb429b9e1ac1f7bca1d, type: 2}
   - {fileID: 11400000, guid: 31d892457e4986c4c8cec871fcb9188a, type: 2}
   - {fileID: 11400000, guid: e39dc43ab7a014b4fbbbfcbf7093fe11, type: 2}
-  footstepCooldown: 0.4
+  useBobSyncedFootsteps: 1
+  footstepPlayTransform: {fileID: 323695527166178131}
+  walkFootstepEvent:
+    Guid:
+      Data1: 1617678507
+      Data2: 1109545212
+      Data3: -919862089
+      Data4: 60329817
+    Path: event:/Player/Player_Footsteps_Walk
+  runFootstepEvent:
+    Guid:
+      Data1: -1776108468
+      Data2: 1190607566
+      Data3: -1050965834
+      Data4: -493257741
+    Path: event:/Player/Player_Footsteps_Run
+  surfaceParameterName: Surface
+  raycastOrigin: {fileID: 8083589854920794216}
+  raycastDistance: 5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 265
 --- !u!114 &4411909080681021200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,7 +569,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7989190535436660184}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4abaaa04fe1f43e4095cb284681aa0fc, type: 3}
   m_Name: 
@@ -527,12 +586,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7989190535436660184}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5e36bf48b945f04ba8bf3941e9ac05b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetGameObject: {fileID: 7989190535436660184}
+--- !u!114 &6479974962862822255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7989190535436660184}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dfd2d13208ad034885a89b29021c4e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!143 &3084800393523803307
 CharacterController:
   m_ObjectHideFlags: 0
@@ -625,8 +695,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 100
-  field of view: 75
+  far clip plane: 149
+  field of view: 72
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -671,7 +741,25 @@ MonoBehaviour:
     Time: 2
     CustomCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -698,11 +786,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
-  m_VolumeFrameworkUpdateModeOption: 1
+  m_VolumeFrameworkUpdateModeOption: 0
   m_RenderPostProcessing: 1
-  m_Antialiasing: 2
+  m_Antialiasing: 0
   m_AntialiasingQuality: 1
-  m_StopNaN: 0
+  m_StopNaN: 1
   m_Dithering: 0
   m_ClearDepth: 1
   m_AllowXRRendering: 1
@@ -743,9 +831,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 323695527166178131}
-  - component: {fileID: 5409845578693797145}
   m_Layer: 0
-  m_Name: FootSource
+  m_Name: FootstepPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -766,36 +853,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8083589854920794216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5409845578693797145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8334196775585745007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: 1617678507
-      Data2: 1109545212
-      Data3: -919862089
-      Data4: 60329817
-    Path: event:/Player/Footsteps
-  Event: 
-  EventPlayTrigger: 0
-  EventStopTrigger: 0
-  AllowFadeout: 0
-  TriggerOnce: 0
-  Preload: 0
-  NonRigidbodyVelocity: 0
-  Params:
-  - Name: Surface
-    Value: 0
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
