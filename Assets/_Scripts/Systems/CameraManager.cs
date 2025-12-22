@@ -20,23 +20,23 @@ public class CameraManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this.gameObject);
+            Log.VerboseWarning($"Duplicate instance of {GetType().Name} found. Destroying the new one.");
+            Destroy(gameObject);
+            return;
         }
-        else
-        {
-            Instance = this;
-        }
+
+        Instance = this;
 
         if (impulseSource == null)
         {
-            Debug.LogError("CameraManager is missing reference to a Cinemachine Impulse Source. Please assign it.", this);
+            Log.VerboseWarning("CameraManager is missing reference to a Cinemachine Impulse Source. Please assign it.");
         }
     }
 
     public void GenerateShake(float intensity)
     {
-        if (impulseSource == null) { return; }
-        if (GameManager.Instance.cameraShaking == false) { return; }
+        if (impulseSource == null) return;
+        if (GameManager.Instance.cameraShaking == false) return;
 
         Vector3 impulseVelocity = new Vector3(intensity, intensity, intensity);
         impulseSource.GenerateImpulseWithVelocity(impulseVelocity);
@@ -44,8 +44,8 @@ public class CameraManager : MonoBehaviour
 
     public void GenerateShakeWithVector3(Vector3 impulseVelocity)
     {
-        if (impulseSource == null) { return; }
-        if (GameManager.Instance.cameraShaking == false) { return; }
+        if (impulseSource == null) return;
+        if (GameManager.Instance.cameraShaking == false) return;
 
         impulseSource.GenerateImpulseWithVelocity(impulseVelocity);
     }
