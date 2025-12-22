@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8348960288205851712}
-  - component: {fileID: 7698426704425015211}
   - component: {fileID: 3377270935731706834}
+  - component: {fileID: 7698426704425015211}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -33,6 +33,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3377270935731706834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5778290989148710033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 576af10d9f414184c9dde3effb912642, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  occlusionParameterName: Occlusion
+  occlusionLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  updateInterval: 0.15
+  smoothSpeed: 8.67
+  raysPerSound: 3
+  raySpread: 30
+  showDebugRays: 0
+  minOcclusion: 0
+  maxOcclusion: 0.3
 --- !u!114 &7698426704425015211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,15 +78,3 @@ MonoBehaviour:
   - VO
   CollisionTag: 
   PreloadSamples: 1
---- !u!114 &3377270935731706834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5778290989148710033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 576af10d9f414184c9dde3effb912642, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

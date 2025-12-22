@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using FMOD.Studio;
 using FMODUnity;
 using System;
 using System.Collections.Generic;
@@ -6,15 +7,23 @@ using UnityEngine;
 
 public static class FMODHelper
 {
-    public static bool UseOcclusion { get; set; } = true; // Enable or disable automatic occlusion globally
-
     private class ManagedInstance
     {
-        public FMOD.Studio.EventInstance instance;
+        public EventInstance instance;
         public int occlusionId = -1;
     }
 
     private static readonly Dictionary<string, ManagedInstance> activeInstances = new();
+
+    public static void PlayOneShot(EventReference fmodEvent)
+    {
+        RuntimeManager.PlayOneShot(fmodEvent);
+    }
+
+    public static void PlayOneShot3D(EventReference fmodEvent, Vector3 position)
+    {
+        RuntimeManager.PlayOneShot(fmodEvent, position);
+    }
 
     public static void PlayOneShotWithParameters(EventReference fmodEvent, Vector3 position, params (string name, float value)[] parameters)
     {
@@ -30,38 +39,37 @@ public static class FMODHelper
         instance.release();
     }
 
-    public static void PlayOneShotWithOcclusion(EventReference fmodEvent, Vector3 position)
+    public static void PlayOneShotWithOcclusion(EventReference fmodEvent, Vector3 position, int raysPerSound = -1, float raySpread = -1f, float maxDistance = -1f)
     {
         var instance = RuntimeManager.CreateInstance(fmodEvent);
         instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
 
-        if (UseOcclusion && AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.Instance.RegisterSound(instance, position);
+            AudioManager.Instance.RegisterSound(instance, position, raysPerSound, raySpread, maxDistance);
         }
 
         instance.start();
         instance.release();
     }
 
-    public static void PlayOneShotWithDynamicOcclusion(EventReference fmodEvent, Vector3 position, float minDuration = 0.5f)
+    public static void PlayOneShotWithDynamicOcclusion(EventReference fmodEvent, Vector3 position, float minDuration = 0.5f, int raysPerSound = -1, float raySpread = -1f, float maxDistance = -1f)
     {
         var instance = RuntimeManager.CreateInstance(fmodEvent);
         instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
 
         int occlusionId = -1;
-        if (UseOcclusion && AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
         {
-            occlusionId = AudioManager.Instance.RegisterSound(instance, position);
+            occlusionId = AudioManager.Instance.RegisterSound(instance, position, raysPerSound, maxDistance);
         }
 
         instance.start();
 
-        // Auto-cleanup after sound finishes
         MonitorAndCleanup(instance, occlusionId, minDuration).Forget();
     }
 
-    public static void PlayOneShotWithParametersAndOcclusion(EventReference fmodEvent, Vector3 position, float minDuration = 0.5f, params (string name, float value)[] parameters)
+    public static void PlayOneShotWithParametersAndOcclusion(EventReference fmodEvent, Vector3 position, float minDuration = 0.5f, int raysPerSound = -1, float raySpread = -1f, float maxDistance = -1f, params (string name, float value)[] parameters)
     {
         var instance = RuntimeManager.CreateInstance(fmodEvent);
         instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
@@ -72,30 +80,18 @@ public static class FMODHelper
         }
 
         int occlusionId = -1;
-        if (UseOcclusion && AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
         {
-            occlusionId = AudioManager.Instance.RegisterSound(instance, position);
+            occlusionId = AudioManager.Instance.RegisterSound(instance, position, raysPerSound, maxDistance);
         }
 
         instance.start();
 
-        // Auto-cleanup after sound finishes
         MonitorAndCleanup(instance, occlusionId, minDuration).Forget();
-    }
-
-    public static void PlayOneShot(EventReference fmodEvent)
-    {
-        RuntimeManager.PlayOneShot(fmodEvent);
-    }
-
-    public static void PlayOneShot3D(EventReference fmodEvent, Vector3 position)
-    {
-        RuntimeManager.PlayOneShot(fmodEvent, position);
     }
 
     public static void PlayInstance(EventReference fmodEvent, string key, Vector3 position)
     {
-        // Stop & release old instance if still running
         if (activeInstances.TryGetValue(key, out var existing))
         {
             if (existing.occlusionId >= 0 && AudioManager.Instance != null)
@@ -116,9 +112,8 @@ public static class FMODHelper
         activeInstances[key] = managed;
     }
 
-    public static void PlayInstanceWithOcclusion(EventReference fmodEvent, string key, Vector3 position)
+    public static void PlayInstanceWithOcclusion(EventReference fmodEvent, string key, Vector3 position, int raysPerSound = -1, float raySpread = -1f, float maxDistance = -1f)
     {
-        // Stop & release old instance if still running
         if (activeInstances.TryGetValue(key, out var existing))
         {
             if (existing.occlusionId >= 0 && AudioManager.Instance != null)
@@ -137,10 +132,9 @@ public static class FMODHelper
 
         var managed = new ManagedInstance { instance = instance };
 
-        // Register for occlusion
-        if (UseOcclusion && AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
         {
-            managed.occlusionId = AudioManager.Instance.RegisterSound(instance, position);
+            managed.occlusionId = AudioManager.Instance.RegisterSound(instance, position, raysPerSound, maxDistance);
         }
 
         activeInstances[key] = managed;
@@ -148,7 +142,6 @@ public static class FMODHelper
 
     public static void StopInstance(string key, bool allowFadeout = true)
     {
-        // Check occlusion-enabled instances first
         if (activeInstances.TryGetValue(key, out var managed))
         {
             if (managed.occlusionId >= 0 && AudioManager.Instance != null)
@@ -179,7 +172,6 @@ public static class FMODHelper
 
     public static FMOD.Studio.EventInstance GetInstance(string key)
     {
-        // Check occlusion-enabled instances first
         if (activeInstances.TryGetValue(key, out var managed))
         {
             return managed.instance;
@@ -195,10 +187,8 @@ public static class FMODHelper
 
     private static async UniTaskVoid MonitorAndCleanup(FMOD.Studio.EventInstance instance, int occlusionId, float minDuration)
     {
-        // Wait minimum duration
         await UniTask.Delay(TimeSpan.FromSeconds(minDuration));
 
-        // Wait for sound to finish
         while (instance.isValid())
         {
             instance.getPlaybackState(out var state);
