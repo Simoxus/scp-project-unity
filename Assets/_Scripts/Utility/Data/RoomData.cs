@@ -1,62 +1,57 @@
-using UnityEngine;
 using EditorAttributes;
-using System.Collections.Generic;
-using System;
-//using Events.Base;
+using FMODUnity;
+using UnityEngine;
 
-namespace Rooms.Data
+[CreateAssetMenu(fileName = "RoomData", menuName = "Custom/Room Data")]
+public class RoomData : ScriptableObject
 {
-    [CreateAssetMenu(fileName = "RoomData", menuName = "Custom Data/Room ID Data")]
-    public class RoomData : ScriptableObject
-    {
-        [SerializeField, AssetPreview] public GameObject roomPrefab;
+    [SerializeField, AssetPreview] public GameObject roomPrefab;
 
-        [Header("Room Info")]
-        public string roomID;
-        public string roomDisplayID;
+    [Header("Room Info")]
+    public string roomID;
+    public string roomName;
+    [TextArea]
+    public string description;
 
-        [TextArea]
-        public string description;
+    [Header("Room Properties")]
+    public ZoneLocation zoneLocation;
+    public RoomType roomType;
+    public bool roomIsRequired;
+    [SerializeField, HideField(nameof(roomIsRequired))] public float roomRarity;
 
-        [Header("Room Properties")]
-        public ZoneLocation zoneLocation;
-        public RoomType roomType;
-        public bool roomRequired;
-        [SerializeField, HideField(nameof(roomRequired))] public float roomRarity;
+    [Space]
+    public AllowedConnectDirections allowedConnectDirections;
 
-        [Space]
-        public AllowedConnectDirections allowedConnectDirections;
+    [Header("Environment")]
+    public bool customAmbience;
+    [SerializeField, IndentProperty(15f), ShowField(nameof(customAmbience))]
+    public EventReference customAmbienceAudio;
 
-        [Header("Environment")]
-        //public bool featuresEvent;
-        //[SerializeField, IndentProperty(15f), ShowField(nameof(featuresEvent))] public RoomEvent featuredEvent;
-        public bool customAmbience;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(customAmbience))] public AudioClip customAmbienceAudio;
-        public bool customFog;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(customFog))] public Color customFogColor;
-    }
+    public bool customFog;
+    [SerializeField, IndentProperty(15f), ShowField(nameof(customFog))]
+    public Color customFogColor;
+}
 
-    public enum ZoneLocation
-    {
-        SurfaceZone,
-        EntranceZone,
-        HeavyZone,
-        LightZone,
-        Custom
-    }
+public enum ZoneLocation
+{
+    SurfaceZone,
+    EntranceZone,
+    HeavyZone,
+    LightZone,
+    Custom
+}
 
-    public enum RoomType
-    {
-        Containment,
-        Checkpoint,
-        DeadEnd,
-        Hallway,
-        Custom
-    }
+public enum RoomType
+{
+    Containment,
+    Checkpoint,
+    DeadEnd,
+    Hallway,
+    Custom
+}
 
-    [System.Serializable]
-    public struct AllowedConnectDirections
-    {
-        public bool north, east, south, west;
-    }
+[System.Serializable]
+public struct AllowedConnectDirections
+{
+    public bool north, east, south, west;
 }
