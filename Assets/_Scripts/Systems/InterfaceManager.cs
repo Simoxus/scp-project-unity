@@ -1,12 +1,13 @@
 ﻿using PrimeTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class InterfaceManager : MonoBehaviour
 {
     public static InterfaceManager Instance { get; private set; }
 
-    [Header("UI-related References")]
+    [Header("UI References")]
     [SerializeField] private GameObject playerUI;
     [SerializeField] private GameObject playerUIOverlays;
     [SerializeField] private CanvasGroup indicatorsGroup;
@@ -17,51 +18,69 @@ public class InterfaceManager : MonoBehaviour
     public Texture2D clickCursor;
     public Vector2 hotspot = Vector2.zero; // pivot point of the cursor
 
-    // Tweens
-    private Tween _blinkTween;
-    private Tween _hudTween;
-
-    // States
-    //private bool _isClickingUI;
+    // Cached references and state
+    private EventSystem _eventSystem;
+    private bool _isMouseOverUI;
+    private bool _wasMousePressed;
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // Cache EventSystem reference
+        _eventSystem = EventSystem.current;
     }
 
     private void Start()
     {
-        Cursor.SetCursor(normalCursor, hotspot, CursorMode.Auto);
+        InitializeCursor();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject()) // LMB pressed
-        {
-            Cursor.SetCursor(clickCursor, hotspot, CursorMode.Auto);
-            //_isClickingUI = true;
-        }
+        HandleMouseInput();
+    }
 
-        if (Input.GetMouseButtonUp(0)) // LMB released
+    private void InitializeCursor()
+    {
+        if (normalCursor != null)
         {
             Cursor.SetCursor(normalCursor, hotspot, CursorMode.Auto);
-            //_isClickingUI = false;
         }
     }
 
-    public void TogglePlayerHUD(float duration = 0.8f)
+    private void HandleMouseInput()
     {
-        if (indicatorsGroup == null) return;
+        // Cache mouse button states to avoid multiple Input calls
+        bool mouseDown = Input.GetMouseButtonDown(0);
+        bool mouseUp = Input.GetMouseButtonUp(0);
 
-        // Toggle the state
-        GameManager.Instance.hidePlayerHUD = !GameManager.Instance.hidePlayerHUD;
+        // Only check UI overlay when mouse state changes
+        if (mouseDown || mouseUp)
+        {
+            _isMouseOverUI = _eventSystem != null && _eventSystem.IsPointerOverGameObject();
+        }
 
-        // Stop any ongoing tween to prevent jumping
-        _hudTween.Stop();
-
-        // Start a new tween based on the new state
-        float targetAlpha = GameManager.Instance.hidePlayerHUD ? 0 : 1;
-        _hudTween = Tween.Alpha(indicatorsGroup, targetAlpha, duration, Ease.InOutCubic);
+        // Handle cursor changes
+        if (mouseDown && _isMouseOverUI && !_wasMousePressed)
+        {
+            if (clickCursor != null)
+                Cursor.SetCursor(clickCursor, hotspot, CursorMode.Auto);
+            _wasMousePressed = true;
+        }
+        else if (mouseUp && _wasMousePressed)
+        {
+            if (normalCursor != null)
+                Cursor.SetCursor(normalCursor, hotspot, CursorMode.Auto);
+            _wasMousePressed = false;
+        }
     }
 }

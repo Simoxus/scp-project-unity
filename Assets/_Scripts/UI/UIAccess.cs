@@ -6,7 +6,7 @@ public class UIAccess : MonoBehaviour
 {
     public static UIAccess Instance { get; private set; }
 
-    [Header("Canvas Parents")]
+    [Header("Canvases")]
     public GameObject canvasOverlays;
     public GameObject canvasIndicators;
     public GameObject canvasInventory;
@@ -14,6 +14,9 @@ public class UIAccess : MonoBehaviour
     public GameObject canvasPauseMenu;
     public GameObject canvasDebuggers;
     public GameObject canvasInteract;
+
+    [Header("Overlays")]
+    public CanvasGroup blinkOverlay;
 
     [Header("For Settings")]
     public Image crosshair;

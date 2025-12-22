@@ -146,11 +146,6 @@ public class PauseMenuUI : MonoBehaviour
         ShowPanel(mainPanelCanvasGroup);
     }
 
-    public void OnOpenSettingsFolder()
-    {
-        SettingsManager.Instance.OpenSettingsFolder();
-    }
-
     public void ForceClose()
     {
         if (IsMenuOpen())

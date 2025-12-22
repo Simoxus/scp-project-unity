@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class IndicatorsUI : MonoBehaviour
 {
@@ -8,6 +7,7 @@ public class IndicatorsUI : MonoBehaviour
     public GameObject blinkMeter;
     public Image blinkIcon;
     public BarProgress blinkBar;
+
     public GameObject sprintMeter;
     public Image sprintIcon;
     public BarProgress sprintBar;
@@ -16,11 +16,15 @@ public class IndicatorsUI : MonoBehaviour
     public Sprite sprintIconSprite;
     public Sprite crouchIconSprite;
 
-    public void UpdateIndicators(float currentSprint, float maxSprint, PlayerState playerState)
+    public void UpdateIndicators(float currentSprint, float currentBlink, PlayerState playerState)
     {
-        //blinkBar.SetProgress(Mathf.Clamp01(currentBlink / maxBlink));
-        sprintBar.SetProgress(Mathf.Clamp01(currentSprint / maxSprint));
+        // Update blink meter (0-1 range)
+        blinkBar.SetProgress(Mathf.Clamp01(currentBlink));
 
+        // Update sprint meter (0-1 range, but clamp to 0 for display if negative)
+        sprintBar.SetProgress(Mathf.Clamp01(currentSprint));
+
+        // Update sprint/crouch icon based on player state
         switch (playerState)
         {
             case PlayerState.Sprinting:
@@ -30,6 +34,10 @@ public class IndicatorsUI : MonoBehaviour
                 sprintIcon.sprite = crouchIconSprite;
                 break;
             case PlayerState.Walking:
+            case PlayerState.Idle:
+            case PlayerState.Freefall:
+                // Keep sprint icon for other states
+                sprintIcon.sprite = sprintIconSprite;
                 break;
         }
     }
