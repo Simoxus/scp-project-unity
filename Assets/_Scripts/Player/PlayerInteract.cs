@@ -1,129 +1,354 @@
 using Cysharp.Threading.Tasks;
+using PrimeTween;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using PrimeTween;
 
 public class PlayerInteract : MonoBehaviour
 {
+    [SerializeField] private InteractionSpriteData[] interactionSpriteData;
+
     [Header("References")]
     [SerializeField] private Player player;
     [SerializeField] private Camera cameraBrain;
-
-    [Header("UI Settings")]
-    [SerializeField] private bool useFading = true;
-    [SerializeField] private float borderPadding = 50f;
-    [SerializeField] private float fadeSpeed = 10f;
-    [Range(0f, 180f), SerializeField] private float onScreenFrustumAngle = 60f;
-
-    [Header("On-Screen UI")]
-    [SerializeField] private InteractionUI onScreenInteractionUI;
-
-    [Header("Off-Screen UI")]
-    [SerializeField] private InteractionUI offScreenInteractionUI;
+    [SerializeField] private InteractionUI interactionUI;
 
     [Header("Interaction Settings")]
     [SerializeField] private float interactionRange = 3f;
-    [SerializeField] private float fadeStartDistance = 2f;
-    [SerializeField] private float uiHeightOffset = 0f;
+    [SerializeField] private LayerMask obstacleLayers;
     [SerializeField] private LayerMask interactableLayer;
 
-    [Header("Icon Tween Settings")]
+    [Header("Position Settings")]
+    [SerializeField] private float baseHorizontalPadding = -200f;
+    [SerializeField] private float baseVerticalPadding = -140f;
+    [SerializeField] private float referenceAspect = 16f / 9f;
+    [SerializeField] private float cornerLerpSpeed = 10f;
+    [SerializeField] private float edgeThreshold = 0.05f;
+
+    [Header("Fade Settings")]
+    [SerializeField] private bool disableFading = false;
+    [SerializeField] private float fadeSpeed = 10f;
+    [SerializeField] private float fadeStartDistance = 2f;
+    [SerializeField, Range(0f, 1f)] private float minAlpha = 0.3f;
+    private const float OFF_SCREEN_FADE = 0.6f;
+
+    [Header("Animation Settings")]
     [SerializeField] private Ease easingStyle1 = Ease.InSine;
     [SerializeField] private Ease easingStyle2 = Ease.OutSine;
-    [SerializeField] private float onScreenTweenScale1 = 0.14f;
-    [SerializeField] private float onScreenTweenScale2 = 0.17f;
-    [SerializeField] private float offScreenTweenScale1 = 0.65f;
-    [SerializeField] private float offScreenTweenScale2 = 0.85f;
+    [SerializeField] private float tweenIdleScale = 0.7f;
+    [SerializeField] private float tweenDownScale = 0.6f;
     [SerializeField] private float tweenDuration1 = 0.12f;
     [SerializeField] private float tweenDuration2 = 0.08f;
     [SerializeField] private float delayBetweenTweens = 0.121f;
 
-    [SerializeField] private InteractionSpriteData[] interactionSpriteData;
     private Dictionary<string, Sprite> _interactionSprites;
     private IInteractable _currentTarget;
     private Transform _currentTargetTransform;
+    private Outline _currentOutline;
+    private readonly Collider[] _interactableColliders = new Collider[10];
 
-    private Collider[] _interactableColliders = new Collider[10]; // Pre-allocated array for Physics.OverlapSphereNonAlloc
+    // Cached values to avoid a lot of math
+    private int _screenWidth;
+    private int _screenHeight;
+    private float _cachedAspect;
+    private float _cachedHorizontalPadding;
+    private ScreenBounds _screenBounds;
+
+    private struct ScreenBounds
+    {
+        public float minX;
+        public float maxX;
+        public float minY;
+        public float maxY;
+    }
+
+    private void Awake()
+    {
+        player = player != null ? player : Player.Instance;
+        cameraBrain = cameraBrain != null ? cameraBrain : Camera.main;
+
+        BuildSpriteCache();
+        CacheScreenValues();
+    }
+
+    private void Update()
+    {
+        // Update cached screen values if resolution changes
+        if (_screenWidth != Screen.width || _screenHeight != Screen.height)
+        {
+            CacheScreenValues();
+        }
+
+        FindNearestInteractable();
+        UpdateInteractionUI();
+    }
+
+    private void OnEnable()
+    {
+        if (player != null && player.playerInputs != null)
+        {
+            player.playerInputs.OnInteract += HandleInteraction;
+        }
+
+        FindNearestInteractable();
+        UpdateOutline();
+    }
+
+    private void OnDisable()
+    {
+        if (player != null && player.playerInputs != null)
+        {
+            player.playerInputs.OnInteract -= HandleInteraction;
+        }
+
+        DisableCurrentOutline();
+        interactionUI.Hide();
+    }
+
+    private void BuildSpriteCache()
+    {
+        _interactionSprites = new Dictionary<string, Sprite>();
+
+        if (interactionSpriteData == null) return;
+
+        foreach (var data in interactionSpriteData)
+        {
+            if (!string.IsNullOrEmpty(data.type) && data.sprite != null)
+            {
+                _interactionSprites[data.type.ToLower()] = data.sprite;
+            }
+        }
+    }
+
+    private void CacheScreenValues()
+    {
+        _screenWidth = Screen.width;
+        _screenHeight = Screen.height;
+        _cachedAspect = (float)_screenWidth / _screenHeight;
+
+        _cachedHorizontalPadding = Mathf.Clamp(
+            baseHorizontalPadding * (_cachedAspect / referenceAspect),
+            baseHorizontalPadding,
+            baseHorizontalPadding * 1.6f
+        );
+
+        _screenBounds.minX = _screenWidth * edgeThreshold + _cachedHorizontalPadding;
+        _screenBounds.maxX = _screenWidth * (1 - edgeThreshold) - _cachedHorizontalPadding;
+        _screenBounds.minY = _screenHeight * edgeThreshold + baseVerticalPadding;
+        _screenBounds.maxY = _screenHeight * (1 - edgeThreshold) - baseVerticalPadding;
+    }
+
+    private void FindNearestInteractable()
+    {
+        IInteractable previousTarget = _currentTarget;
+        _currentTarget = null;
+        _currentTargetTransform = null;
+
+        int count = Physics.OverlapSphereNonAlloc(transform.position, interactionRange, _interactableColliders, interactableLayer);
+        float closestDistSqr = float.MaxValue;
+        Vector3 playerPos = transform.position;
+
+        for (int i = 0; i < count; i++)
+        {
+            Collider collider = _interactableColliders[i];
+            if (collider == null) continue;
+            if (!collider.TryGetComponent(out IInteractable interactable)) continue;
+
+            Vector3 targetPos = collider.transform.position;
+            Vector3 directionToTarget = targetPos - playerPos;
+            float distSqr = directionToTarget.sqrMagnitude;
+
+            // Check distance first before raycast
+            if (distSqr >= closestDistSqr) continue;
+
+            float distance = Mathf.Sqrt(distSqr);
+
+            if (Physics.Raycast(playerPos, directionToTarget / distance, distance, obstacleLayers))
+            {
+                continue; // Obstacle blocking line of sight
+            }
+
+            closestDistSqr = distSqr;
+            _currentTarget = interactable;
+            _currentTargetTransform = collider.transform;
+        }
+
+        if (_currentTarget != previousTarget)
+        {
+            DisableCurrentOutline();
+            UpdateOutline();
+        }
+    }
+
+    private void UpdateOutline()
+    {
+        if (_currentTarget == null)
+        {
+            _currentOutline = null;
+            return;
+        }
+
+        _currentOutline = _currentTarget.GetOutline();
+
+        if (_currentOutline != null)
+        {
+            _currentOutline.enabled = true;
+        }
+    }
+
+    private void DisableCurrentOutline()
+    {
+        if (_currentOutline != null)
+        {
+            _currentOutline.enabled = false;
+            _currentOutline = null;
+        }
+    }
+
+    private void UpdateInteractionUI()
+    {
+        if (_currentTarget == null || cameraBrain == null)
+        {
+            HideInteractionUI();
+            return;
+        }
+
+        UIAccess.Instance.crosshair.enabled = false;
+
+        float distSqr = (transform.position - _currentTargetTransform.position).sqrMagnitude;
+        float distance = Mathf.Sqrt(distSqr);
+        float alpha = disableFading ? 1f : CalculateAlpha(distance);
+
+        Vector3 screenPos = cameraBrain.WorldToScreenPoint(_currentTargetTransform.position);
+
+        if (screenPos.z < 0)
+        {
+            screenPos.x = _screenWidth - screenPos.x;
+            screenPos.y = _screenHeight - screenPos.y;
+        }
+
+        bool offScreen = IsOffScreen(screenPos);
+        Vector3 clampedPos = ClampToScreenBounds(screenPos);
+        float fadeMult = (disableFading || !offScreen) ? 1f : OFF_SCREEN_FADE;
+
+        interactionUI.iconTransform.position = Vector3.Lerp(
+            interactionUI.iconTransform.position,
+            clampedPos,
+            Time.deltaTime * cornerLerpSpeed
+        );
+
+        interactionUI.UpdateCanvasGroup(alpha * fadeMult, fadeSpeed, disableFading);
+        UpdateIcon(alpha);
+    }
+
+    private void HandleInteraction()
+    {
+        if (_currentTarget == null) return;
+
+        _currentTarget.Interact();
+        PlayInteractionTween().Forget();
+    }
+
+    private void HideInteractionUI()
+    {
+        interactionUI.UpdateCanvasGroup(0, fadeSpeed, disableFading);
+        interactionUI.SetIcon(null, 0);
+        UIAccess.Instance.crosshair.enabled = true;
+    }
+
+    private float CalculateAlpha(float distance)
+    {
+        float rawAlpha = Mathf.InverseLerp(interactionRange, fadeStartDistance, distance);
+        return Mathf.Clamp(rawAlpha, minAlpha, 1f);
+    }
+
+    private Vector3 ClampToScreenBounds(Vector3 screenPos)
+    {
+        return new Vector3(
+            Mathf.Clamp(screenPos.x, _screenBounds.minX, _screenBounds.maxX),
+            Mathf.Clamp(screenPos.y, _screenBounds.minY, _screenBounds.maxY),
+            screenPos.z
+        );
+    }
+
+    private bool IsOffScreen(Vector3 screenPos)
+    {
+        return screenPos.x < _screenBounds.minX || screenPos.x > _screenBounds.maxX ||
+               screenPos.y < _screenBounds.minY || screenPos.y > _screenBounds.maxY;
+    }
+
+    private void UpdateIcon(float alpha)
+    {
+        string type = _currentTarget.GetInteractionType();
+        if (_interactionSprites.TryGetValue(type.ToLower(), out var sprite))
+        {
+            interactionUI.SetIcon(sprite, alpha);
+        }
+    }
+
+    private async UniTask PlayInteractionTween()
+    {
+        if (interactionUI?.iconImage?.rectTransform == null) return;
+
+        var rect = interactionUI.iconTransform;
+
+        await Tween.Scale(rect, tweenDownScale, tweenDuration1, easingStyle1).ToYieldInstruction().ToUniTask();
+        await UniTask.WaitForSeconds(delayBetweenTweens);
+        await Tween.Scale(rect, tweenIdleScale, tweenDuration2, easingStyle2).ToYieldInstruction().ToUniTask();
+    }
 
     [System.Serializable]
     public class InteractionUI
     {
         public RectTransform uiTransform;
+        public RectTransform iconTransform;
         public Image iconImage;
         public CanvasGroup canvasGroup;
-
-        private bool _wasIconActive = false; // To track active state and avoid redundant SetActive calls
 
         public void SetIcon(Sprite sprite, float alpha)
         {
             if (iconImage == null) return;
 
             iconImage.sprite = sprite;
-            Color currentColor = iconImage.color;
-            currentColor.a = alpha;
-            iconImage.color = currentColor;
-
-            bool shouldBeActive = sprite != null && alpha > 0.001f;
-            if (iconImage.gameObject.activeSelf != shouldBeActive)
-            {
-                iconImage.gameObject.SetActive(shouldBeActive);
-            }
-            _wasIconActive = shouldBeActive;
+            var color = iconImage.color;
+            color.a = alpha;
+            iconImage.color = color;
+            iconImage.gameObject.SetActive(sprite != null && alpha > 0.001f);
         }
 
-        public void UpdateCanvasGroup(float targetAlpha, float lerpSpeed)
+        public void UpdateCanvasGroup(float targetAlpha, float speed, bool disableFading)
         {
-            if (canvasGroup == null || uiTransform == null) return;
+            if (canvasGroup == null) return;
 
-            bool shouldBeUIActive = targetAlpha > 0.001f;
-            if (uiTransform.gameObject.activeSelf != shouldBeUIActive)
+            if (disableFading)
             {
-                uiTransform.gameObject.SetActive(shouldBeUIActive);
+                canvasGroup.alpha = 1f;
+                uiTransform.gameObject.SetActive(true);
+                canvasGroup.blocksRaycasts = true;
+                canvasGroup.interactable = true;
+
+                return;
             }
 
-            canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, targetAlpha, Time.deltaTime * lerpSpeed);
-            bool isActiveForInteraction = canvasGroup.alpha > 0.01f;
-            canvasGroup.blocksRaycasts = isActiveForInteraction;
-            canvasGroup.interactable = isActiveForInteraction;
+            canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, targetAlpha, Time.deltaTime * speed);
+
+            bool isActive = canvasGroup.alpha > 0.01f;
+            uiTransform.gameObject.SetActive(isActive);
+            canvasGroup.blocksRaycasts = isActive;
+            canvasGroup.interactable = isActive;
         }
 
-        public void SetCanvasGroupDirect(float alpha, bool interactable)
+        public void Hide()
         {
-            if (canvasGroup == null || uiTransform == null) return;
-
-            bool shouldBeUIActive = alpha > 0.001f;
-            if (uiTransform.gameObject.activeSelf != shouldBeUIActive)
-            {
-                uiTransform.gameObject.SetActive(shouldBeUIActive);
-            }
-
-            canvasGroup.alpha = alpha;
-            canvasGroup.blocksRaycasts = interactable;
-            canvasGroup.interactable = interactable;
-        }
-
-        public void HideUI()
-        {
-            if (canvasGroup != null)
-            {
-                canvasGroup.alpha = 0f;
-                canvasGroup.blocksRaycasts = false;
-                canvasGroup.interactable = false;
-            }
-            if (uiTransform != null && uiTransform.gameObject.activeSelf) // Avoid redundant SetActive
+            if (uiTransform != null)
             {
                 uiTransform.gameObject.SetActive(false);
             }
-            if (iconImage != null)
+
+            if (canvasGroup != null)
             {
-                iconImage.sprite = null;
-                if (iconImage.gameObject.activeSelf) // Avoid redundant SetActive
-                {
-                    iconImage.gameObject.SetActive(false);
-                }
+                canvasGroup.alpha = 0;
             }
-            _wasIconActive = false;
         }
     }
 
@@ -132,367 +357,5 @@ public class PlayerInteract : MonoBehaviour
     {
         public string type;
         public Sprite sprite;
-    }
-
-    private void OnEnable()
-    {
-        /*
-        BasicInteract.OnObjectInteracted += HandleObjectInteracted;
-        DoorActivator.OnObjectInteracted += HandleObjectInteracted;
-        */
-
-        // Subscribe to the PlayerInputs' interact event
-        if (player != null && player.playerInputs != null)
-        {
-            player.playerInputs.OnInteractPressed += CheckInteractionInput;
-        }
-    }
-
-    private void OnDisable()
-    {
-        // Unsubscribe from the PlayerInputs' interact event
-        if (player != null && player.playerInputs != null)
-        {
-            player.playerInputs.OnInteractPressed -= CheckInteractionInput;
-        }
-
-        HideAllUI();
-    }
-
-    private void HideAllUI()
-    {
-        // Ensure that both on-screen and off-screen UI elements are immediately
-        // hidden and their icons are cleared.
-        onScreenInteractionUI.HideUI();
-        offScreenInteractionUI.HideUI();
-
-        // Reset the current target to null
-        _currentTarget = null;
-        _currentTargetTransform = null;
-    }
-
-    // This method now directly calls the local tweening logic
-    private async void HandleObjectInteracted()
-    {
-        await SizeInteractIcons();
-    }
-
-    private void Awake()
-    {
-        // Check for player and if there's no player, try to find the singleton/instance
-        player = player != null ? player : Player.Instance;
-
-        InitializeInteractionSprites();
-        // It's generally good practice to set up references here if possible
-        // If cameraBrain is not set in inspector, try to find it here instead of Start.
-        if (cameraBrain == null)
-        {
-            SetupCamera(); // Try to get Camera.main early
-        }
-    }
-
-    private void Start()
-    {
-        // If cameraBrain was already set in Awake or Inspector, this is skipped.
-        if (cameraBrain == null)
-        {
-            SetupCamera();
-        }
-        InitializeUIState();
-    }
-
-    private void Update()
-    {
-        FindInteractable();
-        UpdateInteractionUI();
-    }
-
-    // Private Helper Methods
-
-    private void InitializeInteractionSprites()
-    {
-        _interactionSprites = new Dictionary<string, Sprite>();
-        foreach (var data in interactionSpriteData)
-        {
-            if (data.sprite != null && !string.IsNullOrEmpty(data.type))
-            {
-                _interactionSprites[data.type.ToLowerInvariant()] = data.sprite; // Using InvariantCulture for consistency
-            }
-        }
-    }
-
-    private void SetupCamera()
-    {
-        cameraBrain = Camera.main;
-        if (cameraBrain == null)
-        {
-            Debug.LogError("No camera has been assigned to PlayerInteract and Camera.main not found. Disabling script.", this);
-            enabled = false;
-        }
-    }
-
-    private void InitializeUIState()
-    {
-        if (useFading)
-        {
-            onScreenInteractionUI.HideUI();
-            offScreenInteractionUI.HideUI();
-        }
-        else
-        {
-            // Only set active state if currently different
-            if (onScreenInteractionUI.uiTransform != null && onScreenInteractionUI.uiTransform.gameObject.activeSelf)
-            {
-                onScreenInteractionUI.uiTransform.gameObject.SetActive(false);
-            }
-            if (offScreenInteractionUI.uiTransform != null && offScreenInteractionUI.uiTransform.gameObject.activeSelf)
-            {
-                offScreenInteractionUI.uiTransform.gameObject.SetActive(false);
-            }
-            onScreenInteractionUI.SetCanvasGroupDirect(0f, false);
-            offScreenInteractionUI.SetCanvasGroupDirect(0f, false);
-        }
-    }
-
-    private void FindInteractable()
-    {
-        _currentTarget = null;
-        _currentTargetTransform = null;
-
-        // Use Physics.OverlapSphereNonAlloc to avoid garbage creation
-        int numColliders = Physics.OverlapSphereNonAlloc(transform.position, interactionRange, _interactableColliders, interactableLayer);
-
-        float closestDistanceSqr = Mathf.Infinity;
-        IInteractable potentialTarget = null;
-        Transform potentialTargetTransform = null;
-
-        for (int i = 0; i < numColliders; i++)
-        {
-            var hitCollider = _interactableColliders[i];
-            if (hitCollider.TryGetComponent(out IInteractable interactable))
-            {
-                float distanceSqr = (transform.position - hitCollider.transform.position).sqrMagnitude;
-                if (distanceSqr < closestDistanceSqr)
-                {
-                    closestDistanceSqr = distanceSqr;
-                    potentialTarget = interactable;
-                    potentialTargetTransform = hitCollider.transform;
-                }
-            }
-        }
-
-        _currentTarget = potentialTarget;
-        _currentTargetTransform = potentialTargetTransform;
-    }
-
-    private void UpdateInteractionUI()
-    {
-        if (_currentTarget == null || _currentTargetTransform == null || cameraBrain == null)
-        {
-            HandleNoCurrentTarget();
-            return;
-        }
-
-        float distance = Vector3.Distance(transform.position, _currentTargetTransform.position);
-        float calculatedAlpha = Mathf.Clamp01(Mathf.InverseLerp(interactionRange, fadeStartDistance, distance));
-
-        Vector3 directionToTarget = (_currentTargetTransform.position - cameraBrain.transform.position).normalized;
-        float angleToTarget = Vector3.Angle(cameraBrain.transform.forward, directionToTarget);
-        bool isInCustomFrustum = angleToTarget < (onScreenFrustumAngle / 2f);
-
-        Vector3 viewportPoint = cameraBrain.WorldToViewportPoint(_currentTargetTransform.position);
-        bool isGenerallyOnScreen = viewportPoint.z > 0 &&
-                                   viewportPoint.x >= 0 && viewportPoint.x <= 1 &&
-                                   viewportPoint.y >= 0 && viewportPoint.y <= 1;
-
-        bool isOnScreen = isGenerallyOnScreen && isInCustomFrustum;
-        string interactionType = _currentTarget.GetInteractionType(); // Get once
-
-        if (isOnScreen)
-        {
-            HandleOnScreenUI(calculatedAlpha, interactionType);
-            offScreenInteractionUI.HideUI();
-        }
-        else
-        {
-            HandleOffScreenUI(calculatedAlpha, viewportPoint, interactionType);
-            onScreenInteractionUI.HideUI();
-        }
-    }
-
-    private void HandleNoCurrentTarget()
-    {
-        if (useFading)
-        {
-            onScreenInteractionUI.UpdateCanvasGroup(0f, fadeSpeed);
-            offScreenInteractionUI.UpdateCanvasGroup(0f, fadeSpeed);
-            onScreenInteractionUI.SetIcon(null, 0f); // Ensure icon is cleared
-            offScreenInteractionUI.SetIcon(null, 0f); // Ensure icon is cleared
-        }
-        else
-        {
-            onScreenInteractionUI.HideUI();
-            offScreenInteractionUI.HideUI();
-        }
-    }
-
-    private void HandleOnScreenUI(float targetAlpha, string interactionType)
-    {
-        if (onScreenInteractionUI.uiTransform == null) return;
-
-        if (useFading)
-        {
-            onScreenInteractionUI.UpdateCanvasGroup(targetAlpha, fadeSpeed);
-            SetInteractionIcon(onScreenInteractionUI, interactionType, targetAlpha);
-        }
-        else
-        {
-            onScreenInteractionUI.SetCanvasGroupDirect(1f, true);
-            SetInteractionIcon(onScreenInteractionUI, interactionType, 1f);
-        }
-
-        onScreenInteractionUI.uiTransform.position = _currentTargetTransform.position + Vector3.up * uiHeightOffset;
-        onScreenInteractionUI.uiTransform.LookAt(onScreenInteractionUI.uiTransform.position + cameraBrain.transform.rotation * Vector3.forward, cameraBrain.transform.rotation * Vector3.up);
-    }
-
-    private void HandleOffScreenUI(float targetAlpha, Vector3 viewportPoint, string interactionType)
-    {
-        if (offScreenInteractionUI.uiTransform == null) return;
-
-        if (useFading)
-        {
-            offScreenInteractionUI.UpdateCanvasGroup(targetAlpha, fadeSpeed);
-            SetInteractionIcon(offScreenInteractionUI, interactionType, targetAlpha);
-        }
-        else
-        {
-            offScreenInteractionUI.SetCanvasGroupDirect(1f, true);
-            SetInteractionIcon(offScreenInteractionUI, interactionType, 1f);
-        }
-
-        // Calculate off-screen indicator position and rotation
-        Vector2 screenPoint = cameraBrain.WorldToScreenPoint(_currentTargetTransform.position);
-        Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
-        Vector2 direction = new Vector2(screenPoint.x - screenCenter.x, screenPoint.y - screenCenter.y);
-        direction.Normalize();
-
-        float halfScreenWidth = Screen.width / 2f - borderPadding;
-        float halfScreenHeight = Screen.height / 2f - borderPadding;
-        float angle = Mathf.Atan2(direction.y, direction.x);
-        float tanAngle = Mathf.Tan(angle);
-        float indicatorX, indicatorY;
-
-        // Prevent division by zero if tanAngle is extremely close to 0
-        if (Mathf.Abs(tanAngle) < float.Epsilon && Mathf.Abs(direction.x) > float.Epsilon) // if horizontal and not precisely at center
-        {
-            indicatorX = Mathf.Sign(direction.x) * halfScreenWidth;
-            indicatorY = 0;
-        }
-        else if (Mathf.Abs(tanAngle) > (halfScreenHeight / halfScreenWidth)) // If it hits vertical border first
-        {
-            indicatorY = Mathf.Sign(direction.y) * halfScreenHeight;
-            indicatorX = indicatorY / tanAngle;
-        }
-        else // Hits horizontal border first
-        {
-            indicatorX = Mathf.Sign(direction.x) * halfScreenWidth;
-            indicatorY = tanAngle * indicatorX;
-        }
-
-        if (viewportPoint.z < 0)
-        {
-            indicatorX *= -1;
-            indicatorY *= -1;
-        }
-
-        float rotationAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        offScreenInteractionUI.uiTransform.position = screenCenter + new Vector2(indicatorX, indicatorY);
-        offScreenInteractionUI.uiTransform.rotation = Quaternion.Euler(0, 0, rotationAngle - 90);
-    }
-
-    private void SetInteractionIcon(InteractionUI interactionUI, string type, float targetAlpha)
-    {
-        if (interactionUI.iconImage == null) return;
-
-        Sprite iconSprite;
-        if (_interactionSprites.TryGetValue(type.ToLowerInvariant(), out iconSprite)) // Using InvariantCulture
-        {
-            interactionUI.SetIcon(iconSprite, targetAlpha);
-        }
-        else
-        {
-            interactionUI.SetIcon(null, 0f);
-        }
-    }
-
-    private void CheckInteractionInput()
-    {
-        if (_currentTarget != null)
-        {
-            _currentTarget.Interact();
-            HandleObjectInteracted();
-        }
-    }
-
-    private async UniTask SizeInteractIcons()
-    {
-        // Safety check: Ensure icon RectTransforms exist
-        if (onScreenInteractionUI?.iconImage?.rectTransform == null || offScreenInteractionUI?.iconImage?.rectTransform == null)
-        {
-            Debug.LogWarning("Cannot size interact icons: one or both icon RectTransforms are null.");
-            return;
-        }
-
-        // Ensure the icon GameObjects are active BEFORE tweening them if they were not already.
-        // The InteractionUI.SetIcon method now handles this more robustly.
-
-        // Store the tweens
-        var onScreenTween1 = Tween.Scale(onScreenInteractionUI.iconImage.rectTransform, onScreenTweenScale1, tweenDuration1, easingStyle1)
-            .ToYieldInstruction().ToUniTask();
-        var offScreenTween1 = Tween.Scale(offScreenInteractionUI.iconImage.rectTransform, offScreenTweenScale1, tweenDuration1, easingStyle1)
-            .ToYieldInstruction().ToUniTask();
-
-        // Await both tweens concurrently
-        await UniTask.WhenAll(onScreenTween1, offScreenTween1);
-
-        await UniTask.WaitForSeconds(delayBetweenTweens, ignoreTimeScale: false);
-
-        var onScreenTween2 = Tween.Scale(onScreenInteractionUI.iconImage.rectTransform, onScreenTweenScale2, tweenDuration2, easingStyle2)
-            .ToYieldInstruction().ToUniTask();
-        var offScreenTween2 = Tween.Scale(offScreenInteractionUI.iconImage.rectTransform, offScreenTweenScale2, tweenDuration2, easingStyle2)
-            .ToYieldInstruction().ToUniTask();
-
-        await UniTask.WhenAll(onScreenTween2, offScreenTween2);
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactionRange);
-
-        // Draw the custom frustum angle in the editor
-        if (cameraBrain != null)
-        {
-            Gizmos.color = Color.cyan;
-            Vector3 cameraPos = cameraBrain.transform.position;
-            Vector3 cameraForward = cameraBrain.transform.forward;
-
-            // Calculate the half angle in radians
-            float halfAngleRad = onScreenFrustumAngle * 0.5f * Mathf.Deg2Rad;
-
-            // Calculate the far distance for the frustum visualization
-            float frustumDisplayDistance = interactionRange + 1f; // A bit beyond interaction range
-
-            // Get the direction vectors for the edges of the frustum
-            Quaternion leftRotation = Quaternion.AngleAxis(-onScreenFrustumAngle / 2f, cameraBrain.transform.up);
-            Quaternion rightRotation = Quaternion.AngleAxis(onScreenFrustumAngle / 2f, cameraBrain.transform.up);
-
-            Vector3 leftRayDirection = leftRotation * cameraForward;
-            Vector3 rightRayDirection = rightRotation * cameraForward;
-
-            // Draw lines representing the frustum edges
-            Gizmos.DrawLine(cameraPos, cameraPos + leftRayDirection * frustumDisplayDistance);
-            Gizmos.DrawLine(cameraPos, cameraPos + rightRayDirection * frustumDisplayDistance);
-        }
     }
 }

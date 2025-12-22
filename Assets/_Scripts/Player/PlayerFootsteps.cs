@@ -1,4 +1,3 @@
-using FMOD.Studio;
 using FMODUnity;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,201 +8,212 @@ public class PlayerFootsteps : MonoBehaviour
     [Header("References")]
     public Player player;
 
+    [Header("Behavior Settings")]
+    public List<FootstepData> footstepSurfaces = new List<FootstepData>();
+    public bool useBobSyncedFootsteps = true;
+
     [Header("FMOD Setup")]
-    public StudioEventEmitter footstepEventEmitter;
+    public Transform footstepPlayTransform;
+    public EventReference walkFootstepEvent;
+    public EventReference runFootstepEvent;
     public string surfaceParameterName = "Surface";
 
     [Header("Raycast Settings")]
     public Transform raycastOrigin;
-    public float raycastDistance;
+    public float raycastDistance = 4f;
     public LayerMask groundLayer;
-  
-    public List<FootstepData> footstepSurfaces = new List<FootstepData>();
 
-    [Header("Footstep Cooldown")]
-    public float footstepCooldown = 0.3f; // Default cooldown, can be adjusted in Inspector
-
-    private Dictionary<string, FootstepData> _surfaceDefinitionsByTextureID = new Dictionary<string, FootstepData>();
-    private string _currentFootstepParameterLabel;
-    private float _lastFootstepTime; // To track when the last footstep played
+    private Dictionary<string, FootstepData> _surfaceByTextureName = new Dictionary<string, FootstepData>();
+    private FootstepData _currentFootstepData;
 
     private void Awake()
     {
-        // Check for player and if there's no player, try to find the singleton/instance
         player = player != null ? player : Player.Instance;
 
-        _surfaceDefinitionsByTextureID.Clear();
+        if (raycastOrigin == null)
+        {
+            raycastOrigin = transform;
+        }
+
+        if (player == null)
+        {
+            Log.VerboseWarning("Player could not be found. Footsteps may not work.");
+        }
+
+        BuildSurfaceDictionary();
+    }
+
+    private void OnEnable()
+    {
+        if (useBobSyncedFootsteps && player && player.playerBobbing != null)
+        {
+            player.playerBobbing.OnFootstepTrigger += PlayFootstepAudio;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (player && player.playerBobbing != null)
+        {
+            player.playerBobbing.OnFootstepTrigger -= PlayFootstepAudio;
+        }
+    }
+
+    public void PlayFootstepAudio()
+    {
+        if (player == null || player.playerController == null) return;
+        if (!player.playerController.isMoving) return;
+
+        DetectGroundSurface();
+
+        if (_currentFootstepData == null) return;
+
+        EventReference footstepEvent = GetFootstepEventForState(player.currentState);
+
+        if (footstepEvent.IsNull)
+            return;
+
+        FMODHelper.PlayOneShotWithParameters(
+            footstepEvent,
+            footstepPlayTransform.position,
+            (surfaceParameterName, _currentFootstepData.fmodParameterValue)
+        );
+    }
+
+    private void BuildSurfaceDictionary()
+    {
+        _surfaceByTextureName.Clear();
 
         foreach (FootstepData surface in footstepSurfaces)
         {
-            if (surface == null) { Debug.LogWarning("FootstepSurface reference is null. Please check your setup.", this); continue; }
+            if (surface == null)
+            {
+                Log.VerboseWarning($"A FootstepData entry is null. Make sure to check your list in {name}.");
+                continue;
+            }
 
             foreach (Texture texture in surface.textures)
             {
-                if (texture != null)
+                if (texture == null) continue;
+
+                string identifier = texture.name;
+                if (string.IsNullOrEmpty(identifier)) continue;
+
+                if (!_surfaceByTextureName.ContainsKey(identifier))
                 {
-                    string identifier = texture.name;
-
-                    if (!string.IsNullOrEmpty(identifier))
-                    {
-                        if (!_surfaceDefinitionsByTextureID.ContainsKey(identifier))
-                        {
-                            _surfaceDefinitionsByTextureID.Add(identifier, surface);
-                        }
-                    }
-                }
-            }
-        }  
-
-        _lastFootstepTime = -footstepCooldown; // Initialize to allow immediate footstep
-    }
-
-    // Removed Update() from PlayerFootsteps, as PlayerController will now drive it.
-
-    public void RequestFootstep()
-    {
-        // Check cooldown/values
-        if (!player.playerController.isMoving) return;
-        if (Time.time < _lastFootstepTime + footstepCooldown) { return; }
-
-        // If not on cooldown, proceed to detect and play
-        DetectGroundSurface();
-
-        if (footstepEventEmitter == null || footstepEventEmitter.EventReference.IsNull)
-        {
-            Debug.LogWarning("Footstep emitter is not set in the inspector. No sound will play.", this);
-            return;
-        }
-
-        // Get the FootstepData associated with the current label
-        FootstepData currentFootstepData = null;
-        foreach (var entry in _surfaceDefinitionsByTextureID)
-        {
-            if (entry.Value.fmodParameterLabel == _currentFootstepParameterLabel)
-            {
-                currentFootstepData = entry.Value;
-                break;
-            }
-        }
-
-        if (currentFootstepData != null)
-        {
-            EventReference footstepReference = footstepEventEmitter.EventReference;
-
-            FMODHelper.PlayOneShotWithParameters(
-                footstepReference, // Use the path from EventReference
-                footstepEventEmitter.gameObject.transform.position,
-                (surfaceParameterName, currentFootstepData.fmodParameterValue) // Use the float value from FootstepData
-            );
-
-            _lastFootstepTime = Time.time;
-        }
-    }
-
-
-    public void DetectGroundSurface()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(raycastOrigin.position, Vector3.down, out hit, raycastDistance, groundLayer))
-        {
-            Debug.DrawRay(raycastOrigin.position, Vector3.down * raycastDistance, Color.green, 0.1f);
-
-            Renderer hitRenderer = hit.collider.GetComponent<Renderer>();
-            MeshCollider hitMeshCollider = hit.collider as MeshCollider;
-
-            Material detectedMaterial = null;
-
-            if (hitMeshCollider != null && hitRenderer != null && hitMeshCollider.sharedMesh != null && hitRenderer.sharedMaterials != null && hitRenderer.sharedMaterials.Length > 0)
-            {
-                // This is a MeshCollider with potentially multiple materials
-                Mesh mesh = hitMeshCollider.sharedMesh;
-                int submeshIndex = -1;
-
-                for (int i = 0; i < mesh.subMeshCount; i++)
-                {
-                    var submeshDescriptor = mesh.GetSubMesh(i);
-                    if (hit.triangleIndex * 3 >= submeshDescriptor.indexStart &&
-                        hit.triangleIndex * 3 < (submeshDescriptor.indexStart + submeshDescriptor.indexCount))
-                    {
-                        submeshIndex = i;
-                        break;
-                    }
-                }
-
-                if (submeshIndex != -1 && submeshIndex < hitRenderer.sharedMaterials.Length)
-                {
-                    detectedMaterial = hitRenderer.sharedMaterials[submeshIndex];
-                }
-                else if (hitRenderer.sharedMaterials.Length > 0)
-                {
-                    detectedMaterial = hitRenderer.sharedMaterials[0];
-                }
-            }
-            else if (hitRenderer != null && hitRenderer.sharedMaterial != null)
-            {
-                // This is likely a primitive collider (Box, Sphere, Capsule)
-                // or a simple MeshRenderer with a single material.
-                detectedMaterial = hitRenderer.sharedMaterial;
-            }
-            // ELSE: No valid Renderer or no materials found on the hit object.
-
-            if (detectedMaterial != null)
-            {
-                Texture detectedTexture = null;
-                if (detectedMaterial.HasProperty("_BaseMap"))
-                {
-                    detectedTexture = detectedMaterial.GetTexture("_BaseMap");
-                }
-                else if (detectedMaterial.HasProperty("_MainTex"))
-                {
-                    detectedTexture = detectedMaterial.GetTexture("_MainTex");
-                }
-
-                if (detectedTexture != null)
-                {
-                    bool surfaceFound = false;
-                    if (_surfaceDefinitionsByTextureID.TryGetValue(detectedTexture.name, out FootstepData foundSurfaceDef))
-                    {
-                        _currentFootstepParameterLabel = foundSurfaceDef.fmodParameterLabel;
-                        surfaceFound = true;
-                    }
-                    else
-                    {
-                        foreach (var entry in _surfaceDefinitionsByTextureID)
-                        {
-                            string identifier = entry.Key;
-                            FootstepData surfaceDef = entry.Value;
-
-                            if (detectedTexture.name.Contains(identifier))
-                            {
-                                _currentFootstepParameterLabel = surfaceDef.fmodParameterLabel;
-                                surfaceFound = true;
-                               
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!surfaceFound)
-                    {
-                        _currentFootstepParameterLabel = "";
-                    }
+                    _surfaceByTextureName.Add(identifier, surface);
                 }
                 else
                 {
-                    _currentFootstepParameterLabel = "";
+                    Log.VerboseInfo($"Duplicate texture identifier '{identifier}' found. Ignoring duplicate.");
                 }
             }
-            else
-            {
-                _currentFootstepParameterLabel = "";
-            }
         }
-        else
+    }
+
+    private EventReference GetFootstepEventForState(PlayerState state)
+    {
+        switch (state)
+        {
+            case PlayerState.Sprinting:
+                return runFootstepEvent;
+            case PlayerState.Walking:
+            case PlayerState.Crouching:
+            case PlayerState.Idle:
+            case PlayerState.Freefall:
+            default:
+                return walkFootstepEvent;
+        }
+    }
+
+    public void DetectGroundSurface()
+    {
+        if (!Physics.Raycast(raycastOrigin.position, Vector3.down, out RaycastHit hit, raycastDistance, groundLayer))
         {
             Debug.DrawRay(raycastOrigin.position, Vector3.down * raycastDistance, Color.red, 0.1f);
-            _currentFootstepParameterLabel = "";
+            _currentFootstepData = null;
+            return;
         }
+
+        Debug.DrawRay(raycastOrigin.position, Vector3.down * raycastDistance, Color.green, 0.1f);
+
+        Material detectedMaterial = GetMaterialFromHit(hit);
+        if (detectedMaterial == null)
+        {
+            _currentFootstepData = null;
+            return;
+        }
+
+        Texture detectedTexture = GetTextureFromMaterial(detectedMaterial);
+        if (detectedTexture == null)
+        {
+            _currentFootstepData = null;
+            return;
+        }
+
+        if (_surfaceByTextureName.TryGetValue(detectedTexture.name, out FootstepData foundSurfaceDef))
+        {
+            _currentFootstepData = foundSurfaceDef;
+            return;
+        }
+
+        foreach (var entry in _surfaceByTextureName)
+        {
+            if (detectedTexture.name.Contains(entry.Key))
+            {
+                _currentFootstepData = entry.Value;
+                return;
+            }
+        }
+
+        _currentFootstepData = null;
+    }
+
+    private Material GetMaterialFromHit(RaycastHit hit)
+    {
+        Renderer hitRenderer = hit.collider.GetComponent<Renderer>();
+        if (hitRenderer == null)
+            return null;
+
+        MeshCollider meshCollider = hit.collider as MeshCollider;
+
+        if (meshCollider != null && meshCollider.sharedMesh != null && hitRenderer.sharedMaterials != null)
+        {
+            Mesh mesh = meshCollider.sharedMesh;
+
+            for (int i = 0; i < mesh.subMeshCount; i++)
+            {
+                var submesh = mesh.GetSubMesh(i);
+                if (hit.triangleIndex * 3 >= submesh.indexStart &&
+                    hit.triangleIndex * 3 < submesh.indexStart + submesh.indexCount)
+                {
+                    if (i < hitRenderer.sharedMaterials.Length)
+                        return hitRenderer.sharedMaterials[i];
+                }
+            }
+
+            if (hitRenderer.sharedMaterials.Length > 0)
+                return hitRenderer.sharedMaterials[0];
+        }
+        else if (hitRenderer.sharedMaterial != null)
+        {
+            return hitRenderer.sharedMaterial;
+        }
+
+        return null;
+    }
+
+    private Texture GetTextureFromMaterial(Material mat)
+    {
+        if (mat == null) return null;
+
+        if (mat.HasProperty("_BaseMap"))
+            return mat.GetTexture("_BaseMap");
+
+        if (mat.HasProperty("_MainTex"))
+            return mat.GetTexture("_MainTex");
+
+        return null;
     }
 
     void OnDrawGizmos()

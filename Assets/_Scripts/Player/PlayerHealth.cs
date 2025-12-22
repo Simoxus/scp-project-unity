@@ -9,9 +9,13 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float currentHealth = 100f;
 
-    // Broadcasts currentHealth/maxHealth when it changes
+    [Header("Injury Settings")]
+    [SerializeField] private float injuryFactor = 0f;
+    [SerializeField, ReadOnly] private float maxInjuryFactor = 3f;
+
     public event Action<float, float> OnHealthChanged;
     public event Action<HealthLevel> OnHealthLevelChanged;
+    public event Action<float> OnInjuryChanged;
 
     public enum HealthLevel
     {
@@ -51,15 +55,29 @@ public class PlayerHealth : MonoBehaviour
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
         var newLevel = GetHealthLevel();
-
         if (newLevel != healthLevel)
         {
             healthLevel = newLevel;
             OnHealthLevelChanged?.Invoke(newLevel);
         }
+
+        float newInjuryFactor = CalculateInjuryFactor();
+        if (!Mathf.Approximately(newInjuryFactor, injuryFactor))
+        {
+            injuryFactor = newInjuryFactor;
+            OnInjuryChanged?.Invoke(injuryFactor);
+        }
     }
 
-    private HealthLevel GetHealthLevel() // Edit ratios here :)
+    private float CalculateInjuryFactor()
+    {
+        float healthPercent = currentHealth / maxHealth;
+        float damage = 1f - healthPercent;
+
+        return Mathf.Clamp(damage * maxInjuryFactor, 0f, maxInjuryFactor);
+    }
+
+    private HealthLevel GetHealthLevel()
     {
         float ratio = currentHealth / maxHealth;
 
@@ -77,4 +95,5 @@ public class PlayerHealth : MonoBehaviour
     public float GetHealth() => currentHealth;
     public float GetMaxHealth() => maxHealth;
     public float GetHealthPercent() => currentHealth / maxHealth;
+    public float GetInjuryFactor() => injuryFactor;
 }

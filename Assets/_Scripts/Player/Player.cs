@@ -1,7 +1,6 @@
-using UnityEngine;
-using Unity.Cinemachine;
-using FMODUnity;
 using EditorAttributes;
+using Unity.Cinemachine;
+using UnityEngine;
 
 public enum PlayerState
 {
