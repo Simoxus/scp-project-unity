@@ -1,13 +1,13 @@
 # SCP: Project Unity
 
-SCP: Project Unity is a remake of the iconic indie horror game, SCP - Containment Breach, released in 2012.
+SCP: Project Unity is a remake of the indie horror game, SCP - Containment Breach, released in 2012.
 
 This is a Unity engine remake of SCP - Containment Breach, and is licensed under [Creative Commons Attribution-Sharealike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
 
 ---
 
 ### [Changelog](CHANGELOG.md)
-### [Attributions](ATTRIBS.md)
+### [Attributions](ATTRIBUTIONS.md)
 ### [Credits](CREDITS.md)
 
 ---
@@ -19,11 +19,6 @@ This is a Unity engine remake of SCP - Containment Breach, and is licensed under
   <a href="https://www.reddit.com/r/scpprojectunity/"><img src="https://github.com/user-attachments/assets/51cb9f6b-e8c1-40d0-aee4-f433c7deaf21" alt="Reddit" width="200"></a>
   <a href="https://www.youtube.com/@simoxusofficial"><img src="https://github.com/user-attachments/assets/7f64541a-176e-4625-8e4a-173ac49a772b" alt="YouTube" width="200"></a>
 </div>
-
----
-
-## Showcase
-https://github.com/user-attachments/assets/449e926a-f46f-4d1e-89a9-9e3fbebdf99d
 
 ---
 
@@ -63,23 +58,43 @@ https://github.com/user-attachments/assets/449e926a-f46f-4d1e-89a9-9e3fbebdf99d
 
 * ### **Why make this?**
 
-SCP - Containment Breach was originally developed on an engine known as Blitz3D, and it's very cranky.
+I don't really have a good answer to that question, but over the years, I've seen so many amazing projects and mods inspired by SCP - Containment Breach struggle and lose their momentum just because Blitz3D is so ancient and difficult to work with. Creators had nowhere solid to build off of. This project here aims to change that; I want to provide a modern, open-source foundation that absolutely anyone can fork, modify, and build upon. Even if Project Unity doesn't reach completion, the open-source nature of the project means that anyone in the community can always pick it up, and take it in their own direction.
 
 * ### **How do I play the latest releases?**
 
 The #builds channel in the [Discord](https://discord.gg/dVdY4PuGfp). If a build is tagged as extremely stable in the Discord #builds channel, you will also be able to find it on [Itch](https://simoxus.itch.io/scp-project-unity).
 
-* ### **What platforms does Project Unity support?**
+* ### **How often are new builds released?**
+Build releases vary based on progress. If you want to keep up with this project, you should join the Discord for the latest updates!
 
-SCP: Project Unity supports **Windows**, **Linux**, and **macOS**.
+* ### **Will Project Unity be free to play?**
+Yes, the game is completely free and the majority of content included in the game is licensed under CC BY-SA 4.0, although there are some exceptions, which will be outlined in the README as they are added.
+
+* ### **Is this a continuation of SCP: Unity?**
+No, SCP: Project Unity is a separate project with its own vision.
+
+* ### **Is this affiliated with SCP - Containment Breach?**
+No, but Project Unity is a remake of the game. It's just not officially affiliated with the original game's developer(s).
+
+* ### **Will all content from the original game be included?**
+Yes, the project's main goal is to practically port the game, as well as expanding upon the original content, with improvements and additions planned over time.
+
+* ### **Can I contribute to the project?**
+Yes! Contributions are actually very much appreciated. Join the Discord to get involved. :)
 
 * ### **I want to make a bug report or suggestion. How do I make one?**
 
 You can make a bug report OR suggestion in GitHub Issues on the repository, but preferably in the [Discord](https://discord.gg/dVdY4PuGfp).
 
-* ### **Will Project Unity be free to play?**
+* ### **Can I create mods or custom content?**
+Yes, the game is designed to support modding! More information about modding support will be provided as development progresses.
 
-Yes, SCP: Project Unity is completely free and the majority of content included in the game is licensed under CC BY-SA 4.0, although there are some exceptions, which will be outlined in the README as they are added.
+* ### **Will there be multiplayer support?**
+No, multiplayer is not currently planned.
+
+* ### **What platforms does Project Unity support?**
+
+SCP: Project Unity supports **Windows**, **Linux**, and **macOS**.
 
 ---
 
@@ -116,5 +131,3 @@ Before building, confirm the correct scenes are included in your build settings.
 4. Hit "**Build**" or "**Build and Run**".
 
 ---
-
-
