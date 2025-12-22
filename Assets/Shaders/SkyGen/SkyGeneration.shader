@@ -1,6 +1,5 @@
 Shader "Skybox/Night generator"
 {
-
     Properties
     {
         _Seed("Seed", float) = 68.89
@@ -31,15 +30,14 @@ Shader "Skybox/Night generator"
         [Space][NoiseParameters] _NoiseMaskParams("Background mask parameters", Vector) = (0.33, 6.0, 0.628, 2.11)
 
         //x, y - smoothstep, z - border, w - power
-        [Space][NoiseCutParameters] _NoiseMaskParams2("Background cut parameters", Vector) = (0.07, - 0.001, 0.51, 2.5)
-
+        [Space][NoiseCutParameters] _NoiseMaskParams2("Background cut parameters", Vector) = (0.07, -0.001, 0.51, 2.5) 
 
         [Header(Moon settings)]
         [Toggle(ENABLE_MOON)] _EnableMoon("Enable moon", Int) = 1
         _MoonTex("Moon texture", 2D) = "black" {}
         _MoonTint("Moon tint color", Color) = (1.0, 1.0, 1.0, 1.0)
         //x, y - smoothstep, w - power, z - strength
-        [Space][BloomParameters] _MoonBloomParams("Moon blooming parameters", Vector) = (10.0, - 1.0, 0.3, 5.3)
+        [Space][BloomParameters] _MoonBloomParams("Moon blooming parameters", Vector) = (10.0, -1.0, 0.3, 5.3)
         [Space] _MoonSize("Moon size", Range(0.0, 1.0)) = 0.095
 
         [HideInInspector] _SunDisk ("Sun", Int) = 2

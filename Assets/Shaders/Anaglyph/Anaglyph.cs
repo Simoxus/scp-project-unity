@@ -14,6 +14,5 @@ public class Anaglyph : VolumeComponent, IPostProcessComponent
     public ClampedFloatParameter separation = new ClampedFloatParameter(0.005f, 0f, 0.02f);
 
     public bool IsActive() => separation.overrideState && separation.value > 0f;
-
     public bool IsTileCompatible() => false;
 }
