@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEngine.Rendering.Universal;
+
 namespace Console.Commands
 {
     public class NoLightsCommand : BaseConsole
@@ -35,3 +37,4 @@ namespace Console.Commands
         }
     }
 }
+#endif
