@@ -1,13 +1,12 @@
 using EditorAttributes;
 using PrimeTween;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    public static GameManager Instance { get; private set; }
-
     [HideInInspector] public bool IsInMainMenu => SceneManager.GetActiveScene().name == "MainMenu";
 
     [Header("Global Values")]
@@ -15,13 +14,12 @@ public class GameManager : MonoBehaviour
     public bool disablePlayerInputs = false;
     public bool hidePlayerHUD = false;
 
-    [Header("Player References")]
-    public Player player;
-
     [Header("Inherited QOL")]
     public bool inventoryPausesGame;
     public bool skipIntroSequence;
     public bool cameraShaking = true;
+
+    public event Action<bool, object> OnPauseStateChanged;
 
     [ReadOnly] public int pauseRequestCount = 0;
     [ReadOnly] public int disableControlsRequestCount = 0;
@@ -29,20 +27,17 @@ public class GameManager : MonoBehaviour
     // Variables that track which scripts have requested pause/disable
     private readonly HashSet<object> _pauseRequesters = new HashSet<object>();
     private readonly HashSet<object> _disableControlsRequesters = new HashSet<object>();
+    private readonly HashSet<object> _cursorControlRequesters = new HashSet<object>();
 
-    private void Awake()
+    private void Reset()
     {
-        if (Instance != null && Instance != this)
-        {
-            Log.VerboseWarning($"Duplicate instance of {GetType().Name} found. Destroying the new one.");
-            Destroy(gameObject);
-            return;
-        }
+        _pauseRequesters.Clear();
+        _disableControlsRequesters.Clear();
+        _cursorControlRequesters.Clear();
+    }
 
-        Instance = this;
-
-        player = player != null ? player : Player.Instance;
-
+    protected override void OnAwake()
+    {
         Time.timeScale = 1.0f;
         gamePaused = false;
         pauseRequestCount = 0;
@@ -81,7 +76,7 @@ public class GameManager : MonoBehaviour
 
             if (pauseRequestCount == 1)
             {
-                ApplyPauseState(true);
+                ApplyPauseState(true, requester);
             }
         }
     }
@@ -100,23 +95,83 @@ public class GameManager : MonoBehaviour
 
             if (pauseRequestCount == 0 && gamePaused)
             {
-                ApplyPauseState(false);
+                ApplyPauseState(false, requester);
             }
         }
     }
 
-    private void ApplyPauseState(bool shouldPause)
+    public void RequestCursorControl(object requester)
+    {
+        if (requester == null)
+        {
+            Log.VerboseWarning("RequestCursorControl was called, but with no requester provided!");
+            return;
+        }
+
+        if (_cursorControlRequesters.Add(requester))
+        {
+            // When first requester takes control, show and unlock cursor by default
+            if (_cursorControlRequesters.Count == 1)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+        }
+    }
+
+    public void ReleaseCursorControl(object requester)
+    {
+        if (requester == null)
+        {
+            Log.VerboseWarning("ReleaseCursorControl was called, but with no requester provided!");
+            return;
+        }
+
+        if (_cursorControlRequesters.Remove(requester))
+        {
+            if (_cursorControlRequesters.Count == 0)
+            {
+                UpdateCursorVisiblity(); // Restore normal cursor behavior
+            }
+        }
+    }
+
+    /// <summary>
+    /// Allows manual control of cursor state. Only works if requester has already called RequestCursorControl.
+    /// </summary>
+    public void SetCursorState(object requester, bool visible, CursorLockMode lockMode = CursorLockMode.None)
+    {
+        if (requester == null)
+        {
+            Log.VerboseWarning("SetCursorState was called, but with no requester provided!");
+            return;
+        }
+
+        if (_cursorControlRequesters.Contains(requester))
+        {
+            Cursor.visible = visible;
+            Cursor.lockState = lockMode;
+        }
+        else
+        {
+            Log.VerboseWarning($"SetCursorState was called by {requester}, but they haven't requested cursor control!");
+        }
+    }
+
+    private void ApplyPauseState(bool shouldPause, object requester = null)
     {
         gamePaused = shouldPause;
 
-        AudioManager.Instance.ToggleGameSounds(gamePaused);
+        if (Core.AudioManager != null) Core.AudioManager.ToggleGameSounds(gamePaused);
         Time.timeScale = gamePaused ? 0f : 1.0f;
 
-        GameManager.Instance.RequestDisableControls(this, shouldDisable: gamePaused);
+        RequestDisableControls(this, shouldDisable: gamePaused);
         UpdateCursorVisiblity();
+
+        OnPauseStateChanged?.Invoke(shouldPause, requester);
     }
 
-    public void RequestDisableControls(object requester, bool shouldDisable)
+    public void RequestDisableControls(object requester, bool shouldDisable, bool updateCursor = true)
     {
         if (requester == null)
         {
@@ -147,7 +202,11 @@ public class GameManager : MonoBehaviour
         if (stateChanged)
         {
             TogglePlayerControls(shouldDisable: disableControlsRequestCount > 0);
-            UpdateCursorVisiblity();
+
+            if (updateCursor)
+            {
+                UpdateCursorVisiblity();
+            }
         }
     }
 
@@ -155,6 +214,7 @@ public class GameManager : MonoBehaviour
     {
         _pauseRequesters.Clear();
         _disableControlsRequesters.Clear();
+        _cursorControlRequesters.Clear();
         pauseRequestCount = 0;
         disableControlsRequestCount = 0;
 
@@ -171,26 +231,35 @@ public class GameManager : MonoBehaviour
         return _disableControlsRequesters.Contains(requester);
     }
 
+    public bool HasCursorControlRequest(object requester)
+    {
+        return _cursorControlRequesters.Contains(requester);
+    }
+
     private void TogglePlayerControls(bool shouldDisable)
     {
         disablePlayerInputs = shouldDisable;
 
         bool enableComponents = !shouldDisable;
 
-        if (player != null)
+        if (Core.Player != null)
         {
-            player.playerController.enabled = enableComponents;
-            player.playerBobbing.enabled = enableComponents;
-            player.playerInteract.enabled = enableComponents;
-            player.playerFootsteps.enabled = enableComponents;
+            Core.Player.PlayerController.enabled = enableComponents;
+            Core.Player.PlayerBobbing.enabled = enableComponents;
+            Core.Player.PlayerInteract.enabled = enableComponents;
+            Core.Player.PlayerFootsteps.enabled = enableComponents;
         }
     }
 
     public void UpdateCursorVisiblity(bool? forceDisable = null)
     {
+        // If any script has manual cursor control, don't interfere
+        if (_cursorControlRequesters.Count > 0)
+            return;
+
         bool showCursor = forceDisable.HasValue
-            ? !forceDisable.Value   // forceDisable = true -> hide
-            : disablePlayerInputs;  // disable inputs = true -> show
+            ? !forceDisable.Value   // forceDisable = true -> hide cursor
+            : disablePlayerInputs;  // disable inputs = true -> show cursor
 
         Cursor.lockState = showCursor ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = showCursor;
