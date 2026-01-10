@@ -28,12 +28,14 @@ public class KeycardDoorController : BaseDoorController
             doorActivator1.buttonVisual.ToggleLogo(false);
             doorActivator1.buttonVisual.ToggleText(true);
             doorActivator1.buttonVisual.ChangeScreenText(message);
+            doorActivator1.buttonVisual.ChangeScreenColor(color, true);
         }
         if (doorActivator2 != null)
         {
             doorActivator2.buttonVisual.ToggleLogo(false);
             doorActivator2.buttonVisual.ToggleText(true);
             doorActivator2.buttonVisual.ChangeScreenText(message);
+            doorActivator2.buttonVisual.ChangeScreenColor(color, true);
         }
     }
 
@@ -61,10 +63,14 @@ public class KeycardDoorController : BaseDoorController
     {
         if (doorActivator1 != null)
         {
+            doorActivator1.buttonVisual.ToggleLogo(true);
+            doorActivator1.buttonVisual.ToggleText(false);
             doorActivator1.buttonVisual.ChangeScreenColor(color, true, 0.4f);
         }
         if (doorActivator2 != null)
         {
+            doorActivator2.buttonVisual.ToggleLogo(true);
+            doorActivator2.buttonVisual.ToggleText(false);
             doorActivator2.buttonVisual.ChangeScreenColor(color, true, 0.4f);
         }
     }
@@ -111,7 +117,7 @@ public class KeycardDoorController : BaseDoorController
         {
             doorActivator1.buttonVisual.ToggleLogo(false);
             doorActivator1.buttonVisual.ToggleText(true);
-            doorActivator1.buttonVisual.ChangeScreenColor(grantedColor, true, 1f);
+            doorActivator1.buttonVisual.ChangeScreenColor(successColor, true, 1f);
             doorActivator1.buttonVisual.ChangeScreenText($"LEVEL {clearanceLevel} DETECTED");
             doorActivator1.ResetButtonDisplay().Forget();
         }
@@ -119,7 +125,7 @@ public class KeycardDoorController : BaseDoorController
         {
             doorActivator2.buttonVisual.ToggleLogo(false);
             doorActivator2.buttonVisual.ToggleText(true);
-            doorActivator2.buttonVisual.ChangeScreenColor(grantedColor, true, 1f);
+            doorActivator2.buttonVisual.ChangeScreenColor(successColor, true, 1f);
             doorActivator2.buttonVisual.ChangeScreenText($"LEVEL {clearanceLevel} DETECTED");
             doorActivator2.ResetButtonDisplay().Forget();
         }
@@ -131,7 +137,7 @@ public class KeycardDoorController : BaseDoorController
         {
             doorActivator1.buttonVisual.ToggleLogo(false);
             doorActivator1.buttonVisual.ToggleText(true);
-            doorActivator1.buttonVisual.ChangeScreenColor(deniedColor, true, 1f);
+            doorActivator1.buttonVisual.ChangeScreenColor(failureColor, true, 1f);
             doorActivator1.buttonVisual.ChangeScreenText($"LEVEL {clearanceLevel} REQUIRED");
             doorActivator1.ResetButtonDisplay().Forget();
         }
@@ -139,21 +145,9 @@ public class KeycardDoorController : BaseDoorController
         {
             doorActivator2.buttonVisual.ToggleLogo(false);
             doorActivator2.buttonVisual.ToggleText(true);
-            doorActivator2.buttonVisual.ChangeScreenColor(deniedColor, true, 1f);
+            doorActivator2.buttonVisual.ChangeScreenColor(failureColor, true, 1f);
             doorActivator2.buttonVisual.ChangeScreenText($"LEVEL {clearanceLevel} REQUIRED");
             doorActivator2.ResetButtonDisplay().Forget();
-        }
-    }
-
-    protected override void OnTransitionToPulse(Color targetColor, float transitionDuration)
-    {
-        if (doorActivator1 != null)
-        {
-            doorActivator1.TransitionToPulseEffect(targetColor, transitionDuration, 0.6f, 1.2f);
-        }
-        if (doorActivator2 != null)
-        {
-            doorActivator2.TransitionToPulseEffect(targetColor, transitionDuration, 0.6f, 1.2f);
         }
     }
 }
