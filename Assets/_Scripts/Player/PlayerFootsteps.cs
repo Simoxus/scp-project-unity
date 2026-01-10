@@ -5,17 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerFootsteps : MonoBehaviour
 {
-    [Header("References")]
-    public Player player;
-
     [Header("Behavior Settings")]
     public List<FootstepData> footstepSurfaces = new List<FootstepData>();
     public bool useBobSyncedFootsteps = true;
 
     [Header("FMOD Setup")]
     public Transform footstepPlayTransform;
-    public EventReference walkFootstepEvent;
-    public EventReference runFootstepEvent;
     public string surfaceParameterName = "Surface";
 
     [Header("Raycast Settings")]
@@ -28,16 +23,9 @@ public class PlayerFootsteps : MonoBehaviour
 
     private void Awake()
     {
-        player = player != null ? player : Player.Instance;
-
         if (raycastOrigin == null)
         {
             raycastOrigin = transform;
-        }
-
-        if (player == null)
-        {
-            Log.VerboseWarning("Player could not be found. Footsteps may not work.");
         }
 
         BuildSurfaceDictionary();
@@ -45,30 +33,30 @@ public class PlayerFootsteps : MonoBehaviour
 
     private void OnEnable()
     {
-        if (useBobSyncedFootsteps && player && player.playerBobbing != null)
+        if (useBobSyncedFootsteps && Core.Player.PlayerBobbing != null)
         {
-            player.playerBobbing.OnFootstepTrigger += PlayFootstepAudio;
+            Core.Player.PlayerBobbing.OnFootstepTrigger += PlayFootstepAudio;
         }
     }
 
     private void OnDisable()
     {
-        if (player && player.playerBobbing != null)
+        if (Core.Player.PlayerBobbing != null)
         {
-            player.playerBobbing.OnFootstepTrigger -= PlayFootstepAudio;
+            Core.Player.PlayerBobbing.OnFootstepTrigger -= PlayFootstepAudio;
         }
     }
 
     public void PlayFootstepAudio()
     {
-        if (player == null || player.playerController == null) return;
-        if (!player.playerController.isMoving) return;
+        if (Core.Player.PlayerController == null) return;
+        if (!Core.Player.IsMoving() || Core.Player.IsInState(PlayerState.Noclip)) return;
 
         DetectGroundSurface();
 
         if (_currentFootstepData == null) return;
 
-        EventReference footstepEvent = GetFootstepEventForState(player.currentState);
+        EventReference footstepEvent = GetFootstepEventForState(Core.Player.CurrentState);
 
         if (footstepEvent.IsNull)
             return;
@@ -116,13 +104,13 @@ public class PlayerFootsteps : MonoBehaviour
         switch (state)
         {
             case PlayerState.Sprinting:
-                return runFootstepEvent;
+                return AudioDataAccess.Instance.Player.RunFootstepSound;
             case PlayerState.Walking:
             case PlayerState.Crouching:
             case PlayerState.Idle:
             case PlayerState.Freefall:
             default:
-                return walkFootstepEvent;
+                return AudioDataAccess.Instance.Player.WalkFootstepSound;
         }
     }
 
@@ -131,7 +119,7 @@ public class PlayerFootsteps : MonoBehaviour
         if (!Physics.Raycast(raycastOrigin.position, Vector3.down, out RaycastHit hit, raycastDistance, groundLayer))
         {
             Debug.DrawRay(raycastOrigin.position, Vector3.down * raycastDistance, Color.red, 0.1f);
-            _currentFootstepData = null;
+            _currentFootstepData = footstepSurfaces.Count > 0 ? footstepSurfaces[0] : null;
             return;
         }
 
@@ -140,14 +128,14 @@ public class PlayerFootsteps : MonoBehaviour
         Material detectedMaterial = GetMaterialFromHit(hit);
         if (detectedMaterial == null)
         {
-            _currentFootstepData = null;
+            _currentFootstepData = footstepSurfaces.Count > 0 ? footstepSurfaces[0] : null;
             return;
         }
 
         Texture detectedTexture = GetTextureFromMaterial(detectedMaterial);
         if (detectedTexture == null)
         {
-            _currentFootstepData = null;
+            _currentFootstepData = footstepSurfaces.Count > 0 ? footstepSurfaces[0] : null;
             return;
         }
 
@@ -166,7 +154,7 @@ public class PlayerFootsteps : MonoBehaviour
             }
         }
 
-        _currentFootstepData = null;
+        _currentFootstepData = footstepSurfaces.Count > 0 ? footstepSurfaces[0] : null;
     }
 
     private Material GetMaterialFromHit(RaycastHit hit)
