@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using EditorAttributes;
-using FMODUnity;
 using PrimeTween;
 using System;
 using System.Threading;
@@ -8,25 +7,19 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Player player;
-    [SerializeField] private IndicatorsUI indicatorsUI;
-    [SerializeField] private UIAccess uiAccess;
-
     [Header("Sprint Settings")]
-    [SerializeField] private float sprintDrainRate = 0.4f;
-    [SerializeField] private float sprintRegenRateMoving = 0.15f;
-    [SerializeField] private float sprintRegenRateIdle = 0.1875f;
+    [SerializeField] private float sprintDrainRate = 0.26f;
+    [SerializeField] private float sprintRegenRateMoving = 0.194f;
+    [SerializeField] private float sprintRegenRateIdle = 0.2f;
     [SerializeField] private float minSprintThreshold = 0.0f;
 
     [Header("Blink Settings")]
     [SerializeField] private bool allowBlinkHold = true;
     [SerializeField] private float blinkFrequency = 15.43f;
-    [SerializeField] private float blinkingTime = 0.21f;
+    [SerializeField] private float blinkingTime = 0.18f;
 
     [Header("Tired Sound Settings")]
-    [SerializeField] private EventReference tiredBreathingSound;
-    [SerializeField] private float tiredSoundThreshold = 0.2f;
+    [SerializeField] private float tiredSoundThreshold = 0.07f;
 
     [Header("Current Values")]
     [ReadOnly] public float currentSprint = 1f;
@@ -36,7 +29,6 @@ public class PlayerStats : MonoBehaviour
     private bool _isSprinting;
     private bool _isMoving;
 
-    private float _currentBlinkHoldTime = 0f;
     private bool _isHoldingBlink = false;
 
     public event Action OnBlinkStarted;
@@ -46,25 +38,15 @@ public class PlayerStats : MonoBehaviour
 
     private CancellationTokenSource _blinkCts;
 
-    private void Awake()
-    {
-        player = player != null ? player : Player.Instance;
-    }
-
     private void Start()
     {
         currentSprint = 1f;
         currentBlink = 1f;
         _blinkTimer = blinkFrequency;
 
-        if (indicatorsUI == null)
+        if (Core.Player.PlayerInputs != null)
         {
-            indicatorsUI = FindFirstObjectByType<IndicatorsUI>();
-        }
-
-        if (player?.playerInputs != null)
-        {
-            player.playerInputs.OnBlink += () => DoBlink().Forget();
+            Core.Player.PlayerInputs.OnBlink += () => DoBlink().Forget();
         }
 
         // Start blink timer loop
@@ -74,9 +56,9 @@ public class PlayerStats : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (player?.playerInputs != null)
+        if (Core.Player.PlayerInputs != null)
         {
-            player.playerInputs.OnBlink -= () => DoBlink().Forget();
+            Core.Player.PlayerInputs.OnBlink -= () => DoBlink().Forget();
         }
 
         _blinkCts?.Cancel();
@@ -85,7 +67,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance == null || GameManager.Instance.gamePaused) return;
+        if (Core.GameManager == null || Core.GameManager.gamePaused) return;
 
         HandleSprint();
         HandleBlinkHold();
@@ -96,22 +78,18 @@ public class PlayerStats : MonoBehaviour
     {
         if (!allowBlinkHold) return;
 
-        bool isHoldingBlink = player?.playerInputs != null && player.playerInputs.BlinkHeld;
+        bool isHoldingBlink = Core.Player.PlayerInputs != null && Core.Player.PlayerInputs.BlinkHeld;
 
         if (isHoldingBlink && !IsBlinking)
         {
             if (!_isHoldingBlink)
             {
                 _isHoldingBlink = true;
-                _currentBlinkHoldTime = 0f;
             }
-
-            _currentBlinkHoldTime += Time.deltaTime;
         }
         else if (_isHoldingBlink && !isHoldingBlink)
         {
             _isHoldingBlink = false;
-            _currentBlinkHoldTime = 0f;
         }
     }
 
@@ -160,7 +138,7 @@ public class PlayerStats : MonoBehaviour
 
         if (shouldPlayTired)
         {
-            FMODHelper.PlayOneShot(tiredBreathingSound);
+            FMODHelper.PlayOneShot(AudioDataAccess.Instance.Player.TiredSound);
         }
     }
 
@@ -172,31 +150,30 @@ public class PlayerStats : MonoBehaviour
         _blinkTimer = 0f;
         currentBlink = 0f;
 
-        await Tween.Alpha(uiAccess.blinkOverlay, 1f, 0.11f, ease: Ease.InOutCirc);
+        await Tween.Alpha(Core.UI.BlinkOverlay, 1f, 0.11f, ease: Ease.InOutCirc);
         await UniTask.WaitForSeconds(blinkingTime, false);
 
-        if (allowBlinkHold && player?.playerInputs != null && player.playerInputs.BlinkHeld)
+        if (allowBlinkHold && Core.Player?.PlayerInputs != null && Core.Player.PlayerInputs.BlinkHeld)
         {
-            while (player.playerInputs.BlinkHeld)
+            while (Core.Player.PlayerInputs.BlinkHeld)
             {
                 _blinkTimer = 0f;
                 currentBlink = 0f;
 
                 await UniTask.Yield(PlayerLoopTiming.Update);
 
-                if (GameManager.Instance && GameManager.Instance.gamePaused)
+                if (Core.GameManager && Core.GameManager.gamePaused)
                 {
                     await UniTask.Yield(PlayerLoopTiming.Update);
                 }
             }
         }
 
-        await Tween.Alpha(uiAccess.blinkOverlay, 0f, 0.12f, ease: Ease.InOutCirc);
+        await Tween.Alpha(Core.UI.BlinkOverlay, 0f, 0.12f, ease: Ease.InOutCirc);
 
         _blinkTimer = blinkFrequency;
         currentBlink = 1f;
         _isHoldingBlink = false;
-        _currentBlinkHoldTime = 0f;
 
         IsBlinking = false;
         OnBlinkEnded?.Invoke();
@@ -215,9 +192,9 @@ public class PlayerStats : MonoBehaviour
 
     private void UpdateUI()
     {
-        if (indicatorsUI != null)
+        if (Core.UI.Indicators != null)
         {
-            indicatorsUI.UpdateIndicators(currentSprint, currentBlink, player.currentState);
+            Core.UI.Indicators.SetProgress(currentBlink, currentSprint);
         }
     }
 }
