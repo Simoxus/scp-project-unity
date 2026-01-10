@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 namespace Console.Commands
@@ -13,7 +12,7 @@ namespace Console.Commands
         public override void Execute(string[] args)
         {
             PlayerPrefs.DeleteAll();
-            ConsoleManager.LogToConsole($"<color=#33CC33>All PlayerPrefs data has been cleared.</color>");
+            ConsoleManager.LogToConsole("All PlayerPrefs data has been cleared.".AsSuccess());
         }
     }
 }

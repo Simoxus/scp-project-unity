@@ -1,21 +1,17 @@
-using UnityEngine;
-
 namespace Console.Commands
 {
     public class FreecamCommand : BaseConsole
     {
         public override string CommandWord => "freecam";
-        public override string Description => "Detaches the player's camera from their character.";
+        public override string Description => "Detaches the camera from the player.";
         protected override string RawUsage => "freecam";
 
         public override void Execute(string[] args)
         {
-            GameObject player = GameObject.FindWithTag("Player");
-            PlayerFreecam playerFreecam = player.GetComponent<PlayerFreecam>();
+            bool isActive = Core.Player.PlayerFreecam.ToggleFreecam();
 
-            bool freecamIsEnabled = playerFreecam.ToggleFreecam();
-            if (freecamIsEnabled) { ConsoleManager.LogToConsole("<color=#33CC33>Freecam has been activated.</color>"); }
-            if (!freecamIsEnabled) { ConsoleManager.LogToConsole("<color=#33CC33>Freecam has been deactivated.</color>"); }
+            string status = isActive ? "enabled" : "disabled";
+            ConsoleManager.LogToConsole($"Freecam has been {status}.".AsSuccess());
         }
     }
 }

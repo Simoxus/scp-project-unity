@@ -12,18 +12,18 @@ namespace Console.Commands
         {
             if (args.Length > 0)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
 
-            ConsoleManager.LogToConsole($"Memory access violation (JUST KIDDING GET PRANKED LOSER)");
+            ConsoleManager.LogToConsole("Memory access violation (JUST KIDDING GET PRANKED LOSER)".AsError());
             SpookyMessage().Forget();
         }
 
         private async UniTask SpookyMessage()
         {
-            await UniTask.WaitForSeconds(3f, ignoreTimeScale: true);
-            ConsoleManager.LogToConsole($"Seriously though.. <i>I will</i> generate a memory access violation.");
+            await UniTask.WaitForSeconds(2f, ignoreTimeScale: true);
+            ConsoleManager.LogToConsole("Seriously though.. <i>I will</i> generate a memory access violation.".AsJorge());
         }
     }
 }

@@ -10,10 +10,10 @@ namespace Console.Commands
 
         public override void Execute(string[] args)
         {
-            ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Fixed Timestep: {Time.fixedDeltaTime}</color>");
-            ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Gravity: {Physics.gravity}</color>");
-            ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Queries Hit Triggers: {Physics.queriesHitTriggers}</color>");
-            ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Solver Iterations: {Physics.defaultSolverIterations}</color>");
+            ConsoleManager.LogToConsole($"Fixed Timestep: {Time.fixedDeltaTime}".AsInfo());
+            ConsoleManager.LogToConsole($"Gravity: {Physics.gravity}".AsInfo());
+            ConsoleManager.LogToConsole($"Queries Hit Triggers: {Physics.queriesHitTriggers}".AsInfo());
+            ConsoleManager.LogToConsole($"Solver Iterations: {Physics.defaultSolverIterations}".AsInfo());
         }
     }
 }

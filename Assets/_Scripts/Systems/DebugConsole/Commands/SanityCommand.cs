@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Console.Commands
 {
     public class SanityCommand : BaseConsole
@@ -10,7 +8,7 @@ namespace Console.Commands
 
         public override void Execute(string[] args)
         {
-            ConsoleManager.LogToConsole($"<color=#33CC33>This command is currently being rewritten and will be temporarily unavailable.</color>");
+            ConsoleManager.LogToConsole($"This command is currently being rewritten and will be temporarily unavailable.".AsInfo());
         }
     }
 }

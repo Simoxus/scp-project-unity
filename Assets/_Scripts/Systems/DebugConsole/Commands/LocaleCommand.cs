@@ -1,16 +1,14 @@
-using UnityEngine;
-
 namespace Console.Commands
 {
     public class LocaleCommand : BaseConsole
     {
         public override string CommandWord => "locale";
-        public override string Description => "Displays the system language being used.";
+        public override string Description => "Displays the game language currently being used.";
         protected override string RawUsage => "locale";
 
         public override void Execute(string[] args)
         {
-            ConsoleManager.LogToConsole($"<color=#ADD8E6FF>System Language: {Application.systemLanguage}");
+            ConsoleManager.LogToConsole($"Game Language: {LocalizationHelper.GetCurrentLanguage()}".AsSuccess());
         }
     }
 }

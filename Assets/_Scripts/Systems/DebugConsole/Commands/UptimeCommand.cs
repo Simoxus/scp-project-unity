@@ -12,7 +12,7 @@ namespace Console.Commands
         {
             float seconds = Time.realtimeSinceStartup;
             System.TimeSpan span = System.TimeSpan.FromSeconds(seconds);
-            ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Uptime: {span:hh\\:mm\\:ss}</color>");
+            ConsoleManager.LogToConsole($"Uptime: {span:hh\\:mm\\:ss}".AsInfo());
         }
     }
 }

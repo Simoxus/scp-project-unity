@@ -15,41 +15,26 @@ namespace Console.Commands
         {
             if (args.Length == 0)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
 
             string action = args[0].ToLower();
 
-            Player player = Player.Instance;
-            if (player == null)
-            {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Player GameObject not found.</color>");
-                return;
-            }
+            CinemachineCamera cameraMain = Core.Player.CameraMain;
+            if (cameraMain == null) return;
 
-            CinemachineCamera cameraMain = player.cameraMain;
-            if (cameraMain == null)
-            {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Main Cinemachine camera was not assigned in the Player.</color>");
-                return;
-            }
-
-            // Raycast from the player's camera
             Ray ray = new(cameraMain.transform.position, cameraMain.transform.forward);
             if (!Physics.Raycast(ray, out RaycastHit hit, 15f)) return;
 
-            // Try to find any door or gate activator
             MonoBehaviour activator = FindActivator(hit.collider.gameObject);
             BaseDoorController doorController = null;
 
-            // If no activator, try to find door controller directly (for cell doors)
             if (activator == null)
             {
                 doorController = FindDoorController(hit.collider.gameObject);
             }
 
-            // If no activator found, check if it's a door part with FMOD Collision and Rigidbody
             if (activator == null && doorController == null)
             {
                 StudioEventEmitter fmodCollision = hit.collider.GetComponent<StudioEventEmitter>();
@@ -57,7 +42,6 @@ namespace Console.Commands
 
                 if (fmodCollision != null && rb != null)
                 {
-                    // Try to find activator in grandparent
                     Transform grandparent = hit.collider.transform.parent?.parent;
                     if (grandparent != null)
                     {
@@ -67,18 +51,13 @@ namespace Console.Commands
                         {
                             doorController = FindDoorController(grandparent.gameObject);
                         }
-
-                        if (activator != null || doorController != null)
-                        {
-                            ConsoleManager.LogToConsole("<color=#ADD8E6FF>Found door controller in grandparent object.</color>");
-                        }
                     }
                 }
             }
 
             if (activator == null && doorController == null)
             {
-                ConsoleManager.LogToConsole("<color=#ADD8E6FF>The object hit is not a valid door activator.</color>");
+                ConsoleManager.LogToConsole("The object hit is not a valid door activator.".AsError());
                 return;
             }
 
@@ -99,29 +78,25 @@ namespace Console.Commands
                     break;
 
                 default:
-                    ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid argument. Use 'toggle' or 'break'.</color>");
+                    ConsoleManager.LogToConsole("Invalid argument. Use 'toggle' or 'break'.".AsError());
                     break;
             }
         }
 
         private MonoBehaviour FindActivator(GameObject obj)
         {
-            // Try to find BaseDoorActivator first
             var doorActivator = obj.GetComponentInChildren<BaseDoorActivator>();
             if (doorActivator != null) return doorActivator;
 
-            // Try to find BaseGateActivator
             var gateActivator = obj.GetComponentInChildren<BaseGateActivator>();
             return gateActivator;
         }
 
         private BaseDoorController FindDoorController(GameObject obj)
         {
-            // Check hit object first
             var controller = obj.GetComponent<BaseDoorController>();
             if (controller != null) return controller;
 
-            // Check children
             controller = obj.GetComponentInChildren<BaseDoorController>();
             return controller;
         }
@@ -140,7 +115,7 @@ namespace Console.Commands
                         if (method != null)
                         {
                             string activatorType = doorActivator.GetType().Name.Replace("DoorActivator", "");
-                            ConsoleManager.LogToConsole($"<color=#33CC33>{activatorType} door toggled.</color>");
+                            ConsoleManager.LogToConsole($"{activatorType} door toggled.".AsSuccess());
                             await (UniTask)method.Invoke(controller, null);
                             return;
                         }
@@ -159,7 +134,7 @@ namespace Console.Commands
                         if (method != null)
                         {
                             string activatorType = gateActivator.GetType().Name.Replace("GateActivator", "");
-                            ConsoleManager.LogToConsole($"<color=#33CC33>{activatorType} gate toggled.</color>");
+                            ConsoleManager.LogToConsole($"{activatorType} gate toggled.".AsSuccess());
                             await (UniTask)method.Invoke(controller, null);
                             return;
                         }
@@ -167,7 +142,7 @@ namespace Console.Commands
                 }
             }
 
-            ConsoleManager.LogToConsole("<color=#FF0000FF>Could not find controller for activator.</color>");
+            ConsoleManager.LogToConsole("Could not find controller for activator.".AsError());
         }
 
         private async UniTask HandleBreak(MonoBehaviour activator)
@@ -184,7 +159,7 @@ namespace Console.Commands
                         if (method != null)
                         {
                             string activatorType = doorActivator.GetType().Name.Replace("DoorActivator", "");
-                            ConsoleManager.LogToConsole($"<color=#33CC33>{activatorType} door broken.</color>");
+                            ConsoleManager.LogToConsole($"{activatorType} door broken.".AsSuccess());
                             await (UniTask)method.Invoke(controller, null);
                             return;
                         }
@@ -203,7 +178,7 @@ namespace Console.Commands
                         if (method != null)
                         {
                             string activatorType = gateActivator.GetType().Name.Replace("GateActivator", "");
-                            ConsoleManager.LogToConsole($"<color=#33CC33>{activatorType} gate toggled.</color>");
+                            ConsoleManager.LogToConsole($"{activatorType} gate toggled.".AsSuccess());
                             await (UniTask)method.Invoke(controller, null);
                             return;
                         }
@@ -211,7 +186,7 @@ namespace Console.Commands
                 }
             }
 
-            ConsoleManager.LogToConsole("<color=#FF0000FF>Could not find controller for activator.</color>");
+            ConsoleManager.LogToConsole("Could not find controller for activator.".AsError());
         }
 
         private async UniTask HandleToggleController(BaseDoorController controller)
@@ -219,7 +194,7 @@ namespace Console.Commands
             var method = controller.GetType().GetMethod("ToggleDoor");
             if (method != null)
             {
-                ConsoleManager.LogToConsole($"<color=#33CC33>Cell door toggled.</color>");
+                ConsoleManager.LogToConsole($"Cell door toggled.".AsSuccess());
                 await (UniTask)method.Invoke(controller, null);
             }
         }
@@ -229,7 +204,7 @@ namespace Console.Commands
             var method = controller.GetType().GetMethod("BreakDoor");
             if (method != null)
             {
-                ConsoleManager.LogToConsole($"<color=#33CC33>Cell door broken.</color>");
+                ConsoleManager.LogToConsole($"Cell door broken.".AsSuccess());
                 await (UniTask)method.Invoke(controller, null);
             }
         }

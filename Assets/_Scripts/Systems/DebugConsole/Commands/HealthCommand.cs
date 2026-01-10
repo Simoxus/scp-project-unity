@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Console.Commands
 {
     public class HealthCommand : BaseConsole
@@ -12,7 +10,7 @@ namespace Console.Commands
         {
             if (args.Length != 2)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
 
@@ -21,40 +19,27 @@ namespace Console.Commands
 
             if (!float.TryParse(args[1], out value))
             {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid value. Please enter a number.</color>");
+                ConsoleManager.LogToConsole("Invalid value. Please enter a number.".AsError());
                 return;
             }
 
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player == null)
-            {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Error: Player GameObject not found (ensure it has the 'Player' tag).</color>");
-                return;
-            }
-
-            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-            if (playerHealth == null)
-            {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Error: PlayerHealth component not found on Player GameObject.</color>");
-                return;
-            }
-
+            PlayerHealth playerHealth = Core.Player.PlayerHealth;
             switch (method)
             {
                 case "set":
                     playerHealth.Set(value);
-                    ConsoleManager.LogToConsole($"<color=#33CC33>Player health set to {value}.</color>");
+                    ConsoleManager.LogToConsole($"Player health set to {value}.".AsSuccess());
                     break;
                 case "heal":
                     playerHealth.Heal(value);
-                    ConsoleManager.LogToConsole($"<color=#33CC33>Player healed by {value}.</color>");
+                    ConsoleManager.LogToConsole($"Player healed by {value}.".AsSuccess());
                     break;
                 case "damage":
                     playerHealth.Take(value);
-                    ConsoleManager.LogToConsole($"<color=#33CC33>Player took {value} damage.</color>");
+                    ConsoleManager.LogToConsole($"Player took {value} damage.".AsSuccess());
                     break;
                 default:
-                    ConsoleManager.LogToConsole("<color=#FF0000FF>Unknown health method. Use 'set', 'heal', or 'damage'.</color>");
+                    ConsoleManager.LogToConsole("Unknown health method. Use 'set', 'heal', or 'damage'.".AsError());
                     break;
             }
         }

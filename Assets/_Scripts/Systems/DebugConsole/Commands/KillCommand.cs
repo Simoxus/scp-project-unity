@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Console.Commands
 {
     public class KillCommand : BaseConsole
@@ -12,32 +10,19 @@ namespace Console.Commands
         {
             if (args.Length > 0)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
 
-            GameObject player = GameObject.FindWithTag("Player");
-            if (player == null)
-            {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Error: Player GameObject not found (ensure it has the 'Player' tag).</color>");
-                return;
-            }
-
-            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-            if (playerHealth == null)
-            {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Error: PlayerHealth component not found on Player GameObject.</color>");
-                return;
-            }
-
+            PlayerHealth playerHealth = Core.Player.PlayerHealth;
             if (playerHealth.GetHealth() <= 0)
             {
-                ConsoleManager.LogToConsole($"Player is already dead.");
+                ConsoleManager.LogToConsole("Player is already dead.".AsSuccess());
                 return;
             }
 
             playerHealth.Set(0f);
-            ConsoleManager.LogToConsole($"Player has been killed.");
+            ConsoleManager.LogToConsole("Player has been killed.".AsSuccess());
         }
     }
 }

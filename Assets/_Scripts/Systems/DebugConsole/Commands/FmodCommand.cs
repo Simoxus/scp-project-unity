@@ -14,17 +14,14 @@ namespace Console.Commands
         {
             if (args.Length < 1)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
 
             string action = args[0].ToLowerInvariant();
 
             Vector3 soundPlayPosition = Vector3.zero;
-            if (Player.Instance)
-            {
-                soundPlayPosition = Player.Instance.transform.position;
-            }
+            soundPlayPosition = Core.Player.transform.position;
 
             switch (action)
             {
@@ -38,35 +35,35 @@ namespace Console.Commands
                 case "stop":
                     if (args.Length < 2)
                     {
-                        ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                        ConsoleManager.LogToConsole(Usage.AsError());
                         return;
                     }
 
                     string rawName = args[1];
                     string eventPath = rawName.StartsWith("event:/") ? rawName : $"event:/{rawName}";
-                    EventReference evRef = FMODUnity.RuntimeManager.PathToEventReference(eventPath);
+                    EventReference evRef = RuntimeManager.PathToEventReference(eventPath);
 
                     switch (action)
                     {
                         case "play":
                             FMODHelper.PlayOneShot3D(evRef, Vector3.zero);
-                            ConsoleManager.LogToConsole($"<color=#33CC33>Played FMOD sound oneshot '{eventPath}'</color>");
+                            ConsoleManager.LogToConsole($"Played FMOD sound oneshot '{eventPath}'".AsSuccess());
                             break;
 
                         case "playinst":
                             FMODHelper.PlayInstance(evRef, eventPath, Vector3.zero);
-                            ConsoleManager.LogToConsole($"<color=#33CC33>Started FMOD sound instance '{eventPath}'</color>");
+                            ConsoleManager.LogToConsole($">Started FMOD sound instance '{eventPath}'".AsSuccess());
                             break;
 
                         case "stop":
                             FMODHelper.StopInstance(eventPath);
-                            ConsoleManager.LogToConsole($"<color=#33CC33>Stopped FMOD sound instance '{eventPath}'</color>");
+                            ConsoleManager.LogToConsole($"Stopped FMOD sound instance '{eventPath}'".AsSuccess());
                             break;
                     }
                     break;
 
                 default:
-                    ConsoleManager.LogToConsole($"<color=#FF0000FF>Unknown FMOD method '{action}'. Use 'play', 'playinst', 'stop' or 'list[optional: refresh]'.</color>");
+                    ConsoleManager.LogToConsole($"Unknown FMOD method '{action}'. Use 'play', 'playinst', 'stop' or 'list[optional: refresh]'.".AsError());
                     break;
             }
         }
@@ -98,7 +95,7 @@ namespace Console.Commands
             if (refresh)
             {
                 GetAllEvents();
-                ConsoleManager.LogToConsole($"<color=#33CC33>FMOD events list has been refreshed.</color>");
+                ConsoleManager.LogToConsole($">FMOD events list has been refreshed.".AsSuccess());
 
                 return;
             }
@@ -110,11 +107,11 @@ namespace Console.Commands
 
             if (cachedEventPaths.Count == 0)
             {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>No FMOD events found :( (make sure banks are initalized).</color>");
+                ConsoleManager.LogToConsole("No FMOD events found :( (make sure banks are initalized).".AsError());
                 return;
             }
 
-            ConsoleManager.LogToConsole("<color=#00FFFFFF>--- FMOD Events ---</color>");
+            ConsoleManager.LogToConsole($"--- FMOD Events ({cachedEventPaths.Count} events) ---".AsHeader());
             ConsoleManager.LogToConsole("<size=17><color=#808080>missing an event you know is loaded? do 'fmod list refresh'</color></size>");
 
             string lastFolder = "";
@@ -128,14 +125,14 @@ namespace Console.Commands
                 // Print a folder header if moved into a new folder
                 if (folder != lastFolder)
                 {
-                    ConsoleManager.LogToConsole($"<color=#CCCCCC>[{(string.IsNullOrEmpty(folder) ? "Root" : folder)}]</color>");
+                    ConsoleManager.LogToConsole($"[{(string.IsNullOrEmpty(folder) ? "Root" : folder)}]".AsInfo());
                     lastFolder = folder;
                 }
 
                 ConsoleManager.LogToConsole($"  {cleanPath}");
             }
 
-            ConsoleManager.LogToConsole("<color=#00FFFFFF>--------------------------</color>");
+            ConsoleManager.LogToConsole("--------------------------".AsHeader());
         }
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Console.Commands
@@ -32,7 +31,7 @@ namespace Console.Commands
         {
             if (args.Length != 1)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
 
@@ -43,11 +42,11 @@ namespace Console.Commands
                 if (sceneIndex >= 0 && sceneIndex < SceneManager.sceneCountInBuildSettings)
                 {
                     SceneManager.LoadScene(sceneIndex);
-                    ConsoleManager.LogToConsole($"<color=#33CC33>Loading scene using index method: '{sceneIndex}'...</color>");
+                    ConsoleManager.LogToConsole($"Loading scene using index method: '{sceneIndex}'...".AsWarning());
                 }
                 else
                 {
-                    ConsoleManager.LogToConsole($"<color=#FF0000FF>Scene index {sceneIndex} is out of build settings range (0 to {SceneManager.sceneCountInBuildSettings - 1}).</color>");
+                    ConsoleManager.LogToConsole($"Scene index {sceneIndex} is out of build settings range (0 to {SceneManager.sceneCountInBuildSettings - 1}).".AsError());
                 }
             }
             else
@@ -57,16 +56,16 @@ namespace Console.Commands
                     try
                     {
                         SceneManager.LoadScene(sceneIdentifier);
-                        ConsoleManager.LogToConsole($"<color=#33CC33>Loading scene using name method: '{sceneIdentifier}'...</color>");
+                        ConsoleManager.LogToConsole($"Loading scene using name method: '{sceneIdentifier}'...".AsWarning());
                     }
                     catch (System.Exception exception)
                     {
-                        ConsoleManager.LogToConsole($"<color=#FF0000FF>Error loading scene '{sceneIdentifier}': {exception.Message}.</color>");
+                        ConsoleManager.LogToConsole($"Error loading scene '{sceneIdentifier}': {exception.Message}.".AsError());
                     }
                 }
                 else
                 {
-                    ConsoleManager.LogToConsole($"<color=#FF0000FF>Scene '{sceneIdentifier}' not found or not in available scenes list. Please check spelling or use a valid build index.</color>");
+                    ConsoleManager.LogToConsole($"Scene '{sceneIdentifier}' not found or not in available scenes list. Please check spelling or use a valid build index.".AsError());
                 }
             }
         }

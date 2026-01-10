@@ -1,5 +1,4 @@
 using System.Linq;
-using UnityEngine;
 
 namespace Console.Commands
 {
@@ -13,7 +12,7 @@ namespace Console.Commands
         {
             if (args.Length < 2)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
 
@@ -35,7 +34,7 @@ namespace Console.Commands
                     Log.Info($"[Forced Info]: {message}");
                     break;
                 default:
-                    ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid log type. Use 'error', 'warning', 'log', or 'info'.</color>");
+                    ConsoleManager.LogToConsole("Invalid log type. Use 'error', 'warning', 'log', or 'info'.".AsError());
                     break;
             }
         }

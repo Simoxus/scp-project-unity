@@ -12,7 +12,7 @@ namespace Console.Commands
         {
             if (args.Length < 1)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
 
@@ -21,33 +21,29 @@ namespace Console.Commands
 
             if (method == "get")
             {
-                if (args.Length > 1)
-                {
-                    ConsoleManager.LogToConsole($"<color=#FFA500FF>Warning: 'get' method does not require a value. Ignoring '{args[1]}'.</color>");
-                }
-                ConsoleManager.LogToConsole($"Current timeScale: {Time.timeScale}");
+                ConsoleManager.LogToConsole($"Current timeScale: {Time.timeScale}".AsInfo());
             }
             else if (method == "set")
             {
                 if (args.Length < 2)
                 {
-                    ConsoleManager.LogToConsole("<color=#FF0000FF>Usage: time set <value></color>");
+                    ConsoleManager.LogToConsole("Usage: time set <value>".AsError());
                     return;
                 }
 
                 if (!float.TryParse(args[1], out value))
                 {
-                    ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid value for 'set'. Please enter a number.</color>");
+                    ConsoleManager.LogToConsole("Invalid value for 'set'. Please enter a number.".AsError());
                     return;
                 }
 
                 // Set the timeScale
                 Time.timeScale = value;
-                ConsoleManager.LogToConsole($"TimeScale set to {value}.");
+                ConsoleManager.LogToConsole($"TimeScale set to {value}.".AsSuccess());
             }
             else
             {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Unknown time method. Use 'get' or 'set'.</color>");
+                ConsoleManager.LogToConsole("Unknown time method. Use 'get' or 'set'.".AsError());
                 return;
             }
         }

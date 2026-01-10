@@ -52,6 +52,11 @@ public class ConsoleManager : MonoBehaviour
         {
             SceneCommand.PopulateAvailableScenes();
         }
+
+        if (commands.TryGetValue("worldfog", out var fogCmd) && fogCmd is WorldFogCommand fc)
+        {
+            WorldFogCommand.SetDefaultFogDensity();
+        }
     }
 
     public void RegisterCommand(IConsoleCommand command)
@@ -95,12 +100,12 @@ public class ConsoleManager : MonoBehaviour
             }
             catch (Exception ex)
             {
-                LogToConsole($"<color=#FF0000FF>Error executing '{commandWord}': {ex.Message}</color>");
+                LogToConsole($"Error executing '{commandWord}': {ex.Message}".AsError());
             }
         }
         else
         {
-            LogToConsole($"<color=#FFA500FF>Unknown command: '{commandWord}'. Type 'help' for a list of commands.</color>");
+            LogToConsole($"Unknown command: '{commandWord}'. Type 'help' for a list of commands.".AsWarning());
         }
     }
 

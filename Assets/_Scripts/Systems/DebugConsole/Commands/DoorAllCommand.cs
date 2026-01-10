@@ -15,7 +15,7 @@ namespace Console.Commands
         {
             if (args.Length == 0)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>{Usage}</color>");
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
 
@@ -23,7 +23,7 @@ namespace Console.Commands
 
             if (action != "toggle" && action != "break")
             {
-                ConsoleManager.LogToConsole("<color=#FF0000FF>Invalid argument. Use 'toggle' or 'break'.</color>");
+                ConsoleManager.LogToConsole("Invalid argument. Use 'toggle' or 'break'.".AsError());
                 return;
             }
 
@@ -101,7 +101,6 @@ namespace Console.Commands
                 var controller = door.GetComponent<BaseDoorController>();
                 if (controller != null)
                 {
-                    // Check if it has an activator - if not, it's a cell door
                     var hasActivator = door.GetComponentInChildren<BaseDoorActivator>() != null;
                     if (!hasActivator)
                     {
@@ -122,11 +121,10 @@ namespace Console.Commands
                 }
             }
 
-            // Wait for all doors and gates to complete simultaneously
             await UniTask.WhenAll(doorTasks.Concat(gateTasks));
 
             string actionText = action == "toggle" ? "toggled" : "broken";
-            ConsoleManager.LogToConsole($"<color=#33CC33>{doorCount} doors {actionText}, {gateCount} gates toggled.</color>");
+            ConsoleManager.LogToConsole($"{doorCount} doors {actionText}, {gateCount} gates toggled.".AsSuccess());
         }
     }
 }

@@ -10,11 +10,11 @@ namespace Console.Commands
 
         public override void Execute(string[] args)
         {
-            ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Quitting {Application.productName}.... :(");
+            ConsoleManager.LogToConsole($"Quitting {Application.productName}.... :(".AsSuccess());
 
             if (Application.isEditor)
             {
-                ConsoleManager.LogToConsole($"<color=#FF0000FF>Attempt to quit {Application.productName} failed because you are in the editor!</color>");
+                ConsoleManager.LogToConsole($"Quitting {Application.productName} failed because you are in the editor!".AsError());
             }
             else
             {
