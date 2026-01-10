@@ -1,15 +1,16 @@
+// please go away
+
 using Cysharp.Threading.Tasks;
 using FMOD.Studio;
 using FMODUnity;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Collections;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
-    public static AudioManager Instance { get; private set; }
-
     [Header("Global Settings")]
     [SerializeField] private bool occlusionEnabled = true;
     [SerializeField] private string occlusionParameterName = "Occlusion";
@@ -23,9 +24,15 @@ public class AudioManager : MonoBehaviour
     [SerializeField, Range(0f, 100f)] private float defaultMaxDistance = 50f;
     [SerializeField, Range(0f, 0.2f)] private float occlusionDeadzone = 0.05f;
 
+    [Header("Performance Optimization")]
+    [SerializeField, Range(5f, 50f)] private float priorityDistance = 15f;
+    [SerializeField, Range(10, 100)] private int maxRaysPerFrame = 50;
+    [SerializeField, Range(0.5f, 5f)] private float performanceBudgetMs = 2f;
+    [SerializeField] private bool useJobSystem = true;
+
     [Header("Distance-Based Falloff")]
-    [SerializeField, Range(0.5f, 5f)] private float occlusionFalloffDistance = 2f;
-    [SerializeField, Range(0f, 0.75f)] private float closeProximityMultiplier = 0.3f;
+    [SerializeField, Range(0.5f, 9f)] private float occlusionFalloffDistance = 2f;
+    [SerializeField, Range(0f, 4f)] private float closeProximityMultiplier = 0.3f;
 
     [Header("Material Transition Smoothing")]
     [SerializeField, Range(1f, 20f)] private float materialTransitionSpeed = 5f;
@@ -38,24 +45,31 @@ public class AudioManager : MonoBehaviour
         new OcclusionMaterial { tag = "Metal", occlusionAmount = 0.34f },
         new OcclusionMaterial { tag = "Concrete", occlusionAmount = 0.5f },
         new OcclusionMaterial { tag = "Glass", occlusionAmount = 0.23f },
-        new OcclusionMaterial { tag = "GateFrame", occlusionAmount = 0.4f }
+        new OcclusionMaterial { tag = "GateFrame", occlusionAmount = 0.4f },
+        new OcclusionMaterial { tag = "Door", occlusionAmount = 0.25f }
     };
 
     [SerializeField, Range(0f, 1f)] private float defaultOcclusionAmount = 0.6f;
 
-    [Header("Immediate Occlusion Check")]
-    [SerializeField] private bool useImmediateCheck = true;
-    [SerializeField, Range(0.01f, 0.1f)] private float immediateCheckInterval = 0.03f;
-
     [Header("Debug")]
     [SerializeField] private bool showDebugRays = false;
-    [SerializeField] private bool showOcclusionDebug = false;
+    [SerializeField] private bool showPerformanceStats = false;
 
     private Dictionary<int, TrackedSound> _trackedSounds = new Dictionary<int, TrackedSound>();
     private Dictionary<string, float> _materialOcclusionCache;
     private Transform _listenerTransform;
     private int _nextSoundId = 0;
     private CancellationTokenSource _occlusionCts;
+
+    private System.Diagnostics.Stopwatch _perfStopwatch = new System.Diagnostics.Stopwatch();
+    private float _lastFrameTimeMs = 0f;
+    private int _lastFrameRayCount = 0;
+    private int _adaptiveQualityLevel = 2;
+
+    private List<(TrackedSound sound, float distSqr)> _sortedSounds = new List<(TrackedSound, float)>(100);
+    private List<RaycastCommand> _raycastCommands = new List<RaycastCommand>(200);
+    private List<(TrackedSound sound, int startIndex, int rayCount, float distance)> _raycastResults =
+        new List<(TrackedSound, int, int, float)>(100);
 
     // Bus and VCA management
     private Bus _gameplayBus;
@@ -78,17 +92,8 @@ public class AudioManager : MonoBehaviour
     public float GetVOVolume() { _voVCA.getVolume(out float v); return v; }
     public float GetUIVolume() { _uiVCA.getVolume(out float v); return v; }
 
-    private void Awake()
+    protected override void OnAwake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Log.VerboseWarning($"Duplicate instance of {GetType().Name} found. Destroying the new one.");
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-
         // Initialize buses and VCAs
         _gameplayBus = RuntimeManager.GetBus("bus:/Gameplay");
         _persistentBus = RuntimeManager.GetBus("bus:/Persistent");
@@ -98,36 +103,28 @@ public class AudioManager : MonoBehaviour
         _voVCA = RuntimeManager.GetVCA("vca:/VO");
         _uiVCA = RuntimeManager.GetVCA("vca:/UI");
 
-        // Build material occlusion cache
         BuildMaterialCache();
     }
 
     private void Start()
     {
         FindListener();
-
         _occlusionCts = new CancellationTokenSource();
 
-        // Start async update loops
-        OcclusionCalculationLoop(_occlusionCts.Token).Forget();
-        OcclusionApplicationLoop(_occlusionCts.Token).Forget();
-        CleanupLoop(_occlusionCts.Token).Forget();
-
-        if (useImmediateCheck)
-        {
-            ImmediateOcclusionCheckLoop(_occlusionCts.Token).Forget();
-        }
+        // Single unified update loop instead of three separate ones
+        UnifiedUpdateLoop(_occlusionCts.Token).Forget();
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         _occlusionCts?.Cancel();
         _occlusionCts?.Dispose();
     }
 
     private void BuildMaterialCache()
     {
-        _materialOcclusionCache = new Dictionary<string, float>();
+        _materialOcclusionCache = new Dictionary<string, float>(occlusionMaterials.Length);
         foreach (var material in occlusionMaterials)
         {
             if (!string.IsNullOrEmpty(material.tag))
@@ -176,16 +173,10 @@ public class AudioManager : MonoBehaviour
             raysPerSound = raysPerSound < 0 ? defaultRaysPerSound : Mathf.Clamp(raysPerSound, 1, 5),
             raySpread = raySpread < 0 ? defaultRaySpread : Mathf.Clamp(raySpread, 0f, 45f),
             maxDistance = maxDistance < 0 ? defaultMaxDistance : maxDistance,
-            needsImmediateCheck = true
+            lastUpdateFrame = -999
         };
 
         _trackedSounds[id] = trackedSound;
-
-        if (useImmediateCheck && _listenerTransform != null)
-        {
-            PerformImmediateOcclusionCheck(trackedSound);
-        }
-
         return id;
     }
 
@@ -195,96 +186,223 @@ public class AudioManager : MonoBehaviour
     {
         if (_trackedSounds.TryGetValue(soundId, out var sound))
         {
-            sound.position = position;
-            sound.needsImmediateCheck = true;
-        }
-    }
-
-    private async UniTaskVoid ImmediateOcclusionCheckLoop(CancellationToken token)
-    {
-        while (!token.IsCancellationRequested)
-        {
-            if (_listenerTransform != null && occlusionEnabled)
+            if (Vector3.Distance(sound.position, position) > 0.5f)
             {
-                foreach (var sound in _trackedSounds.Values)
-                {
-                    if (sound.needsImmediateCheck && sound.isValid)
-                    {
-                        PerformImmediateOcclusionCheck(sound);
-                        sound.needsImmediateCheck = false;
-                    }
-                }
+                sound.position = position;
             }
-
-            await UniTask.Delay(TimeSpan.FromSeconds(immediateCheckInterval), cancellationToken: token);
         }
     }
 
-    private void PerformImmediateOcclusionCheck(TrackedSound sound)
+    private async UniTaskVoid UnifiedUpdateLoop(CancellationToken token)
     {
-        if (_listenerTransform == null || !occlusionEnabled)
-            return;
+        float nextOcclusionUpdate = 0f;
+        float nextCleanup = 1f;
+        int frameCount = 0;
 
-        Vector3 listenerPos = _listenerTransform.position;
-        float distance = Vector3.Distance(sound.position, listenerPos);
-
-        if (distance > sound.maxDistance)
-        {
-            sound.targetOcclusion = 0f;
-            // Don't reset currentOcclusion - let it smooth to 0
-        }
-        else
-        {
-            float rawOcclusion = CalculateOcclusion(sound.position, listenerPos, sound.raysPerSound, sound.raySpread, distance);
-            sound.targetOcclusion = rawOcclusion;
-            // Don't set currentOcclusion directly - let smoothing handle it
-        }
-    }
-
-    private async UniTaskVoid OcclusionCalculationLoop(CancellationToken token)
-    {
         while (!token.IsCancellationRequested)
         {
+            frameCount++;
+            float time = Time.time;
+
             if (_listenerTransform == null)
             {
                 FindListener();
             }
-            else
+
+            ApplyOcclusionSmoothing();
+
+            if (occlusionEnabled && time >= nextOcclusionUpdate)
             {
-                await CalculateAllOcclusionAsync(token);
+                if (useJobSystem)
+                {
+                    await CalculateAllOcclusionJobSystemAsync(token);
+                }
+                else
+                {
+                    await CalculateAllOcclusionAsync(token);
+                }
+
+                nextOcclusionUpdate = time + updateInterval;
             }
 
-            await UniTask.Delay(TimeSpan.FromSeconds(updateInterval), cancellationToken: token);
-        }
-    }
+            if (time >= nextCleanup)
+            {
+                CleanupInvalidSounds();
+                nextCleanup = time + 1f;
+            }
 
-    private async UniTaskVoid OcclusionApplicationLoop(CancellationToken token)
-    {
-        while (!token.IsCancellationRequested)
-        {
-            ApplyOcclusion();
+            // Performance stats
+            if (showPerformanceStats && frameCount % 60 == 0)
+            {
+                Debug.Log($"[AudioManager] Last update: {_lastFrameTimeMs:F2}ms, Rays: {_lastFrameRayCount}, Quality: {_adaptiveQualityLevel}, Sounds: {_trackedSounds.Count}");
+            }
+
             await UniTask.Yield(PlayerLoopTiming.Update, token);
         }
     }
 
-    private async UniTaskVoid CleanupLoop(CancellationToken token)
+    private async UniTask CalculateAllOcclusionJobSystemAsync(CancellationToken token)
     {
-        while (!token.IsCancellationRequested)
+        if (_listenerTransform == null || _trackedSounds.Count == 0)
+            return;
+
+        _perfStopwatch.Restart();
+
+        Vector3 listenerPos = _listenerTransform.position;
+        int currentFrame = Time.frameCount;
+
+        // Clear reusable collections
+        _sortedSounds.Clear();
+        _raycastCommands.Clear();
+        _raycastResults.Clear();
+
+        // Collect and sort sounds by distance
+        foreach (var sound in _trackedSounds.Values)
         {
-            CleanupInvalidSounds();
-            await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: token);
+            if (!sound.isValid) continue;
+            float distSqr = (sound.position - listenerPos).sqrMagnitude;
+            _sortedSounds.Add((sound, distSqr));
         }
+
+        _sortedSounds.Sort((a, b) => a.distSqr.CompareTo(b.distSqr));
+
+        // Adaptive ray count based on quality level
+        int effectiveRaysPerSound = defaultRaysPerSound;
+        int maxRaysThisFrame = maxRaysPerFrame;
+        int totalRays = 0;
+        int processedSounds = 0;
+
+        // Build raycast commands
+        foreach (var (sound, distSqr) in _sortedSounds)
+        {
+            if (token.IsCancellationRequested)
+                break;
+
+            float distance = Mathf.Sqrt(distSqr);
+
+            // Skip if out of range
+            if (distance > sound.maxDistance)
+            {
+                sound.targetOcclusion = 0f;
+                continue;
+            }
+
+            bool isPriority = distance <= priorityDistance;
+            int raysForThisSound = isPriority ? sound.raysPerSound : effectiveRaysPerSound;
+
+            if (!isPriority && totalRays + raysForThisSound > maxRaysThisFrame)
+            {
+                break;
+            }
+
+            Vector3 direction = (listenerPos - sound.position).normalized;
+            int startIndex = _raycastCommands.Count;
+
+            for (int i = 0; i < raysForThisSound; i++)
+            {
+                Vector3 rayDir = direction;
+
+                if (i > 0 && sound.raySpread > 0)
+                {
+                    float angle = sound.raySpread * Mathf.Deg2Rad;
+                    Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * angle;
+                    rayDir = (direction + randomOffset).normalized;
+                }
+
+                _raycastCommands.Add(new RaycastCommand(
+                    sound.position,
+                    rayDir,
+                    new QueryParameters(occlusionLayers, false, QueryTriggerInteraction.Ignore, false),
+                    distance
+                ));
+            }
+
+            _raycastResults.Add((sound, startIndex, raysForThisSound, distance));
+            totalRays += raysForThisSound;
+            processedSounds++;
+            sound.lastUpdateFrame = currentFrame;
+
+            if (processedSounds % 20 == 0)
+            {
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
+            }
+        }
+
+        if (_raycastCommands.Count > 0)
+        {
+            var commandsArray = new NativeArray<RaycastCommand>(_raycastCommands.ToArray(), Allocator.TempJob);
+            var resultsArray = new NativeArray<RaycastHit>(_raycastCommands.Count, Allocator.TempJob);
+
+            var raycastJob = RaycastCommand.ScheduleBatch(commandsArray, resultsArray, 16);
+
+            while (!raycastJob.IsCompleted)
+            {
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
+
+                if (_perfStopwatch.ElapsedMilliseconds > performanceBudgetMs * 2)
+                {
+                    break;
+                }
+            }
+
+            raycastJob.Complete();
+
+            foreach (var (sound, startIndex, rayCount, distance) in _raycastResults)
+            {
+                float totalOcclusionWeight = 0f;
+
+                for (int i = 0; i < rayCount; i++)
+                {
+                    var hit = resultsArray[startIndex + i];
+
+                    if (hit.collider != null && hit.distance < distance - 0.1f)
+                    {
+                        float materialOcclusion = GetMaterialOcclusionCached(hit.collider);
+
+                        float distanceToWall = hit.distance;
+                        float proximityFactor = Mathf.Clamp01(distanceToWall / occlusionFalloffDistance);
+                        float proximityMultiplier = Mathf.Lerp(closeProximityMultiplier, 1f, proximityFactor);
+
+                        totalOcclusionWeight += materialOcclusion * proximityMultiplier;
+
+                        if (showDebugRays)
+                        {
+                            Color debugColor = Color.Lerp(Color.yellow, Color.red, materialOcclusion);
+                            Debug.DrawLine(sound.position, hit.point, debugColor, updateInterval);
+                        }
+                    }
+                }
+
+                float occlusionPercent = totalOcclusionWeight / rayCount;
+                float newOcclusion = Mathf.Clamp01(occlusionPercent);
+
+                if (Mathf.Abs(newOcclusion - sound.targetOcclusion) > occlusionDeadzone)
+                {
+                    sound.targetOcclusion = newOcclusion;
+                }
+            }
+
+            commandsArray.Dispose();
+            resultsArray.Dispose();
+        }
+
+        _perfStopwatch.Stop();
+        _lastFrameTimeMs = (float)_perfStopwatch.Elapsed.TotalMilliseconds;
+        _lastFrameRayCount = totalRays;
     }
 
     private async UniTask CalculateAllOcclusionAsync(CancellationToken token)
     {
-        if (_listenerTransform == null || !occlusionEnabled)
+        if (_listenerTransform == null)
             return;
 
-        Vector3 listenerPos = _listenerTransform.position;
-        List<TrackedSound> soundsList = new List<TrackedSound>(_trackedSounds.Values);
+        _perfStopwatch.Restart();
 
-        foreach (var sound in soundsList)
+        Vector3 listenerPos = _listenerTransform.position;
+        int processedCount = 0;
+        int totalRays = 0;
+
+        foreach (var sound in _trackedSounds.Values)
         {
             if (token.IsCancellationRequested || !sound.isValid)
                 break;
@@ -298,6 +416,7 @@ public class AudioManager : MonoBehaviour
             else
             {
                 float rawOcclusion = CalculateOcclusion(sound.position, listenerPos, sound.raysPerSound, sound.raySpread, distance);
+                totalRays += sound.raysPerSound;
 
                 if (Mathf.Abs(rawOcclusion - sound.targetOcclusion) > occlusionDeadzone)
                 {
@@ -305,11 +424,21 @@ public class AudioManager : MonoBehaviour
                 }
             }
 
-            if (soundsList.Count > 10)
+            processedCount++;
+            if (processedCount % 10 == 0)
             {
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
+
+            if (_perfStopwatch.ElapsedMilliseconds > performanceBudgetMs)
+            {
+                break;
+            }
         }
+
+        _perfStopwatch.Stop();
+        _lastFrameTimeMs = (float)_perfStopwatch.Elapsed.TotalMilliseconds;
+        _lastFrameRayCount = totalRays;
     }
 
     private float CalculateOcclusion(Vector3 soundPos, Vector3 listenerPos, int raysPerSound, float raySpread, float totalDistance)
@@ -335,53 +464,30 @@ public class AudioManager : MonoBehaviour
             {
                 if (hit.distance < totalDistance - 0.1f)
                 {
-                    // Get material-specific occlusion
-                    float materialOcclusion = GetMaterialOcclusion(hit.collider);
-
-                    // Apply distance-based falloff (reduces occlusion when close to wall)
+                    float materialOcclusion = GetMaterialOcclusionCached(hit.collider);
                     float distanceToWall = hit.distance;
                     float proximityFactor = Mathf.Clamp01(distanceToWall / occlusionFalloffDistance);
                     float proximityMultiplier = Mathf.Lerp(closeProximityMultiplier, 1f, proximityFactor);
 
-                    float finalOcclusion = materialOcclusion * proximityMultiplier;
-                    totalOcclusionWeight += finalOcclusion;
-
-                    if (showDebugRays)
-                    {
-                        Color debugColor = Color.Lerp(Color.yellow, Color.red, finalOcclusion);
-                        Debug.DrawLine(soundPos, hit.point, debugColor, updateInterval);
-                    }
+                    totalOcclusionWeight += materialOcclusion * proximityMultiplier;
                 }
-                else if (showDebugRays)
-                {
-                    Debug.DrawLine(soundPos, listenerPos, Color.green, updateInterval);
-                }
-            }
-            else if (showDebugRays)
-            {
-                Debug.DrawLine(soundPos, listenerPos, Color.green, updateInterval);
             }
         }
 
-        float occlusionPercent = totalOcclusionWeight / raysPerSound;
-        return Mathf.Clamp01(occlusionPercent);
+        return Mathf.Clamp01(totalOcclusionWeight / raysPerSound);
     }
 
-    private float GetMaterialOcclusion(Collider collider)
+    private float GetMaterialOcclusionCached(Collider collider)
     {
-        // Use CompareTag for performance
-        foreach (var material in occlusionMaterials)
+        // Use cached dictionary
+        if (_materialOcclusionCache.TryGetValue(collider.tag, out float cachedValue))
         {
-            if (!string.IsNullOrEmpty(material.tag) && collider.CompareTag(material.tag))
-            {
-                return material.occlusionAmount;
-            }
+            return cachedValue;
         }
-
         return defaultOcclusionAmount;
     }
 
-    private void ApplyOcclusion()
+    private void ApplyOcclusionSmoothing()
     {
         if (!occlusionEnabled)
             return;
@@ -393,37 +499,26 @@ public class AudioManager : MonoBehaviour
             if (!sound.isValid || !sound.instance.isValid())
                 continue;
 
-            // Determine appropriate smoothing speed based on change direction and magnitude
             float occlusionDifference = sound.targetOcclusion - sound.currentOcclusion;
-            float adaptiveSpeed = smoothSpeed;
+            float adaptiveSpeed = Mathf.Abs(occlusionDifference) > 0.1f ? materialTransitionSpeed : smoothSpeed;
 
-            // Use material transition speed when there's a significant change
-            // This smooths out material transitions
-            if (Mathf.Abs(occlusionDifference) > 0.1f)
-            {
-                adaptiveSpeed = materialTransitionSpeed;
-            }
-
-            // Smooth transition with adaptive speed
             sound.currentOcclusion = Mathf.Lerp(
                 sound.currentOcclusion,
                 sound.targetOcclusion,
                 deltaTime * adaptiveSpeed
             );
 
-            // Apply to FMOD parameter
-            sound.instance.setParameterByName(occlusionParameterName, sound.currentOcclusion);
-
-            if (showOcclusionDebug && sound.currentOcclusion > 0.01f)
+            // Only set parameter if value changed meaningfully
+            if (Mathf.Abs(occlusionDifference) > 0.001f)
             {
-                Debug.Log($"Applied Occlusion: current={sound.currentOcclusion:F3}, target={sound.targetOcclusion:F3}, diff={occlusionDifference:F3}");
+                sound.instance.setParameterByName(occlusionParameterName, sound.currentOcclusion);
             }
         }
     }
 
     private void CleanupInvalidSounds()
     {
-        var toRemove = new List<int>();
+        var toRemove = new List<int>(16);
 
         foreach (var kvp in _trackedSounds)
         {
@@ -440,6 +535,11 @@ public class AudioManager : MonoBehaviour
         foreach (var id in toRemove)
         {
             _trackedSounds.Remove(id);
+        }
+
+        if (toRemove.Count > 0 && showDebugRays)
+        {
+            Debug.Log($"[AudioManager] Cleaned up {toRemove.Count} invalid sounds");
         }
     }
 
@@ -460,6 +560,6 @@ public class AudioManager : MonoBehaviour
         public int raysPerSound;
         public float raySpread;
         public float maxDistance;
-        public bool needsImmediateCheck;
+        public int lastUpdateFrame;
     }
 }
