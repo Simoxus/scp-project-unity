@@ -1,17 +1,127 @@
-# Naming conventions
+# Contributing
+
+## Contributing workflow
+
+1. Create a new branch from `dev` for your pull request
+2. Test your changes thoroughly
+3. Submit a pull request to the `dev` branch
+
+## Branch strategy
+
+- `main` - Stable releases
+- `dev` - Active development (base your work/forks on this)
+- `branch/feat/feature-name` - New features
+- `branch/fix/bug-description` - Bug fixes
+- `branch/refac/component-name` - Code rewrites
+
+## Code conventions
+
+### Method Order
+
+All scripts inheriting from MonoBehaviour should be in this order:
+
+```csharp
 Awake()
 Start()
 OnEnable()
 OnDisable()
 OnDestroy()
+OnValidate()
 Reset()
-AssignReferences() (for Reset)
-
-OnCollisionEnter
-OnCollisionStay
-OnTriggerEnter
-OnTriggerExit
+AssignReferences() // for Reset
 
 Update()
 FixedUpdate()
 LateUpdate()
+
+OnCollisionEnter()
+OnCollisionStay()
+OnCollisionExit()
+OnTriggerEnter()
+OnTriggerStay()
+OnTriggerExit()
+
+OnDrawGizmos()
+OnDrawGizmosSelected()
+```
+
+### Naming Convention
+
+- **Classes**: PascalCase (`PlayerController`)
+- **Interfaces**: PascalCase with I prefix (`IInteractable`)
+- **Constants**: UPPER_SNAKE_CASE (`MAX_INVENTORY_SIZE`)
+- **Methods**: PascalCase (`MovePlayer()`)
+- **Public Fields**: PascalCase (`MaxHealth`)
+- **Private Serialized Fields**: camelCase (`walkSpeed`)
+- **Private Fields**: camelCase with underscore prefix (`_currentSpeed`)
+- **Properties**: PascalCase (`IsGrounded`)
+
+### Code Quality
+
+- Keep methods focused and single-purpose
+- Avoid deep nesting (max 3-4 levels)
+- Use meaningful variable names
+- Remove debug code before committing
+- Avoid any hardcoded values - use SerializeField or constants
+
+## Unity-Specific Guidelines
+
+### Prefabs
+
+- Keep prefabs modular
+- Test prefab changes
+- Document any setup for prefabs
+
+### Asset Organization
+
+- Keep assets organized
+- Follow the existing folder structure since I worked very hard to keep it nice :(
+- Name assets descriptively
+- Remove unused assets
+
+### Unity Version
+
+- Ensure you're using the Unity version specified in the project
+- Check `ProjectSettings/ProjectVersion.txt` for the required version
+
+## Pull Request Process
+
+1. Ensure your code follows all conventions
+2. Test your changes thoroughly
+3. Update documentation
+4. Create a PR targeting the `dev` branch
+5. Provide a clear description of what your PR does
+6. Reference any related issues
+
+## Testing Requirements
+
+Before submitting a PR:
+
+- Test all affected gameplay mechanics
+- Verify no console errors or warnings
+- Test in both Editor and Build (if possible)
+- Check for performance issues
+- Ensure no conflicts with existing features
+
+## Issue Reporting
+
+When reporting bugs or requesting features, you can use GitHub Issues or preferably post in the [Discord](https://discord.gg/dVdY4PuGfp).
+
+**Bug Reports:**
+- Describe the issue clearly
+- Steps to reproduce
+- Expected vs actual behavior
+- Unity version and platform
+- Screenshots or videos if applicable
+
+**Feature Requests:**
+- Describe the feature
+- Explain the use case
+- Consider implementation complexity
+- Discuss in Issues or Discord before starting major work
+
+## Questions?
+
+If you have questions about contributing, join the [Discord](https://discord.gg/dVdY4PuGfp)
+
+For bug reports or feature suggestions, you can use GitHub Issues or preferably post in the Discord.
