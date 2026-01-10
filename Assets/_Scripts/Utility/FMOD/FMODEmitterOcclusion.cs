@@ -7,30 +7,34 @@ using UnityEngine;
 public class FMODEmitterOcclusion : MonoBehaviour
 {
     [SerializeField] private bool useOcclusion = true;
-    [SerializeField] private float updateInterval = 0.1f;
 
-    [Header("Occlusion Quality")]
+    [Header("Update Settings")]
+    [SerializeField, Range(0.1f, 5f)] private float minMovementThreshold = 0.5f;
+
+    [Header("Quality Settings")]
     [SerializeField, Range(1, 5)] private int raysPerSound = 1;
     [SerializeField, Range(0f, 45f)] private float raySpread = 0f;
 
-    [Header("Distance")]
+    [Header("Distance Settings")]
     [SerializeField] private bool useCustomMaxDistance = true;
     [SerializeField, Range(0f, 300f)] private float maxDistance = 50f;
 
     private StudioEventEmitter emitter;
     private int occlusionId = -1;
     private bool wasPlayingLastFrame;
+    private Vector3 lastPosition;
     private CancellationTokenSource cts;
 
     private void Awake()
     {
         emitter = GetComponent<StudioEventEmitter>();
+        lastPosition = transform.position;
     }
 
     private void OnEnable()
     {
         cts = new CancellationTokenSource();
-        UpdateLoopAsync(cts.Token).Forget();
+        MonitorPlaybackAsync(cts.Token).Forget();
     }
 
     private void OnDisable()
@@ -49,7 +53,7 @@ public class FMODEmitterOcclusion : MonoBehaviour
         UnregisterOcclusion();
     }
 
-    private async UniTaskVoid UpdateLoopAsync(CancellationToken token)
+    private async UniTaskVoid MonitorPlaybackAsync(CancellationToken token)
     {
         while (!token.IsCancellationRequested)
         {
@@ -60,7 +64,6 @@ public class FMODEmitterOcclusion : MonoBehaviour
             }
 
             bool isCurrentlyPlaying = emitter.IsPlaying();
-
             if (isCurrentlyPlaying && !wasPlayingLastFrame)
             {
                 RegisterOcclusion();
@@ -69,15 +72,23 @@ public class FMODEmitterOcclusion : MonoBehaviour
             {
                 UnregisterOcclusion();
             }
-            else if (isCurrentlyPlaying && occlusionId >= 0)
-            {
-                UpdateOcclusionPosition();
-                await UniTask.WaitForSeconds(updateInterval, cancellationToken: token);
-                continue;
-            }
 
             wasPlayingLastFrame = isCurrentlyPlaying;
+
             await UniTask.Yield(PlayerLoopTiming.Update, token);
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (occlusionId >= 0 && useOcclusion)
+        {
+            Vector3 currentPos = transform.position;
+            if (Vector3.Distance(currentPos, lastPosition) > minMovementThreshold)
+            {
+                UpdateOcclusionPosition();
+                lastPosition = currentPos;
+            }
         }
     }
 
@@ -88,13 +99,20 @@ public class FMODEmitterOcclusion : MonoBehaviour
             UnregisterOcclusion();
         }
 
-        if (AudioManager.Instance == null)
-            return;
+        if (AudioManager.Instance == null) return;
 
         if (emitter != null && emitter.EventInstance.isValid())
         {
             float distance = useCustomMaxDistance ? maxDistance : -1f;
-            occlusionId = AudioManager.Instance.RegisterSound(emitter.EventInstance, transform.position, raysPerSound, raySpread, distance);
+            occlusionId = AudioManager.Instance.RegisterSound(
+                emitter.EventInstance,
+                transform.position,
+                raysPerSound,
+                raySpread,
+                distance
+            );
+
+            lastPosition = transform.position;
         }
     }
 
@@ -132,6 +150,7 @@ public class FMODEmitterOcclusion : MonoBehaviour
     {
         if (occlusionId >= 0)
         {
+            lastPosition = transform.position;
             UpdateOcclusionPosition();
         }
     }
