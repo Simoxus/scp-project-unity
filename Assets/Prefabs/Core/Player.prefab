@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8050014540779147981}
   - component: {fileID: 2116979898301904093}
-  - component: {fileID: 477963096991724100}
   - component: {fileID: 1597569775814926523}
   - component: {fileID: 4173263037985968180}
   m_Layer: 0
@@ -59,7 +58,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 72
+    FieldOfView: 70
     OrthographicSize: 10
     NearClipPlane: 0.01
     FarClipPlane: 149
@@ -77,33 +76,7 @@ MonoBehaviour:
       Curvature: {x: 2, y: 11}
       BarrelClipping: 0.25
       Anamorphism: 0
-  BlendHint: 0
---- !u!114 &477963096991724100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 958268008706456147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 625c14eee3ad46c99df7c7c891ef668a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Damping: {x: 0, y: 0, z: 0}
-  ShoulderOffset: {x: 0, y: 0, z: 0}
-  VerticalArmLength: 0
-  CameraSide: 0.6
-  CameraDistance: 0
-  AvoidObstacles:
-    Enabled: 1
-    CollisionFilter:
-      serializedVersion: 2
-      m_Bits: 1
-    IgnoreTag: Player
-    CameraRadius: 0.15
-    DampingIntoCollision: 0
-    DampingFromCollision: 0
+  BlendHint: 4
 --- !u!114 &1597569775814926523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,7 +92,7 @@ MonoBehaviour:
   NoiseProfile: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   PivotOffset: {x: 0, y: 0, z: 0}
   AmplitudeGain: 1
-  FrequencyGain: 0.2
+  FrequencyGain: 0
   m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!114 &4173263037985968180
 MonoBehaviour:
@@ -281,7 +254,6 @@ GameObject:
   - component: {fileID: 6702291545312606249}
   - component: {fileID: 1189419969090933863}
   - component: {fileID: 4411909080681021200}
-  - component: {fileID: 7100720009754110944}
   - component: {fileID: 6479974962862822255}
   - component: {fileID: 3084800393523803307}
   m_Layer: 7
@@ -321,23 +293,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2f776b536f44d4c90454358c22b9ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
-  playerController: {fileID: 3303578035313515851}
-  playerInputs: {fileID: 8923427205051015749}
-  playerStats: {fileID: 5867371172417033057}
-  playerHealth: {fileID: 2952845768212316805}
-  playerEffects: {fileID: 7100720009754110944}
-  playerBobbing: {fileID: 6702291545312606249}
-  playerSanity: {fileID: 4411909080681021200}
-  playerFootsteps: {fileID: 1189419969090933863}
-  playerInteract: {fileID: 1900300680731127074}
-  playerFreecam: {fileID: 6479974962862822255}
-  characterController: {fileID: 3084800393523803307}
-  cameraRoot: {fileID: 4863580433871097859}
-  cameraBrain: {fileID: 473945264047167352}
-  cameraMain: {fileID: 2116979898301904093}
-  cameraImpulseListener: {fileID: 4173263037985968180}
-  cameraImpulseSource: {fileID: 3622525049317278363}
+  CurrentState: 0
+  PlayerController: {fileID: 3303578035313515851}
+  PlayerInputs: {fileID: 8923427205051015749}
+  PlayerStats: {fileID: 5867371172417033057}
+  PlayerHealth: {fileID: 2952845768212316805}
+  PlayerBobbing: {fileID: 6702291545312606249}
+  PlayerSanity: {fileID: 4411909080681021200}
+  PlayerFootsteps: {fileID: 1189419969090933863}
+  PlayerInteract: {fileID: 1900300680731127074}
+  PlayerFreecam: {fileID: 6479974962862822255}
+  CharacterController: {fileID: 3084800393523803307}
+  CameraRoot: {fileID: 4863580433871097859}
+  CameraBrain: {fileID: 473945264047167352}
+  CameraMain: {fileID: 2116979898301904093}
+  CameraSettings: {fileID: 1213113212922487799}
+  CameraImpulseListener: {fileID: 4173263037985968180}
+  CameraImpulseSource: {fileID: 3622525049317278363}
+  CameraBrainStudioListener: {fileID: 6929250164369162214}
 --- !u!114 &3303578035313515851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,25 +323,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55919ac34a26952479f3fc91f777b2fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6969650758551764498}
   walkSpeed: 12
   sprintSpeed: 20
-  crouchSpeed: 5
+  crouchSpeed: 5.4
   gravity: 400
-  doLookInvert: 0
-  doSmoothLook: 1
+  invertYAxis: 0
+  smoothLook: 1
   lookSmoothTime: 0.1
   lookSpeed: 2.5
   minLookX: -75
   maxLookX: 75
+  accelerationCurve: 15
+  decelerationCurve: 9
+  decelerationKick: 3
   standingHeight: 2.6
   crouchHeight: 1.4
   crouchTransitionSpeed: 9
   crouchCheckOffset: 0.1
-  isMoving: 0
-  isSprinting: 0
-  isBlinking: 0
-  isCrouching: 0
+  noclipSpeed: 20
+  noclipSprintMultiplier: 2
 --- !u!114 &8923427205051015749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,24 +367,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dfafc39cdc0b3c4aa0e4251390d5506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6969650758551764498}
-  indicatorsUI: {fileID: 0}
-  uiAccess: {fileID: 0}
-  sprintDrainRate: 0.26
+  sprintDrainRate: 0
   sprintRegenRateMoving: 0.194
   sprintRegenRateIdle: 0.2
   minSprintThreshold: 0
   allowBlinkHold: 1
   blinkFrequency: 15.43
   blinkingTime: 0.18
-  tiredBreathingSound:
-    Guid:
-      Data1: -71319878
-      Data2: 1244155867
-      Data3: 544662946
-      Data4: -1058864526
-    Path: event:/Player/Player_Tired
-  tiredSoundThreshold: 0.1
+  tiredSoundThreshold: 0.07
   currentSprint: 1
   currentBlink: 1
 --- !u!114 &2952845768212316805
@@ -421,7 +384,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7989190535436660184}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d65c0ec664b0c409d10161b45b4a7e, type: 3}
   m_Name: 
@@ -443,20 +406,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382216fd00d17a94c86d08b93577d8ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionSpriteData:
-  - type: Hand
-    sprite: {fileID: 21300000, guid: 67848e7bed236bd40bfa62ecf2e87c5c, type: 3}
-  - type: Grab
-    sprite: {fileID: 21300000, guid: 27af56e137291b6449470981a88fddb0, type: 3}
-  - type: Flip
-    sprite: {fileID: 21300000, guid: 73a3a8668059d584eb604777a7d39069, type: 3}
-  player: {fileID: 6969650758551764498}
-  cameraBrain: {fileID: 473945264047167352}
-  interactionUI:
-    uiTransform: {fileID: 0}
-    iconTransform: {fileID: 0}
-    iconImage: {fileID: 0}
-    canvasGroup: {fileID: 0}
   interactionRange: 4
   obstacleLayers:
     serializedVersion: 2
@@ -464,22 +413,6 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 64
-  baseHorizontalPadding: -140
-  baseVerticalPadding: -140
-  referenceAspect: 1.7777778
-  cornerLerpSpeed: 40
-  edgeThreshold: 0.2
-  disableFading: 1
-  fadeSpeed: 3
-  fadeStartDistance: 2.5
-  minAlpha: 0.4
-  easingStyle1: 2
-  easingStyle2: 3
-  tweenIdleScale: 0.7
-  tweenDownScale: 0.6
-  tweenDuration1: 0.1
-  tweenDuration2: 0.1
-  delayBetweenTweens: 0.121
 --- !u!114 &6702291545312606249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,29 +430,26 @@ MonoBehaviour:
   enableTilt: 1
   walkState:
     bobSpeed: 7
-    bobAmount: 0.05
-    upDownDivisor: 20
-    rotationStrength: 0.7
-    maxRotationAngle: 1.15
-    rotationSpeed: 0.5
+    verticalBobIntensity: 1
+    horizontalBobIntensity: 1
+    rollIntensity: 2.5
+    maxRollAngle: 14
   sprintState:
-    bobSpeed: 12.6
-    bobAmount: 0.04
-    upDownDivisor: 45
-    rotationStrength: 0.8
-    maxRotationAngle: 1.3
-    rotationSpeed: 0.5
+    bobSpeed: 11
+    verticalBobIntensity: 1
+    horizontalBobIntensity: 1
+    rollIntensity: 2.7
+    maxRollAngle: 20
   crouchState:
     bobSpeed: 6.5
-    bobAmount: 0.08
-    upDownDivisor: 70
-    rotationStrength: 0.5
-    maxRotationAngle: 4
-    rotationSpeed: 0.5
-  injuryBobMultiplier: 0.15
-  injuryTiltMultiplier: 0.283
-  stateTransitionSpeed: 9
-  bobbingLerpSpeed: 12
+    verticalBobIntensity: 1
+    horizontalBobIntensity: 1
+    rollIntensity: 5
+    maxRollAngle: 14
+  injuryBaseOffset: 0.25
+  injuryMaxCap: 2
+  stateTransitionSpeed: 13
+  bobbingLerpSpeed: 14
 --- !u!114 &1189419969090933863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,7 +462,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9ed0dec53b79949b60c4e903fe5c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 6969650758551764498}
   footstepSurfaces:
   - {fileID: 11400000, guid: c8e0cd3818aec1845bee6d4a608f6d19, type: 2}
   - {fileID: 11400000, guid: ac69084b451c20744a3fff424d50ed31, type: 2}
@@ -542,23 +471,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e39dc43ab7a014b4fbbbfcbf7093fe11, type: 2}
   useBobSyncedFootsteps: 1
   footstepPlayTransform: {fileID: 323695527166178131}
-  walkFootstepEvent:
-    Guid:
-      Data1: 1617678507
-      Data2: 1109545212
-      Data3: -919862089
-      Data4: 60329817
-    Path: event:/Player/Player_Footsteps_Walk
-  runFootstepEvent:
-    Guid:
-      Data1: -1776108468
-      Data2: 1190607566
-      Data3: -1050965834
-      Data4: -493257741
-    Path: event:/Player/Player_Footsteps_Run
   surfaceParameterName: Surface
   raycastOrigin: {fileID: 8083589854920794216}
-  raycastDistance: 5
+  raycastDistance: 4
   groundLayer:
     serializedVersion: 2
     m_Bits: 265
@@ -579,18 +494,6 @@ MonoBehaviour:
   minSanity: 0
   sanityThreshold: 30
   sanityChangeRate: 0
---- !u!114 &7100720009754110944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7989190535436660184}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5e36bf48b945f04ba8bf3941e9ac05b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6479974962862822255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,11 +501,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7989190535436660184}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9dfd2d13208ad034885a89b29021c4e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 15
+  sprintMultiplier: 4
+  decelerateMultiplier: 0.5
+  moveAcceleration: 5
+  moveDamping: 8
+  minFOV: 10
+  maxFOV: 130
+  fovScrollSensitivity: 3
+  fovLerpSpeed: 10
+  fovLerpSpeedSmooth: 6
+  rotationEasingSpeed: 10
 --- !u!143 &3084800393523803307
 CharacterController:
   m_ObjectHideFlags: 0
@@ -616,13 +530,13 @@ CharacterController:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 592
   m_LayerOverridePriority: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2.6
-  m_Radius: 0.5
+  m_Radius: 0.46
   m_SlopeLimit: 90
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -696,7 +610,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 149
-  field of view: 72
+  field of view: 70
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
