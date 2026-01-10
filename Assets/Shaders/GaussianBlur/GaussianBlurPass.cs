@@ -15,7 +15,6 @@ public class GaussianBlurPass : ScriptableRenderPass
     {
         public Material material;
         public TextureHandle source;
-        public TextureHandle temp;
         public TextureHandle destination;
         public int gridSize;
         public float spread;

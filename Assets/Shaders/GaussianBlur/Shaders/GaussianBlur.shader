@@ -31,7 +31,6 @@ Shader "Hidden/GaussianBlur"
         }
         ENDHLSL
 
-        // Pass 0: Horizontal Blur
         Pass
         {
             Name "Horizontal"
@@ -69,7 +68,6 @@ Shader "Hidden/GaussianBlur"
             ENDHLSL
         }
 
-        // Pass 1: Vertical Blur
         Pass
         {
             Name "Vertical"
