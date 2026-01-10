@@ -29,7 +29,7 @@ public abstract class BaseSettings : MonoBehaviour
 
     public bool CheckIfMainMenu()
     {
-        return GameManager.Instance && GameManager.Instance.IsInMainMenu;
+        return Core.GameManager && Core.GameManager.IsInMainMenu;
     }
 
     public async void SaveSettingsWithDelay(float delay = 0.5f)
