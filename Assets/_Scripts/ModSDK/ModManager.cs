@@ -186,9 +186,7 @@ public class ModManager : Singleton<ModManager>
         }
 
         var modDirs = Directory.GetDirectories(modsPath);
-        Log.VerboseSuccess($"Found {modDirs.Length} potential mods in: {modsPath}");
-
-        List<ModInfo> modInfos = new List<ModInfo>();
+        var modInfos = new List<ModInfo>();
 
         foreach (var dir in modDirs)
         {
@@ -286,7 +284,7 @@ public class ModManager : Singleton<ModManager>
             }
         }
 
-        Log.VerboseSuccess($"Initialized {_loadedMods.Count} mods");
+        Log.VerboseSuccess($"Loaded {_loadedMods.Count} mods");
     }
 
     public async UniTask ReloadMod(string modId)
