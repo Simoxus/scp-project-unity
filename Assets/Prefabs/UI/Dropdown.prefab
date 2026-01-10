@@ -244,13 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02a238fd8818393419413866a634f8a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiPressEvent:
-    Guid:
-      Data1: 1807382103
-      Data2: 1100232730
-      Data3: 1698246309
-      Data4: -643697669
-    Path: event:/UI/UI_Press
+  uiAudioData: {fileID: 11400000, guid: 54d9399f609770d4eb75dcabab49ad77, type: 2}
 --- !u!1 &1697002307429805843
 GameObject:
   m_ObjectHideFlags: 0
@@ -871,9 +865,9 @@ MonoBehaviour:
   m_fontSize: 12
   m_fontSizeBase: 12
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 7
+  m_fontSizeMax: 12
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -1007,9 +1001,9 @@ MonoBehaviour:
   m_fontSize: 12
   m_fontSizeBase: 12
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 7
-  m_fontSizeMax: 14
+  m_fontSizeMax: 12
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -1042,7 +1036,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 1.2545166, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
