@@ -323,9 +323,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55919ac34a26952479f3fc91f777b2fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 12
-  sprintSpeed: 20
-  crouchSpeed: 5.4
+  walkSpeed: 10
+  sprintSpeed: 18
+  crouchSpeed: 4.5
   gravity: 400
   invertYAxis: 0
   smoothLook: 1
@@ -432,19 +432,19 @@ MonoBehaviour:
     bobSpeed: 7
     verticalBobIntensity: 1.5
     horizontalBobIntensity: 1.5
-    rollIntensity: 2.5
+    rollIntensity: 1
     maxRollAngle: 14
   sprintState:
     bobSpeed: 11.5
-    verticalBobIntensity: 1.6
-    horizontalBobIntensity: 1.6
+    verticalBobIntensity: 1.5
+    horizontalBobIntensity: 1.5
     rollIntensity: 2
-    maxRollAngle: 40
+    maxRollAngle: 30
   crouchState:
     bobSpeed: 6.7
     verticalBobIntensity: 2
     horizontalBobIntensity: 1.4
-    rollIntensity: 3
+    rollIntensity: 1
     maxRollAngle: 30
   injuryBaseOffset: 0.25
   injuryMaxCap: 2
