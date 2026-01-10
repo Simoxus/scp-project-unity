@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 2409550970270724447}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 3.7, y: 0.57, z: 0}
+  m_LocalPosition: {x: 3.7, y: 0.57, z: -0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -87,34 +87,25 @@ MonoBehaviour:
   startOpened: 0
   chanceToStartOpened: 0
   percentChanceToStartOpened: 0.5
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  movingColor: {r: 1, g: 0.953, b: 0.459, a: 1}
-  brokenColor: {r: 1, g: 0.451, b: 0.345, a: 1}
-  grantedColor: {r: 0.643, g: 0.992, b: 0.51, a: 1}
-  deniedColor: {r: 1, g: 0.353, b: 0.353, a: 1}
-  lockedColor: {r: 0.078, g: 0.078, b: 0.078, a: 1}
+  defaultColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  successColor:
+    serializedVersion: 2
+    rgba: 4291559380
+  failureColor:
+    serializedVersion: 2
+    rgba: 4288584191
+  movingColor:
+    serializedVersion: 2
+    rgba: 4288279807
+  brokenColor:
+    serializedVersion: 2
+    rgba: 4283986943
+  lockedColor:
+    serializedVersion: 2
+    rgba: 4288584191
   breakableByEnvironment: 1
-  doorToggleSound:
-    Guid:
-      Data1: 420893315
-      Data2: 1162257272
-      Data3: -395256647
-      Data4: 1064140581
-    Path: event:/Environment/Doors/Env_Door
-  doorBreakSound:
-    Guid:
-      Data1: -2099762745
-      Data2: 1079054529
-      Data3: -1591891560
-      Data4: 1497429722
-    Path: event:/Environment/Doors/Env_DoorBreak
-  doorBrokenSound:
-    Guid:
-      Data1: 881702286
-      Data2: 1255307725
-      Data3: 973634697
-      Data4: 2122392019
-    Path: event:/Environment/Doors/Env_DoorBroken
   fmodParameterName: State
   door: {fileID: 4390291595089664214}
   doorFront: {fileID: 3824593694480035165}
@@ -131,7 +122,7 @@ MonoBehaviour:
   easeStyle: 7
   impulseVelocityRange: {x: 1, y: 2}
   currentState: 2
-  requiredKeycardLevel: 0
+  requiredKeycardLevel: 5
   doorActivator1: {fileID: 5063699321096168145}
   doorActivator2: {fileID: 8693986291010913608}
 --- !u!1 &6018503654021892090
@@ -146,7 +137,7 @@ GameObject:
   - component: {fileID: 5063699321096168145}
   - component: {fileID: 7088619498968824653}
   m_Layer: 6
-  m_Name: Activator1
+  m_Name: InteractNode1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,20 +177,6 @@ MonoBehaviour:
   secondActivatorCollider: {fileID: 4070349875907982232}
   buttonVisual: {fileID: 7697631294051269006}
   targetDoorController: {fileID: 751353375331670810}
-  keycardSoundEvent:
-    Guid:
-      Data1: -1858015740
-      Data2: 1335252114
-      Data3: -470492538
-      Data4: -1342430567
-    Path: event:/Environment/Doors/Env_ButtonKeycard
-  keycardFailSoundEvent:
-    Guid:
-      Data1: 1512529467
-      Data2: 1131190304
-      Data3: 973783966
-      Data4: 1207693362
-    Path: event:/Environment/Doors/Env_ButtonError
 --- !u!65 &7088619498968824653
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -279,7 +256,7 @@ Transform:
   m_GameObject: {fileID: 7431341223438278439}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.7, y: 0.57, z: 0}
+  m_LocalPosition: {x: -3.7, y: 0.57, z: 0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -386,7 +363,7 @@ GameObject:
   - component: {fileID: 8693986291010913608}
   - component: {fileID: 4070349875907982232}
   m_Layer: 6
-  m_Name: Activator2
+  m_Name: InteractNode2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,20 +403,6 @@ MonoBehaviour:
   secondActivatorCollider: {fileID: 7088619498968824653}
   buttonVisual: {fileID: 1271986598915011131}
   targetDoorController: {fileID: 751353375331670810}
-  keycardSoundEvent:
-    Guid:
-      Data1: -1858015740
-      Data2: 1335252114
-      Data3: -470492538
-      Data4: -1342430567
-    Path: event:/Environment/Doors/Env_ButtonKeycard
-  keycardFailSoundEvent:
-    Guid:
-      Data1: 1512529467
-      Data2: 1131190304
-      Data3: 973783966
-      Data4: 1207693362
-    Path: event:/Environment/Doors/Env_ButtonError
 --- !u!65 &4070349875907982232
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -469,6 +432,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3015316639935675102}
     m_Modifications:
+    - target: {fileID: 2717556426996809087, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
+      propertyPath: includeChildren
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4636326902313832304, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
       propertyPath: m_Name
       value: ButtonKeycardFront
@@ -520,8 +487,60 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3299447646869597732, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5148760674156637816}
   m_SourcePrefab: {fileID: 100100000, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
+--- !u!1 &3852591137918358049 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3299447646869597732, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
+  m_PrefabInstance: {fileID: 1783101221915606021}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5148760674156637816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3852591137918358049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29de8271f65bc6e4c85bdf5d51e3b827, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2.6
+  enableFading: 1
+  fadeInSpeed: 5
+  fadeOutSpeed: 40
+  precomputeOutline: 1
+  includeChildren: 0
+  bakeKeys:
+  - {fileID: -2855539028221714878, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
+  bakeValues:
+  - data:
+    - {x: 0.7071062, y: -0.70710737, z: 0.00029555662}
+    - {x: 0.5772678, y: -0.5772688, z: 0.5775142}
+    - {x: -0.5761201, y: -0.5761457, z: 0.5797773}
+    - {x: -0.70708406, y: -0.7071155, z: 0.004452108}
+    - {x: 0.5788684, y: 0.5788311, z: 0.5743396}
+    - {x: 0.70711875, y: 0.70707315, z: -0.005538676}
+    - {x: -0.7071138, y: 0.70709836, z: -0.001383988}
+    - {x: -0.5777212, y: 0.57770854, z: 0.57662046}
+    - {x: -0.5777212, y: 0.57770854, z: 0.57662046}
+    - {x: -0.7071138, y: 0.70709836, z: -0.001383988}
+    - {x: -0.70708406, y: -0.7071155, z: 0.004452108}
+    - {x: -0.5761201, y: -0.5761457, z: 0.5797773}
+    - {x: 0.5772678, y: -0.5772688, z: 0.5775142}
+    - {x: 0.7071062, y: -0.70710737, z: 0.00029555662}
+    - {x: 0.70711875, y: 0.70707315, z: -0.005538676}
+    - {x: 0.5788684, y: 0.5788311, z: 0.5743396}
+    - {x: -0.5777212, y: 0.57770854, z: 0.57662046}
+    - {x: 0.5772678, y: -0.5772688, z: 0.5775142}
+    - {x: 0.5788684, y: 0.5788311, z: 0.5743396}
+    - {x: -0.5761201, y: -0.5761457, z: 0.5797773}
 --- !u!114 &4397881795398418810 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2717556426996809087, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
@@ -617,6 +636,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
       propertyPath: m_Name
       value: FrontDoor
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
+      propertyPath: m_TagString
+      value: Door
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -815,6 +842,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6858263608707809553}
     m_Modifications:
+    - target: {fileID: 2717556426996809087, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
+      propertyPath: includeChildren
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4636326902313832304, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
       propertyPath: m_Name
       value: ButtonKeycardBack
@@ -866,7 +897,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3299447646869597732, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5420257315107813420}
   m_SourcePrefab: {fileID: 100100000, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
 --- !u!114 &1271986598915011131 stripped
 MonoBehaviour:
@@ -900,6 +934,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29de8271f65bc6e4c85bdf5d51e3b827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5621438774602422676 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3299447646869597732, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
+  m_PrefabInstance: {fileID: 7190738904383879088}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5420257315107813420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5621438774602422676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29de8271f65bc6e4c85bdf5d51e3b827, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2.6
+  enableFading: 1
+  fadeInSpeed: 5
+  fadeOutSpeed: 40
+  precomputeOutline: 1
+  includeChildren: 0
+  bakeKeys:
+  - {fileID: -2855539028221714878, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
+  bakeValues:
+  - data:
+    - {x: 0.7071062, y: -0.70710737, z: 0.00029555662}
+    - {x: 0.5772678, y: -0.5772688, z: 0.5775142}
+    - {x: -0.5761201, y: -0.5761457, z: 0.5797773}
+    - {x: -0.70708406, y: -0.7071155, z: 0.004452108}
+    - {x: 0.5788684, y: 0.5788311, z: 0.5743396}
+    - {x: 0.70711875, y: 0.70707315, z: -0.005538676}
+    - {x: -0.7071138, y: 0.70709836, z: -0.001383988}
+    - {x: -0.5777212, y: 0.57770854, z: 0.57662046}
+    - {x: -0.5777212, y: 0.57770854, z: 0.57662046}
+    - {x: -0.7071138, y: 0.70709836, z: -0.001383988}
+    - {x: -0.70708406, y: -0.7071155, z: 0.004452108}
+    - {x: -0.5761201, y: -0.5761457, z: 0.5797773}
+    - {x: 0.5772678, y: -0.5772688, z: 0.5775142}
+    - {x: 0.7071062, y: -0.70710737, z: 0.00029555662}
+    - {x: 0.70711875, y: 0.70707315, z: -0.005538676}
+    - {x: 0.5788684, y: 0.5788311, z: 0.5743396}
+    - {x: -0.5777212, y: 0.57770854, z: 0.57662046}
+    - {x: 0.5772678, y: -0.5772688, z: 0.5775142}
+    - {x: 0.5788684, y: 0.5788311, z: 0.5743396}
+    - {x: -0.5761201, y: -0.5761457, z: 0.5797773}
 --- !u!1001 &8845090320354476993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -963,6 +1046,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
       propertyPath: m_Name
       value: BackDoor
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
+      propertyPath: m_TagString
+      value: Door
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

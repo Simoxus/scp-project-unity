@@ -85,20 +85,6 @@ MonoBehaviour:
   secondActivatorCollider: {fileID: 4338340649124165904}
   buttonVisual: {fileID: 5267672573115687424}
   targetGateController: {fileID: 4029593673575649928}
-  buttonSoundEvent:
-    Guid:
-      Data1: 695519176
-      Data2: 1261895117
-      Data3: 1849746340
-      Data4: -574814676
-    Path: event:/Environment/Doors/Env_Button
-  buttonFailSoundEvent:
-    Guid:
-      Data1: 1512529467
-      Data2: 1131190304
-      Data3: 973783966
-      Data4: 1207693362
-    Path: event:/Environment/Doors/Env_ButtonError
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   movingColor: {r: 1, g: 0.953, b: 0.459, a: 1}
   brokenColor: {r: 1, g: 0.451, b: 0.345, a: 1}
@@ -176,20 +162,6 @@ MonoBehaviour:
   secondActivatorCollider: {fileID: 6306629549823637422}
   buttonVisual: {fileID: 2132913331070923771}
   targetGateController: {fileID: 4029593673575649928}
-  buttonSoundEvent:
-    Guid:
-      Data1: 695519176
-      Data2: 1261895117
-      Data3: 1849746340
-      Data4: -574814676
-    Path: event:/Environment/Doors/Env_Button
-  buttonFailSoundEvent:
-    Guid:
-      Data1: 1512529467
-      Data2: 1131190304
-      Data3: 973783966
-      Data4: 1207693362
-    Path: event:/Environment/Doors/Env_ButtonError
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   movingColor: {r: 1, g: 0.953, b: 0.459, a: 1}
   brokenColor: {r: 1, g: 0.451, b: 0.345, a: 1}
@@ -269,34 +241,25 @@ MonoBehaviour:
   startOpened: 0
   chanceToStartOpened: 0
   percentChanceToStartOpened: 0.5
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  movingColor: {r: 1, g: 0.953, b: 0.459, a: 1}
-  brokenColor: {r: 1, g: 0.451, b: 0.345, a: 1}
-  grantedColor: {r: 0.392, g: 1, b: 0.392, a: 1}
-  deniedColor: {r: 1, g: 0.278, b: 0.278, a: 1}
-  lockedColor: {r: 0.078, g: 0.078, b: 0.078, a: 1}
+  defaultColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  movingColor:
+    serializedVersion: 2
+    rgba: 4288279807
+  brokenColor:
+    serializedVersion: 2
+    rgba: 4283986943
+  grantedColor:
+    serializedVersion: 2
+    rgba: 4291559380
+  deniedColor:
+    serializedVersion: 2
+    rgba: 4288584191
+  lockedColor:
+    serializedVersion: 2
+    rgba: 4288584191
   breakableByEnvironment: 1
-  gateToggleSound:
-    Guid:
-      Data1: 1155132866
-      Data2: 1183082153
-      Data3: -1969528697
-      Data4: -136469759
-    Path: event:/Environment/Doors/Env_Gate
-  gateBreakSound:
-    Guid:
-      Data1: -1591755132
-      Data2: 1206827687
-      Data3: -399057741
-      Data4: 37383942
-    Path: event:/Environment/Doors/Env_GateBreak
-  gateBrokenSound:
-    Guid:
-      Data1: 1374242683
-      Data2: 1321000886
-      Data3: 866730168
-      Data4: 906199512
-    Path: event:/Environment/Doors/Env_GateBroken
   fmodParameterName: State
   gate: {fileID: 1956310562556992390}
   gateLeft: {fileID: 1087178885416532559}

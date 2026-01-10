@@ -54,34 +54,25 @@ MonoBehaviour:
   startOpened: 0
   chanceToStartOpened: 0
   percentChanceToStartOpened: 0.5
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  movingColor: {r: 1, g: 0.953, b: 0.459, a: 1}
-  brokenColor: {r: 1, g: 0.451, b: 0.345, a: 1}
-  grantedColor: {r: 0.643, g: 0.992, b: 0.51, a: 1}
-  deniedColor: {r: 1, g: 0.353, b: 0.353, a: 1}
-  lockedColor: {r: 0.078, g: 0.078, b: 0.078, a: 1}
+  defaultColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  successColor:
+    serializedVersion: 2
+    rgba: 4291559380
+  failureColor:
+    serializedVersion: 2
+    rgba: 4288584191
+  movingColor:
+    serializedVersion: 2
+    rgba: 4288279807
+  brokenColor:
+    serializedVersion: 2
+    rgba: 4283986943
+  lockedColor:
+    serializedVersion: 2
+    rgba: 4288584191
   breakableByEnvironment: 1
-  doorToggleSound:
-    Guid:
-      Data1: 420893315
-      Data2: 1162257272
-      Data3: -395256647
-      Data4: 1064140581
-    Path: event:/Environment/Doors/Env_Door
-  doorBreakSound:
-    Guid:
-      Data1: -2099762745
-      Data2: 1079054529
-      Data3: -1591891560
-      Data4: 1497429722
-    Path: event:/Environment/Doors/Env_DoorBreak
-  doorBrokenSound:
-    Guid:
-      Data1: 881702286
-      Data2: 1255307725
-      Data3: 973634697
-      Data4: 2122392019
-    Path: event:/Environment/Doors/Env_DoorBroken
   fmodParameterName: State
   door: {fileID: 1497388548359236925}
   doorFront: {fileID: 850673402524932824}
@@ -115,7 +106,7 @@ GameObject:
   - component: {fileID: 479575093872270051}
   - component: {fileID: 5339435020224702464}
   m_Layer: 6
-  m_Name: Activator1
+  m_Name: InteractNode1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,7 +121,7 @@ Transform:
   m_GameObject: {fileID: 2747099276026456174}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.19, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -166,32 +157,10 @@ MonoBehaviour:
   - {fileID: 1438214661412394795}
   keypadEnterVisual: {fileID: 5007773079193745858}
   keypadClearVisual: {fileID: 3474762658432245055}
-  player: {fileID: 0}
   keypadTweener: {fileID: 6352648566006533352}
   targetDoorController: {fileID: 1454301052302076391}
   keypadCamera: {fileID: 8977150091869000100}
   cameraTransitionDuration: 0.75
-  keypadSoundEvent:
-    Guid:
-      Data1: -2007113072
-      Data2: 1326101700
-      Data3: 204317346
-      Data4: -229371291
-    Path: event:/Environment/Doors/Env_ButtonKeypad
-  keypadFailSoundEvent:
-    Guid:
-      Data1: 1512529467
-      Data2: 1131190304
-      Data3: 973783966
-      Data4: 1207693362
-    Path: event:/Environment/Doors/Env_ButtonError
-  buttonPressSoundEvent:
-    Guid:
-      Data1: 695519176
-      Data2: 1261895117
-      Data3: 1849746340
-      Data4: -574814676
-    Path: event:/Environment/Doors/Env_Button
 --- !u!65 &5339435020224702464
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -340,7 +309,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4107569809014794171}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
   m_Name: 
@@ -418,7 +387,7 @@ Transform:
   m_GameObject: {fileID: 4736427261541754973}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.7, y: 0.57, z: 0}
+  m_LocalPosition: {x: -3.7, y: 0.57, z: 0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -439,7 +408,7 @@ GameObject:
   - component: {fileID: 5522423202065313573}
   - component: {fileID: 1576362915496356053}
   m_Layer: 6
-  m_Name: Activator2
+  m_Name: InteractNode2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -454,7 +423,7 @@ Transform:
   m_GameObject: {fileID: 6004846088949931994}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.19, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -490,32 +459,10 @@ MonoBehaviour:
   - {fileID: 9052277256111416117}
   keypadEnterVisual: {fileID: 3110467525586685404}
   keypadClearVisual: {fileID: 6804200796641929505}
-  player: {fileID: 0}
   keypadTweener: {fileID: 3926174190001338614}
   targetDoorController: {fileID: 1454301052302076391}
   keypadCamera: {fileID: 7239570827422840451}
   cameraTransitionDuration: 0.75
-  keypadSoundEvent:
-    Guid:
-      Data1: -2007113072
-      Data2: 1326101700
-      Data3: 204317346
-      Data4: -229371291
-    Path: event:/Environment/Doors/Env_ButtonKeypad
-  keypadFailSoundEvent:
-    Guid:
-      Data1: 1512529467
-      Data2: 1131190304
-      Data3: 973783966
-      Data4: 1207693362
-    Path: event:/Environment/Doors/Env_ButtonError
-  buttonPressSoundEvent:
-    Guid:
-      Data1: 695519176
-      Data2: 1261895117
-      Data3: 1849746340
-      Data4: -574814676
-    Path: event:/Environment/Doors/Env_Button
 --- !u!65 &1576362915496356053
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -610,7 +557,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7999746639264646829}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
   m_Name: 
@@ -688,7 +635,7 @@ Transform:
   m_GameObject: {fileID: 8307223450830740389}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 3.7, y: 0.57, z: 0}
+  m_LocalPosition: {x: 3.7, y: 0.57, z: -0.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -760,6 +707,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
       propertyPath: m_Name
       value: FrontDoor
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
+      propertyPath: m_TagString
+      value: Door
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -939,6 +894,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BackDoor
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b47453ed0faa50b4c9f6f2ac3daa41d6, type: 3}
+      propertyPath: m_TagString
+      value: Door
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1061,6 +1024,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1890393175572584324}
     m_Modifications:
+    - target: {fileID: 2344337810751806111, guid: 00ae46a5a0113f246a5efdb9ba694ef7, type: 3}
+      propertyPath: includeChildren
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4997881022221871085, guid: 00ae46a5a0113f246a5efdb9ba694ef7, type: 3}
       propertyPath: keypadScreenRenderer
       value: 
@@ -1293,6 +1260,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6118856545988538690}
     m_Modifications:
+    - target: {fileID: 2344337810751806111, guid: 00ae46a5a0113f246a5efdb9ba694ef7, type: 3}
+      propertyPath: includeChildren
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4997881022221871085, guid: 00ae46a5a0113f246a5efdb9ba694ef7, type: 3}
       propertyPath: keypadScreenRenderer
       value: 

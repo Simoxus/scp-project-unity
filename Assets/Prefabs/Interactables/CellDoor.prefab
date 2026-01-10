@@ -52,34 +52,25 @@ MonoBehaviour:
   startOpened: 0
   chanceToStartOpened: 0
   percentChanceToStartOpened: 0.5
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  movingColor: {r: 1, g: 0.953, b: 0.459, a: 1}
-  brokenColor: {r: 1, g: 0.451, b: 0.345, a: 1}
-  grantedColor: {r: 0.643, g: 0.992, b: 0.51, a: 1}
-  deniedColor: {r: 1, g: 0.353, b: 0.353, a: 1}
-  lockedColor: {r: 0.078, g: 0.078, b: 0.078, a: 1}
+  defaultColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  successColor:
+    serializedVersion: 2
+    rgba: 4291559380
+  failureColor:
+    serializedVersion: 2
+    rgba: 4288584191
+  movingColor:
+    serializedVersion: 2
+    rgba: 4288279807
+  brokenColor:
+    serializedVersion: 2
+    rgba: 4283986943
+  lockedColor:
+    serializedVersion: 2
+    rgba: 4288584191
   breakableByEnvironment: 0
-  doorToggleSound:
-    Guid:
-      Data1: 420893315
-      Data2: 1162257272
-      Data3: -395256647
-      Data4: 1064140581
-    Path: event:/Environment/Doors/Env_Door
-  doorBreakSound:
-    Guid:
-      Data1: -2099762745
-      Data2: 1079054529
-      Data3: -1591891560
-      Data4: 1497429722
-    Path: event:/Environment/Doors/Env_DoorBreak
-  doorBrokenSound:
-    Guid:
-      Data1: 881702286
-      Data2: 1255307725
-      Data3: 973634697
-      Data4: 2122392019
-    Path: event:/Environment/Doors/Env_DoorBroken
   fmodParameterName: State
   door: {fileID: 1278748243440809822}
   doorFront: {fileID: 7491780057452813486}
