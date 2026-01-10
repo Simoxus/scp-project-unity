@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class ProgressManager : MonoBehaviour
+﻿public class ProgressManager : Singleton<ProgressManager>
 {
 
 }
