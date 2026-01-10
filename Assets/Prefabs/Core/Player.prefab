@@ -430,26 +430,25 @@ MonoBehaviour:
   enableTilt: 1
   walkState:
     bobSpeed: 7
-    verticalBobIntensity: 1
-    horizontalBobIntensity: 1
+    verticalBobIntensity: 1.5
+    horizontalBobIntensity: 1.5
     rollIntensity: 2.5
     maxRollAngle: 14
   sprintState:
-    bobSpeed: 11
-    verticalBobIntensity: 1
-    horizontalBobIntensity: 1
-    rollIntensity: 2.7
-    maxRollAngle: 20
+    bobSpeed: 11.5
+    verticalBobIntensity: 1.6
+    horizontalBobIntensity: 1.6
+    rollIntensity: 2
+    maxRollAngle: 40
   crouchState:
-    bobSpeed: 6.5
-    verticalBobIntensity: 1
-    horizontalBobIntensity: 1
-    rollIntensity: 5
-    maxRollAngle: 14
+    bobSpeed: 6.7
+    verticalBobIntensity: 2
+    horizontalBobIntensity: 1.4
+    rollIntensity: 3
+    maxRollAngle: 30
   injuryBaseOffset: 0.25
   injuryMaxCap: 2
   stateTransitionSpeed: 13
-  bobbingLerpSpeed: 14
 --- !u!114 &1189419969090933863
 MonoBehaviour:
   m_ObjectHideFlags: 0
