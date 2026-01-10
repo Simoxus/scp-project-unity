@@ -60,12 +60,12 @@ public abstract class BaseDoorController : MonoBehaviour
     public Vector3 doorBackCloseOffset;
 
     [Header("Tweening & Physics")]
+    public Ease easeStyle = Ease.InOutSine;
+    public Vector2 breakImpulseRange = new Vector2(1.3f, 1.7f);
     public float doorMoveDuration = 1.5f;
     public float doorBreakForce = 27f;
     public float doorBreakDownwardForce = 15f;
     public float doorBreakTorque = 35f;
-    public Ease easeStyle = Ease.InOutQuad;
-    public Vector2 impulseVelocityRange = new Vector2(1.6f, 2f);
 
     [Header("State Values"), ReadOnly]
     public DoorState currentState = DoorState.Closed;
@@ -165,7 +165,7 @@ public abstract class BaseDoorController : MonoBehaviour
         );
 
         SetDoorState(DoorState.Moving);
-        StartActivatorsPulse(MovingStateColor, 0.5f, 1.2f);
+        StartActivatorsPulse(MovingStateColor, 0.5f, 1.04f);
 
         try
         {
@@ -209,10 +209,9 @@ public abstract class BaseDoorController : MonoBehaviour
         if (this == null || CameraManager.Instance == null)
             return;
 
-        CameraManager.Instance.GenerateShakeWithVector3(UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(0.04f, 0.06f));
+        CameraManager.Instance.GenerateShakeWithVector3(UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(0.02f, 0.03f));
 
         SetDoorState(DoorState.Opened);
-        StopActivatorsPulse();
         ApplyOpenableState();
     }
 
@@ -231,10 +230,9 @@ public abstract class BaseDoorController : MonoBehaviour
         if (this == null || CameraManager.Instance == null)
             return;
 
-        CameraManager.Instance.GenerateShakeWithVector3(UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(0.04f, 0.06f));
+        CameraManager.Instance.GenerateShakeWithVector3(UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(0.02f, 0.03f));
 
         SetDoorState(DoorState.Closed);
-        StopActivatorsPulse();
         ApplyOpenableState();
     }
 
@@ -244,7 +242,6 @@ public abstract class BaseDoorController : MonoBehaviour
         if (doorFront == null || doorBack == null) return;
         if (currentState == DoorState.Broken) return;
 
-        // Cancel any ongoing door operations
         _doorCts.Cancel();
         _doorCts = new CancellationTokenSource();
 
@@ -262,14 +259,13 @@ public abstract class BaseDoorController : MonoBehaviour
 
             if (CameraManager.Instance != null)
             {
-                CameraManager.Instance.GenerateShakeWithVector3(UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(impulseVelocityRange.x, impulseVelocityRange.y));
+                CameraManager.Instance.GenerateShakeWithVector3(UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(breakImpulseRange.x, breakImpulseRange.y));
             }
 
             sparksEmitter?.Play();
 
             Rigidbody frontRigidbody = doorFront.GetComponent<Rigidbody>();
             Rigidbody backRigidbody = doorBack.GetComponent<Rigidbody>();
-
             Collider frontCollider = doorFront.GetComponent<Collider>();
             Collider backCollider = doorBack.GetComponent<Collider>();
 
@@ -278,7 +274,7 @@ public abstract class BaseDoorController : MonoBehaviour
                 Physics.IgnoreCollision(frontCollider, backCollider, true);
             }
 
-            await UniTask.WaitForSeconds(0.4f, ignoreTimeScale: false);
+            await UniTask.WaitForSeconds(0.2f, ignoreTimeScale: false);
 
             if (frontRigidbody != null)
             {
@@ -339,7 +335,7 @@ public abstract class BaseDoorController : MonoBehaviour
         OnStopActivatorsPulse();
     }
 
-    // for child classes to implement
+    // for child classes
     protected abstract void OnSetActivatorsState(bool enabled);
     protected abstract void OnApplyLockedVisuals(Color color, string message);
     protected abstract void OnApplyBrokenVisuals(Color color);
