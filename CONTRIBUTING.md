@@ -14,6 +14,11 @@
 - `branch/fix/bug-description` - Bug fixes
 - `branch/refac/component-name` - Code rewrites
 
+## Font generation
+* Majority of fonts - Use Extended ASCII for your Character Set
+* Courier New font - Use Unicode Range (Hex), and use this range `20-7E,A0-FF,400-4FF`
+* `SDFAA_HINTED` is recommended for Render Mode
+
 ## Code conventions
 
 ### Method Order
@@ -51,38 +56,38 @@ OnDrawGizmosSelected()
 - **Interfaces**: PascalCase with I prefix (`IInteractable`)
 - **Constants**: UPPER_SNAKE_CASE (`MAX_INVENTORY_SIZE`)
 - **Methods**: PascalCase (`MovePlayer()`)
-- **Public Fields**: PascalCase (`MaxHealth`)
-- **Private Serialized Fields**: camelCase (`walkSpeed`)
-- **Private Fields**: camelCase with underscore prefix (`_currentSpeed`)
+- **Public fields**: PascalCase (`MaxHealth`)
+- **Private serialized fields**: camelCase (`walkSpeed`)
+- **Private fields**: camelCase with underscore prefix (`_currentSpeed`)
 - **Properties**: PascalCase (`IsGrounded`)
 
 ### Code Quality
 
-- Keep methods focused and single-purpose
-- Avoid deep nesting (max 3-4 levels)
-- Use meaningful variable names
-- Remove debug code before committing
-- Avoid any hardcoded values - use SerializeField or constants
+* Keep methods focused and single-purpose
+* Avoid deep nesting (max 3-4 levels)
+* Use meaningful variable names
+* Remove debug code before committing
+* Avoid any hardcoded values - use SerializeField or constants
 
-## Unity-Specific Guidelines
+## Unity Guidelines
 
 ### Prefabs
 
-- Keep prefabs modular
-- Test prefab changes
-- Document any setup for prefabs
+* Keep prefabs modular
+* Test prefab changes
+* Document any setup for prefabs
 
 ### Asset Organization
 
-- Keep assets organized
-- Follow the existing folder structure since I worked very hard to keep it nice :(
-- Name assets descriptively
-- Remove unused assets
+* Keep assets organized
+* Follow the existing folder structure since I worked very hard to keep it nice :(
+* Name assets descriptively
+* Remove unused assets
 
 ### Unity Version
 
-- Ensure you're using the Unity version specified in the project
-- Check `ProjectSettings/ProjectVersion.txt` for the required version
+* Ensure you're using the Unity version specified in the project
+* Check `ProjectSettings/ProjectVersion.txt` for the required version
 
 ## Pull Request Process
 
@@ -95,33 +100,14 @@ OnDrawGizmosSelected()
 
 ## Testing Requirements
 
-Before submitting a PR:
+Before submitting a pull request:
 
-- Test all affected gameplay mechanics
-- Verify no console errors or warnings
-- Test in both Editor and Build (if possible)
-- Check for performance issues
-- Ensure no conflicts with existing features
-
-## Issue Reporting
-
-When reporting bugs or requesting features, you can use GitHub Issues or preferably post in the [Discord](https://discord.gg/dVdY4PuGfp).
-
-**Bug Reports:**
-- Describe the issue clearly
-- Steps to reproduce
-- Expected vs actual behavior
-- Unity version and platform
-- Screenshots or videos if applicable
-
-**Feature Requests:**
-- Describe the feature
-- Explain the use case
-- Consider implementation complexity
-- Discuss in Issues or Discord before starting major work
+* Test all affected gameplay mechanics
+* Verify no console errors or warnings
+* Test in both the Editor and Build (if possible)
+* Check for performance issues
+* Ensure no conflicts with existing features
 
 ## Questions?
 
-If you have questions about contributing, join the [Discord](https://discord.gg/dVdY4PuGfp)
-
-For bug reports or feature suggestions, you can use GitHub Issues or preferably post in the Discord.
+If you have questions about contributing, join the [Discord](https://discord.gg/dVdY4PuGfp). :)
