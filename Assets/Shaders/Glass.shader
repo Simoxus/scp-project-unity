@@ -13,6 +13,7 @@ Shader "Custom/Glass"
         _FresnelPower ("Fresnel Power", Range(0, 5)) = 3.0
         _FresnelDistanceFade ("Fresnel Distance Fade", Range(0, 100)) = 20.0
         _BlurAmount ("Blur Amount", Range(0, 10)) = 2.0
+        [Enum(Off,0,Back,2)] _Cull ("Cull Mode", Float) = 2
     }
     
     SubShader
@@ -33,6 +34,7 @@ Shader "Custom/Glass"
             
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
+            Cull [_Cull]
             
             HLSLPROGRAM
             #pragma vertex vert
@@ -83,6 +85,7 @@ Shader "Custom/Glass"
                 float _FresnelPower;
                 float _FresnelDistanceFade;
                 float _BlurAmount;
+                float _Cull;
             CBUFFER_END
             
             Varyings vert(Attributes input)
@@ -109,7 +112,12 @@ Shader "Custom/Glass"
             // Gaussian blur for glass effect
             half3 SampleBlurredBackground(float2 uv, float blurAmount)
             {
-                half3 color = half3(0, 0, 0);
+                if (blurAmount < 0.01)
+                {
+                    return SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, uv).rgb;
+                }
+    
+                half3 color = half3(0.0, 0.0, 0.0);
                 float pixelSize = 0.001 * blurAmount;
                 
                 // Gaussian kernel weights (13-tap)
@@ -122,6 +130,7 @@ Shader "Custom/Glass"
                 float totalWeight = 0.0;
                 
                 // Horizontal and vertical passes combined
+                [unroll]
                 for (int i = -6; i <= 6; i++)
                 {
                     float weight = weights[i + 6];
@@ -136,16 +145,23 @@ Shader "Custom/Glass"
                         saturate(uv + float2(0, i * pixelSize))).rgb * weight;
                 }
                 
-                return color / totalWeight;
+                return color / max(totalWeight, 0.0001);
             }
             
-            half4 frag(Varyings input) : SV_Target
+            half4 frag(Varyings input, bool isFrontFace : SV_IsFrontFace) : SV_Target
             {
                 // Normalize vectors
                 float3 normalWS = normalize(input.normalWS);
                 float3 tangentWS = normalize(input.tangentWS);
                 float3 bitangentWS = normalize(input.bitangentWS);
                 float3 viewDirWS = normalize(input.viewDirWS);
+                
+                // Flip normals for back faces when double-sided
+                if (!isFrontFace)
+                {
+                    normalWS = -normalWS;
+                    tangentWS = -tangentWS;
+                }
                 
                 // Sample and apply normal map
                 half3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, input.uv), _NormalStrength);
