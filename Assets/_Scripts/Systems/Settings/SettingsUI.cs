@@ -1,4 +1,3 @@
-using FMODUnity;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -15,11 +14,7 @@ public class SettingsUI : MonoBehaviour
         public TMP_Text buttonText;
     }
 
-    [SerializeField] private EventReference uiPressEvent;
-
     [SerializeField] private List<Tab> tabs = new List<Tab>();
-
-    private int activeTab = -1;
 
     private void Awake()
     {
@@ -70,8 +65,6 @@ public class SettingsUI : MonoBehaviour
             }
         }
 
-        if (!settingUp) { FMODHelper.PlayOneShot(uiPressEvent); }
-
-        activeTab = index;
+        if (!settingUp) { FMODHelper.PlayOneShot(Core.AudioDataAccess.UI.PressSound); }
     }
 }
