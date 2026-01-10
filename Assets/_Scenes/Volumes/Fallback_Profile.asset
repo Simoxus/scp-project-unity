@@ -57,6 +57,12 @@ MonoBehaviour:
   blurPower:
     m_OverrideState: 1
     m_Value: 0
+  decay:
+    m_OverrideState: 0
+    m_Value: 0.99
+  decayStrength:
+    m_OverrideState: 0
+    m_Value: 1
   desaturation:
     m_OverrideState: 1
     m_Value: 0
@@ -88,6 +94,34 @@ MonoBehaviour:
   clamp:
     m_OverrideState: 1
     m_Value: 0.05
+--- !u!114 &-4407208776518964013
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a1f2dc5a2a47a44c824a4057d97c8d9, type: 3}
+  m_Name: AccumulationBlur
+  m_EditorClassIdentifier: 
+  active: 1
+  blurPower:
+    m_OverrideState: 1
+    m_Value: 0.5
+  decay:
+    m_OverrideState: 1
+    m_Value: 0.99
+  decayStrength:
+    m_OverrideState: 1
+    m_Value: 1
+  desaturation:
+    m_OverrideState: 1
+    m_Value: 0
+  tintColor:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &-3090020717631433338
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -303,8 +337,9 @@ MonoBehaviour:
   - {fileID: 42333630944232030}
   - {fileID: -7358164354684089623}
   - {fileID: 6491411886244824475}
-  - {fileID: -6388806628167863922}
-  - {fileID: 2196350584095465250}
+  - {fileID: 9017175588545994103}
+  - {fileID: 2578657656286072703}
+  - {fileID: -4407208776518964013}
 --- !u!114 &42333630944232030
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -391,6 +426,28 @@ MonoBehaviour:
   cropToFit:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &452084896973049776
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1013827c1bd5d64381c615baab9d481, type: 3}
+  m_Name: Anaglyph
+  m_EditorClassIdentifier: 
+  active: 1
+  leftTint:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 0, b: 0, a: 1}
+  rightTint:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 1, b: 1, a: 1}
+  separation:
+    m_OverrideState: 1
+    m_Value: 0.005
 --- !u!114 &1837997181398471376
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -664,6 +721,25 @@ MonoBehaviour:
   highlightsEnd:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &2578657656286072703
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 931eeb9a14bedd7449b8b1fb3bb50472, type: 3}
+  m_Name: GaussianBlur
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
+  iterations:
+    m_OverrideState: 1
+    m_Value: 2
 --- !u!114 &3520033679169850414
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -709,6 +785,25 @@ MonoBehaviour:
   texture:
     m_OverrideState: 1
     m_Value: {fileID: 0}
+--- !u!114 &4864360645152876155
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 931eeb9a14bedd7449b8b1fb3bb50472, type: 3}
+  m_Name: GaussianBlur
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
+  iterations:
+    m_OverrideState: 1
+    m_Value: 2
 --- !u!114 &6491411886244824475
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -801,6 +896,34 @@ MonoBehaviour:
   bladeRotation:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &7007009949009478376
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a1f2dc5a2a47a44c824a4057d97c8d9, type: 3}
+  m_Name: AccumulationBlur
+  m_EditorClassIdentifier: 
+  active: 1
+  blurPower:
+    m_OverrideState: 1
+    m_Value: 0.5
+  decay:
+    m_OverrideState: 1
+    m_Value: 0.99
+  decayStrength:
+    m_OverrideState: 1
+    m_Value: 1
+  desaturation:
+    m_OverrideState: 1
+    m_Value: 0
+  tintColor:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &7959331888905632651
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -839,3 +962,25 @@ MonoBehaviour:
   gain:
     m_OverrideState: 1
     m_Value: {x: 1, y: 1, z: 1, w: 0}
+--- !u!114 &9017175588545994103
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1013827c1bd5d64381c615baab9d481, type: 3}
+  m_Name: Anaglyph
+  m_EditorClassIdentifier: 
+  active: 1
+  leftTint:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 0, b: 0, a: 1}
+  rightTint:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 1, b: 1, a: 1}
+  separation:
+    m_OverrideState: 1
+    m_Value: 0.005
