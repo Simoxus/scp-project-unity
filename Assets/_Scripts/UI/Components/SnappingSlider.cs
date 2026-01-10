@@ -1,6 +1,4 @@
-﻿using FMODUnity;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class SnappingSlider : MonoBehaviour
@@ -14,11 +12,10 @@ public class SnappingSlider : MonoBehaviour
 
     public Slider targetSlider;
     public SnapPoint[] snapPoints;
-    public EventReference snapSound;
 
     [Header("Marker Animation Settings")]
     public float scaleUpSize = 1.3f;
-    public float scaleThreshold = 0.1f; 
+    public float scaleThreshold = 0.1f;
 
     private int _lastActiveIndex = -1;
 
@@ -58,7 +55,7 @@ public class SnappingSlider : MonoBehaviour
         {
             // Play the snap sound ONLY if snapping to a new different marker
             if (nearestIndex != _lastActiveIndex)
-                FMODHelper.PlayOneShot(snapSound);
+                FMODHelper.PlayOneShot(Core.AudioDataAccess.UI.SliderSnapSound);
 
             UpdateMarkers(nearestIndex);
         }
