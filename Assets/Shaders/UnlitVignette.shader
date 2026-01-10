@@ -40,6 +40,7 @@ Shader "Universal Render Pipeline/Unlit Vignette"
     {
         Tags
         {
+            "Queue" = "Geometry"
             "RenderType" = "Opaque"
             "IgnoreProjector" = "True"
             "UniversalMaterialType" = "Unlit"
@@ -53,7 +54,8 @@ Shader "Universal Render Pipeline/Unlit Vignette"
 
         Pass
         {
-            Name "Unlit"
+            Name "ForwardLit"
+            Tags { "LightMode" = "UniversalForwardOnly" }
             AlphaToMask[_AlphaToMask]
 
             HLSLPROGRAM
@@ -139,7 +141,7 @@ Shader "Universal Render Pipeline/Unlit Vignette"
                 #endif
 
                 half2 centeredUV = uv - 0.5;
-                half dist = length(centeredUV) * 1.414; // Normalize to 0-1 range
+                half dist = length(centeredUV) * 1.414; // Normalize
                 
                 half gradient = saturate(dist / _VignetteSmoothness);
                 gradient = pow(gradient, 1.0 / _VignetteIntensity);
