@@ -1,4 +1,3 @@
-using FMOD;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,39 +25,42 @@ public class SettingsData
     public List<SettingCategory> categories = new List<SettingCategory>();
 }
 
-public class SettingsManager : MonoBehaviour
+public class SettingsManager : Singleton<SettingsManager>
 {
     private const string SETTINGS_FILE_NAME = "settings.json";
-
-    public static SettingsManager Instance { get; private set; }
 
     private SettingsData settingsData;
     private string settingsFolder;
     private string settingsFilePath;
     private Dictionary<string, int> categoryPriorityMap = new Dictionary<string, int>();
+    private bool isInitialized = false;
 
-    private void Awake()
+    protected override void OnAwake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Log.VerboseWarning($"Duplicate instance of {GetType().Name} found. Destroying the new one.");
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
         DontDestroyOnLoad(gameObject);
-
         InitializeSettings();
     }
 
     private void InitializeSettings()
     {
+        if (isInitialized)
+            return;
+
         string buildFolder = Directory.GetParent(Application.dataPath).FullName;
         settingsFolder = buildFolder;
         settingsFilePath = Path.Combine(settingsFolder, SETTINGS_FILE_NAME);
 
         LoadFromFile();
+        isInitialized = true;
+    }
+
+    // Ensure initialization before any operation
+    private void EnsureInitialized()
+    {
+        if (!isInitialized)
+        {
+            InitializeSettings();
+        }
     }
 
     private void LoadFromFile()
@@ -89,6 +91,8 @@ public class SettingsManager : MonoBehaviour
 
     private SettingCategory GetOrCreateCategory(string categoryName)
     {
+        EnsureInitialized();
+
         var category = settingsData.categories.Find(c => c.categoryName == categoryName);
 
         if (category == null)
@@ -102,6 +106,8 @@ public class SettingsManager : MonoBehaviour
 
     private void SetValue(string category, string key, string value)
     {
+        EnsureInitialized();
+
         var cat = GetOrCreateCategory(category);
         var setting = cat.settings.Find(s => s.key == key);
 
@@ -117,6 +123,8 @@ public class SettingsManager : MonoBehaviour
 
     private string GetValue(string category, string key, string defaultValue)
     {
+        EnsureInitialized();
+
         var cat = settingsData.categories.Find(c => c.categoryName == category);
 
         if (cat != null)
@@ -176,6 +184,8 @@ public class SettingsManager : MonoBehaviour
 
     public void Save()
     {
+        EnsureInitialized();
+
         try
         {
             settingsData.categories = settingsData.categories
@@ -189,12 +199,14 @@ public class SettingsManager : MonoBehaviour
         }
         catch (Exception)
         {
-            
+
         }
     }
 
     public void RegisterCategory(string categoryName, int priority)
     {
+        EnsureInitialized();
+
         if (!categoryPriorityMap.ContainsKey(categoryName))
         {
             categoryPriorityMap[categoryName] = priority;
@@ -205,6 +217,8 @@ public class SettingsManager : MonoBehaviour
 
     public void ResetCategory(string categoryName)
     {
+        EnsureInitialized();
+
         var category = settingsData.categories.Find(c => c.categoryName == categoryName);
 
         if (category != null)
@@ -218,6 +232,8 @@ public class SettingsManager : MonoBehaviour
 
     public void ResetAllSettings()
     {
+        EnsureInitialized();
+
         settingsData = new SettingsData();
 
         if (File.Exists(settingsFilePath))
@@ -234,6 +250,8 @@ public class SettingsManager : MonoBehaviour
 
     public void OpenSettingsFolder()
     {
+        EnsureInitialized();
+
         if (Directory.Exists(settingsFolder))
         {
             Application.OpenURL("file://" + settingsFolder);
@@ -243,6 +261,8 @@ public class SettingsManager : MonoBehaviour
 
     public string GetSettingsFolderPath()
     {
+        EnsureInitialized();
+
         Log.VerboseInfo($"Current '{SETTINGS_FILE_NAME}' folder path: {settingsFolder}");
         return settingsFolder;
     }
