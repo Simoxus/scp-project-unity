@@ -1,16 +1,20 @@
 ﻿using System;
 using UnityEngine;
 
+// up# = (Sin(Shake) / (20.0+CrouchState*20.0))*0.6
+// side# = Cos(Shake / 2.0) / 35.0
+// roll# = Max(Min(Sin(Shake/2)*2.5*Min(Injuries+0.25,3.0),8.0),-8.0)
+
 [System.Serializable]
 public class BobbingState
 {
-    [Tooltip("How fast the bob cycles per second")]
+    [Tooltip("How fast the bob cycles/per second")]
     public float bobSpeed = 7f;
-    [Tooltip("Intensity of vertical head bobbing")]
+    [Tooltip("Intensity of head bobbing")]
     public float verticalBobIntensity = 1f;
-    [Tooltip("Intensity of horizontal head swaying")]
+    [Tooltip("Intensity of head swaying")]
     public float horizontalBobIntensity = 1f;
-    [Tooltip("Intensity of camera rolling/tilting")]
+    [Tooltip("Intensity of camera rolling")]
     public float rollIntensity = 1f;
     [Tooltip("Maximum roll angle in degrees")]
     public float maxRollAngle = 8f;
@@ -64,7 +68,6 @@ public class PlayerBobbing : MonoBehaviour
 
     [Header("Transition Settings")]
     [SerializeField] private float stateTransitionSpeed = 13f;
-    [SerializeField] private float bobbingLerpSpeed = 14f;
 
     public bool EnableBobbing
     {
@@ -81,15 +84,12 @@ public class PlayerBobbing : MonoBehaviour
     private Vector3 _defaultLocalPosition;
     private Vector3 _defaultRotation;
 
-    private float _bobTimer;
+    private float _shake;
     private float _currentBobSpeed;
     private float _currentVerticalBobIntensity;
     private float _currentHorizontalBobIntensity;
     private float _currentRollIntensity;
     private float _currentMaxRollAngle;
-
-    private Vector3 _lastAppliedPosition;
-    private float _lastAppliedRotation;
 
     private float _currentInjuryFactor = 0.25f;
 
@@ -99,8 +99,6 @@ public class PlayerBobbing : MonoBehaviour
         {
             _defaultLocalPosition = player.CameraRoot.transform.localPosition;
             _defaultRotation = player.CameraRoot.transform.localRotation.eulerAngles;
-            _lastAppliedPosition = _defaultLocalPosition;
-            _lastAppliedRotation = 0f;
         }
 
         if (player.PlayerHealth != null)
@@ -130,98 +128,65 @@ public class PlayerBobbing : MonoBehaviour
         BobbingState targetState = GetCurrentTargetState();
         BlendToState(targetState, Time.deltaTime * stateTransitionSpeed);
 
-        if (player.PlayerController.IsMoving && player.CharacterController.isGrounded)
-        {
-            UpdateBobbing();
-        }
-        else
-        {
-            ReturnToRest();
-        }
+        UpdateBobbing();
     }
 
     private void UpdateBobbing()
     {
-        float previousTimer = _bobTimer;
-
-        float degreesPerSecond = _currentBobSpeed * 60f;
-        _bobTimer += Time.deltaTime * degreesPerSecond;
-
-        if (_bobTimer >= 720f)
+        // Only increment shake when movign
+        if (player.PlayerController.IsMoving && player.CharacterController.isGrounded)
         {
-            _bobTimer = _bobTimer % 720f;
+            float previousShake = _shake;
+            _shake += Time.deltaTime * _currentBobSpeed * 60f;
+
+            float prevMod = previousShake % 360f;
+            float currMod = _shake % 360f;
+            if (prevMod < 180f && currMod >= 180f)
+            {
+                OnFootstepTrigger?.Invoke();
+            }
         }
 
-        float prevMod = previousTimer % 360f;
-        float currMod = _bobTimer % 360f;
-
-        if (prevMod < 180f && currMod >= 180f)
-        {
-            OnFootstepTrigger?.Invoke();
-        }
-
-        float shakeRadians = _bobTimer * Mathf.Deg2Rad;
-        float shakeRadiansHalf = (_bobTimer / 2f) * Mathf.Deg2Rad;
-
-        float bobOffset = 0f;
-        float sideOffset = 0f;
-        float rotationOffset = 0f;
+        float shakeRadians = _shake * Mathf.Deg2Rad;
+        float shakeHalfRadians = (_shake / 2f) * Mathf.Deg2Rad;
 
         float crouchState = player.PlayerController.CrouchState;
+
+        float up = 0f;
+        float side = 0f;
+        float roll = 0f;
 
         if (enableBobbing)
         {
             float bobDivisor = 20f + (crouchState * 20f);
-            bobOffset = (Mathf.Sin(shakeRadians) / bobDivisor * 0.6f) * _currentVerticalBobIntensity;
-            sideOffset = (Mathf.Cos(shakeRadiansHalf) / 35f) * _currentHorizontalBobIntensity;
+            up = (Mathf.Sin(shakeRadians) / bobDivisor) * 0.6f * _currentVerticalBobIntensity;
+            side = (Mathf.Cos(shakeHalfRadians) / 35f) * _currentHorizontalBobIntensity;
         }
 
         if (enableTilt)
         {
             float injuryFactor = Mathf.Min(_currentInjuryFactor, 3f);
-            float rawTilt = Mathf.Sin(shakeRadiansHalf) * 2.5f * injuryFactor;
-            float clampedTilt = Mathf.Clamp(rawTilt, -_currentMaxRollAngle, _currentMaxRollAngle);
-            rotationOffset = clampedTilt * _currentRollIntensity;
+            float rawRoll = Mathf.Sin(shakeHalfRadians) * 2.5f * injuryFactor;
+            roll = Mathf.Clamp(rawRoll, -_currentMaxRollAngle, _currentMaxRollAngle);
+            roll *= _currentRollIntensity;
         }
 
-        Vector3 targetPosition = _defaultLocalPosition;
-        targetPosition.y += bobOffset;
-        targetPosition.x += sideOffset;
+        player.CameraRoot.transform.localPosition = _defaultLocalPosition;
+        player.CameraRoot.transform.localRotation = Quaternion.Euler(_defaultRotation);
 
-        float lerpFactor = Time.deltaTime * bobbingLerpSpeed;
-        _lastAppliedPosition = Vector3.Lerp(_lastAppliedPosition, targetPosition, lerpFactor);
-        _lastAppliedRotation = Mathf.Lerp(_lastAppliedRotation, rotationOffset * 0.5f, lerpFactor);
-
-        player.CameraRoot.transform.localPosition = _lastAppliedPosition;
         player.CameraRoot.transform.localRotation = Quaternion.Euler(
             _defaultRotation.x,
             _defaultRotation.y,
-            _defaultRotation.z + _lastAppliedRotation
-        );
-    }
-
-    private void ReturnToRest()
-    {
-        _bobTimer = Mathf.Lerp(_bobTimer, 0f, Time.deltaTime * 3f);
-
-        _lastAppliedPosition = Vector3.Lerp(
-            _lastAppliedPosition,
-            _defaultLocalPosition,
-            Time.deltaTime * stateTransitionSpeed * 1.5f
+            _defaultRotation.z + roll * 0.5f
         );
 
-        _lastAppliedRotation = Mathf.Lerp(
-            _lastAppliedRotation,
-            0f,
-            Time.deltaTime * stateTransitionSpeed * 1.5f
+        Vector3 offset = new Vector3(
+            side,
+            up,
+            0f
         );
 
-        player.CameraRoot.transform.localPosition = _lastAppliedPosition;
-        player.CameraRoot.transform.localRotation = Quaternion.Euler(
-            _defaultRotation.x,
-            _defaultRotation.y,
-            _defaultRotation.z + _lastAppliedRotation
-        );
+        player.CameraRoot.transform.localPosition = _defaultLocalPosition + offset;
     }
 
     private BobbingState GetCurrentTargetState()
