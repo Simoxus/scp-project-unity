@@ -22,7 +22,7 @@ Shader "PostProcessing/AnaglyphEffect"
 
         Pass
         {
-            Name "AnaglyphPass"
+            Name "Anaglyph"
             
             HLSLPROGRAM
             #pragma vertex Vert

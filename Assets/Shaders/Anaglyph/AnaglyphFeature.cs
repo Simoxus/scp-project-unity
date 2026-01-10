@@ -24,11 +24,7 @@ public class AnaglyphFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        if (pass == null || settings.shader == null)
-        {
-            Debug.LogWarning("AnaglyphVolumeFeature: Shader is not assigned!");
-            return;
-        }
+        if (pass == null || settings.shader == null) return;
 
         renderer.EnqueuePass(pass);
     }
