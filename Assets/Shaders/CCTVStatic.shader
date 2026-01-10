@@ -4,31 +4,24 @@ Shader "Custom/CCTVStatic"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color ("Tint Color", Color) = (1,1,1,1)
-        
-        // Static/Noise
+
         _StaticIntensity ("Static Intensity", Range(0, 1)) = 0.5
         _StaticSpeed ("Static Speed", Range(0, 10)) = 8
         _StaticScale ("Static Scale", Range(1, 200)) = 100
         _StaticContrast ("Static Contrast", Range(1, 5)) = 2
-        
-        // Scanlines
+
         _Scanlines ("Scanlines Intensity", Range(0, 1)) = 0.4
         _ScanlineCount ("Scanline Count", Range(200, 2000)) = 800
         _ScanlineSpeed ("Scanline Scroll Speed", Range(-5, 5)) = 0.5
-        
-        // Image adjustments
+ 
         _Brightness ("Brightness", Range(0, 2)) = 0.8
         _Contrast ("Contrast", Range(0, 3)) = 1.2
-        
-        // VHS/interference effects
+
         _ChromaticAberration ("Chromatic Aberration", Range(0, 0.01)) = 0.002
         _Distortion ("Horizontal Distortion", Range(0, 0.05)) = 0.01
         _DistortionSpeed ("Distortion Speed", Range(0, 5)) = 1
-        
-        // Vignette
+
         _Vignette ("Vignette", Range(0, 1)) = 0.3
-        
-        // Transparency
         _Alpha ("Alpha", Range(0, 1)) = 1
     }
     
@@ -93,7 +86,7 @@ Shader "Custom/CCTVStatic"
                 return o;
             }
 
-            // Better noise function
+            // Noise
             float hash(float2 p)
             {
                 float3 p3 = frac(float3(p.xyx) * 0.13);
@@ -137,7 +130,7 @@ Shader "Custom/CCTVStatic"
                 
                 float2 uv = i.uv;
                 
-                // Horizontal distortion/wobble
+                // Wobble
                 float wobble = sin(uv.y * 10 + _Time.y * distortionSpeed) * distortion;
                 wobble += sin(uv.y * 23.4 + _Time.y * distortionSpeed * 0.7) * distortion * 0.5;
                 uv.x += wobble;
@@ -148,7 +141,7 @@ Shader "Custom/CCTVStatic"
                 float b = tex2D(_MainTex, uv - float2(chromaticAberration, 0)).b;
                 fixed4 col = fixed4(r, g, b, 1);
                 
-                // Generate layered static noise
+                // Layered static noise
                 float2 noiseUV = uv * staticScale;
                 float time = _Time.y * staticSpeed;
                 
@@ -156,38 +149,30 @@ Shader "Custom/CCTVStatic"
                 n += noise(noiseUV + float2(time, time * 0.7)) * 0.5;
                 n += noise(noiseUV * 2.3 + float2(time * 1.3, time)) * 0.3;
                 n += noise(noiseUV * 4.7 + float2(time * 0.8, time * 1.5)) * 0.2;
-                
-                // Animated scanlines
+
                 float scanlinePos = (uv.y + _Time.y * scanlineSpeed * 0.1) * scanlineCount;
                 float scanline = sin(scanlinePos * 3.14159) * 0.5 + 0.5;
                 scanline = pow(scanline, 3);
                 col.rgb *= lerp(1.0, scanline, scanlines);
                 
-                // Random horizontal lines/interference
+                // Random interference
                 float randomLine = hash(float2(floor(uv.y * 200), floor(_Time.y * 10)));
                 if (randomLine > 0.98)
                 {
                     col.rgb = lerp(col.rgb, float3(1, 1, 1), 0.3);
                 }
-                
-                // Apply contrast and brightness
+
                 col.rgb = ((col.rgb - 0.5) * contrast + 0.5) * brightness;
                 
                 // Vignette
                 float2 vignetteUV = uv * 2 - 1;
                 float vignetteAmount = 1.0 - dot(vignetteUV, vignetteUV) * vignette;
                 col.rgb *= vignetteAmount;
-                
-                // High contrast static
+
                 n = pow(n, staticContrast);
-                
-                // Mix static with image (applied after vignette)
+
                 col.rgb = lerp(col.rgb, float3(n, n, n), staticIntensity);
-                
-                // Apply tint color
                 col *= tintColor;
-                
-                // Set alpha
                 col.a *= alpha;
                 
                 return col;
