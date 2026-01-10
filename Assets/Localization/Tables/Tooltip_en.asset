@@ -1,0 +1,191 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Tooltip_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 5d945128acb377b428b4c60aea5aaa39, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 7758795055104
+    m_Localized: Select the graphics rendering backend.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7852336422912
+    m_Localized: Choose between Fullscreen, Windowed, or Borderless mode.\nBorderless
+      allows for fast alt-tabbing, while maintaining fullscreen appearance.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7867750490112
+    m_Localized: Set the window or screen resolution.\nHigher resolutions do sharper
+      image quality, but reduce performance.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7894245908480
+    m_Localized: Adjust rendering resolution as a percentage of window resolution.\nLower
+      values improve performance, while higher values increase quality.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7915599110144
+    m_Localized: Synchronize frame rate with monitor refresh rate to eliminate screen
+      tearing.\nMay introduce input lag.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7964752158720
+    m_Localized: Limit the maximum frame rate.\nUnlimited allows maximum performance,
+      but you can also set a specific limit to reduce power consumption.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8022906183680
+    m_Localized: Control the resolution and detail of textures.\nHigher quality uses
+      more VRAM, but provides crisper visuals.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8047426084864
+    m_Localized: Smooth jagged edges on objects.\nHigher settings improve visual
+      quality but impact performance.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8063519629312
+    m_Localized: Enable or disable real-time shadow rendering.\nShadows enhance visual
+      depth and realism, but are performance-intensive.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8081383170048
+    m_Localized: Add a "glow" effect to bright light sources.\nCreates a more cinematic
+      look, but has a slight performance cost, and can obscure details in bright
+      areas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8126719401984
+    m_Localized: Darken the edges of the screen.\nCreates a more cinematic appearance.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8138694139904
+    m_Localized: Control the overall volume level for all audio in the game.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8157530759168
+    m_Localized: Control the volume of sound effects, like footsteps, gunfire, and
+      environmental sounds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8180117086208
+    m_Localized: Control the volume of background music and soundtracks.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8205719117824
+    m_Localized: Adjust the volume of character dialogue and voice acting.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8234013892608
+    m_Localized: Control the volume of menu sounds, button clicks, and UI feedback.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8264561008640
+    m_Localized: Muffle sounds based on walls and obstacles between you and the sound
+      source.\nAdds realism but uses more of your CPU.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8343233568768
+    m_Localized: Display text captions for dialogue and important sounds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8378377641984
+    m_Localized: Show names in subtitles to identify who is speaking.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8402029322240
+    m_Localized: Reverse vertical camera movement.\nLooking up makes you look down,
+      while looking down looks up.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8425253183488
+    m_Localized: Adjust how fast the camera rotates when moving the mouse.\nHigher
+      values mean faster turning.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8444576342016
+    m_Localized: Add smoothness to camera movements.\nHigher values create more fluid
+      motion but will feel less responsive.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8467355607040
+    m_Localized: Adjust how fast the camera rotates with controller stick input.\nHigher
+      values mean faster turning.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8503279820800
+    m_Localized: Add smoothness to controller camera movements.\nReduces jittery
+      motion, but may feel less precise.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8526423990272
+    m_Localized: Enable vibration feedback on compatible controllers during gameplay
+      events.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8549580742656
+    m_Localized: Set the formula for bobbing that simulates a walking motion.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8653834362880
+    m_Localized: Select the language for game text, menus, and subtitles.\nMay require
+      restart.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8679880990720
+    m_Localized: Display the heads-up display.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8696507211776
+    m_Localized: Display current frame rate in the corner of the screen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8764547211264
+    m_Localized: Display the aiming reticle in the center of the screen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8796046434304
+    m_Localized: Add animated effects to object outlines and highlights.\nDisabling
+      may improve performance slightly.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8818133639168
+    m_Localized: Show a popup when an achievements are unlocked.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8851822288896
+    m_Localized: Enable the developer console for commands and debugging.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8877143302144
+    m_Localized: Automatically open the developer console when an error occurs.\nUseful
+      for troubleshooting issues.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11938918113280
+    m_Localized: Enable detailed background telemetry.\nThis will significantly affect
+      performance.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6115690649559040
+    m_Localized: Adjust the extent of your view visible on screen.\nHigher values
+      provide a wider peripheral view but cause "fisheye" distortion, and can negatively
+      impact your immersion.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
