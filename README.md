@@ -6,9 +6,10 @@ This is a Unity engine remake of SCP - Containment Breach, and is licensed under
 
 ---
 
+### [Credits](CREDITS.md)
+### [Contributing](CONTRIBUTING.md)
 ### [Changelog](CHANGELOG.md)
 ### [Attributions](ATTRIBUTIONS.md)
-### [Credits](CREDITS.md)
 
 ---
 
