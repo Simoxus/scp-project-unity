@@ -18,7 +18,6 @@ public static class Core
     private static FacilityManager _facilityManager;
     private static GameManager _gameManager;
     private static HintManager _hintManager;
-    private static InterfaceManager _interfaceManager;
     private static InventoryManager _inventoryManager;
     private static ProgressManager _progressManager;
     private static SettingsManager _settingsManager;
@@ -123,7 +122,6 @@ public static class Core
     public static FacilityManager FacilityManager => GetOrCreateManager(ref _facilityManager, () => FacilityManager.Instance, "FacilityManager");
     public static GameManager GameManager => GetOrCreateManager(ref _gameManager, () => GameManager.Instance, "GameManager");
     public static HintManager HintManager => GetOrCreateManager(ref _hintManager, () => HintManager.Instance, "HintManager");
-    public static InterfaceManager InterfaceManager => GetOrCreateManager(ref _interfaceManager, () => InterfaceManager.Instance, "InterfaceManager");
     public static InventoryManager InventoryManager => GetOrCreateManager(ref _inventoryManager, () => InventoryManager.Instance, "InventoryManager");
     public static ProgressManager ProgressManager => GetOrCreateManager(ref _progressManager, () => ProgressManager.Instance, "ProgressManager");
     public static SettingsManager SettingsManager => GetOrCreateManager(ref _settingsManager, () => SettingsManager.Instance, "SettingsManager");
@@ -141,7 +139,6 @@ public static class Core
         _facilityManager = null;
         _gameManager = null;
         _hintManager = null;
-        _interfaceManager = null;
         _inventoryManager = null;
         _progressManager = null;
     }
