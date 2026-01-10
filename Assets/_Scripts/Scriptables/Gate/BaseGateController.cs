@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using EditorAttributes;
-using FMODUnity;
 using PrimeTween;
 using System;
 using System.Threading;
@@ -28,20 +27,17 @@ public abstract class BaseGateController : MonoBehaviour
     public float percentChanceToStartOpened = 0.5f;
 
     [Header("Color States")]
-    public Color defaultColor = new Color(1f, 1f, 1f); // 255, 255, 255 (white)
-    public Color movingColor = new Color(1f, 0.953f, 0.459f); // 255, 243, 117 (yellow)
-    public Color brokenColor = new Color(1f, 0.451f, 0.345f); // 255, 115, 88 (orange)
-    public Color grantedColor = new Color(0.392f, 1f, 0.392f); // 100, 255, 100 (green)
-    public Color deniedColor = new Color(1f, 0.278f, 0.278f); // 255, 71, 71 (red)
-    public Color lockedColor = new Color(0.078f, 0.078f, 0.078f); // 32, 32, 32 (dark gray)
+    public Color32 defaultColor = new Color32(255, 255, 255, 255); // white
+    public Color32 movingColor = new Color32(255, 244, 153, 255); // light yellow
+    public Color32 brokenColor = new Color32(255, 115, 88, 255); // salmon
+    public Color32 grantedColor = new Color32(212, 255, 203, 255); // light green
+    public Color32 deniedColor = new Color32(255, 153, 158, 255); // light red
+    public Color32 lockedColor = new Color32(255, 153, 158, 255); // light red
 
     [Header("Environment Settings")]
     public bool breakableByEnvironment = true;
 
     [Header("FMOD Settings")]
-    public EventReference gateToggleSound;
-    public EventReference gateBreakSound;
-    public EventReference gateBrokenSound;
     public string fmodParameterName = "State";
 
     [Header("Gate Visuals")]
@@ -156,7 +152,7 @@ public abstract class BaseGateController : MonoBehaviour
         await SetActivatorsState(enabled: false);
 
         FMODHelper.PlayOneShotWithParametersAndOcclusion(
-            gateToggleSound,
+            AudioDataAccess.Instance.Doors.GateSound,
             gate.transform.position,
             minDuration: 1.5f,
             raysPerSound: 2,
@@ -257,8 +253,8 @@ public abstract class BaseGateController : MonoBehaviour
 
         if (gate != null)
         {
-            FMODHelper.PlayOneShotWithDynamicOcclusion(gateBreakSound, gate.transform.position, 1.5f);
-            FMODHelper.PlayOneShot3D(gateBrokenSound, gate.transform.position);
+            FMODHelper.PlayOneShotWithDynamicOcclusion(AudioDataAccess.Instance.Doors.GateBreakSound, gate.transform.position, 1.5f);
+            FMODHelper.PlayOneShot3D(AudioDataAccess.Instance.Doors.GateBrokenSound, gate.transform.position);
 
             if (CameraManager.Instance != null)
             {

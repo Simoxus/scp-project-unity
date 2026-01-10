@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using EditorAttributes;
-using FMODUnity;
 using PrimeTween;
 using System;
 using System.Threading;
@@ -28,20 +27,24 @@ public abstract class BaseDoorController : MonoBehaviour
     public float percentChanceToStartOpened = 0.5f;
 
     [Header("Color States")]
-    public Color defaultColor = new Color(1f, 1f, 1f); // 255, 255, 255 (white)
-    public Color movingColor = new Color(1f, 0.953f, 0.459f); // 255, 243, 117 (yellow)
-    public Color brokenColor = new Color(1f, 0.451f, 0.345f); // 255, 115, 88 (orange)
-    public Color grantedColor = new Color(0.392f, 1f, 0.392f); // 100, 255, 100 (green)
-    public Color deniedColor = new Color(1f, 0.278f, 0.278f); // 255, 71, 71 (red)
-    public Color lockedColor = new Color(0.078f, 0.078f, 0.078f); // 32, 32, 32 (dark gray)
+    public Color32 defaultColor = new Color32(255, 255, 255, 255); // white
+    public Color32 successColor = new Color32(212, 255, 203, 255); // light green
+    public Color32 failureColor = new Color32(255, 153, 158, 255); // light red
+    public Color32 movingColor = new Color32(255, 244, 153, 255); // light yellow
+    public Color32 brokenColor = new Color32(255, 115, 88, 255); // salmon
+    public Color32 lockedColor = new Color32(255, 153, 158, 255); // light red
+
+    public virtual Color32 DefaultStateColor => defaultColor;
+    public virtual Color32 SuccessStateColor => successColor;
+    public virtual Color32 FailureStateColor => failureColor;
+    public virtual Color32 MovingStateColor => movingColor;
+    public virtual Color32 BrokenStateColor => brokenColor;
+    public virtual Color32 LockedStateColor => lockedColor;
 
     [Header("Environment Settings")]
     public bool breakableByEnvironment = true;
 
     [Header("FMOD Settings")]
-    public EventReference doorToggleSound;
-    public EventReference doorBreakSound;
-    public EventReference doorBrokenSound;
     public string fmodParameterName = "State";
 
     [Header("Door Visuals")]
@@ -118,7 +121,7 @@ public abstract class BaseDoorController : MonoBehaviour
         }
         else
         {
-            ResetActivatorColors();
+            ApplyOpenableState();
         }
     }
 
@@ -156,13 +159,13 @@ public abstract class BaseDoorController : MonoBehaviour
         await SetActivatorsState(enabled: false);
 
         FMODHelper.PlayOneShotWithParameters(
-            doorToggleSound,
+            Core.AudioDataAccess.Doors.DoorSound,
             door.transform.position,
             parameters: (fmodParameterName, fmodParameterValue)
         );
 
         SetDoorState(DoorState.Moving);
-        StartActivatorsPulse(movingColor, 0.5f, 1.2f);
+        StartActivatorsPulse(MovingStateColor, 0.5f, 1.2f);
 
         try
         {
@@ -210,7 +213,7 @@ public abstract class BaseDoorController : MonoBehaviour
 
         SetDoorState(DoorState.Opened);
         StopActivatorsPulse();
-        ResetActivatorColors();
+        ApplyOpenableState();
     }
 
     private async UniTask CloseDoorAsync(CancellationToken token)
@@ -232,7 +235,7 @@ public abstract class BaseDoorController : MonoBehaviour
 
         SetDoorState(DoorState.Closed);
         StopActivatorsPulse();
-        ResetActivatorColors();
+        ApplyOpenableState();
     }
 
     [ContextMenu("Break Door")]
@@ -254,8 +257,8 @@ public abstract class BaseDoorController : MonoBehaviour
 
         if (door != null)
         {
-            FMODHelper.PlayOneShotWithDynamicOcclusion(doorBreakSound, door.transform.position, 1.5f);
-            FMODHelper.PlayOneShot3D(doorBrokenSound, door.transform.position);
+            FMODHelper.PlayOneShotWithDynamicOcclusion(Core.AudioDataAccess.Doors.DoorBreakSound, door.transform.position, 1.5f);
+            FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.DoorBrokenSound, door.transform.position);
 
             if (CameraManager.Instance != null)
             {
@@ -306,23 +309,24 @@ public abstract class BaseDoorController : MonoBehaviour
         OnSetActivatorsState(enabled);
     }
 
+    private void ApplyOpenableState()
+    {
+        StopActivatorsPulse();
+        OnResetActivatorVisuals(SuccessStateColor);
+    }
+
     private void ApplyLockedState()
     {
         StopActivatorsPulse();
-        OnApplyLockedVisuals(lockedColor, lockedMessage);
-        StartActivatorsPulse(lockedColor);
+        OnApplyLockedVisuals(LockedStateColor, lockedMessage);
+        StartActivatorsPulse(LockedStateColor);
     }
 
     private void ApplyBrokenState()
     {
         StopActivatorsPulse();
-        OnApplyBrokenVisuals(brokenColor);
-        StartActivatorsPulse(brokenColor);
-    }
-
-    private void ResetActivatorColors()
-    {
-        OnResetActivatorVisuals(defaultColor);
+        OnApplyBrokenVisuals(BrokenStateColor);
+        StartActivatorsPulse(BrokenStateColor);
     }
 
     private void StartActivatorsPulse(Color color, float? customDuration = null, float? customIntensity = null)
@@ -342,5 +346,4 @@ public abstract class BaseDoorController : MonoBehaviour
     protected abstract void OnResetActivatorVisuals(Color color);
     protected abstract void OnStopActivatorsPulse();
     protected abstract void OnStartActivatorsPulse(Color color, float? customDuration = null, float? customIntensity = null);
-    protected abstract void OnTransitionToPulse(Color targetColor, float transitionDuration);
 }
