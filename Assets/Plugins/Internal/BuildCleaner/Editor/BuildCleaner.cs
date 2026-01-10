@@ -30,7 +30,7 @@ public class BuildCleaner : IPreprocessBuildWithReport, IPostprocessBuildWithRep
 
         string buildFolder = Path.GetDirectoryName(report.summary.outputPath);
         string burstFolder = Path.Combine(
-            buildFolder, 
+            buildFolder,
             $"{Path.GetFileNameWithoutExtension(report.summary.outputPath)}_BurstDebugInformation_DoNotShip"
         );
 
@@ -43,7 +43,7 @@ public class BuildCleaner : IPreprocessBuildWithReport, IPostprocessBuildWithRep
             }
             catch (IOException)
             {
-                
+
             }
         }
     }
