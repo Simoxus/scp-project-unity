@@ -15,34 +15,34 @@ public class SettingsControlsApplier : BaseSettingsApplier
 
     public void ApplyInvertYAxis(bool enabled)
     {
-        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
+        if (settingsControls.CheckIfMainMenu()) return;
 
-        settingsControls.player.playerController.doLookInvert = enabled;
+        Core.Player.PlayerController.InvertYAxis = enabled;
 
         if (!inBatchMode) settingsControls.SaveSettings();
     }
 
     public void ApplyMouseSensitivity(float value)
     {
-        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
+        if (settingsControls.CheckIfMainMenu()) return;
 
-        settingsControls.player.playerController.lookSpeed = Mathf.Clamp(value, 0.1f, 5f);
+        Core.Player.PlayerController.LookSpeed = Mathf.Clamp(value, 0.1f, 5f);
 
         if (!inBatchMode) settingsControls.SaveSettingsWithDelay();
     }
 
     public void ApplyCameraSmoothing(bool enabled)
     {
-        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
+        if (settingsControls.CheckIfMainMenu()) return;
 
-        settingsControls.player.playerController.doSmoothLook = enabled;
+        Core.Player.PlayerController.SmoothLook = enabled;
 
         if (!inBatchMode) settingsControls.SaveSettings();
     }
 
     public void ApplyControllerSensitivity(float value)
     {
-        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
+        if (settingsControls.CheckIfMainMenu()) return;
 
         // TODO: Implement controller sensitivity
 
@@ -51,7 +51,7 @@ public class SettingsControlsApplier : BaseSettingsApplier
 
     public void ApplyControllerSmoothing(bool enabled)
     {
-        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
+        if (settingsControls.CheckIfMainMenu()) return;
 
         // TODO: Implement controller smoothing
 
@@ -60,9 +60,14 @@ public class SettingsControlsApplier : BaseSettingsApplier
 
     public void ApplyControllerRumble(bool enabled)
     {
-        if (settingsControls.CheckIfMainMenu() || settingsControls.player == null) return;
+        if (settingsControls.CheckIfMainMenu()) return;
 
-        // TODO: Implement controller rumble
+        VibrationHelper.IsVibrationEnabled = enabled;
+
+        if (!enabled)
+        {
+            VibrationHelper.Stop();
+        }
 
         if (!inBatchMode) settingsControls.SaveSettings();
     }

@@ -8,7 +8,6 @@ public class SettingsControls : BaseSettings
 
     [Header("References")]
     public SettingsControlsApplier applier;
-    public Player player;
 
     [Header("UI Elements")]
     public Toggle invertYAxisToggle;
@@ -21,7 +20,6 @@ public class SettingsControls : BaseSettings
 
     protected override void InitializeReferences()
     {
-        if (player == null) player = Player.Instance;
         if (applier == null) applier = GetComponent<SettingsControlsApplier>();
     }
 
@@ -44,9 +42,6 @@ public class SettingsControls : BaseSettings
     {
         SettingsManager settingsManager = SettingsManager.Instance;
         if (settingsManager == null) return;
-
-        if (player == null) player = Player.Instance;
-        if (player == null) return;
 
         applier.inBatchMode = true;
 
