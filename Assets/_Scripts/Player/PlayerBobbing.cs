@@ -1,26 +1,19 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 [System.Serializable]
 public class BobbingState
 {
-    [Header("Animation Speed")]
-    [Tooltip("How fast the bob cycles. Higher = faster bobbing")]
-    public float bobSpeed = 8f;
-
-    [Header("Bob Settings")]
-    [Tooltip("How much vertical movement. SCP-CB style uses 0.6 relative to divisor")]
-    public float bobAmount = 0.1f;
-    [Tooltip("Divisor for vertical bobbing (higher = less bob). SCP-CB uses 20.0 for standing, 40.0 for crouching")]
-    public float upDownDivisor = 20f;
-
-    [Header("Tilt Settings")]
-    [Tooltip("How strong the head tilt is")]
-    public float rotationStrength = 0.7f;
-    [Tooltip("Maximum tilt angle in degrees")]
-    public float maxRotationAngle = 8f;
-    [Tooltip("Speed of rotation relative to bob")]
-    public float rotationSpeed = 0.5f;
+    [Tooltip("How fast the bob cycles per second")]
+    public float bobSpeed = 7f;
+    [Tooltip("Intensity of vertical head bobbing")]
+    public float verticalBobIntensity = 1f;
+    [Tooltip("Intensity of horizontal head swaying")]
+    public float horizontalBobIntensity = 1f;
+    [Tooltip("Intensity of camera rolling/tilting")]
+    public float rollIntensity = 1f;
+    [Tooltip("Maximum roll angle in degrees")]
+    public float maxRollAngle = 8f;
 }
 
 public class PlayerBobbing : MonoBehaviour
@@ -31,113 +24,113 @@ public class PlayerBobbing : MonoBehaviour
     [SerializeField] private Player player;
 
     [Header("Behavior Settings")]
-    public bool enableBobbing = true;
-    public bool enableTilt = true;
+    [SerializeField] private bool enableBobbing = true;
+    [SerializeField] private bool enableTilt = true;
 
     [Header("State Configurations")]
     [SerializeField]
     private BobbingState walkState = new BobbingState
     {
         bobSpeed = 7f,
-        bobAmount = 0.05f,
-        upDownDivisor = 20f,
-        rotationStrength = 0.4f,
-        maxRotationAngle = 2f,
-        rotationSpeed = 0.5f
+        verticalBobIntensity = 1f,
+        horizontalBobIntensity = 1f,
+        rollIntensity = 3.5f,
+        maxRollAngle = 17f
     };
 
     [SerializeField]
     private BobbingState sprintState = new BobbingState
     {
-        bobSpeed = 13f,
-        bobAmount = 0.04f,
-        upDownDivisor = 15f,
-        rotationStrength = 0.4f,
-        maxRotationAngle = 3f,
-        rotationSpeed = 0.5f
+        bobSpeed = 10.5f,
+        verticalBobIntensity = 1f,
+        horizontalBobIntensity = 1f,
+        rollIntensity = 4f,
+        maxRollAngle = 12f
     };
 
     [SerializeField]
     private BobbingState crouchState = new BobbingState
     {
-        bobSpeed = 6.3f,
-        bobAmount = 0.08f,
-        upDownDivisor = 40f,
-        rotationStrength = 0.5f,
-        maxRotationAngle = 6f,
-        rotationSpeed = 0.5f
+        bobSpeed = 6.5f,
+        verticalBobIntensity = 1f,
+        horizontalBobIntensity = 1f,
+        rollIntensity = 5f,
+        maxRollAngle = 14f
     };
 
     [Header("Injury Impact")]
-    [SerializeField, Range(0f, 1f)] private float injuryBobMultiplier = 0.15f;
-    [SerializeField, Range(0f, 1f)] private float injuryTiltMultiplier = 0.3f;
+    [SerializeField] private float injuryBaseOffset = 0.25f;
+    [SerializeField] private float injuryMaxCap = 2f;
 
     [Header("Transition Settings")]
-    [SerializeField] private float stateTransitionSpeed = 9f;
-    [SerializeField] private float bobbingLerpSpeed = 12f;
+    [SerializeField] private float stateTransitionSpeed = 13f;
+    [SerializeField] private float bobbingLerpSpeed = 14f;
+
+    public bool EnableBobbing
+    {
+        get => enableBobbing;
+        set => enableBobbing = value;
+    }
+
+    public bool EnableTilt
+    {
+        get => enableTilt;
+        set => enableTilt = value;
+    }
 
     private Vector3 _defaultLocalPosition;
     private Vector3 _defaultRotation;
 
     private float _bobTimer;
-    private bool _hasPlayedFootstep;
-
     private float _currentBobSpeed;
-    private float _currentBobAmount;
-    private float _currentRotationStrength;
-    private float _currentMaxRotationAngle;
-    private float _currentRotationSpeed;
+    private float _currentVerticalBobIntensity;
+    private float _currentHorizontalBobIntensity;
+    private float _currentRollIntensity;
+    private float _currentMaxRollAngle;
 
     private Vector3 _lastAppliedPosition;
     private float _lastAppliedRotation;
 
-    private float _cachedInjuryBobMultiplier;
-    private float _cachedInjuryTiltMultiplier;
-
-    private void Awake()
-    {
-        player = player != null ? player : Player.Instance;
-    }
-
-    private void Reset()
-    {
-        player = GetComponent<Player>();
-    }
+    private float _currentInjuryFactor = 0.25f;
 
     private void Start()
     {
-        if (player.cameraRoot.transform != null)
+        if (player.CameraRoot.transform != null)
         {
-            _defaultLocalPosition = player.cameraRoot.transform.localPosition;
-            _defaultRotation = player.cameraRoot.transform.localRotation.eulerAngles;
+            _defaultLocalPosition = player.CameraRoot.transform.localPosition;
+            _defaultRotation = player.CameraRoot.transform.localRotation.eulerAngles;
             _lastAppliedPosition = _defaultLocalPosition;
             _lastAppliedRotation = 0f;
         }
 
-        if (player.playerHealth != null)
+        if (player.PlayerHealth != null)
         {
-            player.playerHealth.OnInjuryChanged += UpdateInjuryMultiplier;
-            UpdateInjuryMultiplier(player.playerHealth.GetInjuryFactor());
+            player.PlayerHealth.OnInjuryChanged += UpdateInjuryFactor;
+            UpdateInjuryFactor(player.PlayerHealth.GetInjuryFactor());
         }
 
-        InitializeCurrentState(walkState);
+        _currentBobSpeed = walkState.bobSpeed;
+        _currentVerticalBobIntensity = walkState.verticalBobIntensity;
+        _currentHorizontalBobIntensity = walkState.horizontalBobIntensity;
+        _currentRollIntensity = walkState.rollIntensity;
+        _currentMaxRollAngle = walkState.maxRollAngle;
     }
 
-    private void UpdateInjuryMultiplier(float injuries)
+    private void UpdateInjuryFactor(float injuries)
     {
-        _cachedInjuryBobMultiplier = 1f + (injuries * injuryBobMultiplier);
-        _cachedInjuryTiltMultiplier = 1f + (injuries * injuryTiltMultiplier);
+        _currentInjuryFactor = Mathf.Min(injuries + injuryBaseOffset, injuryMaxCap);
     }
 
     private void Update()
     {
-        if (player.cameraRoot.transform == null || !enabled) return;
-        if (player.playerController == null) return;
+        if (player.CameraRoot.transform == null || !enabled) return;
+        if (player.PlayerController == null) return;
+        if (player.PlayerController.IsNoclipping) return;
 
         BobbingState targetState = GetCurrentTargetState();
         BlendToState(targetState, Time.deltaTime * stateTransitionSpeed);
 
-        if (player.playerController.isMoving && player.characterController.isGrounded)
+        if (player.PlayerController.IsMoving && player.CharacterController.isGrounded)
         {
             UpdateBobbing();
         }
@@ -149,22 +142,46 @@ public class PlayerBobbing : MonoBehaviour
 
     private void UpdateBobbing()
     {
-        _bobTimer += Time.deltaTime * _currentBobSpeed;
+        float previousTimer = _bobTimer;
+
+        float degreesPerSecond = _currentBobSpeed * 60f;
+        _bobTimer += Time.deltaTime * degreesPerSecond;
+
+        if (_bobTimer >= 720f)
+        {
+            _bobTimer = _bobTimer % 720f;
+        }
+
+        float prevMod = previousTimer % 360f;
+        float currMod = _bobTimer % 360f;
+
+        if (prevMod < 180f && currMod >= 180f)
+        {
+            OnFootstepTrigger?.Invoke();
+        }
+
+        float shakeRadians = _bobTimer * Mathf.Deg2Rad;
+        float shakeRadiansHalf = (_bobTimer / 2f) * Mathf.Deg2Rad;
 
         float bobOffset = 0f;
-        float rotationOffset = 0f;
         float sideOffset = 0f;
+        float rotationOffset = 0f;
+
+        float crouchState = player.PlayerController.CrouchState;
 
         if (enableBobbing)
         {
-            bobOffset = Mathf.Sin(_bobTimer) * _currentBobAmount * _cachedInjuryBobMultiplier;
-            sideOffset = Mathf.Cos(_bobTimer / 2f) / 35f * _cachedInjuryBobMultiplier;
+            float bobDivisor = 20f + (crouchState * 20f);
+            bobOffset = (Mathf.Sin(shakeRadians) / bobDivisor * 0.6f) * _currentVerticalBobIntensity;
+            sideOffset = (Mathf.Cos(shakeRadiansHalf) / 35f) * _currentHorizontalBobIntensity;
         }
 
         if (enableTilt)
         {
-            rotationOffset = Mathf.Sin(_bobTimer * _currentRotationSpeed) *
-                           _currentMaxRotationAngle * _currentRotationStrength * _cachedInjuryTiltMultiplier;
+            float injuryFactor = Mathf.Min(_currentInjuryFactor, 3f);
+            float rawTilt = Mathf.Sin(shakeRadiansHalf) * 2.5f * injuryFactor;
+            float clampedTilt = Mathf.Clamp(rawTilt, -_currentMaxRollAngle, _currentMaxRollAngle);
+            rotationOffset = clampedTilt * _currentRollIntensity;
         }
 
         Vector3 targetPosition = _defaultLocalPosition;
@@ -173,29 +190,19 @@ public class PlayerBobbing : MonoBehaviour
 
         float lerpFactor = Time.deltaTime * bobbingLerpSpeed;
         _lastAppliedPosition = Vector3.Lerp(_lastAppliedPosition, targetPosition, lerpFactor);
-        _lastAppliedRotation = Mathf.Lerp(_lastAppliedRotation, rotationOffset, lerpFactor);
+        _lastAppliedRotation = Mathf.Lerp(_lastAppliedRotation, rotationOffset * 0.5f, lerpFactor);
 
-        player.cameraRoot.transform.localPosition = _lastAppliedPosition;
-        player.cameraRoot.transform.localRotation = Quaternion.Euler(
+        player.CameraRoot.transform.localPosition = _lastAppliedPosition;
+        player.CameraRoot.transform.localRotation = Quaternion.Euler(
             _defaultRotation.x,
             _defaultRotation.y,
             _defaultRotation.z + _lastAppliedRotation
         );
-
-        if (bobOffset < 0 && !_hasPlayedFootstep)
-        {
-            OnFootstepTrigger?.Invoke();
-            _hasPlayedFootstep = true;
-        }
-        else if (bobOffset >= 0)
-        {
-            _hasPlayedFootstep = false;
-        }
     }
 
     private void ReturnToRest()
     {
-        _bobTimer = Mathf.Lerp(_bobTimer, 0f, Time.deltaTime * 5f);
+        _bobTimer = Mathf.Lerp(_bobTimer, 0f, Time.deltaTime * 3f);
 
         _lastAppliedPosition = Vector3.Lerp(
             _lastAppliedPosition,
@@ -209,19 +216,17 @@ public class PlayerBobbing : MonoBehaviour
             Time.deltaTime * stateTransitionSpeed * 1.5f
         );
 
-        player.cameraRoot.transform.localPosition = _lastAppliedPosition;
-        player.cameraRoot.transform.localRotation = Quaternion.Euler(
+        player.CameraRoot.transform.localPosition = _lastAppliedPosition;
+        player.CameraRoot.transform.localRotation = Quaternion.Euler(
             _defaultRotation.x,
             _defaultRotation.y,
             _defaultRotation.z + _lastAppliedRotation
         );
-
-        _hasPlayedFootstep = false;
     }
 
     private BobbingState GetCurrentTargetState()
     {
-        switch (player.currentState)
+        switch (player.CurrentState)
         {
             case PlayerState.Idle:
             case PlayerState.Walking:
@@ -236,21 +241,12 @@ public class PlayerBobbing : MonoBehaviour
         }
     }
 
-    private void InitializeCurrentState(BobbingState state)
-    {
-        _currentBobSpeed = state.bobSpeed;
-        _currentBobAmount = state.bobAmount;
-        _currentRotationStrength = state.rotationStrength;
-        _currentMaxRotationAngle = state.maxRotationAngle;
-        _currentRotationSpeed = state.rotationSpeed;
-    }
-
     private void BlendToState(BobbingState target, float blendFactor)
     {
         _currentBobSpeed = Mathf.Lerp(_currentBobSpeed, target.bobSpeed, blendFactor);
-        _currentBobAmount = Mathf.Lerp(_currentBobAmount, target.bobAmount, blendFactor);
-        _currentRotationStrength = Mathf.Lerp(_currentRotationStrength, target.rotationStrength, blendFactor);
-        _currentMaxRotationAngle = Mathf.Lerp(_currentMaxRotationAngle, target.maxRotationAngle, blendFactor);
-        _currentRotationSpeed = Mathf.Lerp(_currentRotationSpeed, target.rotationSpeed, blendFactor);
+        _currentVerticalBobIntensity = Mathf.Lerp(_currentVerticalBobIntensity, target.verticalBobIntensity, blendFactor);
+        _currentHorizontalBobIntensity = Mathf.Lerp(_currentHorizontalBobIntensity, target.horizontalBobIntensity, blendFactor);
+        _currentRollIntensity = Mathf.Lerp(_currentRollIntensity, target.rollIntensity, blendFactor);
+        _currentMaxRollAngle = Mathf.Lerp(_currentMaxRollAngle, target.maxRollAngle, blendFactor);
     }
 }
