@@ -94,16 +94,4 @@ public class ButtonDoorController : BaseDoorController
             doorActivator2.StartPulseEffect(color, customDuration, customIntensity);
         }
     }
-
-    protected override void OnTransitionToPulse(Color targetColor, float transitionDuration)
-    {
-        if (doorActivator1 != null)
-        {
-            doorActivator1.TransitionToPulseEffect(targetColor, transitionDuration, 0.6f, 1.2f);
-        }
-        if (doorActivator2 != null)
-        {
-            doorActivator2.TransitionToPulseEffect(targetColor, transitionDuration, 0.6f, 1.2f);
-        }
-    }
 }

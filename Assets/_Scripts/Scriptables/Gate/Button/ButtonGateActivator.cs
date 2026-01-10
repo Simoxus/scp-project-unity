@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using FMODUnity;
 using UnityEngine;
 
 public class ButtonGateActivator : BaseGateActivator
@@ -7,10 +6,6 @@ public class ButtonGateActivator : BaseGateActivator
     [Header("Script References")]
     public ButtonGateVisual buttonVisual;
     public ButtonGateController targetGateController;
-
-    [Header("FMOD Events")]
-    public EventReference buttonSoundEvent;
-    public EventReference buttonFailSoundEvent;
 
     [Header("Color States")]
     public Color defaultColor = new Color(1f, 1f, 1f); // 255, 255, 255 (white)
@@ -41,18 +36,18 @@ public class ButtonGateActivator : BaseGateActivator
 
         if (targetGateController.locked)
         {
-            FMODHelper.PlayOneShot3D(buttonFailSoundEvent, transform.position);
+            FMODHelper.PlayOneShot3D(AudioDataAccess.Instance.Doors.ButtonErrorSound, transform.position);
             return;
         }
 
         if (targetGateController.currentState != ButtonGateController.GateState.Broken)
         {
-            FMODHelper.PlayOneShot3D(buttonSoundEvent, transform.position);
+            FMODHelper.PlayOneShot3D(AudioDataAccess.Instance.Doors.ButtonSound, transform.position);
             targetGateController.ToggleGate().Forget();
         }
         else
         {
-            FMODHelper.PlayOneShot3D(buttonFailSoundEvent, transform.position);
+            FMODHelper.PlayOneShot3D(AudioDataAccess.Instance.Doors.ButtonErrorSound, transform.position);
         }
     }
 

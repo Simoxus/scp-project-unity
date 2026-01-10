@@ -25,8 +25,4 @@ public class CellDoorController : BaseDoorController
     protected override void OnStartActivatorsPulse(Color color, float? customDuration = null, float? customIntensity = null)
     {
     }
-
-    protected override void OnTransitionToPulse(Color targetColor, float transitionDuration)
-    {
-    }
 }

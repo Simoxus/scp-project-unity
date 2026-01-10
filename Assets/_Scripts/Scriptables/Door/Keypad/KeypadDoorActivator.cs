@@ -11,7 +11,6 @@ public class KeypadDoorActivator : BaseDoorActivator
     public GameObject keypadClearVisual;
 
     [Header("Script References")]
-    public Player player;
     public KeypadDoorVisual keypadTweener;
     public KeypadDoorController targetDoorController;
 
@@ -19,38 +18,31 @@ public class KeypadDoorActivator : BaseDoorActivator
     public CinemachineCamera keypadCamera;
     public float cameraTransitionDuration = 1f;
 
-    [Header("FMOD Events")]
-    public EventReference keypadSoundEvent;
-    public EventReference keypadFailSoundEvent;
-    public EventReference buttonPressSoundEvent;
-
     private string _currentInput = "";
     private float _previousTransitionTime = 0f;
     private bool _isProcessing = false;
 
-    protected override void Start()
+    private string FormatCodeInput(string input)
     {
-        base.Start();
-
-        player = player != null ? player : Player.Instance;
+        return $"<u><size=30%><cspace=-0.05em>ACCESS CODE:</cspace></size></u>\n<line-height=-10%>\\n</line-height>\n{input}";
     }
 
     private void OnEnable()
     {
-        if (player != null && player.playerInputs != null)
+        if (Core.Player != null && Core.Player.PlayerInputs != null)
         {
-            player.playerInputs.OnKeypadInput += HandleKeypadInput;
+            Core.Player.PlayerInputs.OnKeypadInput += HandleKeypadInput;
         }
     }
 
     private void OnDisable()
     {
-        if (player != null && player.playerInputs != null)
+        if (Core.Player != null && Core.Player.PlayerInputs != null)
         {
-            player.playerInputs.OnKeypadInput -= HandleKeypadInput;
+            Core.Player.PlayerInputs.OnKeypadInput -= HandleKeypadInput;
         }
 
-        if (GameManager.Instance != null && GameManager.Instance.HasDisableControlsRequest(this))
+        if (Core.GameManager != null && Core.GameManager.HasDisableControlsRequest(this))
         {
             ForceExitKeypad();
         }
@@ -65,36 +57,36 @@ public class KeypadDoorActivator : BaseDoorActivator
     {
         if (targetDoorController == null || _isProcessing || targetDoorController.currentState == KeypadDoorController.DoorState.Broken)
         {
-            RuntimeManager.PlayOneShot(keypadFailSoundEvent, transform.position);
+            RuntimeManager.PlayOneShot(Core.AudioDataAccess.Doors.ButtonErrorSound, transform.position);
             return;
         }
 
         if (targetDoorController.locked)
         {
-            FMODHelper.PlayOneShot3D(keypadFailSoundEvent, transform.position);
+            FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonErrorSound, transform.position);
             return;
         }
 
         _isProcessing = true;
         _currentInput = "";
 
-        player.playerInputs.DisableGameplayInputs();
-        player.playerInputs.DisableUIInputs();
-        player.playerInputs.EnableKeypadInputs();
+        Core.Player.PlayerInputs.DisableGameplayInputs();
+        Core.Player.PlayerInputs.DisableUIInputs();
+        Core.Player.PlayerInputs.EnableKeypadInputs();
 
-        Player.Instance.playerController.ForceRotate(keypadCamera.transform.rotation.eulerAngles);
+        Core.Player.PlayerController.ForceRotate(keypadCamera.transform.rotation.eulerAngles);
 
-        GameManager.Instance.RequestDisableControls(this, shouldDisable: true);
-        GameManager.Instance.UpdateCursorVisiblity(forceDisable: true);
+        Core.GameManager.RequestDisableControls(this, shouldDisable: true);
+        Core.GameManager.UpdateCursorVisiblity(forceDisable: true);
 
-        _previousTransitionTime = CameraManager.Instance.cameraBrain.DefaultBlend.Time;
-        CameraManager.Instance.cameraBrain.DefaultBlend.Time = cameraTransitionDuration;
+        _previousTransitionTime = Core.Player.CameraSettings.DefaultBlend.Time;
+        Core.Player.CameraSettings.DefaultBlend.Time = cameraTransitionDuration;
         keypadCamera.Priority = 100;
         keypadCamera.enabled = true;
 
         keypadTweener.ToggleLogo(false);
         keypadTweener.ToggleText(true);
-        keypadTweener.ChangeScreenText("");
+        keypadTweener.ChangeScreenText(FormatCodeInput(""));
     }
 
     private void HandleKeypadInput(string keyName)
@@ -134,8 +126,12 @@ public class KeypadDoorActivator : BaseDoorActivator
         if (_currentInput.Length < targetDoorController.maxCodeLength)
         {
             _currentInput += number;
-            FMODHelper.PlayOneShot3D(buttonPressSoundEvent, transform.position);
-            keypadTweener.ChangeScreenText(_currentInput);
+
+            FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonSound, transform.position);
+            VibrationHelper.VibrateTap();
+
+            keypadTweener.ChangeScreenText(FormatCodeInput(_currentInput));
+
             await keypadTweener.PlayNumberKeyTween(buttonVisual);
         }
     }
@@ -144,29 +140,31 @@ public class KeypadDoorActivator : BaseDoorActivator
     {
         keypadTweener.PlayClearKeyTween().Forget();
 
-        FMODHelper.PlayOneShot3D(buttonPressSoundEvent, transform.position);
+        FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonSound, transform.position);
+        VibrationHelper.VibrateTap();
 
         if (_currentInput.Length > 0)
         {
             _currentInput = _currentInput.Substring(0, _currentInput.Length - 1);
-            keypadTweener.ChangeScreenText(_currentInput);
+            keypadTweener.ChangeScreenText(FormatCodeInput(_currentInput));
         }
     }
 
     private async UniTask CheckCode(string input)
     {
-        player.playerInputs.DisableKeypadInputs();
+        Core.Player.PlayerInputs.DisableKeypadInputs();
 
         keypadTweener.PlayEnterKeyTween().Forget();
 
-        FMODHelper.PlayOneShot3D(buttonPressSoundEvent, transform.position);
+        FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonSound, transform.position);
+        VibrationHelper.Vibrate();
 
         bool success = input == targetDoorController.correctCode;
 
         if (success)
         {
             FMODHelper.PlayOneShotWithParameters(
-                keypadSoundEvent,
+                Core.AudioDataAccess.Doors.ButtonKeypadSound,
                 transform.position,
                 ("Result", 0.0f)
             );
@@ -175,7 +173,7 @@ public class KeypadDoorActivator : BaseDoorActivator
         else
         {
             FMODHelper.PlayOneShotWithParameters(
-                keypadSoundEvent,
+                Core.AudioDataAccess.Doors.ButtonKeypadSound,
                 transform.position,
                 ("Result", 1.0f)
             );
@@ -187,9 +185,9 @@ public class KeypadDoorActivator : BaseDoorActivator
 
         _isProcessing = false;
 
-        player.playerInputs.DisableKeypadInputs();
-        player.playerInputs.EnableUIInputs();
-        player.playerInputs.EnableGameplayInputs();
+        Core.Player.PlayerInputs.DisableKeypadInputs();
+        Core.Player.PlayerInputs.EnableUIInputs();
+        Core.Player.PlayerInputs.EnableGameplayInputs();
 
         await ResetPlayerCamera();
     }
@@ -198,9 +196,9 @@ public class KeypadDoorActivator : BaseDoorActivator
     {
         _isProcessing = false;
 
-        player.playerInputs.DisableKeypadInputs();
-        player.playerInputs.EnableUIInputs();
-        player.playerInputs.EnableGameplayInputs();
+        Core.Player.PlayerInputs.DisableKeypadInputs();
+        Core.Player.PlayerInputs.EnableUIInputs();
+        Core.Player.PlayerInputs.EnableGameplayInputs();
 
         ResetPlayerCamera(wasForceExit: true).Forget();
     }
@@ -210,18 +208,18 @@ public class KeypadDoorActivator : BaseDoorActivator
         keypadCamera.Priority = -1;
         keypadCamera.enabled = false;
 
-        GameManager.Instance.RequestDisableControls(this, shouldDisable: false);
+        Core.GameManager.RequestDisableControls(this, shouldDisable: false);
 
         if (wasForceExit == false)
         {
             keypadTweener.ToggleLogo(true);
             keypadTweener.ToggleText(false);
-            keypadTweener.ChangeScreenColor(targetDoorController.defaultColor, true, 0.8f);
+            keypadTweener.ChangeScreenColor(targetDoorController.DefaultStateColor, true, 0.8f);
             _currentInput = "";
         }
 
         await UniTask.WaitForSeconds(cameraTransitionDuration, ignoreTimeScale: false);
-        CameraManager.Instance.cameraBrain.DefaultBlend.Time = _previousTransitionTime;
+        Core.Player.CameraSettings.DefaultBlend.Time = _previousTransitionTime;
         _previousTransitionTime = 0f;
     }
 
@@ -231,7 +229,7 @@ public class KeypadDoorActivator : BaseDoorActivator
 
         keypadTweener.ToggleLogo(true);
         keypadTweener.ToggleText(false);
-        keypadTweener.ChangeScreenColor(targetDoorController.defaultColor, true, 0.8f);
+        keypadTweener.ChangeScreenColor(targetDoorController.DefaultStateColor, true, 0.8f);
 
         await UniTask.WaitForSeconds(0.6f, ignoreTimeScale: false);
 

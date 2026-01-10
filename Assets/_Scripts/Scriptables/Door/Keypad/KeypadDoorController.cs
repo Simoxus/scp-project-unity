@@ -11,6 +11,8 @@ public class KeypadDoorController : BaseDoorController
     public KeypadDoorActivator doorActivator1;
     public KeypadDoorActivator doorActivator2;
 
+    public override Color32 MovingStateColor => successColor;
+
     protected override void OnSetActivatorsState(bool enabled)
     {
         if (doorActivator1 != null)
@@ -30,12 +32,14 @@ public class KeypadDoorController : BaseDoorController
             doorActivator1.keypadTweener.ToggleLogo(false);
             doorActivator1.keypadTweener.ToggleText(true);
             doorActivator1.keypadTweener.ChangeScreenText(message);
+            doorActivator1.keypadTweener.ChangeScreenColor(color, true);
         }
         if (doorActivator2 != null)
         {
             doorActivator2.keypadTweener.ToggleLogo(false);
             doorActivator2.keypadTweener.ToggleText(true);
             doorActivator2.keypadTweener.ChangeScreenText(message);
+            doorActivator2.keypadTweener.ChangeScreenColor(color, true);
         }
     }
 
@@ -63,10 +67,14 @@ public class KeypadDoorController : BaseDoorController
     {
         if (doorActivator1 != null)
         {
+            doorActivator1.keypadTweener.ToggleLogo(true);
+            doorActivator1.keypadTweener.ToggleText(false);
             doorActivator1.keypadTweener.ChangeScreenColor(color, true, 0.4f);
         }
         if (doorActivator2 != null)
         {
+            doorActivator2.keypadTweener.ToggleLogo(true);
+            doorActivator2.keypadTweener.ToggleText(false);
             doorActivator2.keypadTweener.ChangeScreenColor(color, true, 0.4f);
         }
     }
@@ -113,7 +121,7 @@ public class KeypadDoorController : BaseDoorController
         {
             doorActivator1.keypadTweener.ToggleLogo(false);
             doorActivator1.keypadTweener.ToggleText(true);
-            doorActivator1.keypadTweener.ChangeScreenColor(grantedColor, true, 0.5f);
+            doorActivator1.keypadTweener.ChangeScreenColor(SuccessStateColor, true, 0.5f);
             doorActivator1.keypadTweener.ChangeScreenText("ACCESS\nGRANTED");
             doorActivator1.ResetButtonDisplay().Forget();
         }
@@ -121,7 +129,7 @@ public class KeypadDoorController : BaseDoorController
         {
             doorActivator2.keypadTweener.ToggleLogo(false);
             doorActivator2.keypadTweener.ToggleText(true);
-            doorActivator2.keypadTweener.ChangeScreenColor(grantedColor, true, 0.5f);
+            doorActivator2.keypadTweener.ChangeScreenColor(SuccessStateColor, true, 0.5f);
             doorActivator2.keypadTweener.ChangeScreenText("ACCESS\nGRANTED");
             doorActivator2.ResetButtonDisplay().Forget();
         }
@@ -133,7 +141,7 @@ public class KeypadDoorController : BaseDoorController
         {
             doorActivator1.keypadTweener.ToggleLogo(false);
             doorActivator1.keypadTweener.ToggleText(true);
-            doorActivator1.keypadTweener.ChangeScreenColor(deniedColor, true, 0.5f);
+            doorActivator1.keypadTweener.ChangeScreenColor(FailureStateColor, true, 0.5f);
             doorActivator1.keypadTweener.ChangeScreenText("ACCESS\nDENIED");
             doorActivator1.ResetButtonDisplay().Forget();
         }
@@ -141,21 +149,9 @@ public class KeypadDoorController : BaseDoorController
         {
             doorActivator2.keypadTweener.ToggleLogo(false);
             doorActivator2.keypadTweener.ToggleText(true);
-            doorActivator2.keypadTweener.ChangeScreenColor(deniedColor, true, 0.5f);
+            doorActivator2.keypadTweener.ChangeScreenColor(FailureStateColor, true, 0.5f);
             doorActivator2.keypadTweener.ChangeScreenText("ACCESS\nDENIED");
             doorActivator2.ResetButtonDisplay().Forget();
-        }
-    }
-
-    protected override void OnTransitionToPulse(Color targetColor, float transitionDuration)
-    {
-        if (doorActivator1 != null)
-        {
-            doorActivator1.TransitionToPulseEffect(targetColor, transitionDuration, 0.6f, 1.2f);
-        }
-        if (doorActivator2 != null)
-        {
-            doorActivator2.TransitionToPulseEffect(targetColor, transitionDuration, 0.6f, 1.2f);
         }
     }
 }
