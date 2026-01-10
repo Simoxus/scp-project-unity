@@ -7,6 +7,7 @@ public class PlayerInputs : MonoBehaviour
 {
     [Header("Input Actions")]
     [SerializeField] private InputActionAsset playerInputAsset;
+    public InputActionAsset PlayerInputAsset => playerInputAsset;
 
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
@@ -14,6 +15,16 @@ public class PlayerInputs : MonoBehaviour
     public bool BlinkHeld { get; private set; }
     public bool SprintHeld { get; private set; }
     public bool CrouchHeld { get; private set; }
+
+    // Freecam inputs
+    public Vector2 FreecamMoveInput { get; private set; }
+    public Vector2 FreecamLookInput { get; private set; }
+    public bool FreecamAccelerateHeld { get; private set; }
+    public bool FreecamDecelerateHeld { get; private set; }
+    public bool FreecamUpHeld { get; private set; }
+    public bool FreecamDownHeld { get; private set; }
+    public float FreecamZoomInput { get; private set; }
+    public bool FreecamZoomModifierHeld { get; private set; }
 
     private bool _blinkPressed;
     private bool _crouchPressed;
@@ -40,9 +51,15 @@ public class PlayerInputs : MonoBehaviour
 
     public event Action OnBlink;
     public event Action OnInteract;
-    public event Action OnPauseUI;
     public event Action OnDebugUI;
+    public event Action OnPauseUI;
+    public event Action OnInventoryUI;
     public event Action<string> OnKeypadInput;
+    public event Action OnFreecamLock;
+    public event Action OnFreecamSmooth;
+    public event Action OnFreecamWobble;
+    public event Action OnFreecamPause;
+    public event Action OnFreecamTutorial;
 
     private InputContextManager _contexts;
     private InputBindingManager _bindings;
@@ -80,10 +97,12 @@ public class PlayerInputs : MonoBehaviour
     public void EnableGameplayInputs() => AddContext(InputContext.Gameplay);
     public void EnableUIInputs() => AddContext(InputContext.UI);
     public void EnableKeypadInputs() => AddContext(InputContext.Keypad);
+    public void EnableFreecamInputs() => AddContext(InputContext.Freecam);
 
     public void DisableGameplayInputs() => RemoveContext(InputContext.Gameplay);
     public void DisableUIInputs() => RemoveContext(InputContext.UI);
     public void DisableKeypadInputs() => RemoveContext(InputContext.Keypad);
+    public void DisableFreecamInputs() => RemoveContext(InputContext.Freecam);
 
     private void Awake()
     {
@@ -104,12 +123,27 @@ public class PlayerInputs : MonoBehaviour
         CacheAction("Player/Blink");
         CacheAction("Player/Interact");
 
-        CacheAction("Menus/PauseUI");
         CacheAction("Menus/DebugUI");
+        CacheAction("Menus/PauseUI");
+        CacheAction("Menus/InventoryUI");
 
         CacheAction("Keypad/Number");
         CacheAction("Keypad/Enter");
         CacheAction("Keypad/Clear");
+
+        CacheAction("Freecam/Hide");
+        CacheAction("Freecam/Move");
+        CacheAction("Freecam/Look");
+        CacheAction("Freecam/Zoom");
+        CacheAction("Freecam/ZoomModifier");
+        CacheAction("Freecam/Accelerate");
+        CacheAction("Freecam/Decelerate");
+        CacheAction("Freecam/Up");
+        CacheAction("Freecam/Down");
+        CacheAction("Freecam/Lock");
+        CacheAction("Freecam/Smooth");
+        CacheAction("Freecam/Wobble");
+        CacheAction("Freecam/Pause");
 
         BindAll();
     }
@@ -141,8 +175,49 @@ public class PlayerInputs : MonoBehaviour
 
     private void Update()
     {
+        // Check if Player/Freecam inputs should be blocked
+        bool shouldBlockGameplay = (Core.GameManager != null && Core.GameManager.gamePaused) ||
+                                   (Core.GameManager != null && Core.GameManager.disablePlayerInputs);
+
+        // Manage Player action map state
+        bool isPlayerMapActive = _contexts.IsContextActive(InputContext.Gameplay);
+        if (shouldBlockGameplay && isPlayerMapActive)
+        {
+            _contexts.DisableContext(InputContext.Gameplay);
+        }
+        else if (!shouldBlockGameplay && !isPlayerMapActive)
+        {
+            _contexts.EnableContext(InputContext.Gameplay);
+        }
+
+        // Manage Freecam action map state
+        // Freecam should be active when freecam mode is enabled, but blocked if game is paused by something OTHER than freecam
+        bool isFreecamMapActive = _contexts.IsContextActive(InputContext.Freecam);
+        bool isInFreecamMode = Core.Player?.PlayerFreecam != null && Core.Player.PlayerFreecam.IsFreecamActive;
+
+        bool isFreecamPaused = Core.GameManager != null &&
+                               Core.GameManager.HasPauseRequest(Core.Player.PlayerFreecam) &&
+                               Core.GameManager.pauseRequestCount == 1;
+        bool shouldFreecamBeBlocked = Core.GameManager != null && Core.GameManager.gamePaused && !isFreecamPaused;
+
+        bool shouldFreecamBeActive = isInFreecamMode && !shouldFreecamBeBlocked;
+
+        if (shouldFreecamBeActive && !isFreecamMapActive)
+        {
+            _contexts.EnableContext(InputContext.Freecam);
+        }
+        else if (!shouldFreecamBeActive && isFreecamMapActive)
+        {
+            _contexts.DisableContext(InputContext.Freecam);
+        }
+
+        // Read input values (these will be zero if maps are disabled)
         MoveInput = Read<Vector2>("Player/Move");
         LookInput = Read<Vector2>("Player/Look");
+
+        FreecamMoveInput = Read<Vector2>("Freecam/Move");
+        FreecamLookInput = Read<Vector2>("Freecam/Look");
+        FreecamZoomInput = Read<float>("Freecam/Zoom");
     }
 
     private void BindAll()
@@ -160,12 +235,24 @@ public class PlayerInputs : MonoBehaviour
         });
         BindPress("Player/Interact", () => OnInteract?.Invoke());
 
-        BindPress("Menus/PauseUI", () => OnPauseUI?.Invoke());
         BindPress("Menus/DebugUI", () => OnDebugUI?.Invoke());
+        BindPress("Menus/PauseUI", () => OnPauseUI?.Invoke());
+        BindPress("Menus/InventoryUI", () => OnInventoryUI?.Invoke());
 
         BindPress("Keypad/Number", ctx => OnKeypadInput?.Invoke(ctx.control.name));
         BindPress("Keypad/Enter", () => OnKeypadInput?.Invoke("Enter"));
         BindPress("Keypad/Clear", () => OnKeypadInput?.Invoke("Clear"));
+
+        BindPress("Freecam/Hide", () => OnFreecamTutorial?.Invoke());
+        BindHold("Freecam/ZoomModifier", v => FreecamZoomModifierHeld = v);
+        BindHold("Freecam/Accelerate", v => FreecamAccelerateHeld = v);
+        BindHold("Freecam/Decelerate", v => FreecamDecelerateHeld = v);
+        BindHold("Freecam/Up", v => FreecamUpHeld = v);
+        BindHold("Freecam/Down", v => FreecamDownHeld = v);
+        BindPress("Freecam/Lock", () => OnFreecamLock?.Invoke());
+        BindPress("Freecam/Smooth", () => OnFreecamSmooth?.Invoke());
+        BindPress("Freecam/Wobble", () => OnFreecamWobble?.Invoke());
+        BindPress("Freecam/Pause", () => OnFreecamPause?.Invoke());
     }
 
     private void CacheAction(string path)
@@ -180,14 +267,14 @@ public class PlayerInputs : MonoBehaviour
         var map = playerInputAsset.FindActionMap(split[0]);
         if (map == null)
         {
-            Log.Warning($"Action map not found: {split[0]}");
+            Log.Error($"Action map not found: {split[0]}");
             return;
         }
 
         var action = map.FindAction(split[1]);
         if (action == null)
         {
-            Log.Warning($"Action not found: {path}");
+            Log.Error($"Action not found: {path}");
             return;
         }
 
@@ -235,6 +322,32 @@ public class PlayerInputs : MonoBehaviour
         a.performed += onPress;
         _unbindCallbacks.Add(() => a.performed -= onPress);
     }
+
+    public InputAction GetAction(string path)
+    {
+        if (playerInputAsset == null) return null;
+
+        var parts = path.Split('/');
+        if (parts.Length != 2) return null;
+
+        var actionMap = playerInputAsset.FindActionMap(parts[0]);
+        return actionMap?.FindAction(parts[1]);
+    }
+
+    public void SetActionEnabled(string path, bool enabled)
+    {
+        if (_actions.TryGetValue(path, out var action))
+        {
+            if (enabled)
+            {
+                action.Enable();
+            }
+            else
+            {
+                action.Disable();
+            }
+        }
+    }
 }
 
 public enum InputContext
@@ -242,7 +355,8 @@ public enum InputContext
     Gameplay,
     Keypad,
     Menus,
-    UI
+    UI,
+    Freecam
 }
 
 public class InputContextManager
@@ -261,6 +375,7 @@ public class InputContextManager
         _maps[InputContext.Keypad] = _asset.FindActionMap("Keypad");
         _maps[InputContext.Menus] = _asset.FindActionMap("Menus");
         _maps[InputContext.UI] = _asset.FindActionMap("UI");
+        _maps[InputContext.Freecam] = _asset.FindActionMap("Freecam");
     }
 
     public void EnableContext(InputContext ctx)
