@@ -1,5 +1,4 @@
 using System.Linq;
-
 namespace Console.Commands
 {
     public class HelpCommand : BaseConsole
@@ -7,7 +6,6 @@ namespace Console.Commands
         public override string CommandWord => "help";
         public override string Description => "Lists all available commands or shows usage for a specific command.";
         protected override string RawUsage => "help [optional: command]";
-
         public override void Execute(string[] args)
         {
             if (args.Length > 0)
@@ -15,24 +13,29 @@ namespace Console.Commands
                 string commandName = args[0].ToLower();
                 if (ConsoleManager.Instance.GetCommands().TryGetValue(commandName, out var command))
                 {
-                    ConsoleManager.LogToConsole($"<color=#ADD8E6FF>Description: {command.Description}</color>");
-                    ConsoleManager.LogToConsole($"<color=#ADD8E6FF>{command.Usage}</color>");
+                    ConsoleManager.LogToConsole($"Description: {command.Description}".AsInfo());
+                    ConsoleManager.LogToConsole($"{command.Usage}".AsInfo());
                 }
                 else
                 {
-                    ConsoleManager.LogToConsole($"<color=#FF0000FF>Unknown command '{commandName}'</color>");
+                    ConsoleManager.LogToConsole($"Unknown command '{commandName}'".AsError());
                 }
                 return;
             }
-
-            ConsoleManager.LogToConsole("<color=#00FFFFFF>--- Available Commands ---</color>");
-
+            ConsoleManager.LogToConsole("--- Available Commands ---".AsHeader());
             foreach (var command in ConsoleManager.Instance.GetCommands().Values.OrderBy(c => c.CommandWord))
             {
-                ConsoleManager.LogToConsole($"<b>{command.CommandWord}</b>: {command.Description}");
-            }
+                string commandName = command.CommandWord.AsInfo();
 
-            ConsoleManager.LogToConsole("<color=#00FFFFFF>--------------------------</color>");
+                // Add tag for modded commands
+                if (command is LuaConsoleCommand)
+                {
+                    commandName += " <size=60%>(Modded)</size>".AsWarning();
+                }
+
+                ConsoleManager.LogToConsole($"<b>{commandName}</b>: {command.Description}");
+            }
+            ConsoleManager.LogToConsole("--------------------------".AsHeader());
         }
     }
 }
