@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Threading;
+using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
@@ -7,12 +10,28 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
     [Header("References")]
     [SerializeField] private SettingsGraphics settingsGraphics;
 
+    private CancellationTokenSource _cts;
+    private CancellationTokenSource _renderScaleCts;
+    private float _pendingRenderScale = -1f;
+    private bool _isApplyingRenderScale = false;
+
     protected override void InitializeReferences()
     {
         if (settingsGraphics == null)
         {
             settingsGraphics = GetComponent<SettingsGraphics>();
         }
+
+        _cts = new CancellationTokenSource();
+        _renderScaleCts = new CancellationTokenSource();
+    }
+
+    private void OnDestroy()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _renderScaleCts?.Cancel();
+        _renderScaleCts?.Dispose();
     }
 
     private void OnEnable()
@@ -97,12 +116,39 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
     {
         float clampedValue = Mathf.Clamp(value, 0.1f, 1.0f);
 
-        if (settingsGraphics.urpAsset != null)
+        _pendingRenderScale = clampedValue;
+        if (_isApplyingRenderScale)
         {
-            settingsGraphics.urpAsset.renderScale = clampedValue;
+            _renderScaleCts?.Cancel();
+            _renderScaleCts?.Dispose();
+            _renderScaleCts = new CancellationTokenSource();
         }
 
+        ApplyRenderScaleDelayed(_renderScaleCts.Token).Forget();
+
         if (inBatchMode == false) { settingsGraphics.SaveSettingsWithDelay(); }
+    }
+
+    private async UniTaskVoid ApplyRenderScaleDelayed(CancellationToken cancellationToken)
+    {
+        _isApplyingRenderScale = true;
+
+        try
+        {
+            await UniTask.WaitForSeconds(0.1f, ignoreTimeScale: true, cancellationToken: cancellationToken);
+
+            if (settingsGraphics.urpAsset != null && _pendingRenderScale >= 0)
+            {
+                settingsGraphics.urpAsset.renderScale = _pendingRenderScale;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        finally
+        {
+            _isApplyingRenderScale = false;
+        }
     }
 
     public void ApplyVSync(bool enabled)
@@ -124,17 +170,30 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
         if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
     }
 
+    public void ApplyFieldOfView(float value)
+    {
+        if (Core.Player && Core.Player.CameraMain)
+        {
+            Core.Player.CameraMain.Lens.FieldOfView = value;
+        }
+
+        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+    }
+
     public void ApplyTextureQuality(int index)
     {
         switch (index)
         {
-            case 0: // Quarter
+            case 0: // Eighth
+                QualitySettings.globalTextureMipmapLimit = 3;
+                break;
+            case 1: // Quarter
                 QualitySettings.globalTextureMipmapLimit = 2;
                 break;
-            case 1: // Half
+            case 2: // Half
                 QualitySettings.globalTextureMipmapLimit = 1;
                 break;
-            case 2: // Full
+            case 3: // Full
                 QualitySettings.globalTextureMipmapLimit = 0;
                 break;
         }
@@ -142,12 +201,13 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
         if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
     }
 
-    public void ApplyAntiAliasing(int index)
+    public async void ApplyAntiAliasing(int index)
     {
-        if (Player.Instance == null) return;
-        if (Player.Instance.cameraBrain == null) return;
+        await WaitForPlayerAsync(_cts.Token);
 
-        Camera cameraBrain = Player.Instance.cameraBrain;
+        if (Core.Player.CameraBrain == null) return;
+
+        Camera cameraBrain = Core.Player.CameraBrain;
         UniversalAdditionalCameraData cameraData = cameraBrain.GetUniversalAdditionalCameraData();
         UniversalRenderPipelineAsset urpAsset = settingsGraphics.urpAsset;
 
@@ -184,16 +244,49 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
         if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
     }
 
-    public void ApplyRenderShadows(bool enabled)
+    public async void ApplyRenderShadows(bool enabled)
     {
-        if (Player.Instance == null) return;
-        if (Player.Instance.cameraBrain == null) return;
+        await WaitForPlayerAsync(_cts.Token);
 
-        Camera cameraBrain = Player.Instance.cameraBrain;
+        if (Core.Player.CameraBrain == null) return;
+
+        Camera cameraBrain = Core.Player.CameraBrain;
         UniversalAdditionalCameraData cameraData = cameraBrain.GetUniversalAdditionalCameraData();
 
         cameraData.renderShadows = enabled;
 
         if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+    }
+
+    public void ApplyBloom(bool enabled)
+    {
+        if (settingsGraphics.postProcessVolume == null || settingsGraphics.postProcessVolume.profile == null) return;
+
+        if (settingsGraphics.postProcessVolume.profile.TryGet<Bloom>(out var bloom))
+        {
+            bloom.active = enabled;
+        }
+
+        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+    }
+
+    public void ApplyVignette(bool enabled)
+    {
+        if (settingsGraphics.postProcessVolume == null || settingsGraphics.postProcessVolume.profile == null) return;
+
+        if (settingsGraphics.postProcessVolume.profile.TryGet<Vignette>(out var vignette))
+        {
+            vignette.active = enabled;
+        }
+
+        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+    }
+
+    private async UniTask WaitForPlayerAsync(CancellationToken cancellationToken)
+    {
+        await UniTask.WaitUntil(
+            () => Core.Player != null && Core.Player.CameraBrain != null,
+            cancellationToken: cancellationToken
+        );
     }
 }

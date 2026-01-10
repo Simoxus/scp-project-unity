@@ -9,6 +9,8 @@ public class SettingsGraphics : BaseSettings
 {
     public override string CATEGORY => "Graphics";
 
+    public Volume postProcessVolume;
+
     [HideInInspector]
     public UniversalRenderPipelineAsset urpAsset;
     public Resolution[] availableResolutions;
@@ -23,9 +25,12 @@ public class SettingsGraphics : BaseSettings
     public Slider renderScaleSlider;
     public Toggle vSyncToggle;
     public TMP_Dropdown framerateDropdown;
+    public Slider fieldOfViewSlider;
     public TMP_Dropdown textureQualityDropdown;
     public TMP_Dropdown antiAliasingDropdown;
     public Toggle renderShadowsToggle;
+    public Toggle bloomToggle;
+    public Toggle vignetteToggle;
 
     protected override void InitializeReferences()
     {
@@ -61,9 +66,12 @@ public class SettingsGraphics : BaseSettings
         settingsManager.SaveFloat(CATEGORY, "RenderScale", renderScaleSlider.value);
         settingsManager.SaveBool(CATEGORY, "VSync", vSyncToggle.isOn);
         settingsManager.SaveInt(CATEGORY, "Framerate", framerateDropdown.value);
+        settingsManager.SaveFloat(CATEGORY, "FieldOfView", fieldOfViewSlider.value);
         settingsManager.SaveInt(CATEGORY, "TextureQuality", textureQualityDropdown.value);
         settingsManager.SaveInt(CATEGORY, "AntiAliasing", antiAliasingDropdown.value);
         settingsManager.SaveBool(CATEGORY, "RenderShadows", renderShadowsToggle.isOn);
+        settingsManager.SaveBool(CATEGORY, "Bloom", bloomToggle.isOn);
+        settingsManager.SaveBool(CATEGORY, "Vignette", vignetteToggle.isOn);
 
         settingsManager.Save();
     }
@@ -80,18 +88,24 @@ public class SettingsGraphics : BaseSettings
         renderScaleSlider.value = settingsManager.LoadFloat(CATEGORY, "RenderScale", 1f);
         vSyncToggle.isOn = settingsManager.LoadBool(CATEGORY, "VSync", false);
         framerateDropdown.value = settingsManager.LoadInt(CATEGORY, "Framerate", 0);
-        textureQualityDropdown.value = settingsManager.LoadInt(CATEGORY, "TextureQuality", 2);
-        antiAliasingDropdown.value = settingsManager.LoadInt(CATEGORY, "AntiAliasing", 2);
+        fieldOfViewSlider.value = settingsManager.LoadFloat(CATEGORY, "FieldOfView", 72f);
+        textureQualityDropdown.value = settingsManager.LoadInt(CATEGORY, "TextureQuality", 3);
+        antiAliasingDropdown.value = settingsManager.LoadInt(CATEGORY, "AntiAliasing", 3);
         renderShadowsToggle.isOn = settingsManager.LoadBool(CATEGORY, "RenderShadows", true);
+        bloomToggle.isOn = settingsManager.LoadBool(CATEGORY, "Bloom", true);
+        vignetteToggle.isOn = settingsManager.LoadBool(CATEGORY, "Vignette", true);
 
         applier.ApplyWindowMode(windowModeDropdown.value);
         applier.ApplyWindowResolution(windowResolutionDropdown.value);
         applier.ApplyRenderScale(renderScaleSlider.value);
         applier.ApplyVSync(vSyncToggle.isOn);
         applier.ApplyFramerateLimit(framerateDropdown.value);
+        applier.ApplyFieldOfView(fieldOfViewSlider.value);
         applier.ApplyTextureQuality(textureQualityDropdown.value);
         applier.ApplyAntiAliasing(antiAliasingDropdown.value);
         applier.ApplyRenderShadows(renderShadowsToggle.isOn);
+        applier.ApplyBloom(bloomToggle.isOn);
+        applier.ApplyVignette(vignetteToggle.isOn);
 
         applier.inBatchMode = false;
     }
