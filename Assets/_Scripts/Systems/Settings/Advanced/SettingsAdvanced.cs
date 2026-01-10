@@ -1,14 +1,21 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class SettingsAdvanced : BaseSettings
 {
     public override string CATEGORY => "Advanced";
 
+    [HideInInspector] public List<Locale> availableLocales = new List<Locale>();
+
     [Header("References")]
     public SettingsAdvancedApplier applier;
 
     [Header("UI Elements")]
+    public TMP_Dropdown gameLanguageDropdown;
     public Toggle showHUDToggle;
     public Toggle showFPSToggle;
     public Toggle showCrosshairToggle;
@@ -23,6 +30,11 @@ public class SettingsAdvanced : BaseSettings
         {
             applier = GetComponent<SettingsAdvancedApplier>();
         }
+
+        if (gameLanguageDropdown != null)
+        {
+            PopulateLanguageDropdown();
+        }
     }
 
     public override void SaveSettings()
@@ -30,6 +42,7 @@ public class SettingsAdvanced : BaseSettings
         SettingsManager settingsManager = SettingsManager.Instance;
         if (settingsManager == null) return;
 
+        settingsManager.SaveInt(CATEGORY, "GameLanguage", gameLanguageDropdown.value);
         settingsManager.SaveBool(CATEGORY, "ShowHUD", showHUDToggle.isOn);
         settingsManager.SaveBool(CATEGORY, "ShowFPS", showFPSToggle.isOn);
         settingsManager.SaveBool(CATEGORY, "ShowCrosshair", showCrosshairToggle.isOn);
@@ -49,6 +62,7 @@ public class SettingsAdvanced : BaseSettings
         applier.inBatchMode = true;
 
         // Load settings with different defaults for editor vs build
+        gameLanguageDropdown.value = settingsManager.LoadInt(CATEGORY, "GameLanguage", 0);
         showHUDToggle.isOn = settingsManager.LoadBool(CATEGORY, "ShowHUD", true);
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -64,6 +78,7 @@ public class SettingsAdvanced : BaseSettings
         openConsoleOnErrorToggle.isOn = settingsManager.LoadBool(CATEGORY, "OpenConsoleOnError", false);
 
         // Apply all settings
+        applier.ApplyGameLanguage(gameLanguageDropdown.value);
         applier.ApplyShowHUD(showHUDToggle.isOn);
         applier.ApplyShowFPS(showFPSToggle.isOn);
         applier.ApplyShowCrosshair(showCrosshairToggle.isOn);
@@ -73,5 +88,37 @@ public class SettingsAdvanced : BaseSettings
         applier.ApplyOpenConsoleOnError(openConsoleOnErrorToggle.isOn);
 
         applier.inBatchMode = false;
+    }
+
+    public void PopulateLanguageDropdown()
+    {
+        gameLanguageDropdown.ClearOptions();
+        availableLocales.Clear();
+
+        List<string> options = new List<string>();
+        var locales = LocalizationSettings.AvailableLocales.Locales;
+
+        foreach (var locale in locales)
+        {
+            availableLocales.Add(locale);
+            options.Add($"{locale.Identifier.CultureInfo.NativeName} ({locale.Identifier.Code})");
+        }
+
+        gameLanguageDropdown.AddOptions(options);
+
+        // Set current language as the selected option
+        Locale currentLocale = LocalizationSettings.SelectedLocale;
+        int currentLocaleIndex = availableLocales.IndexOf(currentLocale);
+
+        if (currentLocaleIndex >= 0)
+        {
+            gameLanguageDropdown.value = currentLocaleIndex;
+        }
+        else
+        {
+            gameLanguageDropdown.value = 0;
+        }
+
+        gameLanguageDropdown.RefreshShownValue();
     }
 }

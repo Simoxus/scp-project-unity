@@ -51,15 +51,37 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
         }
     }
 
+    public void ApplyGameLanguage(int index)
+    {
+        if (index < 0 || index >= settingsAdvanced.availableLocales.Count)
+        {
+            Log.VerboseWarning($"Invalid language index: {index}");
+            return;
+        }
+
+        var selectedLocale = settingsAdvanced.availableLocales[index];
+        LocalizationHelper.ChangeLanguage(selectedLocale.Identifier.Code);
+
+        if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
+    }
+
     public void ApplyShowHUD(bool enabled)
     {
         if (settingsAdvanced.CheckIfMainMenu()) return;
 
-        UIAccess uiAccess = UIAccess.Instance;
-        if (uiAccess != null && uiAccess.canvasIndicators != null && uiAccess.canvasInteract != null)
+        UIAccess uiAccess = Core.UI;
+        if (uiAccess != null && uiAccess.Indicators != null && uiAccess.Interact != null)
         {
-            uiAccess.canvasIndicators.SetActive(enabled);
-            uiAccess.canvasInteract.SetActive(enabled);
+            if (enabled)
+            {
+                uiAccess.Indicators.Show();
+            }
+            else
+            {
+                uiAccess.Indicators.Hide();
+            }
+
+            uiAccess.Interact.canvasGroup.gameObject.SetActive(enabled);
         }
 
         if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
@@ -70,10 +92,10 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
         if (settingsAdvanced.CheckIfMainMenu()) return;
 
         UIAccess uiAccess = UIAccess.Instance;
-        if (uiAccess != null && uiAccess.fpsCounter != null)
+        if (uiAccess != null && uiAccess.FpsCounter != null)
         {
-            uiAccess.fpsCounter.gameObject.SetActive(enabled);
-            uiAccess.fpsCounter.enabled = enabled;
+            uiAccess.FpsCounter.gameObject.SetActive(enabled);
+            uiAccess.FpsCounter.enabled = enabled;
         }
 
         if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
@@ -83,10 +105,10 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
     {
         if (settingsAdvanced.CheckIfMainMenu()) return;
 
-        UIAccess uiAccess = UIAccess.Instance;
-        if (uiAccess != null && uiAccess.crosshair != null)
+        UIAccess uiAccess = Core.UI;
+        if (uiAccess != null && uiAccess.Crosshair != null)
         {
-            uiAccess.crosshair.gameObject.SetActive(enabled);
+            uiAccess.Crosshair.gameObject.SetActive(enabled);
         }
 
         if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
@@ -105,9 +127,7 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
     {
         if (settingsAdvanced.CheckIfMainMenu()) return;
 
-        UIAccess uiAccess = UIAccess.Instance;
-
-        // TODO: Implement achievement popup setting if needed
+        // TODO
 
         if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
     }
@@ -116,11 +136,11 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
     {
         if (settingsAdvanced.CheckIfMainMenu()) return;
 
-        UIAccess uiAccess = UIAccess.Instance;
-        if (uiAccess != null && uiAccess.uiDebugPopup != null)
+        UIAccess uiAccess = Core.UI;
+        if (uiAccess != null && uiAccess.Console != null)
         {
-            uiAccess.uiDebugPopup.ForceClose();
-            uiAccess.uiDebugPopup.enabled = enabled;
+            uiAccess.Console.ForceClose();
+            uiAccess.Console.enabled = enabled;
         }
 
         if (settingsAdvanced.openConsoleOnErrorToggle != null)
@@ -135,9 +155,7 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
     {
         if (settingsAdvanced.CheckIfMainMenu()) return;
 
-        UIAccess uiAccess = UIAccess.Instance;
-
-        // TODO: Implement logic to open console on error
+        // TODO
 
         if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
     }
