@@ -1,8 +1,8 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Cysharp.Threading.Tasks;
 
 public class SettingsInitializer : MonoBehaviour
 {
@@ -101,12 +101,12 @@ public class SettingsInitializer : MonoBehaviour
         while (attempts < maxAttempts)
         {
             bool allReady = true;
-            bool isMainMenu = GameManager.Instance && GameManager.Instance.IsInMainMenu;
+            bool isMainMenu = Core.GameManager && Core.GameManager.IsInMainMenu;
 
             if (!isMainMenu)
             {
                 // Wait for Player if we're not in main menu
-                if (Player.Instance == null)
+                if (Core.Player == null)
                 {
                     allReady = false;
                 }
