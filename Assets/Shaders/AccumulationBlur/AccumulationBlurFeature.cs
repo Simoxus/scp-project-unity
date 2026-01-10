@@ -6,10 +6,7 @@ public class AccumulationBlurFeature : ScriptableRendererFeature
     [System.Serializable]
     public class Settings
     {
-        [Tooltip("When to apply the effect")]
         public RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
-
-        [Tooltip("The AccumulationBlur shader")]
         public Shader shader;
     }
 
@@ -23,11 +20,7 @@ public class AccumulationBlurFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        if (settings.shader == null)
-        {
-            Debug.LogWarning("AccumulationBlurFeature: Shader is not assigned!");
-            return;
-        }
+        if (settings.shader == null) return;
 
         renderer.EnqueuePass(pass);
     }

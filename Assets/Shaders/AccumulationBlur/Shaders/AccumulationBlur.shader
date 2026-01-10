@@ -11,7 +11,7 @@ Shader "Hidden/AccumulationBlur"
         Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline"}
         LOD 100
 
-        // Pass 1 : Blend previous frame with current
+        // Blend previous frame with current
         Pass
         {
             Name "Accumulation Blend"
@@ -39,22 +39,17 @@ Shader "Hidden/AccumulationBlur"
             half4 frag(Varyings input) : SV_Target
             {
                 float2 uv = input.texcoord;
-
-                // Sample current frame and previous accumulated frame
                 half4 current = SAMPLE_TEXTURE2D(_CurrentFrame, sampler_CurrentFrame, uv);
                 half4 accumulated = SAMPLE_TEXTURE2D(_AccumulationTex, sampler_AccumulationTex, uv);
 
-                // Apply desaturation to accumulated frame (for B & W effect)
+                // Apply desaturation to accumulated frame
                 if (_Desaturation > 0.0)
                 {
                     float luminance = dot(accumulated.rgb, float3(0.299, 0.587, 0.114));
                     accumulated.rgb = lerp(accumulated.rgb, luminance.xxx, _Desaturation);
                 }
 
-                // Apply color tint to accumulated frame
                 accumulated.rgb *= _TintColor;
-
-                // Lerp between current and accumulated based on blur power
                 half4 result = lerp(current, accumulated, _BlurPower);
 
                 return result;
@@ -62,7 +57,7 @@ Shader "Hidden/AccumulationBlur"
             ENDHLSL
         }
 
-        // Pass 2 : Copy result back to accumulation texture
+        // Copy result back
         Pass
         {
             Name "Copy to Accumulation"
