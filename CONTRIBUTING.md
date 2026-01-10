@@ -10,9 +10,11 @@
 
 - `main` - Stable releases
 - `dev` - Active development (base your work/forks on this)
-- `branch/feat/feature-name` - New features
-- `branch/fix/bug-description` - Bug fixes
-- `branch/refac/component-name` - Code rewrites
+- `feature/feature-name` - New features
+- `fix/bug-description` - Bug fixes
+- `hotfix/cockroach-flying` - Urgent fixes
+- `refactor/component-name` - Code rewrites
+- `test/173-kissing` - Prototypes
 
 ## Font generation
 * Majority of fonts - Use Extended ASCII for your Character Set
