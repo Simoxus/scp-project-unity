@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
-  m_DefaultGroup: 3eb5cb9bfe6013c4989412028da9f92d
+  m_DefaultGroup: 4164e376c94605f49b01eb2b2afe3868
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: b8b7d604ed8e0651bad9cd460c82e6fe
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -30,7 +30,7 @@ MonoBehaviour:
     m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider
   m_IgnoreUnsupportedFilesInBuild: 0
-  m_UniqueBundleIds: 0
+  m_UniqueBundleIds: 1
   m_EnableJsonCatalog: 0
   m_NonRecursiveBuilding: 1
   m_AllowNestedBundleFolders: 0
@@ -47,23 +47,28 @@ MonoBehaviour:
   m_DisableVisibleSubAssetRepresentations: 0
   m_BuiltInBundleNaming: 0
   mBuiltInBundleCustomNaming: 
-  m_MonoScriptBundleNaming: 0
+  m_MonoScriptBundleNaming: 2
   m_CheckForContentUpdateRestrictionsOption: 0
-  m_MonoScriptBundleCustomNaming: 
+  m_MonoScriptBundleCustomNaming: ProjectUnity
   m_RemoteCatalogBuildPath:
     m_Id: 
   m_RemoteCatalogLoadPath:
     m_Id: 
-  m_ContentStateBuildPathProfileVariableName: 
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
+  - {fileID: 11400000, guid: cf7b4ef19a92e234e8caf4737aa3474e, type: 2}
   - {fileID: 11400000, guid: cb1ecec47abc0b34690b721fb9a78e14, type: 2}
   - {fileID: 11400000, guid: e467519d0cb270b4e86e36f2affc0380, type: 2}
+  - {fileID: 11400000, guid: 3496d68ff5acf6442ba8cde6fee8c0a1, type: 2}
+  - {fileID: 11400000, guid: d307a938e6657994f8bd22a833f49f02, type: 2}
+  - {fileID: 11400000, guid: cbfa3e2489ba0df42a53c1daf5289ef1, type: 2}
   - {fileID: 11400000, guid: aaf23c5a29500e34f9003e17ac1d29c1, type: 2}
   - {fileID: 11400000, guid: dc4a27d851817c74e8e5258fdd53a615, type: 2}
+  - {fileID: 11400000, guid: f4bffc0223c934d4fb4182bc5575c197, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
@@ -105,6 +110,9 @@ MonoBehaviour:
     - default
     - Locale
     - Locale-en
+    - Locale-ru
+    - Preload
+    - Locale-es
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 14e2a682b19bc6046b88e1bafdfe8d99, type: 2}
