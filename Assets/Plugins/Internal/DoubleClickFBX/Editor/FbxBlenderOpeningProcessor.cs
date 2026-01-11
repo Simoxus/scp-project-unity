@@ -1,3 +1,5 @@
+// thanks to FleshMobProductions https://gist.github.com/FleshMobProductions/f598096b705f6a9c96beb58e284303f1
+
 #if PLATFORM_STANDALONE_WIN
 using System;
 using System.IO;
@@ -9,39 +11,47 @@ public static class FbxBlenderOpeningProcessor
 {
     private static readonly string blenderPath = @"C:\Program Files (x86)\Steam\steamapps\common\Blender\blender.exe";
 
+    private static string PythonScriptPath
+    {
+        get
+        {
+            string editorPath = Path.Combine(Application.dataPath, "Plugins", "Internal", "DoubleClickFBX", "Editor", "blender_unity_bridge.py");
+            if (!File.Exists(editorPath)) return null;
+            return editorPath;
+        }
+    }
+
     [OnOpenAsset]
     public static bool OnOpenAsset(int instanceId, int line)
     {
         UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceId);
         string assetPath = AssetDatabase.GetAssetPath(instanceId);
+
         if (string.Equals(Path.GetExtension(assetPath), ".fbx", StringComparison.OrdinalIgnoreCase)
             && obj is GameObject)
         {
-            Debug.Log($"Opening FBX file \"{assetPath}\" in Blender");
+            Debug.Log($"Opening FBX file '{assetPath}' in Blender");
             OpenAsFbxInBlender(assetPath);
-            return true; // Prevent Unity from further processing the opening task
+            return true;
         }
         return false;
     }
 
     private static void OpenAsFbxInBlender(string assetPath)
     {
-        string assetPathPythonFull = Path.GetFullPath(assetPath).Replace("\\", "/");
-
-        // Delete default cube and import FBX file
-        string[] instructions = new string[]
+        if (!File.Exists(blenderPath))
         {
-            "import bpy",
-            $"bpy.ops.import_scene.fbx( filepath = '{assetPathPythonFull}' )"
-        };
+            Debug.LogError($"Blender not found at\nUpdate blenderPath in FbxBlenderOpeningProcessor");
+            return;
+        }
 
-        string pythonLoadFbxArgument = CreatePythonExpressionArgument(instructions);
-        StartBlenderWithArguments(pythonLoadFbxArgument);
-    }
-    private static string CreatePythonExpressionArgument(string[] pythonLines)
-    {
-        // Multi line instructions possible using instruction separation with ;
-        return $"--python-expr \"{string.Join(";", pythonLines)}\"";
+        string pythonScript = PythonScriptPath;
+        if (pythonScript == null) return;
+
+        string fbxFullPath = Path.GetFullPath(assetPath);
+        string arguments = $"--python \"{pythonScript}\" -- \"{fbxFullPath}\"";
+
+        StartBlenderWithArguments(arguments);
     }
 
     private static void StartBlenderWithArguments(string arguments)
