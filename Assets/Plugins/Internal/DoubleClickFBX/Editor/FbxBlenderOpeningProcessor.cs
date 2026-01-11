@@ -15,9 +15,13 @@ public static class FbxBlenderOpeningProcessor
     {
         get
         {
-            string editorPath = Path.Combine(Application.dataPath, "Plugins", "Internal", "DoubleClickFBX", "Editor", "blender_unity_bridge.py");
-            if (!File.Exists(editorPath)) return null;
-            return editorPath;
+            string scriptPath = new System.Diagnostics.StackTrace(true).GetFrame(0).GetFileName();
+            string scriptDirectory = Path.GetDirectoryName(scriptPath);
+            string pythonScript = Path.Combine(scriptDirectory, "blender_unity_bridge.py");
+
+            if (!File.Exists(pythonScript)) return null;
+
+            return pythonScript;
         }
     }
 
