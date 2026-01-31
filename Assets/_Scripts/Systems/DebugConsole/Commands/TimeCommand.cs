@@ -33,7 +33,7 @@ namespace Console.Commands
 
                 if (!float.TryParse(args[1], out value))
                 {
-                    ConsoleManager.LogToConsole("Invalid value for 'set'. Please enter a number.".AsError());
+                    ConsoleManager.LogToConsole(Usage.AsError());
                     return;
                 }
 
@@ -43,7 +43,7 @@ namespace Console.Commands
             }
             else
             {
-                ConsoleManager.LogToConsole("Unknown time method. Use 'get' or 'set'.".AsError());
+                ConsoleManager.LogToConsole(Usage.AsError());
                 return;
             }
         }

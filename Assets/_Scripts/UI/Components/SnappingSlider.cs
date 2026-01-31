@@ -10,6 +10,10 @@ public class SnappingSlider : MonoBehaviour
         public RectTransform marker;
     }
 
+    [Space]
+    [SerializeField] private BaseSettingsApplier applier;
+
+    [Space]
     public Slider targetSlider;
     public SnapPoint[] snapPoints;
 
@@ -55,7 +59,10 @@ public class SnappingSlider : MonoBehaviour
         {
             // Play the snap sound ONLY if snapping to a new different marker
             if (nearestIndex != _lastActiveIndex)
+            {
+                if (applier != null && applier.inBatchMode) return;
                 FMODHelper.PlayOneShot(Core.AudioDataAccess.UI.SliderSnapSound);
+            }
 
             UpdateMarkers(nearestIndex);
         }

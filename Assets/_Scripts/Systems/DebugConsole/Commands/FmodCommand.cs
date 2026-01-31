@@ -8,7 +8,9 @@ namespace Console.Commands
     {
         public override string CommandWord => "fmod";
         public override string Description => "Debug FMOD events.";
-        protected override string RawUsage => "fmod <play|playinst|stop|list[optional: refresh]> <eventPath>";
+        protected override string RawUsage => "fmod <play|playinst|stop|list[refresh]> <eventPath>";
+
+        private static Dictionary<string, int> _debugHandles = new Dictionary<string, int>();
 
         public override void Execute(string[] args)
         {
@@ -43,27 +45,38 @@ namespace Console.Commands
                     string eventPath = rawName.StartsWith("event:/") ? rawName : $"event:/{rawName}";
                     EventReference evRef = RuntimeManager.PathToEventReference(eventPath);
 
+                    int instanceHandle;
+
                     switch (action)
                     {
                         case "play":
                             FMODHelper.PlayOneShot3D(evRef, Vector3.zero);
-                            ConsoleManager.LogToConsole($"Played FMOD sound oneshot '{eventPath}'".AsSuccess());
+                            ConsoleManager.LogToConsole($"Played FMOD oneshot '{eventPath}'".AsSuccess());
                             break;
 
                         case "playinst":
-                            FMODHelper.PlayInstance(evRef, eventPath, Vector3.zero);
-                            ConsoleManager.LogToConsole($">Started FMOD sound instance '{eventPath}'".AsSuccess());
+                            instanceHandle = FMODHelper.PlayInstance(evRef, Core.Player.gameObject);
+                            _debugHandles[eventPath] = instanceHandle;
+                            ConsoleManager.LogToConsole($"Started FMOD sound instance '{eventPath}' (handle: {instanceHandle})".AsSuccess());
                             break;
 
                         case "stop":
-                            FMODHelper.StopInstance(eventPath);
-                            ConsoleManager.LogToConsole($"Stopped FMOD sound instance '{eventPath}'".AsSuccess());
+                            if (_debugHandles.TryGetValue(eventPath, out instanceHandle))
+                            {
+                                FMODHelper.StopInstance(instanceHandle);
+                                _debugHandles.Remove(eventPath);
+                                ConsoleManager.LogToConsole($"Stopped FMOD sound instance '{eventPath}'".AsSuccess());
+                            }
+                            else
+                            {
+                                ConsoleManager.LogToConsole($"No active instance found for '{eventPath}'".AsError());
+                            }
                             break;
                     }
                     break;
 
                 default:
-                    ConsoleManager.LogToConsole($"Unknown FMOD method '{action}'. Use 'play', 'playinst', 'stop' or 'list[optional: refresh]'.".AsError());
+                    ConsoleManager.LogToConsole(Usage.AsError());
                     break;
             }
         }

@@ -15,28 +15,53 @@ public enum PlayerState
 
 public class Player : Singleton<Player>
 {
+    [Space]
     [ReadOnly] public PlayerState CurrentState = PlayerState.Idle;
 
     [Header("Scripts")]
-    public PlayerController PlayerController;
-    public PlayerInputs PlayerInputs;
-    public PlayerStats PlayerStats;
-    public PlayerHealth PlayerHealth;
-    public PlayerBobbing PlayerBobbing;
-    public PlayerSanity PlayerSanity;
-    public PlayerFootsteps PlayerFootsteps;
-    public PlayerInteract PlayerInteract;
-    public PlayerFreecam PlayerFreecam;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerSprint playerSprint;
+    [SerializeField] private PlayerBlink playerBlink;
+    [SerializeField] private PlayerInputs playerInputs;
+    [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private PlayerBobbing playerBobbing;
+    [SerializeField] private PlayerSanity playerSanity;
+    [SerializeField] private PlayerFootsteps playerFootsteps;
+    [SerializeField] private PlayerInteract playerInteract;
+    [SerializeField] private PlayerInventory playerInventory;
+    [SerializeField] private PlayerFreecam playerFreecam;
 
     [Header("Components")]
-    public CharacterController CharacterController;
-    public GameObject CameraRoot;
-    public Camera CameraBrain;
-    public CinemachineCamera CameraMain;
-    public CinemachineBrain CameraSettings;
-    public CinemachineImpulseListener CameraImpulseListener;
-    public CinemachineImpulseSource CameraImpulseSource;
-    public StudioListener CameraBrainStudioListener;
+    [SerializeField] private CharacterController characterController;
+    [SerializeField] private GameObject cameraRoot;
+    [SerializeField] private Camera cameraBrain;
+    [SerializeField] private CinemachineCamera cameraMain;
+    [SerializeField] private CinemachineBrain cameraSettings;
+    [SerializeField] private CinemachineImpulseListener cameraImpulseListener;
+    [SerializeField] private CinemachineImpulseSource cameraImpulseSource;
+    [SerializeField] private StudioListener cameraBrainStudioListener;
+
+    // Properties
+    public PlayerController Controller => playerController;
+    public PlayerSprint Sprint => playerSprint;
+    public PlayerBlink Blink => playerBlink;
+    public PlayerInputs Inputs => playerInputs;
+    public PlayerHealth Health => playerHealth;
+    public PlayerBobbing Bobbing => playerBobbing;
+    public PlayerSanity Sanity => playerSanity;
+    public PlayerFootsteps Footsteps => playerFootsteps;
+    public PlayerInteract Interact => playerInteract;
+    public PlayerInventory Inventory => playerInventory;
+    public PlayerFreecam Freecam => playerFreecam;
+
+    public CharacterController CharacterController => characterController;
+    public GameObject CameraRoot => cameraRoot;
+    public Camera CameraBrain => cameraBrain;
+    public CinemachineCamera CameraMain => cameraMain;
+    public CinemachineBrain CameraSettings => cameraSettings;
+    public CinemachineImpulseListener CameraImpulseListener => cameraImpulseListener;
+    public CinemachineImpulseSource CameraImpulseSource => cameraImpulseSource;
+    public StudioListener CameraBrainStudioListener => cameraBrainStudioListener;
 
     public void Reset()
     {
@@ -46,37 +71,37 @@ public class Player : Singleton<Player>
     public bool CanMove()
     {
         return CurrentState != PlayerState.Noclip
-            && PlayerController != null
-            && PlayerController.enabled;
+            && playerController != null
+            && playerController.enabled;
     }
 
     public bool IsInState(PlayerState state) => CurrentState == state;
-
-    public bool IsMoving() => PlayerController != null && PlayerController.IsMoving;
-
-    public bool IsGrounded() => CharacterController != null && CharacterController.isGrounded;
+    public bool IsMoving() => playerController != null && playerController.IsMoving;
+    public bool IsGrounded() => characterController != null && characterController.isGrounded;
 
     private void AssignReferences()
     {
         // Assign scripts
-        PlayerController = GetComponent<PlayerController>();
-        PlayerInputs = GetComponent<PlayerInputs>();
-        PlayerStats = GetComponent<PlayerStats>();
-        PlayerHealth = GetComponent<PlayerHealth>();
-        PlayerBobbing = GetComponent<PlayerBobbing>();
-        PlayerSanity = GetComponent<PlayerSanity>();
-        PlayerFootsteps = GetComponent<PlayerFootsteps>();
-        PlayerInteract = GetComponent<PlayerInteract>();
-        PlayerFreecam = GetComponent<PlayerFreecam>();
+        playerController = GetComponent<PlayerController>();
+        playerSprint = GetComponent<PlayerSprint>();
+        playerBlink = GetComponent<PlayerBlink>();
+        playerInputs = GetComponent<PlayerInputs>();
+        playerHealth = GetComponent<PlayerHealth>();
+        playerBobbing = GetComponent<PlayerBobbing>();
+        playerSanity = GetComponent<PlayerSanity>();
+        playerFootsteps = GetComponent<PlayerFootsteps>();
+        playerInteract = GetComponent<PlayerInteract>();
+        playerInventory = GetComponent<PlayerInventory>();
+        playerFreecam = GetComponent<PlayerFreecam>();
 
         // Assign components
-        CharacterController = GetComponent<CharacterController>();
-        CameraRoot = GetComponentInChildren<CinemachineCamera>().transform.parent.gameObject;
-        CameraBrain = GetComponentInChildren<Camera>();
-        CameraMain = GetComponentInChildren<CinemachineCamera>();
-        CameraSettings = GetComponentInChildren<CinemachineBrain>();
-        CameraImpulseListener = GetComponentInChildren<CinemachineImpulseListener>();
-        CameraImpulseSource = GetComponentInChildren<CinemachineImpulseSource>();
-        CameraBrainStudioListener = GetComponentInChildren<StudioListener>();
+        characterController = GetComponent<CharacterController>();
+        cameraRoot = GetComponentInChildren<CinemachineCamera>().transform.parent.gameObject;
+        cameraBrain = GetComponentInChildren<Camera>();
+        cameraMain = GetComponentInChildren<CinemachineCamera>();
+        cameraSettings = GetComponentInChildren<CinemachineBrain>();
+        cameraImpulseListener = GetComponentInChildren<CinemachineImpulseListener>();
+        cameraImpulseSource = GetComponentInChildren<CinemachineImpulseSource>();
+        cameraBrainStudioListener = GetComponentInChildren<StudioListener>();
     }
 }

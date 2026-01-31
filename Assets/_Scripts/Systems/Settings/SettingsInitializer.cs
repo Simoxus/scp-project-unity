@@ -14,6 +14,7 @@ public class SettingsInitializer : MonoBehaviour
         public BaseSettings settingsScript;
     }
 
+    [Space]
     [SerializeField] private List<SettingsEntry> settingsEntries = new List<SettingsEntry>();
 
     private SettingsManager _settingsManager;
@@ -32,7 +33,7 @@ public class SettingsInitializer : MonoBehaviour
 
     private void Awake()
     {
-        _settingsManager = SettingsManager.Instance;
+        _settingsManager = Core.SettingsManager;
         RegisterCategories();
     }
 
@@ -85,7 +86,7 @@ public class SettingsInitializer : MonoBehaviour
         {
             if (entry.settingsScript != null)
             {
-                entry.settingsScript.LoadSettings();
+                await entry.settingsScript.LoadSettingsAsync();
             }
         }
 
@@ -105,14 +106,12 @@ public class SettingsInitializer : MonoBehaviour
 
             if (!isMainMenu)
             {
-                // Wait for Player if we're not in main menu
                 if (Core.Player == null)
                 {
                     allReady = false;
                 }
 
-                // Wait for UIAccess if needed
-                if (UIAccess.Instance == null)
+                if (Core.UI == null)
                 {
                     allReady = false;
                 }
@@ -132,8 +131,6 @@ public class SettingsInitializer : MonoBehaviour
             await UniTask.WaitForSeconds(0.1f, true);
             attempts++;
         }
-
-        Log.Warning("Timed out waiting for dependencies. Some settings may not apply correctly.");
     }
 
     public void ReapplyAllSettings()

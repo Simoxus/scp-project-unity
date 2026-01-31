@@ -53,8 +53,7 @@ namespace Console.Commands
                     break;
 
                 default:
-                    // If category is not recognized, log an error.
-                    ConsoleManager.LogToConsole($"Unknown info method '{category}'. Use 'game', 'metrics', 'device', or 'all'.".AsError());
+                    ConsoleManager.LogToConsole(Usage.AsError());
                     break;
             }
         }

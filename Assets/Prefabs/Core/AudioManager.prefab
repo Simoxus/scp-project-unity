@@ -56,8 +56,12 @@ MonoBehaviour:
   defaultRaySpread: 22
   defaultMaxDistance: 50
   occlusionDeadzone: 0.05
-  occlusionFalloffDistance: 5
-  closeProximityMultiplier: 0.75
+  priorityDistance: 15
+  maxRaysPerFrame: 50
+  performanceBudgetMs: 2
+  useJobSystem: 1
+  occlusionFalloffDistance: 2.81
+  closeProximityMultiplier: 2.49
   materialTransitionSpeed: 5.64
   occlusionMaterials:
   - tag: Tile
@@ -71,10 +75,8 @@ MonoBehaviour:
   - tag: GateFrame
     occlusionAmount: 0.268
   defaultOcclusionAmount: 0.4
-  useImmediateCheck: 1
-  immediateCheckInterval: 0.035
   showDebugRays: 0
-  showOcclusionDebug: 0
+  showPerformanceStats: 0
 --- !u!114 &7698426704425015211
 MonoBehaviour:
   m_ObjectHideFlags: 0

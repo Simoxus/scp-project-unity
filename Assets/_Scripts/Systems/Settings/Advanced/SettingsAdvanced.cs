@@ -11,7 +11,7 @@ public class SettingsAdvanced : BaseSettings
 
     [HideInInspector] public List<Locale> availableLocales = new List<Locale>();
 
-    [Header("References")]
+    [Space]
     public SettingsAdvancedApplier applier;
 
     [Header("UI Elements")]
@@ -39,7 +39,7 @@ public class SettingsAdvanced : BaseSettings
 
     public override void SaveSettings()
     {
-        SettingsManager settingsManager = SettingsManager.Instance;
+        SettingsManager settingsManager = Core.SettingsManager;
         if (settingsManager == null) return;
 
         settingsManager.SaveInt(CATEGORY, "GameLanguage", gameLanguageDropdown.value);
@@ -56,7 +56,7 @@ public class SettingsAdvanced : BaseSettings
 
     public override void LoadSettings()
     {
-        SettingsManager settingsManager = SettingsManager.Instance;
+        SettingsManager settingsManager = Core.SettingsManager;
         if (settingsManager == null) return;
 
         applier.inBatchMode = true;

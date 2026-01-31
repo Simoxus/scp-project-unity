@@ -49,8 +49,6 @@ public class ModMoveBuildFolder : IPostprocessBuildWithReport
                     string destModDir = Path.Combine(destinationModsPath, modName);
                     CopyDirectory(modDir, destModDir, ref fileCount, ref dirCount);
                 }
-
-                Log.Editor($"Successfully copied {fileCount} files in {dirCount} directories to: {destinationModsPath}");
             }
         }
     }

@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class KeycardDoorActivator : BaseDoorActivator
 {
-    [Header("Script References")]
-    public KeycardDoorVisual buttonVisual;
-    public KeycardDoorController targetDoorController;
+    public override BaseDoorController DoorController => targetDoorController;
+
+    [Space]
+    public KeycardDoorVisual KeycardVisual;
+    [SerializeField] private KeycardDoorController targetDoorController;
 
     public override void Interact()
     {
@@ -24,17 +26,17 @@ public class KeycardDoorActivator : BaseDoorActivator
         int playerKeycardLevel = GetPlayerKeycardLevel();
         bool keycardCheckSuccessful = IsCorrectKeycardLevel(playerKeycardLevel);
 
-        FMODHelper.PlayOneShotWithParameters(
+        FMODHelper.PlayOneShot3D(
             Core.AudioDataAccess.Doors.ButtonKeycardSound,
             transform.position,
-            ("Result", keycardCheckSuccessful ? 0.0f : 1.0f)
+            parameters: new[] { ("Result", keycardCheckSuccessful ? 0.0f : 1.0f) }
         );
 
         if (keycardCheckSuccessful)
         {
             targetDoorController.ToggleDoor().Forget();
 
-            if (Core.InventoryManager != null && Core.UI.Inventory.IsVisible)
+            if (Core.Player.Inventory != null && Core.UI.Inventory.IsVisible)
             {
                 Core.UI.Inventory.Hide();
             }
@@ -45,18 +47,18 @@ public class KeycardDoorActivator : BaseDoorActivator
 
     private int GetPlayerKeycardLevel()
     {
-        if (Core.InventoryManager == null)
-            return 0;
+        if (Core.Player.Inventory == null)
+            return -1;
 
-        ItemData equippedItem = Core.InventoryManager.GetEquippedItem();
+        ItemData equippedItem = Core.Player.Inventory.EquippedItem;
 
         if (equippedItem == null)
-            return 0;
+            return -1;
 
-        var keycardBehavior = Core.InventoryManager.GetEquippedBehavior<KeycardBehavior>();
+        var keycardBehavior = Core.Player.Inventory.GetEquippedBehavior<KeycardBehavior>();
         if (keycardBehavior != null)
         {
-            Core.InventoryManager.UnequipItem();
+            Core.Player.Inventory.UnequipItem();
             return keycardBehavior.keycardLevel;
         }
 
@@ -71,10 +73,10 @@ public class KeycardDoorActivator : BaseDoorActivator
     public async UniTask ResetButtonDisplay()
     {
         await UniTask.WaitForSeconds(1.6f, ignoreTimeScale: false);
-        buttonVisual.ToggleLogo(true);
-        buttonVisual.ToggleText(false);
-        buttonVisual.ChangeScreenColor(targetDoorController.defaultColor, true, 0.8f);
-        buttonVisual.ChangeScreenText("HI");
+        KeycardVisual.ToggleLogo(true);
+        KeycardVisual.ToggleText(false);
+        KeycardVisual.ChangeScreenColor(targetDoorController.SuccessStateColor, true, 0.8f);
+        KeycardVisual.ChangeScreenText("HI");
         await UniTask.WaitForSeconds(0.15f, ignoreTimeScale: false);
 
         SetButtonState(true);
@@ -82,25 +84,25 @@ public class KeycardDoorActivator : BaseDoorActivator
 
     public override void StartPulseEffect(Color startColor, float? customDuration = null, float? customIntensity = null)
     {
-        if (buttonVisual != null)
+        if (KeycardVisual != null)
         {
-            buttonVisual.StartPulse(startColor, customDuration, customIntensity);
+            KeycardVisual.StartPulse(startColor, customDuration, customIntensity);
         }
     }
 
     public override void StopPulseEffect()
     {
-        if (buttonVisual != null)
+        if (KeycardVisual != null)
         {
-            buttonVisual.StopPulse();
+            KeycardVisual.StopPulse();
         }
     }
 
     public void TransitionToPulseEffect(Color targetColor, float transitionDuration, float pulseDuration, float pulseIntensity)
     {
-        if (buttonVisual != null)
+        if (KeycardVisual != null)
         {
-            buttonVisual.TransitionToPulse(targetColor, transitionDuration, pulseDuration, pulseIntensity);
+            KeycardVisual.TransitionToPulse(targetColor, transitionDuration, pulseDuration, pulseIntensity);
         }
     }
 }

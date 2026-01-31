@@ -7,7 +7,7 @@ namespace Console.Commands
     public class WireframeCommand : BaseConsole
     {
         public override string CommandWord => "wireframe";
-        public override string Description => "Toggles wireframe rendering mode.";
+        public override string Description => "Toggles wireframe rendering mode." + " (editor-only)".AsEditor();
         protected override string RawUsage => "wireframe";
 
         private static bool isWireframe = false;

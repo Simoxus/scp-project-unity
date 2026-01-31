@@ -1,25 +1,31 @@
-﻿//using Facility.Generation;
+﻿using Facility.Generation;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public static class Core
 {
+    public const string COMMAND_NAMESPACE = "Console.Commands";
+    public const string PERSIST_DATA_NAMESPACE = "Facility.Persistence.Types";
+
     private static Player _player;
     private static UIAccess _ui;
 
     private static AudioDataAccess _audioDataAccess;
 
-    //private static FacilityGenerator _facilityGenerator;
-    //private static CullingSystem _cullingSystem;
+    private static FacilityGenerator _facilityGenerator;
+    private static CullingSystem _cullingSystem;
     private static AudioManager _audioManager;
     private static CameraManager _cameraManager;
+    private static ConsoleManager _consoleManager;
     private static EventManager _eventManager;
     private static FacilityManager _facilityManager;
     private static GameManager _gameManager;
     private static HintManager _hintManager;
-    private static InventoryManager _inventoryManager;
+    private static ModManager _modManager;
+    private static MusicManager _musicManager;
     private static ProgressManager _progressManager;
+    private static PersistenceManager _persistenceManager;
     private static SettingsManager _settingsManager;
 
     private static bool _hasSubscribedToSceneEvents = false;
@@ -114,15 +120,18 @@ public static class Core
 
     public static AudioDataAccess AudioDataAccess => LoadAddressableAccessor(ref _audioDataAccess, AudioDataAccess.GetInstanceSync, "AudioDataAccess");
 
-    //public static FacilityGenerator FacilityGenerator => GetOrCreateManager(ref _facilityGenerator, () => FacilityGenerator.Instance, "FacilityGenerator");
-    //public static CullingSystem CullingSystem => GetOrCreateManager(ref _cullingSystem, () => CullingSystem.Instance, "CullingSystem");
+    public static FacilityGenerator FacilityGenerator => GetOrCreateManager(ref _facilityGenerator, () => FacilityGenerator.Instance, "FacilityGenerator");
+    public static CullingSystem CullingSystem => GetOrCreateManager(ref _cullingSystem, () => CullingSystem.Instance, "CullingSystem");
     public static AudioManager AudioManager => GetOrCreateManager(ref _audioManager, () => AudioManager.Instance, "AudioManager");
     public static CameraManager CameraManager => GetOrCreateManager(ref _cameraManager, () => CameraManager.Instance, "CameraManager");
+    public static ConsoleManager ConsoleManager => GetOrCreateManager(ref _consoleManager, () => ConsoleManager.Instance, "ConsoleManager");
     public static EventManager EventManager => GetOrCreateManager(ref _eventManager, () => EventManager.Instance, "EventManager");
     public static FacilityManager FacilityManager => GetOrCreateManager(ref _facilityManager, () => FacilityManager.Instance, "FacilityManager");
     public static GameManager GameManager => GetOrCreateManager(ref _gameManager, () => GameManager.Instance, "GameManager");
     public static HintManager HintManager => GetOrCreateManager(ref _hintManager, () => HintManager.Instance, "HintManager");
-    public static InventoryManager InventoryManager => GetOrCreateManager(ref _inventoryManager, () => InventoryManager.Instance, "InventoryManager");
+    public static ModManager ModManager => GetOrCreateManager(ref _modManager, () => ModManager.Instance, "ModManager");
+    public static MusicManager MusicManager => GetOrCreateManager(ref _musicManager, () => MusicManager.Instance, "MusicManager");
+    public static PersistenceManager PersistenceManager => GetOrCreateManager(ref _persistenceManager, () => PersistenceManager.Instance, "PersistenceManager");
     public static ProgressManager ProgressManager => GetOrCreateManager(ref _progressManager, () => ProgressManager.Instance, "ProgressManager");
     public static SettingsManager SettingsManager => GetOrCreateManager(ref _settingsManager, () => SettingsManager.Instance, "SettingsManager");
 
@@ -131,15 +140,18 @@ public static class Core
         _player = null;
         _ui = null;
 
-        //_facilityGenerator = null;
-        //_cullingSystem = null;
+        _facilityGenerator = null;
+        _cullingSystem = null;
         _audioManager = null;
         _cameraManager = null;
+        _consoleManager = null;
         _eventManager = null;
         _facilityManager = null;
         _gameManager = null;
         _hintManager = null;
-        _inventoryManager = null;
+        _modManager = null;
+        _musicManager = null;
+        _persistenceManager = null;
         _progressManager = null;
     }
 

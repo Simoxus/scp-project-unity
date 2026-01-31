@@ -1,9 +1,9 @@
-using UnityEngine;
 using FMODUnity;
+using UnityEngine;
 
 public class FMODReverbZone : MonoBehaviour
 {
-    [Header("Zone Settings")]
+    [Space]
     [SerializeField] private EventReference reverbSnapshot;
     [Range(0f, 50f)] public float blendDistance = 5f;
 

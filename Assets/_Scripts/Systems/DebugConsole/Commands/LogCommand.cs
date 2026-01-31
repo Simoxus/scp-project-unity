@@ -34,7 +34,7 @@ namespace Console.Commands
                     Log.Info($"[Forced Info]: {message}");
                     break;
                 default:
-                    ConsoleManager.LogToConsole("Invalid log type. Use 'error', 'warning', 'log', or 'info'.".AsError());
+                    ConsoleManager.LogToConsole(Usage.AsError());
                     break;
             }
         }

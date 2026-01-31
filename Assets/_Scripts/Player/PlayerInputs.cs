@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputs : MonoBehaviour
 {
-    [Header("Input Actions")]
+    [Space]
     [SerializeField] private InputActionAsset playerInputAsset;
     public InputActionAsset PlayerInputAsset => playerInputAsset;
 
@@ -51,6 +51,10 @@ public class PlayerInputs : MonoBehaviour
 
     public event Action OnBlink;
     public event Action OnInteract;
+    public event Action OnUseItem;
+    public event Action OnUnequipItem;
+    public event Action OnQuickSave;
+    public event Action OnQuickLoad;
     public event Action OnDebugUI;
     public event Action OnPauseUI;
     public event Action OnInventoryUI;
@@ -122,6 +126,10 @@ public class PlayerInputs : MonoBehaviour
         CacheAction("Player/Crouch");
         CacheAction("Player/Blink");
         CacheAction("Player/Interact");
+        CacheAction("Player/Use");
+        CacheAction("Player/Unequip");
+        CacheAction("Player/Quick Save");
+        CacheAction("Player/Quick Load");
 
         CacheAction("Menus/DebugUI");
         CacheAction("Menus/PauseUI");
@@ -193,10 +201,10 @@ public class PlayerInputs : MonoBehaviour
         // Manage Freecam action map state
         // Freecam should be active when freecam mode is enabled, but blocked if game is paused by something OTHER than freecam
         bool isFreecamMapActive = _contexts.IsContextActive(InputContext.Freecam);
-        bool isInFreecamMode = Core.Player?.PlayerFreecam != null && Core.Player.PlayerFreecam.IsFreecamActive;
+        bool isInFreecamMode = Core.Player?.Freecam != null && Core.Player.Freecam.IsFreecamActive;
 
         bool isFreecamPaused = Core.GameManager != null &&
-                               Core.GameManager.HasPauseRequest(Core.Player.PlayerFreecam) &&
+                               Core.GameManager.HasPauseRequest(Core.Player.Freecam) &&
                                Core.GameManager.pauseRequestCount == 1;
         bool shouldFreecamBeBlocked = Core.GameManager != null && Core.GameManager.gamePaused && !isFreecamPaused;
 
@@ -234,6 +242,11 @@ public class PlayerInputs : MonoBehaviour
             }
         });
         BindPress("Player/Interact", () => OnInteract?.Invoke());
+        BindPress("Player/Use", () => OnUseItem?.Invoke());
+        BindPress("Player/Unequip", () => OnUnequipItem?.Invoke());
+
+        BindPress("Player/Quick Save", () => OnQuickSave?.Invoke());
+        BindPress("Player/Quick Load", () => OnQuickLoad?.Invoke());
 
         BindPress("Menus/DebugUI", () => OnDebugUI?.Invoke());
         BindPress("Menus/PauseUI", () => OnPauseUI?.Invoke());

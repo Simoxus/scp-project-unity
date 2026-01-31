@@ -2,21 +2,17 @@
 
 public class PickupItem : MonoBehaviour, IInteractable
 {
+    [Space]
     [SerializeField] private ItemData itemData;
+    [SerializeField] private Collider pickupCollider;
+    [SerializeField] private Transform raycastTarget;
     [SerializeField] private string interactionType = "Grab";
 
     private Outline _outline;
-    private Collider _collider;
 
     private void Awake()
     {
         _outline = GetComponent<Outline>();
-        _collider = GetComponent<Collider>();
-
-        if (_collider == null)
-        {
-            Debug.LogError($"PickupItem on '{gameObject.name}' has no Collider! It will not be detectable by PlayerInteract.");
-        }
     }
 
     public Transform GetTransform()
@@ -29,6 +25,16 @@ public class PickupItem : MonoBehaviour, IInteractable
         return _outline;
     }
 
+    public Collider GetInteractionCollider()
+    {
+        return pickupCollider;
+    }
+
+    public Vector3 GetRaycastTarget()
+    {
+        return raycastTarget != null ? raycastTarget.position : transform.position;
+    }
+
     public string GetInteractionType()
     {
         return interactionType;
@@ -37,15 +43,15 @@ public class PickupItem : MonoBehaviour, IInteractable
     public void Interact()
     {
         if (itemData == null) return;
-        if (InventoryManager.Instance == null) return;
+        if (Core.Player.Inventory == null) return;
 
-        if (InventoryManager.Instance.IsFull)
+        if (Core.Player.Inventory.IsFull)
         {
             Debug.Log("Inventory is full!");
             return;
         }
 
-        if (InventoryManager.Instance.AddItem(itemData))
+        if (Core.Player.Inventory.AddItem(itemData))
         {
             Destroy(gameObject);
         }

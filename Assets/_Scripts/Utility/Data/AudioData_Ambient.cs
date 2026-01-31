@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "AudioData_Ambient", menuName = "Custom/FMOD/Ambient Audio Data")]
 public class AudioData_Ambient : ScriptableObject
 {
+    [Space]
     public EventReference EntranceLoopSound;
     public EventReference ForestLoopSound;
     public EventReference GeneralLoopSound;

@@ -14,6 +14,13 @@
       "dependencies": {},
       "url": "https://registry.npmjs.org"
     },
+    "com.simoxus.blender-bridge": {
+      "version": "https://github.com/Simoxus/blender-bridge.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "ce20c740133b9ca917bbd8c0a7fc410a947036a8"
+    },
     "com.simoxus.light-cookie-generator": {
       "version": "https://github.com/Simoxus/light-cookie-generator.git",
       "depth": 0,
@@ -52,6 +59,16 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.animation.rigging": {
+      "version": "1.3.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.4.1",
+        "com.unity.test-framework": "1.1.24"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.bindings.openimageio": {
       "version": "1.0.0",
       "depth": 1,
@@ -63,7 +80,7 @@
     },
     "com.unity.burst": {
       "version": "1.8.25",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",

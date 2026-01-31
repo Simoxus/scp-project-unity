@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class UIInventory : MonoBehaviour
 {
-    [Header("UI Base")]
+    [Space]
     public Canvas Canvas;
 
     [Header("Inventory Panel")]
@@ -14,12 +14,12 @@ public class UIInventory : MonoBehaviour
     public GameObject HeldItemDisplay;
     public Image HeldItemImage;
 
+    public bool IsVisible => _isVisible;
+    public RectTransform InventoryPanelRect => InventoryPanel?.GetComponent<RectTransform>();
+
     private PlayerInputs _inputs;
     private bool _isVisible;
     private bool _wasCursorLocked;
-
-    public bool IsVisible => _isVisible;
-    public RectTransform InventoryPanelRect => InventoryPanel?.GetComponent<RectTransform>();
 
     private void Awake()
     {
@@ -34,15 +34,13 @@ public class UIInventory : MonoBehaviour
 
     private void OnEnable()
     {
-        // Input events
         if (Core.Player != null)
         {
-            _inputs = Core.Player.PlayerInputs;
+            _inputs = Core.Player.Inputs;
             if (_inputs != null)
                 _inputs.OnInventoryUI += Toggle;
         }
 
-        // Pause state events
         if (Core.GameManager != null)
         {
             Core.GameManager.OnPauseStateChanged += HandlePauseStateChanged;
@@ -51,11 +49,9 @@ public class UIInventory : MonoBehaviour
 
     private void OnDisable()
     {
-        // Input events
         if (_inputs != null)
             _inputs.OnInventoryUI -= Toggle;
 
-        // Pause state events
         if (Core.GameManager != null)
         {
             Core.GameManager.OnPauseStateChanged -= HandlePauseStateChanged;
@@ -64,20 +60,8 @@ public class UIInventory : MonoBehaviour
         ReleasePauseIfNeeded();
     }
 
-    private void Update()
-    {
-        // Right-click to unequip held item
-        if (InventoryManager.Instance != null &&
-            InventoryManager.Instance.GetEquippedItem() != null &&
-            Input.GetMouseButtonDown(1))
-        {
-            InventoryManager.Instance.UnequipItem();
-        }
-    }
-
     public void Toggle()
     {
-        // Don't open if game is paused by something else
         if (Core.GameManager != null &&
             Core.GameManager.gamePaused &&
             !Core.GameManager.HasPauseRequest(this))
@@ -95,8 +79,8 @@ public class UIInventory : MonoBehaviour
     {
         if (_isVisible) return;
 
-        // Prevent opening inventory while holding an equipped item
-        if (InventoryManager.Instance != null && InventoryManager.Instance.GetEquippedItem() != null)
+        PlayerInventory inventory = Core.Player?.Inventory;
+        if (inventory != null && inventory.EquippedItem != null)
             return;
 
         if (Canvas == null)
@@ -110,10 +94,11 @@ public class UIInventory : MonoBehaviour
         if (InventoryPanel != null)
             InventoryPanel.SetActive(true);
 
+        ClearAllSlotOutlines();
+
         if (Core.GameManager != null)
             Core.GameManager.RequestPause(this);
 
-        // Unlock and show cursor
         _wasCursorLocked = Cursor.lockState == CursorLockMode.Locked;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -131,9 +116,9 @@ public class UIInventory : MonoBehaviour
         if (Core.UI.Tooltips != null)
             Core.UI.Tooltips.Hide();
 
+        ClearAllSlotOutlines();
         ReleasePauseIfNeeded();
 
-        // Restore cursor state
         if (_wasCursorLocked)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -156,6 +141,17 @@ public class UIInventory : MonoBehaviour
             HeldItemDisplay.SetActive(false);
     }
 
+    private void ClearAllSlotOutlines()
+    {
+        if (SlotsContainer == null) return;
+
+        InventorySlot[] slots = SlotsContainer.GetComponentsInChildren<InventorySlot>();
+        foreach (var slot in slots)
+        {
+            slot.ClearOutline();
+        }
+    }
+
     private void ValidateCanvas()
     {
         if (Canvas == null)
@@ -171,7 +167,6 @@ public class UIInventory : MonoBehaviour
 
     private void HandlePauseStateChanged(bool isPaused, object requester)
     {
-        // If something else paused, close inventory
         if (!ReferenceEquals(requester, this))
         {
             if (_isVisible)
@@ -179,10 +174,10 @@ public class UIInventory : MonoBehaviour
                 Hide();
             }
 
-            // Unequip held item when paused by something else
-            if (InventoryManager.Instance != null && InventoryManager.Instance.GetEquippedItem() != null)
+            PlayerInventory inventory = Core.Player?.Inventory;
+            if (inventory != null && inventory.EquippedItem != null)
             {
-                InventoryManager.Instance.UnequipItem();
+                inventory.UnequipItem(false);
             }
         }
     }

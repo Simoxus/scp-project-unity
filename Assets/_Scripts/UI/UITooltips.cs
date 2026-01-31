@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UITooltips : MonoBehaviour
 {
-    [Header("Tooltip Elements")]
+    [Space]
     public Canvas canvas;
     public TextMeshProUGUI tooltipText;
     public RectTransform backgroundPanel;

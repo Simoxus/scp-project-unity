@@ -5,13 +5,12 @@ using UnityEngine;
 public class AudioData_Characters : ScriptableObject
 {
     [Header("Agents")]
+    public AudioData_Characters_Ulgrin Ulgrin;
     public EventReference AgentBalconySound;
     public EventReference AgentMusicLoverSound;
     public EventReference AgentRobertsSound;
     public EventReference AgentSadSound;
     public EventReference AgentSexyWhiteGuySound;
-    public EventReference AgentUlgrinSound;
-    public EventReference AgentUlgrinPrebreachSound;
 
     [Header("Mobile Task Force")]
     public EventReference ApacheSound;

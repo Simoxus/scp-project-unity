@@ -1,10 +1,9 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BarSlider : MonoBehaviour
 {
-    [Header("Slider Bar Variables")]
+    [Space]
     [SerializeField] private Image[] barSegments;
     [SerializeField] private Slider barSlider;
 

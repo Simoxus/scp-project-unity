@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ValueTooltipSlider : MonoBehaviour
 {
-    [Header("References")]
+    [Space]
     [SerializeField] private Slider slider;
     [SerializeField] private GameObject tooltipObject;
     [SerializeField] private TMP_Text tooltipText;

@@ -3,6 +3,11 @@ using UnityEngine;
 
 public static class Log
 {
+    // percentage
+    private const int HEADER_SIZE = 110;
+    private const int VERBOSE_HEADER_SIZE = 90;
+    private const int VERBOSE_SIZE = 85;
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
     public static bool VerboseEnabled { get; set; } = true;
 #else
@@ -10,6 +15,12 @@ public static class Log
 #endif
 
     #region Regular logging
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Header(object message)
+    {
+        Debug.Log($"<size={HEADER_SIZE}%><u>{message.ToString()}</size></u>".AsHeader(consoleColors: true));
+    }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Info(object message)
@@ -64,45 +75,52 @@ public static class Log
     #region Verbose logging
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void VerboseHeader(object message)
+    {
+        if (!VerboseEnabled) return;
+        Debug.Log($"<size={VERBOSE_HEADER_SIZE}%><u>[VERBOSE] {message.ToString()}</size></u>".AsHeader(verbose: true, consoleColors: true));
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseInfo(object message)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"[VERBOSE] {message}".ToString().AsInfo(verbose: true, consoleColors: true));
+        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".ToString().AsInfo(verbose: true, consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseInfo(object message, Object context)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"[VERBOSE] {message}".ToString().AsInfo(verbose: true, consoleColors: true), context);
+        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".ToString().AsInfo(verbose: true, consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseWarning(object message)
     {
         if (!VerboseEnabled) return;
-        Debug.LogWarning($"[VERBOSE] {message}".AsWarning(verbose: true, consoleColors: true));
+        Debug.LogWarning($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".AsWarning(verbose: true, consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseWarning(object message, Object context)
     {
         if (!VerboseEnabled) return;
-        Debug.LogWarning($"[VERBOSE] {message}".AsWarning(verbose: true, consoleColors: true), context);
+        Debug.LogWarning($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".AsWarning(verbose: true, consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseSuccess(object message)
     {
         if (!VerboseEnabled) return;
-        Debug.Log(message.ToString().AsSuccess(verbose: true, consoleColors: true));
+        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".AsSuccess(verbose: true, consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseSuccess(object message, Object context)
     {
         if (!VerboseEnabled) return;
-        Debug.Log(message.ToString().AsSuccess(verbose: true, consoleColors: true), context);
+        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".AsSuccess(verbose: true, consoleColors: true), context);
     }
 
     #endregion

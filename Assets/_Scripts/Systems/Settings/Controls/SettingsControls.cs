@@ -6,7 +6,7 @@ public class SettingsControls : BaseSettings
 {
     public override string CATEGORY => "Controls";
 
-    [Header("References")]
+    [Space]
     public SettingsControlsApplier applier;
 
     [Header("UI Elements")]
@@ -25,7 +25,7 @@ public class SettingsControls : BaseSettings
 
     public override void SaveSettings()
     {
-        SettingsManager settingsManager = SettingsManager.Instance;
+        SettingsManager settingsManager = Core.SettingsManager;
         if (settingsManager == null) return;
 
         settingsManager.SaveBool(CATEGORY, "InvertYAxis", invertYAxisToggle.isOn);
@@ -40,7 +40,7 @@ public class SettingsControls : BaseSettings
 
     public override void LoadSettings()
     {
-        SettingsManager settingsManager = SettingsManager.Instance;
+        SettingsManager settingsManager = Core.SettingsManager;
         if (settingsManager == null) return;
 
         applier.inBatchMode = true;

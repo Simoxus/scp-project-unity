@@ -3,6 +3,9 @@
 [attr]unity-json        eol=lf linguist-language=json
 [attr]unity-yaml        merge=unityyamlmerge eol=lf linguist-language=yaml
 
+# Hide certain files from GitHub's language stats
+Assets/Plugins/Internal/DoubleClickFBX/Editor/unity_fbx_bridge.py linguist-vendored
+
 # Unity source files
 *.cginc                 text
 *.compute               text linguist-language=hlsl

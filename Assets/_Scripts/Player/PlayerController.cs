@@ -3,7 +3,7 @@
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Move Settings")]
+    [Space]
     [SerializeField, Min(0)] private float walkSpeed = 12f;
     [SerializeField, Min(0)] private float sprintSpeed = 19.5f;
     [SerializeField, Min(0)] private float crouchSpeed = 5.4f;
@@ -131,6 +131,7 @@ public class PlayerController : MonoBehaviour
 
     private float _currentCharacterHeight;
     private float _heightVelocity;
+
     private float _crouchCheckDistance;
 
     private Vector3 _forceRotateTarget = Vector3.zero;
@@ -155,6 +156,7 @@ public class PlayerController : MonoBehaviour
 
         _currentCharacterHeight = _characterController.height;
         standingHeight = _currentCharacterHeight;
+
         _currentSpeed = walkSpeed;
         _crouchCheckDistance = standingHeight - crouchHeight + crouchCheckOffset;
     }
@@ -164,15 +166,15 @@ public class PlayerController : MonoBehaviour
         GameManager gameManager = Core.GameManager;
         if (gameManager && gameManager.gamePaused) return;
 
-        PlayerInputs inputs = _player.PlayerInputs;
+        PlayerInputs inputs = _player.Inputs;
         bool canMove = !gameManager.disablePlayerInputs;
 
         IsMoving = inputs.MoveInput.sqrMagnitude > 0.01f;
         _isCrouching = inputs.CrouchHeld;
-        IsSprinting = _player.PlayerStats.CanSprint() && inputs.SprintHeld && !_isCrouching;
+        IsSprinting = _player.Sprint.CanSprint() && inputs.SprintHeld && !_isCrouching;
 
         UpdatePlayerState(IsMoving, IsSprinting);
-        _player.PlayerStats.SetCurrentState(IsSprinting, IsMoving, _isCrouching);
+        _player.Sprint.SetCurrentState(IsSprinting, IsMoving, _isCrouching);
 
         if (canMove && !_isForceRotating)
         {
@@ -195,7 +197,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMove()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
         Vector2 moveInput = inputs.MoveInput;
         Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
 
@@ -223,7 +225,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleNoclipMove()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
         Vector2 moveInput = inputs.MoveInput;
         Vector3 forward = _cameraTransform.forward;
         Vector3 right = _cameraTransform.right;
@@ -254,7 +256,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLook()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
         Vector2 lookInput = inputs.LookInput * lookSpeed;
         if (!invertYAxis) lookInput.y = -lookInput.y;
 
@@ -277,7 +279,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleCrouch()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
 
         if (inputs.CrouchHeld)
         {
@@ -291,21 +293,33 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        float previousHeight = _currentCharacterHeight;
         float targetHeight = _isCrouching ? crouchHeight : standingHeight;
 
+        if (Mathf.Abs(_characterController.height - targetHeight) > 0.01f)
+        {
+            AdjustController(targetHeight);
+        }
+    }
+
+    private void AdjustController(float targetHeight)
+    {
+        float previousHeight = _characterController.height;
+
+        // Smooth the height transition
         _currentCharacterHeight = Mathf.SmoothDamp(
             _currentCharacterHeight,
             targetHeight,
             ref _heightVelocity,
             1f / crouchTransitionSpeed
         );
+
         _characterController.height = _currentCharacterHeight;
 
         float heightDifference = _currentCharacterHeight - previousHeight;
-        if (Mathf.Abs(heightDifference) > 0.001f)
+        if (Mathf.Abs(heightDifference) > 0.0001f)
         {
-            _characterController.transform.position += Vector3.up * (heightDifference / 2f);
+            Vector3 wiggle = Random.onUnitSphere * 0.05f;
+            _characterController.Move((Vector3.down + wiggle) * Time.deltaTime);
         }
     }
 
@@ -313,6 +327,7 @@ public class PlayerController : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(_forceRotateTarget);
         _cameraTransform.localRotation = Quaternion.Euler(_forceRotateTarget);
+        _rotationX = _forceRotateTarget.x;
         _isForceRotating = false;
     }
 
@@ -373,6 +388,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ResetLookRotation()
+    {
+        _rotationX = 0f;
+        _currentLook = Vector2.zero;
+        _currentLookVelocity = Vector2.zero;
+        _cameraTransform.localRotation = Quaternion.identity;
+    }
+
     public float CrouchState
     {
         get
@@ -388,11 +411,17 @@ public class PlayerController : MonoBehaviour
         _isForceRotating = true;
     }
 
+    public void ResetMoveDirection()
+    {
+        _moveDirection = Vector3.zero;
+        _currentSpeed = walkSpeed;
+    }
+
     public float DetermineCurrentSpeed()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
         if (inputs.CrouchHeld) return crouchSpeed;
-        if (_player.PlayerStats.CanSprint() && inputs.SprintHeld && !_isCrouching) return sprintSpeed;
+        if (_player.Sprint.CanSprint() && inputs.SprintHeld && !_isCrouching) return sprintSpeed;
         return walkSpeed;
     }
 

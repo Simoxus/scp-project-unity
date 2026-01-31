@@ -3,7 +3,7 @@
     public class NoclipCommand : BaseConsole
     {
         public override string CommandWord => "noclip";
-        public override string Description => "Toggles noclip mode (fly through walls).";
+        public override string Description => "Toggles noclip mode for the player.";
         protected override string RawUsage => "noclip";
 
         public override void Execute(string[] args)
@@ -17,7 +17,7 @@
             Player player = Core.Player;
             if (player == null) return;
 
-            player.PlayerController.ToggleNoclip();
+            player.Controller.ToggleNoclip();
 
             string status = player.IsInState(PlayerState.Noclip) ? "enabled" : "disabled";
             ConsoleManager.LogToConsole($"Noclip has been {status}.".AsSuccess());

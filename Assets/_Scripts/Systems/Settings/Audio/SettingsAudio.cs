@@ -5,7 +5,7 @@ public class SettingsAudio : BaseSettings
 {
     public override string CATEGORY => "Audio";
 
-    [Header("References")]
+    [Space]
     public SettingsAudioApplier applier;
 
     [Header("UI Elements")]
@@ -26,7 +26,7 @@ public class SettingsAudio : BaseSettings
 
     public override void SaveSettings()
     {
-        SettingsManager settingsManager = SettingsManager.Instance;
+        SettingsManager settingsManager = Core.SettingsManager;
         if (settingsManager == null) return;
 
         settingsManager.SaveFloat(CATEGORY, "MasterVolume", masterVolumeSlider.value);
@@ -41,7 +41,7 @@ public class SettingsAudio : BaseSettings
 
     public override void LoadSettings()
     {
-        SettingsManager settingsManager = SettingsManager.Instance;
+        SettingsManager settingsManager = Core.SettingsManager;
         if (settingsManager == null) return;
 
         applier.inBatchMode = true;
@@ -51,7 +51,7 @@ public class SettingsAudio : BaseSettings
         musicVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "MusicVolume", 1f);
         voiceoverVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "VoiceoverVolume", 1f);
         interfaceVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "InterfaceVolume", 1f);
-        realtimeOcclusionToggle.isOn = settingsManager.LoadBool(CATEGORY, "InterfaceVolume", true);
+        realtimeOcclusionToggle.isOn = settingsManager.LoadBool(CATEGORY, "RealtimeOcclusion", true);
 
         applier.ApplyMasterVolume(masterVolumeSlider.value);
         applier.ApplySoundVolume(soundVolumeSlider.value);

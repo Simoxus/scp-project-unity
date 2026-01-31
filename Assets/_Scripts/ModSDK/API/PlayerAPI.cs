@@ -15,9 +15,9 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public float GetWalkSpeed()
     {
-        if (_player.PlayerController != null)
+        if (_player.Controller != null)
         {
-            return _player.PlayerController.WalkSpeed;
+            return _player.Controller.WalkSpeed;
         }
         return 0f;
     }
@@ -29,9 +29,9 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public void SetWalkSpeed(float speed)
     {
-        if (_player.PlayerController != null)
+        if (_player.Controller != null)
         {
-            _player.PlayerController.WalkSpeed = speed;
+            _player.Controller.WalkSpeed = speed;
             Log.VerboseInfo($"Walk speed set to {speed}");
         }
     }
@@ -39,9 +39,9 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public float GetSprintSpeed()
     {
-        if (_player.PlayerController != null)
+        if (_player.Controller != null)
         {
-            return _player.PlayerController.SprintSpeed;
+            return _player.Controller.SprintSpeed;
         }
         return 0f;
     }
@@ -49,9 +49,9 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public void SetSprintSpeed(float speed)
     {
-        if (_player.PlayerController != null)
+        if (_player.Controller != null)
         {
-            _player.PlayerController.SprintSpeed = speed;
+            _player.Controller.SprintSpeed = speed;
             Log.VerboseInfo($"Sprint speed set to {speed}");
         }
     }
@@ -59,9 +59,9 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public float GetCrouchSpeed()
     {
-        if (_player.PlayerController != null)
+        if (_player.Controller != null)
         {
-            return _player.PlayerController.CrouchSpeed;
+            return _player.Controller.CrouchSpeed;
         }
         return 0f;
     }
@@ -69,9 +69,9 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public void SetCrouchSpeed(float speed)
     {
-        if (_player.PlayerController != null)
+        if (_player.Controller != null)
         {
-            _player.PlayerController.CrouchSpeed = speed;
+            _player.Controller.CrouchSpeed = speed;
             Log.VerboseInfo($"Crouch speed set to {speed}");
         }
     }
@@ -79,37 +79,37 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public float GetHealth()
     {
-        return _player.PlayerHealth.GetHealth();
+        return _player.Health.GetHealth();
     }
 
     [MoonSharpVisible(true)]
     public float GetMaxHealth()
     {
-        return _player.PlayerHealth.GetMaxHealth();
+        return _player.Health.GetMaxHealth();
     }
 
     [MoonSharpVisible(true)]
     public float GetHealthPercent()
     {
-        return _player.PlayerHealth.GetHealthPercent();
+        return _player.Health.GetHealthPercent();
     }
 
     [MoonSharpVisible(true)]
     public void DamagePlayer(float amount)
     {
-        _player.PlayerHealth.Take(amount);
+        _player.Health.Take(amount);
     }
 
     [MoonSharpVisible(true)]
     public void HealPlayer(float amount)
     {
-        _player.PlayerHealth.Heal(amount);
+        _player.Health.Heal(amount);
     }
 
     [MoonSharpVisible(true)]
     public void SetHealth(float amount)
     {
-        _player.PlayerHealth.Set(amount);
+        _player.Health.Set(amount);
     }
 
     [MoonSharpVisible(true)]
@@ -241,16 +241,16 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public void SetMovementEnabled(bool enabled)
     {
-        if (_player.PlayerController != null)
+        if (_player.Controller != null)
         {
-            _player.PlayerController.enabled = enabled;
+            _player.Controller.enabled = enabled;
         }
     }
 
     [MoonSharpVisible(true)]
     public bool IsMovementEnabled()
     {
-        return _player.PlayerController != null && _player.PlayerController.enabled;
+        return _player.Controller != null && _player.Controller.enabled;
     }
 
     [MoonSharpVisible(true)]
@@ -306,9 +306,9 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public void OnHealthChanged(Closure callback)
     {
-        if (_player.PlayerHealth != null)
+        if (_player.Health != null)
         {
-            _player.PlayerHealth.OnHealthChanged += (current, max) =>
+            _player.Health.OnHealthChanged += (current, max) =>
             {
                 try
                 {
@@ -324,9 +324,9 @@ public class PlayerAPI
     [MoonSharpVisible(true)]
     public void OnHealthLevelChanged(Closure callback)
     {
-        if (_player.PlayerHealth != null)
+        if (_player.Health != null)
         {
-            _player.PlayerHealth.OnHealthLevelChanged += (level) =>
+            _player.Health.OnHealthLevelChanged += (level) =>
             {
                 try
                 {

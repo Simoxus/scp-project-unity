@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5013688336047198745}
   - component: {fileID: 2729136384319010058}
   - component: {fileID: 2200654171206340253}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ RectTransform:
   m_GameObject: {fileID: 152951595677842222}
   m_LocalRotation: {x: -0, y: 1, z: 0.0000001892221, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0.0038897756}
-  m_LocalScale: {x: 0.025, y: 0.025, z: 0.025}
+  m_LocalScale: {x: 0.00625, y: 0.00625, z: 0.00625}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2610392301296523529}
@@ -102,11 +102,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'MEMORY
+  m_text: 'Memory
 
-    ACCESS
+    Access
 
-    VIOLATION'
+    Violation'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 57544f72d03078544938421bd693a3ff, type: 2}
   m_sharedMaterial: {fileID: 3252665640845409978, guid: 57544f72d03078544938421bd693a3ff, type: 2}
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 4855048505038041273}
   - component: {fileID: 7306931888942585497}
   - component: {fileID: 1262576938968983864}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710695, y: -0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0.0038897756}
-  m_LocalScale: {x: 0.029999997, y: 0.029999997, z: 0.029999997}
+  m_LocalScale: {x: 0.0075000003, y: 0.0075000003, z: 0.0075000003}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2610392301296523529}
@@ -345,6 +345,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8256134651489076907, guid: 05b61a3fb80d51c4cb2041903bcd3238, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 05b61a3fb80d51c4cb2041903bcd3238, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -6428962668990249494, guid: 05b61a3fb80d51c4cb2041903bcd3238, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -361,9 +369,21 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 3a3e61434be5aef448032d4812c99454, type: 2}
+    - target: {fileID: 269047001534634068, guid: 05b61a3fb80d51c4cb2041903bcd3238, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 05b61a3fb80d51c4cb2041903bcd3238, type: 3}
       propertyPath: m_Name
       value: ButtonElevator
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 05b61a3fb80d51c4cb2041903bcd3238, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3806595236043114704, guid: 05b61a3fb80d51c4cb2041903bcd3238, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -1526509560930016547, guid: 05b61a3fb80d51c4cb2041903bcd3238, type: 3}

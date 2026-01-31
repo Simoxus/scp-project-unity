@@ -1,16 +1,8 @@
-/* 
- * HEADERS: #00FFFFFF
- * INFO/LOGS: #ADD8E6FF
- * WARNINGS: #FFA500FF
- * ERRORS: #FF0000FF
- * SUCCESS: #33CC33
- * INPUT: #FFFFFF
-*/
-
 public abstract class BaseConsole : IConsoleCommand
 {
     public abstract string CommandWord { get; }
     public abstract string Description { get; }
+    public virtual string[] Aliases => new string[0];
     protected virtual string RawUsage => CommandWord;
     public string Usage => $"Usage: {RawUsage}";
 

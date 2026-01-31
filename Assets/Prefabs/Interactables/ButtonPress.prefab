@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3772648099377431939}
   - component: {fileID: 2017826124986189994}
   - component: {fileID: 1973647139476197039}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710695, y: -0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0.0038897756}
-  m_LocalScale: {x: 0.029999997, y: 0.029999997, z: 0.029999997}
+  m_LocalScale: {x: 0.0075000003, y: 0.0075000003, z: 0.0075000003}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5678681688690298238}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 5619689807830818237}
   - component: {fileID: 808754601738330161}
   - component: {fileID: 6879913321076587665}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ RectTransform:
   m_GameObject: {fileID: 5690966152440120765}
   m_LocalRotation: {x: -0, y: 1, z: 0.0000001892221, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0.0038897756}
-  m_LocalScale: {x: 0.025, y: 0.025, z: 0.025}
+  m_LocalScale: {x: 0.00625, y: 0.00625, z: 0.00625}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5678681688690298238}
@@ -211,11 +211,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'MEMORY
+  m_text: 'Memory
 
-    ACCESS
+    Access
 
-    VIOLATION'
+    Violation'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 57544f72d03078544938421bd693a3ff, type: 2}
   m_sharedMaterial: {fileID: 3252665640845409978, guid: 57544f72d03078544938421bd693a3ff, type: 2}
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -345,6 +345,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8256134651489076907, guid: 5862e292731021e4285a18f90011bf27, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 5862e292731021e4285a18f90011bf27, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -5648767689465423854, guid: 5862e292731021e4285a18f90011bf27, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -352,6 +360,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5862e292731021e4285a18f90011bf27, type: 3}
       propertyPath: m_Name
       value: ButtonPress
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5862e292731021e4285a18f90011bf27, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6821887585681450876, guid: 5862e292731021e4285a18f90011bf27, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -1526509560930016547, guid: 5862e292731021e4285a18f90011bf27, type: 3}
@@ -372,9 +388,9 @@ PrefabInstance:
       insertIndex: 2
       addedObject: {fileID: 9217851626191777301}
   m_SourcePrefab: {fileID: 100100000, guid: 5862e292731021e4285a18f90011bf27, type: 3}
---- !u!1 &1737061389827491908 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -8256134651489076907, guid: 5862e292731021e4285a18f90011bf27, type: 3}
+--- !u!23 &195498422967954837 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 5862e292731021e4285a18f90011bf27, type: 3}
   m_PrefabInstance: {fileID: 1546732924874125585}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1852792230432525376 stripped
@@ -394,15 +410,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a81c7e979c82454a891607942a56cbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonMesh: {fileID: 5466015331983382125}
-  buttonScreen: {fileID: 1737061389827491908}
-  buttonScreenTextObject: {fileID: 5690966152440120765}
-  buttonScreenText: {fileID: 6879913321076587665}
-  buttonScreenRenderer: {fileID: 0}
-  buttonScreenLogo: {fileID: 2017826124986189994}
+  screen: {fileID: 1852792230432525376}
+  screenRenderer: {fileID: 195498422967954837}
+  screenLogo: {fileID: 2017826124986189994}
+  screenTextObject: {fileID: 5690966152440120765}
+  screenText: {fileID: 6879913321076587665}
   screenMaterialIndex: 1
   pulseDuration: 0.6
   pulseMaxBrightness: 1.2
+  buttonMesh: {fileID: 5466015331983382125}
   tweenPushTime: 0.154
   meshPushedOffset: -0.04
 --- !u!114 &9217851626191777301

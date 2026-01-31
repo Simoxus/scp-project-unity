@@ -16,6 +16,10 @@
 - `refactor/component-name` - Code rewrites
 - `test/173-kissing` - Prototypes
 
+## Map generation
+* [A simplified summary of SCP - Containment Breach's map generation](https://docs.google.com/document/d/1HoehyQrJDPF8rQ0Zo-utYM8xkr82wkwDrJ0TW-KaiC4/edit?tab=t.0#heading=h.gi8p2nr14rh7)
+* [Documentation for SCP - Containment Breach: Unity's map generation](https://docs.google.com/document/d/1Jc8Rn0uu-94lyZqKbLOny1LYTI5gm28u4jWcFTT9ltI/edit?tab=t.0#heading=h.gi8p2nr14rh7)
+
 ## Font generation
 * Majority of fonts - Use Extended ASCII for your Character Set
 * Courier New font - Use Unicode Range (Hex), and use this range `20-7E,A0-FF,400-4FF`
@@ -65,11 +69,12 @@ OnDrawGizmosSelected()
 
 ### Code Quality
 
-* Keep methods focused and single-purpose
-* Avoid deep nesting (max 3-4 levels)
+* Keep methods focused
+* DO NOT USE SHJITY coroutines and use UniTask instead
+* PrimeTween, make sure your tweens use both `ToYieldInstruction()` and `ToUniTask()`
 * Use meaningful variable names
 * Remove debug code before committing
-* Avoid any hardcoded values - use SerializeField or constants
+* Avoid any hardcoded values, use SerializeField or constants
 
 ## Unity Guidelines
 
@@ -77,13 +82,10 @@ OnDrawGizmosSelected()
 
 * Keep prefabs modular
 * Test prefab changes
-* Document any setup for prefabs
 
 ### Asset Organization
 
-* Keep assets organized
 * Follow the existing folder structure since I worked very hard to keep it nice :(
-* Name assets descriptively
 * Remove unused assets
 
 ### Unity Version

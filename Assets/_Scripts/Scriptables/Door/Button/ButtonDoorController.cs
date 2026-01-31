@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ButtonDoorController : BaseDoorController
 {
+    [Header("Door Specific")]
     public ButtonDoorActivator doorActivator1;
     public ButtonDoorActivator doorActivator2;
 
@@ -21,17 +22,18 @@ public class ButtonDoorController : BaseDoorController
     {
         if (doorActivator1 != null)
         {
-            doorActivator1.buttonVisual.ToggleLogo(false);
-            doorActivator1.buttonVisual.ToggleText(true);
-            doorActivator1.buttonVisual.ChangeScreenText(message);
-            doorActivator1.buttonVisual.ChangeScreenColor(color, true);
+            doorActivator1.ButtonVisual.ToggleLogo(false);
+            doorActivator1.ButtonVisual.ToggleText(true);
+            doorActivator1.ButtonVisual.ChangeScreenText(message);
+            doorActivator1.ButtonVisual.ChangeScreenColor(color, true);
         }
+
         if (doorActivator2 != null)
         {
-            doorActivator2.buttonVisual.ToggleLogo(false);
-            doorActivator2.buttonVisual.ToggleText(true);
-            doorActivator2.buttonVisual.ChangeScreenText(message);
-            doorActivator2.buttonVisual.ChangeScreenColor(color, true);
+            doorActivator2.ButtonVisual.ToggleLogo(false);
+            doorActivator2.ButtonVisual.ToggleText(true);
+            doorActivator2.ButtonVisual.ChangeScreenText(message);
+            doorActivator2.ButtonVisual.ChangeScreenColor(color, true);
         }
     }
 
@@ -41,17 +43,18 @@ public class ButtonDoorController : BaseDoorController
 
         if (doorActivator1 != null)
         {
-            doorActivator1.buttonVisual.ToggleLogo(false);
-            doorActivator1.buttonVisual.ToggleText(true);
-            doorActivator1.buttonVisual.ChangeScreenColor(color, true);
-            doorActivator1.buttonVisual.ChangeScreenText(brokenMessage);
+            doorActivator1.ButtonVisual.ToggleLogo(false);
+            doorActivator1.ButtonVisual.ToggleText(true);
+            doorActivator1.ButtonVisual.ChangeScreenColor(color, true);
+            doorActivator1.ButtonVisual.ChangeScreenText(brokenMessage);
         }
+
         if (doorActivator2 != null)
         {
-            doorActivator2.buttonVisual.ToggleLogo(false);
-            doorActivator2.buttonVisual.ToggleText(true);
-            doorActivator2.buttonVisual.ChangeScreenColor(color, true);
-            doorActivator2.buttonVisual.ChangeScreenText(brokenMessage);
+            doorActivator2.ButtonVisual.ToggleLogo(false);
+            doorActivator2.ButtonVisual.ToggleText(true);
+            doorActivator2.ButtonVisual.ChangeScreenColor(color, true);
+            doorActivator2.ButtonVisual.ChangeScreenText(brokenMessage);
         }
     }
 
@@ -59,15 +62,15 @@ public class ButtonDoorController : BaseDoorController
     {
         if (doorActivator1 != null)
         {
-            doorActivator1.buttonVisual.ToggleLogo(true);
-            doorActivator1.buttonVisual.ToggleText(false);
-            doorActivator1.buttonVisual.ChangeScreenColor(color, true, 0.4f);
+            doorActivator1.ButtonVisual.ToggleLogo(true);
+            doorActivator1.ButtonVisual.ToggleText(false);
+            doorActivator1.ButtonVisual.ChangeScreenColor(color, true, 0.4f);
         }
         if (doorActivator2 != null)
         {
-            doorActivator2.buttonVisual.ToggleLogo(true);
-            doorActivator2.buttonVisual.ToggleText(false);
-            doorActivator2.buttonVisual.ChangeScreenColor(color, true, 0.4f);
+            doorActivator2.ButtonVisual.ToggleLogo(true);
+            doorActivator2.ButtonVisual.ToggleText(false);
+            doorActivator2.ButtonVisual.ChangeScreenColor(color, true, 0.4f);
         }
     }
 

@@ -19,7 +19,10 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 7758795055104
-    m_Localized: Select the graphics rendering backend.
+    m_Localized: 'Select the rendering backend.
+
+      <color=#f7a000>This setting
+      can only be changed from the command line.</color>'
     m_Metadata:
       m_Items: []
   - m_Id: 7852336422912
@@ -184,6 +187,11 @@ MonoBehaviour:
     m_Localized: Adjust the extent of your view visible on screen.\nHigher values
       provide a wider peripheral view but cause "fisheye" distortion, and can negatively
       impact your immersion.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9455871192539136
+    m_Localized: Simulate shadows in corners where objects meet.\nThis will slightly
+      affect performance.
     m_Metadata:
       m_Items: []
   references:

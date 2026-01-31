@@ -23,7 +23,7 @@ namespace Console.Commands
                 return;
             }
 
-            PlayerHealth playerHealth = Core.Player.PlayerHealth;
+            PlayerHealth playerHealth = Core.Player.Health;
             switch (method)
             {
                 case "set":
@@ -39,7 +39,7 @@ namespace Console.Commands
                     ConsoleManager.LogToConsole($"Player took {value} damage.".AsSuccess());
                     break;
                 default:
-                    ConsoleManager.LogToConsole("Unknown health method. Use 'set', 'heal', or 'damage'.".AsError());
+                    ConsoleManager.LogToConsole(Usage.AsError());
                     break;
             }
         }

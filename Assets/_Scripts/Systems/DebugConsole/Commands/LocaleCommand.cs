@@ -8,7 +8,7 @@ namespace Console.Commands
 
         public override void Execute(string[] args)
         {
-            ConsoleManager.LogToConsole($"Game Language: {LocalizationHelper.GetCurrentLanguage()}".AsSuccess());
+            ConsoleManager.LogToConsole($"Game Language: {LocalizationHelper.GetCurrentLanguage()}".AsInfo());
         }
     }
 }

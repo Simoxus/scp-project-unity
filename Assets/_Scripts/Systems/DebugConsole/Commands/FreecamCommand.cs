@@ -8,7 +8,7 @@ namespace Console.Commands
 
         public override void Execute(string[] args)
         {
-            bool isActive = Core.Player.PlayerFreecam.ToggleFreecam();
+            bool isActive = Core.Player.Freecam.ToggleFreecam();
 
             string status = isActive ? "enabled" : "disabled";
             ConsoleManager.LogToConsole($"Freecam has been {status}.".AsSuccess());

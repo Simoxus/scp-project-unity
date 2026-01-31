@@ -9,7 +9,7 @@ public static class StringExtensions
     }
 
     public static string AsHeader(this string text, bool verbose = false, bool consoleColors = false)
-        => text.Color(ColorScheme.Header, verbose);
+        => text.Color(consoleColors ? ColorScheme.ConsoleHeader : ColorScheme.Header, verbose);
 
     public static string AsInfo(this string text, bool verbose = false, bool consoleColors = false)
         => text.Color(consoleColors ? ColorScheme.ConsoleInfo : ColorScheme.Info, verbose);

@@ -59,10 +59,10 @@ public class Outline : MonoBehaviour
         _renderers = (includeChildren ? GetComponentsInChildren<Renderer>() : new[] { GetComponent<Renderer>() })
             .Where(r => r != null).ToArray();
 
-        _outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Mat_Outline_Mask"));
-        _outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Mat_Outline_Fill"));
-        _outlineMaskMaterial.name = "OutlineMask (Instance)";
-        _outlineFillMaterial.name = "OutlineFill (Instance)";
+        _outlineFillMaterial = Instantiate(Resources.Load<Material>(@"Mat_Outline-Fill"));
+        _outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Mat_Outline-Mask"));
+        _outlineFillMaterial.name = "Outline Fill (Instance)";
+        _outlineMaskMaterial.name = "Outline Mask (Instance)";
 
         LoadSmoothNormals();
         _needsUpdate = true;
@@ -85,7 +85,11 @@ public class Outline : MonoBehaviour
         }
         else
         {
-            if (!_materialsAttached) AttachOutlineMaterials();
+            if (!_materialsAttached)
+            {
+                AttachOutlineMaterials();
+                DelayedMaterialUpdate().Forget();
+            }
             _currentAlpha = 1f;
             UpdateMaterialAlpha();
         }
@@ -142,6 +146,12 @@ public class Outline : MonoBehaviour
         _fadeCts?.Dispose();
         _fadeCts = new CancellationTokenSource();
         FadeAsync(_fadeCts.Token).Forget();
+    }
+
+    private async UniTaskVoid DelayedMaterialUpdate()
+    {
+        await UniTask.Yield(PlayerLoopTiming.Update);
+        UpdateMaterialProperties();
     }
 
     private async UniTaskVoid FadeAsync(CancellationToken ct)

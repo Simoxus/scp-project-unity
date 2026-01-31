@@ -65,7 +65,7 @@ namespace Console.Commands
                 }
                 else
                 {
-                    ConsoleManager.LogToConsole($"Scene '{sceneIdentifier}' not found or not in available scenes list. Please check spelling or use a valid build index.".AsError());
+                    ConsoleManager.LogToConsole($"Scene '{sceneIdentifier}' not found or not in available scenes list.".AsError());
                 }
             }
         }
