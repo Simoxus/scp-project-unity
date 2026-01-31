@@ -4,9 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "AudioData_Music", menuName = "Custom/FMOD/Music Audio Data")]
 public class AudioData_Music : ScriptableObject
 {
-    public EventReference CreditsMusic;
-    public EventReference EntranceMusic;
-    public EventReference HeavyContainmentMusic;
-    public EventReference LightContainmentMusic;
+    [Space]
     public EventReference MainMenuMusic;
+    public EventReference CreditsMusic;
+    public EventReference IntroMusic;
+    public EventReference EntranceZoneMusic;
+    public EventReference HeavyContainmentZoneMusic;
+    public EventReference LightContainmentZoneMusic;
 }
