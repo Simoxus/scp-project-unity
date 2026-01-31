@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8441492455821714406}
   - component: {fileID: 4587523464980226130}
   - component: {fileID: 7254625661062508410}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ RectTransform:
   m_GameObject: {fileID: 1853430562545000702}
   m_LocalRotation: {x: -0, y: 1, z: 0.0000001892221, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0.0038897756}
-  m_LocalScale: {x: 0.025, y: 0.025, z: 0.025}
+  m_LocalScale: {x: 0.00625, y: 0.00625, z: 0.00625}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1670625042254171726}
@@ -102,11 +102,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'MEMORY
+  m_text: 'Memory
 
-    ACCESS
+    Access
 
-    VIOLATION'
+    Violation'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 57544f72d03078544938421bd693a3ff, type: 2}
   m_sharedMaterial: {fileID: 3252665640845409978, guid: 57544f72d03078544938421bd693a3ff, type: 2}
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 434160963841342933}
   - component: {fileID: 8435856115767359480}
   - component: {fileID: 123176917518871862}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710695, y: -0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0.0038897756}
-  m_LocalScale: {x: 0.029999997, y: 0.029999997, z: 0.029999997}
+  m_LocalScale: {x: 0.0075000003, y: 0.0075000003, z: 0.0075000003}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1670625042254171726}
@@ -345,6 +345,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8256134651489076907, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -1696581382812816358, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -352,6 +360,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
       propertyPath: m_Name
       value: ButtonKeycard
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7016358864071482373, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -1526509560930016547, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
@@ -394,11 +410,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12128e797b1525c4398d6dd46233995a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonScreen: {fileID: 4754308440140991348}
-  buttonScreenTextObject: {fileID: 1853430562545000702}
-  buttonScreenText: {fileID: 7254625661062508410}
-  buttonScreenRenderer: {fileID: 0}
-  buttonScreenLogo: {fileID: 8435856115767359480}
+  screen: {fileID: 4754308440140991348}
+  screenRenderer: {fileID: 6581859882699288229}
+  screenLogo: {fileID: 8435856115767359480}
+  screenTextObject: {fileID: 1853430562545000702}
+  screenText: {fileID: 7254625661062508410}
   screenMaterialIndex: 1
   pulseDuration: 0.6
   pulseMaxBrightness: 1.2
@@ -536,5 +552,10 @@ MonoBehaviour:
 --- !u!1 &4754308440140991348 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8256134651489076907, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
+  m_PrefabInstance: {fileID: 5518848056600949281}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6581859882699288229 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 7adacf6b699b3884dba981516b090c2b, type: 3}
   m_PrefabInstance: {fileID: 5518848056600949281}
   m_PrefabAsset: {fileID: 0}
