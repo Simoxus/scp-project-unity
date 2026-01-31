@@ -26,7 +26,6 @@ Shader "Custom/LightBeam"
 
         [Header(Dust Particles)]
         [Toggle(USE_DUST)] _UseDust("Enable Dust Particles", Float) = 0
-        _DustColor("Dust Color", Color) = (1,1,1,1)
         _DustDensity("Dust Density", Range(1, 50)) = 15
         _DustSize("Dust Size", Range(0.001, 0.1)) = 0.01
         _DustIntensity("Dust Intensity", Range(0, 5)) = 2
@@ -117,7 +116,6 @@ Shader "Custom/LightBeam"
                 float _NoiseIntensity;
                 float _NoiseSpeed;
                 float _NoiseContrast;
-                half4 _DustColor;
                 float _DustDensity;
                 float _DustSize;
                 float _DustIntensity;
@@ -185,6 +183,15 @@ Shader "Custom/LightBeam"
                 float dust = 0.0;
 
                 float3 relativePos = worldPos - beamOrigin - _DustOffset;
+    
+                // Only show dust in the top 30% of the beam (ignores fade distance)
+                float distFromOrigin = length(relativePos);
+                float maxDustDist = _FadeDist * 0.3; // Dust only in first 30% of beam
+                if (distFromOrigin > maxDustDist)
+                {
+                    return 0.0;
+                }
+    
                 float cellSize = 10.0 / _DustDensity;
                 float3 cell = floor(relativePos / cellSize);
 
@@ -195,10 +202,10 @@ Shader "Custom/LightBeam"
                         for (int z = -1; z <= 1; z++)
                         {
                             float3 currentCell = cell + float3(x, y, z);
-   
+
                             float3 random = hash33(currentCell);
                             float3 offset = random - 0.5;
- 
+
                             float sizeVar = lerp(0.85, 1.15, random.x);
                             float particleSize = _DustSize * sizeVar;
 
@@ -226,7 +233,7 @@ Shader "Custom/LightBeam"
                         }
                     }
                 }
-                
+    
                 return dust;
             }
 
@@ -250,7 +257,7 @@ Shader "Custom/LightBeam"
             half4 frag(Varyings IN) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
-                
+    
                 half4 color = _BaseColor * _Intensity;
 
                 #if USE_TEXTURE
@@ -273,14 +280,16 @@ Shader "Custom/LightBeam"
                 float val = pow(dotVal, _ViewPower);
                 fade *= max(0.0, lerp(_ViewMin, _ViewMax, val));
 
+                float dustFade = fade;
+
                 // Volumetric noise
                 #if USE_NOISE
                     float3 noisePos = IN.posWS * _NoiseScale;
                     noisePos.y += _Time.y * _NoiseSpeed;
-                    
+        
                     float noise = fractalNoise(noisePos);
                     noise = pow(noise, _NoiseContrast);
-                    
+        
                     // Blend
                     float noiseFactor = lerp(1.0 - _NoiseIntensity, 1.0, noise);
                     fade *= noiseFactor;
@@ -290,8 +299,10 @@ Shader "Custom/LightBeam"
                 #if USE_DUST
                     float dust = dustParticles(IN.posWS, IN.modelPos, _Time.y);
                     dust = saturate(dust * _DustIntensity);
-                    color.rgb += dust * _DustColor.rgb * fade;
-                    fade = saturate(fade + dust * _DustColor.a * 0.2);
+                    float dustVisibility = pow(dustFade, 0.5);
+        
+                    color.rgb += dust * _BaseColor.rgb * dustVisibility;
+                    fade = saturate(fade + dust * _BaseColor.a * 0.3);
                 #endif
 
                 half4 finalColor = half4(color.rgb, color.a * fade * _OverallAlpha);
