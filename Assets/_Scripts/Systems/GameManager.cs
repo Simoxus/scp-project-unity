@@ -9,7 +9,7 @@ public class GameManager : Singleton<GameManager>
 {
     [HideInInspector] public bool IsInMainMenu => SceneManager.GetActiveScene().name == "MainMenu";
 
-    [Header("Global Values")]
+    [Space]
     public bool gamePaused = false;
     public bool disablePlayerInputs = false;
     public bool hidePlayerHUD = false;
@@ -36,7 +36,7 @@ public class GameManager : Singleton<GameManager>
         _cursorControlRequesters.Clear();
     }
 
-    protected override void OnAwake()
+    protected override void OnSingletonAwake()
     {
         Time.timeScale = 1.0f;
         gamePaused = false;
@@ -50,6 +50,7 @@ public class GameManager : Singleton<GameManager>
         PrimeTweenConfig.warnTweenOnDisabledTarget = false;
         PrimeTweenConfig.warnZeroDuration = false;
         PrimeTweenConfig.warnEndValueEqualsCurrent = false;
+        PrimeTweenConfig.SetTweensCapacity(400);
 
         if (IsInMainMenu)
         {
