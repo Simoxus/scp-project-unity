@@ -6,7 +6,7 @@ using UnityEngine.Localization.Settings;
 
 public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [Header("Localized Content")]
+    [Space]
     [SerializeField] private LocalizedString localizedTooltip;
 
     private string _cachedTooltipText;

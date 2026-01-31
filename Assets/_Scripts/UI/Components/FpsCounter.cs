@@ -3,10 +3,8 @@ using UnityEngine;
 
 public class FpsCounter : MonoBehaviour
 {
-    [Header("References")]
+    [Space]
     [SerializeField] private TMP_Text fpsText;
-
-    [Header("Update Settings")]
     [SerializeField] private float pollingTime = 0.5f;
 
     private float _timeAccumulator;

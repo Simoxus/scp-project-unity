@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class ImageSlider : MonoBehaviour
 {
-    [Header("Bar Image")]
+    [Space]
     [SerializeField] private Image barImage;
 
     [Header("Bar Settings")]
