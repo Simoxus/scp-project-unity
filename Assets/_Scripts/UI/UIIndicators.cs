@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class UIIndicators : MonoBehaviour
 {
+    [Space]
     public CanvasGroup canvasGroup;
 
     [Header("Blink")]
@@ -75,9 +76,30 @@ public class UIIndicators : MonoBehaviour
     public void SetProgress(float currentBlink, float currentSprint)
     {
         if (blinkBar != null)
+        {
             blinkBar.SetProgress(Mathf.Clamp01(currentBlink));
+        }
+
         if (sprintBar != null)
+        {
             sprintBar.SetProgress(Mathf.Clamp01(currentSprint));
+        }
+    }
+
+    public void SetSprintProgress(float currentSprint)
+    {
+        if (sprintBar != null)
+        {
+            sprintBar.SetProgress(Mathf.Clamp01(currentSprint));
+        }
+    }
+
+    public void SetBlinkProgress(float currentBlink)
+    {
+        if (blinkBar != null)
+        {
+            blinkBar.SetProgress(Mathf.Clamp01(currentBlink));
+        }
     }
 
     public void SetSprintIcon(PlayerState state)

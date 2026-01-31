@@ -7,7 +7,7 @@ using UnityEngine.UI;
 [System.Serializable]
 public class UIInteract : MonoBehaviour
 {
-    [Header("UI References")]
+    [Space]
     public RectTransform uiTransform;
     public RectTransform iconTransform;
     public Image iconImage;
@@ -45,6 +45,8 @@ public class UIInteract : MonoBehaviour
     private float _cachedAspect;
     private float _cachedHorizontalPadding;
     private ScreenBounds _screenBounds;
+
+    private bool _wasHidden = true;
 
     private struct ScreenBounds
     {
@@ -95,11 +97,19 @@ public class UIInteract : MonoBehaviour
         Vector3 clampedPos = ClampToScreenBounds(screenPos);
         float fadeMult = (disableFading || !offScreen) ? 1f : offScreenFadeSpeed;
 
-        iconTransform.position = Vector3.Lerp(
-            iconTransform.position,
-            clampedPos,
-            Time.deltaTime * cornerLerpSpeed
-        );
+        if (_wasHidden)
+        {
+            iconTransform.position = clampedPos;
+            _wasHidden = false;
+        }
+        else
+        {
+            iconTransform.position = Vector3.Lerp(
+                iconTransform.position,
+                clampedPos,
+                Time.deltaTime * cornerLerpSpeed
+            );
+        }
 
         UpdateCanvasGroup(alpha * fadeMult);
         UpdateIcon(interactionType, alpha);
@@ -110,6 +120,7 @@ public class UIInteract : MonoBehaviour
         UpdateCanvasGroup(0);
         SetIcon(null, 0);
         Core.UI.Crosshair.enabled = true;
+        _wasHidden = true;
     }
 
     public async UniTask PlayInteractionTween()

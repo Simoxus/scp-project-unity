@@ -6,7 +6,7 @@ using UnityEngine.Localization;
 
 public class UITutorials : MonoBehaviour
 {
-    [Header("Freecam Hints")]
+    [Space]
     public CanvasGroup freecamHintPanel;
     public TMP_Text freecamHintText;
     public LocalizedString freecamControlHintTemplate;
@@ -31,7 +31,7 @@ public class UITutorials : MonoBehaviour
 
         if (Core.Player != null)
         {
-            _freecam = Core.Player.PlayerFreecam;
+            _freecam = Core.Player.Freecam;
         }
 
         // Setup Localization
@@ -42,9 +42,9 @@ public class UITutorials : MonoBehaviour
         }
 
         // Setup Input Listeners
-        if (Core.Player?.PlayerInputs != null)
+        if (Core.Player?.Inputs != null)
         {
-            var inputs = Core.Player.PlayerInputs;
+            var inputs = Core.Player.Inputs;
             inputs.OnFreecamLock += OnFreecamToggleStateChanged;
             inputs.OnFreecamSmooth += OnFreecamToggleStateChanged;
             inputs.OnFreecamWobble += OnFreecamToggleStateChanged;
@@ -61,9 +61,9 @@ public class UITutorials : MonoBehaviour
         if (freecamControlHintTemplate != null)
             freecamControlHintTemplate.StringChanged -= OnFreecamStringChanged;
 
-        if (Core.Player?.PlayerInputs != null)
+        if (Core.Player?.Inputs != null)
         {
-            var inputs = Core.Player.PlayerInputs;
+            var inputs = Core.Player.Inputs;
             inputs.OnFreecamLock -= OnFreecamToggleStateChanged;
             inputs.OnFreecamSmooth -= OnFreecamToggleStateChanged;
             inputs.OnFreecamWobble -= OnFreecamToggleStateChanged;
@@ -121,7 +121,7 @@ public class UITutorials : MonoBehaviour
 
     public void UpdateFreecamHints()
     {
-        if (freecamHintText == null || Core.Player?.PlayerInputs == null) return;
+        if (freecamHintText == null || Core.Player?.Inputs == null) return;
 
         // Get Actions
         var hide = InputDisplayHelper.GetCombinedDisplayBold(FindAction("Freecam/Hide"));
@@ -185,7 +185,7 @@ public class UITutorials : MonoBehaviour
 
     private InputAction FindAction(string path)
     {
-        return Core.Player?.PlayerInputs?.GetAction(path);
+        return Core.Player?.Inputs?.GetAction(path);
     }
 
     private static void ShowCanvasGroup(CanvasGroup cg)

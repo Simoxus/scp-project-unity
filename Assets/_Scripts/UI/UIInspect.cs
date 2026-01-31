@@ -5,7 +5,7 @@ using UnityEngine.UI;
 [System.Serializable]
 public class UIInspect : MonoBehaviour
 {
-    [Header("References")]
+    [Space]
     public Image image;
     [SerializeField] private GameObject inspectPanel;
 

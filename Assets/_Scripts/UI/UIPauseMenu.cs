@@ -13,16 +13,10 @@ public class UIPauseMenu : MonoBehaviour
         public Button buttonBack;
     }
 
-    [Header("UI Base")]
+    [Space]
     public CanvasGroup canvasGroup;
-
-    [Header("Main Panel")]
     public CanvasGroup mainPanelCanvasGroup;
-
-    [Header("Submenus")]
     public List<Submenu> submenus = new List<Submenu>();
-
-    [Header("Buttons")]
     public Button exitButton;
 
     private PlayerInputs _inputs;
@@ -42,7 +36,7 @@ public class UIPauseMenu : MonoBehaviour
         }
 
         if (Core.Player != null)
-            _inputs = Core.Player.PlayerInputs;
+            _inputs = Core.Player.Inputs;
 
         InitializeSubmenuButtons();
 
