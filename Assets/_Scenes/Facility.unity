@@ -386,28 +386,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6581859882699288229, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
   m_PrefabInstance: {fileID: 1783101222889436574}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &518523012 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2717556426996809087, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
-  m_PrefabInstance: {fileID: 1783101222889436574}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29de8271f65bc6e4c85bdf5d51e3b827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &518523013 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8245426804085687691, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
-  m_PrefabInstance: {fileID: 1783101222889436574}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12128e797b1525c4398d6dd46233995a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &607599918
 GameObject:
   m_ObjectHideFlags: 0
@@ -2604,17 +2582,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa26c0dc6fa720741bf82375c4a366d2, type: 3}
---- !u!114 &2093453484 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8245426804085687691, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
-  m_PrefabInstance: {fileID: 7190738903141875243}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12128e797b1525c4398d6dd46233995a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2093453485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5412300273197553098, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
@@ -2625,17 +2592,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6581859882699288229, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
   m_PrefabInstance: {fileID: 7190738903141875243}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2093453488 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2717556426996809087, guid: 33b832a1965882847b5a2364f8acc326, type: 3}
-  m_PrefabInstance: {fileID: 7190738903141875243}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29de8271f65bc6e4c85bdf5d51e3b827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &186691213897302314
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2789,11 +2745,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ae34ee3ed90d24182269b36c0fbc95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  door: {fileID: 4390291594247950669}
+  doorFront: {fileID: 1331550173}
+  doorBack: {fileID: 976133008}
+  doorTrigger: {fileID: 0}
+  sparksEmitter: {fileID: 652269589}
+  navMeshObstacle: {fileID: 0}
   locked: 0
   lockedMessage: 
   startOpened: 0
   chanceToStartOpened: 0
   percentChanceToStartOpened: 0.5
+  breakable: 1
   defaultColor:
     serializedVersion: 2
     rgba: 4294967295
@@ -2812,16 +2775,15 @@ MonoBehaviour:
   lockedColor:
     serializedVersion: 2
     rgba: 4288584191
-  breakableByEnvironment: 1
+  useGateSounds: 0
   fmodParameterName: State
-  door: {fileID: 4390291594247950669}
-  doorFront: {fileID: 1331550173}
-  doorBack: {fileID: 976133008}
-  sparksEmitter: {fileID: 652269589}
   doorFrontOpenOffset: {x: -4.3, y: 0, z: 0}
   doorBackOpenOffset: {x: 4.3, y: 0, z: 0}
   doorFrontCloseOffset: {x: 0, y: 0, z: 0}
   doorBackCloseOffset: {x: 0, y: 0, z: 0}
+  rotationAxis: {x: 0, y: 1, z: 0}
+  openRotationAngle: 90
+  closeRotationAngle: 0
   easeStyle: 4
   breakImpulseRange: {x: 1.3, y: 1.7}
   doorMoveDuration: 1.5
@@ -2959,7 +2921,7 @@ MonoBehaviour:
       Data2: 1207848220
       Data3: 948144303
       Data4: 1656419060
-    Path: event:/Collision/Fall_Door
+    Path: event:/World/Doors/Fall
   useTimer: 1
   timerDuration: 20
   minCollisionMagnitude: 0.1
@@ -3499,12 +3461,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da3be148ba077f469810b5f711aa52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableSecondActivator: 1
+  ActivatorCollider: {fileID: 0}
+  SecondActivatorCollider: {fileID: 0}
+  InteractOutline: {fileID: 0}
   interactionType: Hand
-  outline: {fileID: 518523012}
-  activatorCollider: {fileID: 7088619500073530070}
-  secondActivatorCollider: {fileID: 4070349877487827459}
-  buttonVisual: {fileID: 518523013}
+  KeycardVisual: {fileID: 0}
   targetDoorController: {fileID: 751353373819982465}
 --- !u!114 &5148760673318135779
 MonoBehaviour:
@@ -3868,7 +3829,7 @@ MonoBehaviour:
       Data2: 1207848220
       Data3: 948144303
       Data4: 1656419060
-    Path: event:/Collision/Fall_Door
+    Path: event:/World/Doors/Fall
   useTimer: 1
   timerDuration: 20
   minCollisionMagnitude: 0.1
@@ -4047,12 +4008,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da3be148ba077f469810b5f711aa52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableSecondActivator: 1
+  ActivatorCollider: {fileID: 0}
+  SecondActivatorCollider: {fileID: 0}
+  InteractOutline: {fileID: 0}
   interactionType: Hand
-  outline: {fileID: 2093453488}
-  activatorCollider: {fileID: 4070349877487827459}
-  secondActivatorCollider: {fileID: 7088619500073530070}
-  buttonVisual: {fileID: 2093453484}
+  KeycardVisual: {fileID: 0}
   targetDoorController: {fileID: 751353373819982465}
 --- !u!1001 &8845090319042218586
 PrefabInstance:
