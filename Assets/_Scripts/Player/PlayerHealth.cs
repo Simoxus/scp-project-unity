@@ -1,11 +1,13 @@
+using EditorAttributes;
 using System;
 using UnityEngine;
-using EditorAttributes;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Health Settings")]
+    [Space]
     [SerializeField, ReadOnly] private HealthLevel healthLevel = HealthLevel.Healthy;
+
+    [Header("Health Settings")]
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float currentHealth = 100f;
 

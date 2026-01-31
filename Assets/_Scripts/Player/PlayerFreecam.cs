@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 
 public class PlayerFreecam : MonoBehaviour
 {
-    [Header("Movement Settings")]
+    [Space]
     [SerializeField] private float moveSpeed = 10.0f;
     [SerializeField] private float sprintMultiplier = 5.0f;
     [SerializeField] private float decelerateMultiplier = 0.2f;
@@ -417,25 +417,21 @@ public class PlayerFreecam : MonoBehaviour
 
     private void SetupCullingForFreecam()
     {
-        /*
         if (Core.CullingSystem != null && _freecamCamera != null)
         {
             _originalCullingTransform = Core.CullingSystem.CullingOrigin;
             Core.CullingSystem.CullingOrigin = _freecamCamera.transform;
             Core.CullingSystem.ForceUpdate();
         }
-        */
     }
 
     private void RestoreCullingTransform()
     {
-        /*
         if (Core.CullingSystem != null && _originalCullingTransform != null)
         {
             Core.CullingSystem.CullingOrigin = _originalCullingTransform;
             Core.CullingSystem.ForceUpdate();
             _originalCullingTransform = null;
         }
-        */
     }
 }
