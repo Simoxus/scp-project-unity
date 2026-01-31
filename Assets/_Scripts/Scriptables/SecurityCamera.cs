@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SecurityCamera : MonoBehaviour
 {
-    [Header("Camera Settings")]
+    [Space]
     public Camera securityCamera;
     public Animator cameraAnimator;
 

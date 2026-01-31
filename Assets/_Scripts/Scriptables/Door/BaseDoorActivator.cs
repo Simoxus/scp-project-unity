@@ -3,44 +3,41 @@ using UnityEngine;
 
 public abstract class BaseDoorActivator : MonoBehaviour, IInteractable
 {
-    [Header("Activator Settings")]
-    [SerializeField] protected bool enableSecondActivator;
+    public abstract BaseDoorController DoorController { get; }
+
+    [Space]
+    public BoxCollider ActivatorCollider;
+    public BoxCollider SecondActivatorCollider;
+    public Outline InteractOutline;
+
+    [Header("Settings")]
     [SerializeField] protected string interactionType = "Hand";
 
-    [Header("Outline Reference")]
-    public Outline outline;
-
-    [Header("Collider References")]
-    public BoxCollider activatorCollider;
-    public BoxCollider secondActivatorCollider;
     protected Tween _pulseTween;
-
-    protected virtual void Reset()
-    {
-        outline = GetComponentInChildren<Outline>();
-    }
 
     protected virtual void Awake()
     {
-        if (activatorCollider == null && secondActivatorCollider == null)
+        if (ActivatorCollider == null && SecondActivatorCollider == null)
         {
-            Log.VerboseWarning($"{GetType()} on '{gameObject.name}' has no colliders assigned. It will not be detectable.");
+            Log.VerboseWarning($"Door activator on '{gameObject.name}' has no colliders assigned.");
         }
     }
 
     protected virtual void Start()
     {
-
     }
 
     protected virtual void OnDestroy()
     {
-        _pulseTween.Stop();
+        if (_pulseTween.isAlive)
+        {
+            _pulseTween.Stop();
+        }
     }
 
     public Outline GetOutline()
     {
-        return outline;
+        return InteractOutline;
     }
 
     public virtual Transform GetTransform()
@@ -57,13 +54,14 @@ public abstract class BaseDoorActivator : MonoBehaviour, IInteractable
 
     public virtual void SetButtonState(bool enabled)
     {
-        if (activatorCollider != null)
+        if (ActivatorCollider != null)
         {
-            activatorCollider.enabled = enabled;
+            ActivatorCollider.enabled = enabled;
         }
-        if (enableSecondActivator && secondActivatorCollider != null)
+
+        if (SecondActivatorCollider != null)
         {
-            secondActivatorCollider.enabled = enabled;
+            SecondActivatorCollider.enabled = enabled;
         }
     }
 

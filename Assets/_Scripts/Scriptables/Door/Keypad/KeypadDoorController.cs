@@ -29,17 +29,17 @@ public class KeypadDoorController : BaseDoorController
     {
         if (doorActivator1 != null)
         {
-            doorActivator1.keypadTweener.ToggleLogo(false);
-            doorActivator1.keypadTweener.ToggleText(true);
-            doorActivator1.keypadTweener.ChangeScreenText(message);
-            doorActivator1.keypadTweener.ChangeScreenColor(color, true);
+            doorActivator1.KeypadVisual.ToggleLogo(false);
+            doorActivator1.KeypadVisual.ToggleText(true);
+            doorActivator1.KeypadVisual.ChangeScreenText(message);
+            doorActivator1.KeypadVisual.ChangeScreenColor(color, true);
         }
         if (doorActivator2 != null)
         {
-            doorActivator2.keypadTweener.ToggleLogo(false);
-            doorActivator2.keypadTweener.ToggleText(true);
-            doorActivator2.keypadTweener.ChangeScreenText(message);
-            doorActivator2.keypadTweener.ChangeScreenColor(color, true);
+            doorActivator2.KeypadVisual.ToggleLogo(false);
+            doorActivator2.KeypadVisual.ToggleText(true);
+            doorActivator2.KeypadVisual.ChangeScreenText(message);
+            doorActivator2.KeypadVisual.ChangeScreenColor(color, true);
         }
     }
 
@@ -49,17 +49,17 @@ public class KeypadDoorController : BaseDoorController
 
         if (doorActivator1 != null)
         {
-            doorActivator1.keypadTweener.ToggleLogo(false);
-            doorActivator1.keypadTweener.ToggleText(true);
-            doorActivator1.keypadTweener.ChangeScreenColor(color, true);
-            doorActivator1.keypadTweener.ChangeScreenText(brokenMessage);
+            doorActivator1.KeypadVisual.ToggleLogo(false);
+            doorActivator1.KeypadVisual.ToggleText(true);
+            doorActivator1.KeypadVisual.ChangeScreenColor(color, true);
+            doorActivator1.KeypadVisual.ChangeScreenText(brokenMessage);
         }
         if (doorActivator2 != null)
         {
-            doorActivator2.keypadTweener.ToggleLogo(false);
-            doorActivator2.keypadTweener.ToggleText(true);
-            doorActivator2.keypadTweener.ChangeScreenColor(color, true);
-            doorActivator2.keypadTweener.ChangeScreenText(brokenMessage);
+            doorActivator2.KeypadVisual.ToggleLogo(false);
+            doorActivator2.KeypadVisual.ToggleText(true);
+            doorActivator2.KeypadVisual.ChangeScreenColor(color, true);
+            doorActivator2.KeypadVisual.ChangeScreenText(brokenMessage);
         }
     }
 
@@ -67,15 +67,15 @@ public class KeypadDoorController : BaseDoorController
     {
         if (doorActivator1 != null)
         {
-            doorActivator1.keypadTweener.ToggleLogo(true);
-            doorActivator1.keypadTweener.ToggleText(false);
-            doorActivator1.keypadTweener.ChangeScreenColor(color, true, 0.4f);
+            doorActivator1.KeypadVisual.ToggleLogo(true);
+            doorActivator1.KeypadVisual.ToggleText(false);
+            doorActivator1.KeypadVisual.ChangeScreenColor(color, true, 0.4f);
         }
         if (doorActivator2 != null)
         {
-            doorActivator2.keypadTweener.ToggleLogo(true);
-            doorActivator2.keypadTweener.ToggleText(false);
-            doorActivator2.keypadTweener.ChangeScreenColor(color, true, 0.4f);
+            doorActivator2.KeypadVisual.ToggleLogo(true);
+            doorActivator2.KeypadVisual.ToggleText(false);
+            doorActivator2.KeypadVisual.ChangeScreenColor(color, true, 0.4f);
         }
     }
 
@@ -119,18 +119,18 @@ public class KeypadDoorController : BaseDoorController
     {
         if (doorActivator1 != null)
         {
-            doorActivator1.keypadTweener.ToggleLogo(false);
-            doorActivator1.keypadTweener.ToggleText(true);
-            doorActivator1.keypadTweener.ChangeScreenColor(SuccessStateColor, true, 0.5f);
-            doorActivator1.keypadTweener.ChangeScreenText("ACCESS\nGRANTED");
+            doorActivator1.KeypadVisual.ToggleLogo(false);
+            doorActivator1.KeypadVisual.ToggleText(true);
+            doorActivator1.KeypadVisual.ChangeScreenColor(SuccessStateColor, true, 0.5f);
+            doorActivator1.KeypadVisual.ChangeScreenText("Access\nGranted");
             doorActivator1.ResetButtonDisplay().Forget();
         }
         if (doorActivator2 != null)
         {
-            doorActivator2.keypadTweener.ToggleLogo(false);
-            doorActivator2.keypadTweener.ToggleText(true);
-            doorActivator2.keypadTweener.ChangeScreenColor(SuccessStateColor, true, 0.5f);
-            doorActivator2.keypadTweener.ChangeScreenText("ACCESS\nGRANTED");
+            doorActivator2.KeypadVisual.ToggleLogo(false);
+            doorActivator2.KeypadVisual.ToggleText(true);
+            doorActivator2.KeypadVisual.ChangeScreenColor(SuccessStateColor, true, 0.5f);
+            doorActivator2.KeypadVisual.ChangeScreenText("Access\nGranted");
             doorActivator2.ResetButtonDisplay().Forget();
         }
     }
@@ -139,18 +139,18 @@ public class KeypadDoorController : BaseDoorController
     {
         if (doorActivator1 != null)
         {
-            doorActivator1.keypadTweener.ToggleLogo(false);
-            doorActivator1.keypadTweener.ToggleText(true);
-            doorActivator1.keypadTweener.ChangeScreenColor(FailureStateColor, true, 0.5f);
-            doorActivator1.keypadTweener.ChangeScreenText("ACCESS\nDENIED");
+            doorActivator1.KeypadVisual.ToggleLogo(false);
+            doorActivator1.KeypadVisual.ToggleText(true);
+            doorActivator1.KeypadVisual.ChangeScreenColor(FailureStateColor, true, 0.5f);
+            doorActivator1.KeypadVisual.ChangeScreenText("Access\nGranted");
             doorActivator1.ResetButtonDisplay().Forget();
         }
         if (doorActivator2 != null)
         {
-            doorActivator2.keypadTweener.ToggleLogo(false);
-            doorActivator2.keypadTweener.ToggleText(true);
-            doorActivator2.keypadTweener.ChangeScreenColor(FailureStateColor, true, 0.5f);
-            doorActivator2.keypadTweener.ChangeScreenText("ACCESS\nDENIED");
+            doorActivator2.KeypadVisual.ToggleLogo(false);
+            doorActivator2.KeypadVisual.ToggleText(true);
+            doorActivator2.KeypadVisual.ChangeScreenColor(FailureStateColor, true, 0.5f);
+            doorActivator2.KeypadVisual.ChangeScreenText("Access\nGranted");
             doorActivator2.ResetButtonDisplay().Forget();
         }
     }

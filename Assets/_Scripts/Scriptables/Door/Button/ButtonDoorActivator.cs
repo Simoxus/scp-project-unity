@@ -3,50 +3,49 @@ using UnityEngine;
 
 public class ButtonDoorActivator : BaseDoorActivator
 {
-    [Header("Script References")]
-    public ButtonDoorVisual buttonVisual;
-    public ButtonDoorController targetDoorController;
+    public override BaseDoorController DoorController => targetDoorController;
+
+    [Space]
+    public ButtonDoorVisual ButtonVisual;
+    [SerializeField] private ButtonDoorController targetDoorController;
 
     public override void Interact()
     {
         if (targetDoorController == null) return;
 
-        buttonVisual.PlayTween().Forget();
+        ButtonVisual.PlayTween().Forget();
 
-        if (targetDoorController.currentState == KeycardDoorController.DoorState.Broken || targetDoorController.locked)
+        if (targetDoorController.currentState == BaseDoorController.DoorState.Broken || targetDoorController.locked)
         {
             FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonErrorSound, transform.position);
             return;
         }
 
-        if (targetDoorController.currentState != ButtonDoorController.DoorState.Broken)
-        {
-            FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonSound, transform.position);
-            targetDoorController.ToggleDoor().Forget();
-        }
+        FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonSound, transform.position);
+        targetDoorController.ToggleDoor().Forget();
     }
 
     public override void StartPulseEffect(Color startColor, float? customDuration = null, float? customIntensity = null)
     {
-        if (buttonVisual != null)
+        if (ButtonVisual != null)
         {
-            buttonVisual.StartPulse(startColor, customDuration, customIntensity);
+            ButtonVisual.StartPulse(startColor, customDuration, customIntensity);
         }
     }
 
     public override void StopPulseEffect()
     {
-        if (buttonVisual != null)
+        if (ButtonVisual != null)
         {
-            buttonVisual.StopPulse();
+            ButtonVisual.StopPulse();
         }
     }
 
     public void TransitionToPulseEffect(Color targetColor, float transitionDuration, float pulseDuration, float pulseIntensity)
     {
-        if (buttonVisual != null)
+        if (ButtonVisual != null)
         {
-            buttonVisual.TransitionToPulse(targetColor, transitionDuration, pulseDuration, pulseIntensity);
+            ButtonVisual.TransitionToPulse(targetColor, transitionDuration, pulseDuration, pulseIntensity);
         }
     }
 }

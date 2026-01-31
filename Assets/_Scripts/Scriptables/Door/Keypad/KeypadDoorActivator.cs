@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class KeypadDoorActivator : BaseDoorActivator
 {
-    [Header("Keypad Specific")]
-    public GameObject[] keypadNumberVisuals;
-    public GameObject keypadEnterVisual;
-    public GameObject keypadClearVisual;
+    public override BaseDoorController DoorController => targetDoorController;
 
-    [Header("Script References")]
-    public KeypadDoorVisual keypadTweener;
-    public KeypadDoorController targetDoorController;
+    [Space]
+    public KeypadDoorVisual KeypadVisual;
+    [SerializeField] private KeypadDoorController targetDoorController;
+    [SerializeField] private GameObject[] keypadNumberVisuals;
+    [SerializeField] private GameObject keypadEnterVisual;
+    [SerializeField] private GameObject keypadClearVisual;
 
     [Header("Cinemachine/Camera Control")]
-    public CinemachineCamera keypadCamera;
-    public float cameraTransitionDuration = 1f;
+    [SerializeField] private CinemachineCamera keypadCamera;
+    [SerializeField] private float cameraTransitionDuration = 1f;
 
     private string _currentInput = "";
     private float _previousTransitionTime = 0f;
@@ -50,7 +50,7 @@ public class KeypadDoorActivator : BaseDoorActivator
 
     public override Transform GetTransform()
     {
-        return activatorCollider.transform;
+        return ActivatorCollider.transform;
     }
 
     public override void Interact()
@@ -85,9 +85,9 @@ public class KeypadDoorActivator : BaseDoorActivator
         keypadCamera.Priority = 100;
         keypadCamera.enabled = true;
 
-        keypadTweener.ToggleLogo(false);
-        keypadTweener.ToggleText(true);
-        keypadTweener.ChangeScreenText(FormatCodeInput(""));
+        KeypadVisual.ToggleLogo(false);
+        KeypadVisual.ToggleText(true);
+        KeypadVisual.ChangeScreenText(FormatCodeInput(""));
     }
 
     private void HandleKeypadInput(string keyName)
@@ -131,15 +131,15 @@ public class KeypadDoorActivator : BaseDoorActivator
             FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonSound, transform.position);
             VibrationHelper.VibrateTap();
 
-            keypadTweener.ChangeScreenText(FormatCodeInput(_currentInput));
+            KeypadVisual.ChangeScreenText(FormatCodeInput(_currentInput));
 
-            await keypadTweener.PlayNumberKeyTween(buttonVisual);
+            await KeypadVisual.PlayNumberKeyTween(buttonVisual);
         }
     }
 
     private void RemoveLastInput()
     {
-        keypadTweener.PlayClearKeyTween().Forget();
+        KeypadVisual.PlayClearKeyTween().Forget();
 
         FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonSound, transform.position);
         VibrationHelper.VibrateTap();
@@ -147,7 +147,7 @@ public class KeypadDoorActivator : BaseDoorActivator
         if (_currentInput.Length > 0)
         {
             _currentInput = _currentInput.Substring(0, _currentInput.Length - 1);
-            keypadTweener.ChangeScreenText(FormatCodeInput(_currentInput));
+            KeypadVisual.ChangeScreenText(FormatCodeInput(_currentInput));
         }
     }
 
@@ -164,19 +164,19 @@ public class KeypadDoorActivator : BaseDoorActivator
 
         if (success)
         {
-            FMODHelper.PlayOneShotWithParameters(
+            FMODHelper.PlayOneShot3D(
                 Core.AudioDataAccess.Doors.ButtonKeypadSound,
                 transform.position,
-                ("Result", 0.0f)
+                parameters: new[] { ("Result", 0.0f) }
             );
             targetDoorController.ToggleDoor().Forget();
         }
         else
         {
-            FMODHelper.PlayOneShotWithParameters(
+            FMODHelper.PlayOneShot3D(
                 Core.AudioDataAccess.Doors.ButtonKeypadSound,
                 transform.position,
-                ("Result", 1.0f)
+                parameters: new[] { ("Result", 1.0f) }
             );
         }
 
@@ -213,9 +213,9 @@ public class KeypadDoorActivator : BaseDoorActivator
 
         if (wasForceExit == false)
         {
-            keypadTweener.ToggleLogo(true);
-            keypadTweener.ToggleText(false);
-            keypadTweener.ChangeScreenColor(targetDoorController.DefaultStateColor, true, 0.8f);
+            KeypadVisual.ToggleLogo(true);
+            KeypadVisual.ToggleText(false);
+            KeypadVisual.ChangeScreenColor(targetDoorController.SuccessStateColor, true, 0.8f);
             _currentInput = "";
         }
 
@@ -228,9 +228,9 @@ public class KeypadDoorActivator : BaseDoorActivator
     {
         await UniTask.WaitForSeconds(1.6f, ignoreTimeScale: false);
 
-        keypadTweener.ToggleLogo(true);
-        keypadTweener.ToggleText(false);
-        keypadTweener.ChangeScreenColor(targetDoorController.DefaultStateColor, true, 0.8f);
+        KeypadVisual.ToggleLogo(true);
+        KeypadVisual.ToggleText(false);
+        KeypadVisual.ChangeScreenColor(targetDoorController.SuccessStateColor, true, 0.8f);
 
         await UniTask.WaitForSeconds(0.6f, ignoreTimeScale: false);
 
@@ -239,25 +239,25 @@ public class KeypadDoorActivator : BaseDoorActivator
 
     public override void StartPulseEffect(Color startColor, float? customDuration = null, float? customIntensity = null)
     {
-        if (keypadTweener != null)
+        if (KeypadVisual != null)
         {
-            keypadTweener.StartPulse(startColor, customDuration, customIntensity);
+            KeypadVisual.StartPulse(startColor, customDuration, customIntensity);
         }
     }
 
     public override void StopPulseEffect()
     {
-        if (keypadTweener != null)
+        if (KeypadVisual != null)
         {
-            keypadTweener.StopPulse();
+            KeypadVisual.StopPulse();
         }
     }
 
     public void TransitionToPulseEffect(Color targetColor, float transitionDuration, float pulseDuration, float pulseIntensity)
     {
-        if (keypadTweener != null)
+        if (KeypadVisual != null)
         {
-            keypadTweener.TransitionToPulse(targetColor, transitionDuration, pulseDuration, pulseIntensity);
+            KeypadVisual.TransitionToPulse(targetColor, transitionDuration, pulseDuration, pulseIntensity);
         }
     }
 }
