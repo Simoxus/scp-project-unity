@@ -119,8 +119,7 @@ Shader "Custom/Glass"
     
                 half3 color = half3(0.0, 0.0, 0.0);
                 float pixelSize = 0.001 * blurAmount;
-                
-                // Gaussian kernel weights (13-tap)
+
                 const float weights[13] = {
                     0.0561, 0.1353, 0.2781, 0.4868, 0.7261,
                     0.9231, 1.0, 0.9231, 0.7261,
@@ -128,19 +127,18 @@ Shader "Custom/Glass"
                 };
                 
                 float totalWeight = 0.0;
-                
-                // Horizontal and vertical passes combined
+
                 [unroll]
                 for (int i = -6; i <= 6; i++)
                 {
                     float weight = weights[i + 6];
-                    totalWeight += weight * 2.0; // Count for both axes
+                    totalWeight += weight * 2.0;
                     
-                    // Horizontal samples
+                    // Horizontal
                     color += SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, 
                         saturate(uv + float2(i * pixelSize, 0))).rgb * weight;
                     
-                    // Vertical samples
+                    // Vertical
                     color += SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, 
                         saturate(uv + float2(0, i * pixelSize))).rgb * weight;
                 }
@@ -150,68 +148,51 @@ Shader "Custom/Glass"
             
             half4 frag(Varyings input, bool isFrontFace : SV_IsFrontFace) : SV_Target
             {
-                // Normalize vectors
                 float3 normalWS = normalize(input.normalWS);
                 float3 tangentWS = normalize(input.tangentWS);
                 float3 bitangentWS = normalize(input.bitangentWS);
                 float3 viewDirWS = normalize(input.viewDirWS);
                 
-                // Flip normals for back faces when double-sided
+                // Flip normals
                 if (!isFrontFace)
                 {
                     normalWS = -normalWS;
                     tangentWS = -tangentWS;
                 }
                 
-                // Sample and apply normal map
+                // Apply normal map
                 half3 normalTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, input.uv), _NormalStrength);
                 float3x3 TBN = float3x3(tangentWS, bitangentWS, normalWS);
                 normalWS = normalize(mul(normalTS, TBN));
-                
-                // Calculate distance fade for fresnel (0 = far away, 1 = close)
+
                 float distanceFade = saturate(1.0 - (input.distanceToCamera / _FresnelDistanceFade));
-                
-                // Calculate fresnel effect with distance fade
+
                 float fresnelRaw = pow(1.0 - saturate(dot(normalWS, viewDirWS)), _FresnelPower);
                 float fresnel = fresnelRaw * distanceFade;
-                
-                // Sample overlay texture
+    
                 half4 overlayColor = SAMPLE_TEXTURE2D(_OverlayTexture, sampler_OverlayTexture, input.uv);
-                
-                // Calculate refraction with proper UV clamping
+
                 float2 screenUV = input.screenPos.xy / input.screenPos.w;
                 float2 refractionOffset = normalWS.xy * _RefractionStrength;
                 float2 refractedUV = screenUV + refractionOffset;
-                
-                // Clamp UVs to prevent sampling outside screen bounds
+
                 refractedUV = saturate(refractedUV);
                 
-                // Sample blurred background for glass effect
                 half3 refractionColor = SampleBlurredBackground(refractedUV, _BlurAmount);
-                
-                // Get main light
                 Light mainLight = GetMainLight();
                 half3 lightColor = mainLight.color;
                 float3 lightDir = normalize(mainLight.direction);
-                
-                // Simple lighting calculation
+ 
                 float NdotL = saturate(dot(normalWS, lightDir));
                 half3 lighting = lightColor * NdotL;
-                
-                // Specular highlight (also affected by distance)
+
                 float3 halfDir = normalize(lightDir + viewDirWS);
                 float specular = pow(saturate(dot(normalWS, halfDir)), _Smoothness * 128.0) * distanceFade;
-                
-                // Combine overlay with glass base color
+
                 half3 glassColor = lerp(_BaseColor.rgb, overlayColor.rgb, _OverlayIntensity);
-                
-                // Mix refraction with glass color based on fresnel
                 half3 finalColor = lerp(refractionColor * glassColor, glassColor, fresnel * 0.5);
-                
-                // Add lighting and specular
+
                 finalColor += lighting * 0.3 + specular * fresnel;
-                
-                // Apply fog
                 finalColor = MixFog(finalColor, input.fogFactor);
                 
                 // Calculate final alpha (also reduced at distance)
