@@ -35,7 +35,7 @@ public class SettingsManager : Singleton<SettingsManager>
     private Dictionary<string, int> categoryPriorityMap = new Dictionary<string, int>();
     private bool isInitialized = false;
 
-    protected override void OnAwake()
+    protected override void OnSingletonAwake()
     {
         DontDestroyOnLoad(gameObject);
         InitializeSettings();
@@ -243,7 +243,7 @@ public class SettingsManager : Singleton<SettingsManager>
         }
     }
 
-    private void OnApplicationQuit()
+    protected override void OnSingletonApplicationQuit()
     {
         Save();
     }

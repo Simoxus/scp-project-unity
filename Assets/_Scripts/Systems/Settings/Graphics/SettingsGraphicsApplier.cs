@@ -3,11 +3,9 @@ using System;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.SceneManagement;
 
 public class SettingsGraphicsApplier : BaseSettingsApplier
 {
-    [Header("References")]
     [SerializeField] private SettingsGraphics settingsGraphics;
 
     private CancellationTokenSource _cts;
@@ -34,37 +32,6 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
         _renderScaleCts?.Dispose();
     }
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        ReapplyCameraSettings();
-    }
-
-    private void ReapplyCameraSettings()
-    {
-        if (settingsGraphics == null || SettingsManager.Instance == null) return;
-
-        // Get saved settings and reapply them
-        int antiAliasingValue = SettingsManager.Instance.LoadInt(settingsGraphics.CATEGORY, "AntiAliasing", 2);
-        float renderScaleValue = SettingsManager.Instance.LoadFloat(settingsGraphics.CATEGORY, "RenderScale", 1f);
-
-        inBatchMode = true;
-
-        ApplyAntiAliasing(antiAliasingValue);
-        ApplyRenderScale(renderScaleValue);
-
-        inBatchMode = false;
-    }
-
     public void ApplyWindowResolution(int index)
     {
         if (index < 0 || index >= settingsGraphics.availableResolutions.Length) return;
@@ -72,15 +39,16 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
         Resolution chosenResolution = settingsGraphics.availableResolutions[index];
         Screen.SetResolution(chosenResolution.width, chosenResolution.height, Screen.fullScreenMode);
 
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
     }
 
     public void ApplyWindowMode(int index)
     {
         switch (index)
         {
-            case 0:
+            case 0: // exclusive
                 Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+                settingsGraphics.SetResolutionToNative();
 
                 if (settingsGraphics.windowResolutionDropdown != null)
                 {
@@ -88,12 +56,12 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
                 }
 
                 break;
-            case 1:
+            case 1: // borderless
                 Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
 
                 if (settingsGraphics.windowResolutionDropdown != null)
                 {
-                    settingsGraphics.windowResolutionDropdown.gameObject.SetActive(false);
+                    settingsGraphics.windowResolutionDropdown.gameObject.SetActive(true);
                 }
 
                 break;
@@ -109,7 +77,7 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
                 break;
         }
 
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
     }
 
     public void ApplyRenderScale(float value)
@@ -126,7 +94,7 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
 
         ApplyRenderScaleDelayed(_renderScaleCts.Token).Forget();
 
-        if (inBatchMode == false) { settingsGraphics.SaveSettingsWithDelay(); }
+        if (inBatchMode == false) settingsGraphics.SaveSettingsWithDelay();
     }
 
     private async UniTaskVoid ApplyRenderScaleDelayed(CancellationToken cancellationToken)
@@ -155,7 +123,7 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
     {
         QualitySettings.vSyncCount = enabled ? 1 : 0;
 
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
     }
 
     public void ApplyFramerateLimit(int index)
@@ -167,17 +135,12 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
             Application.targetFrameRate = framerates[index];
         }
 
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
     }
 
     public void ApplyFieldOfView(float value)
     {
-        if (Core.Player && Core.Player.CameraMain)
-        {
-            Core.Player.CameraMain.Lens.FieldOfView = value;
-        }
-
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+        ApplyFieldOfViewAsync(value).Forget();
     }
 
     public void ApplyTextureQuality(int index)
@@ -288,7 +251,7 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
                 break;
         }
 
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
     }
 
     public async UniTask ApplyRenderShadowsAsync(bool enabled)

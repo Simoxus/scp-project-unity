@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -9,14 +10,13 @@ public class SettingsGraphics : BaseSettings
 {
     public override string CATEGORY => "Graphics";
 
-    public Volume postProcessVolume;
-
     [HideInInspector]
     public UniversalRenderPipelineAsset urpAsset;
     public Resolution[] availableResolutions;
 
-    [Header("References")]
+    [Space]
     public SettingsGraphicsApplier applier;
+    public Volume postProcessVolume;
 
     [Header("UI Elements")]
     public TMP_Dropdown graphicsAPIDropdown;
@@ -58,7 +58,7 @@ public class SettingsGraphics : BaseSettings
 
     public override void SaveSettings()
     {
-        SettingsManager settingsManager = SettingsManager.Instance;
+        SettingsManager settingsManager = Core.SettingsManager;
         if (settingsManager == null) return;
 
         settingsManager.SaveInt(CATEGORY, "WindowMode", windowModeDropdown.value);
@@ -78,17 +78,25 @@ public class SettingsGraphics : BaseSettings
 
     public override void LoadSettings()
     {
-        SettingsManager settingsManager = SettingsManager.Instance;
-        if (settingsManager == null) return;
-
         applier.inBatchMode = true;
+        LoadSettingsAsync().Forget();
+    }
+
+    public override async UniTask LoadSettingsAsync()
+    {
+        SettingsManager settingsManager = Core.SettingsManager;
+        if (settingsManager == null)
+        {
+            applier.inBatchMode = false;
+            return;
+        }
 
         windowModeDropdown.value = settingsManager.LoadInt(CATEGORY, "WindowMode", 0);
         windowResolutionDropdown.value = settingsManager.LoadInt(CATEGORY, "WindowResolution", windowResolutionDropdown.value);
         renderScaleSlider.value = settingsManager.LoadFloat(CATEGORY, "RenderScale", 1f);
         vSyncToggle.isOn = settingsManager.LoadBool(CATEGORY, "VSync", false);
         framerateDropdown.value = settingsManager.LoadInt(CATEGORY, "Framerate", 0);
-        fieldOfViewSlider.value = settingsManager.LoadFloat(CATEGORY, "FieldOfView", 72f);
+        fieldOfViewSlider.value = settingsManager.LoadFloat(CATEGORY, "FieldOfView", 70f);
         textureQualityDropdown.value = settingsManager.LoadInt(CATEGORY, "TextureQuality", 3);
         antiAliasingDropdown.value = settingsManager.LoadInt(CATEGORY, "AntiAliasing", 3);
         renderShadowsToggle.isOn = settingsManager.LoadBool(CATEGORY, "RenderShadows", true);
@@ -100,10 +108,10 @@ public class SettingsGraphics : BaseSettings
         applier.ApplyRenderScale(renderScaleSlider.value);
         applier.ApplyVSync(vSyncToggle.isOn);
         applier.ApplyFramerateLimit(framerateDropdown.value);
-        applier.ApplyFieldOfView(fieldOfViewSlider.value);
+        await applier.ApplyFieldOfViewAsync(fieldOfViewSlider.value);
         applier.ApplyTextureQuality(textureQualityDropdown.value);
-        applier.ApplyAntiAliasing(antiAliasingDropdown.value);
-        applier.ApplyRenderShadows(renderShadowsToggle.isOn);
+        await applier.ApplyAntiAliasingAsync(antiAliasingDropdown.value);
+        await applier.ApplyRenderShadowsAsync(renderShadowsToggle.isOn);
         applier.ApplyBloom(bloomToggle.isOn);
         applier.ApplyVignette(vignetteToggle.isOn);
 
@@ -136,6 +144,32 @@ public class SettingsGraphics : BaseSettings
             default:
                 break;
         }
+    }
+
+    public void SetResolutionToNative()
+    {
+        if (availableResolutions == null || availableResolutions.Length == 0) return;
+
+        int nativeResolutionIndex = 0;
+        for (int i = 0; i < availableResolutions.Length; i++)
+        {
+            if (availableResolutions[i].width == Screen.currentResolution.width &&
+                availableResolutions[i].height == Screen.currentResolution.height)
+            {
+                nativeResolutionIndex = i;
+                break;
+            }
+        }
+
+        // Update the dropdown UI value
+        if (windowResolutionDropdown != null)
+        {
+            windowResolutionDropdown.value = nativeResolutionIndex;
+            windowResolutionDropdown.RefreshShownValue();
+        }
+
+        // Apply the resolution
+        applier.ApplyWindowResolution(nativeResolutionIndex);
     }
 
     public void PopulateResolutionDropdown()

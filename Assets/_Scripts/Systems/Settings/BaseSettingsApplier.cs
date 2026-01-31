@@ -1,5 +1,5 @@
-using UnityEngine;
 using EditorAttributes;
+using UnityEngine;
 
 public abstract class BaseSettingsApplier : MonoBehaviour
 {
@@ -9,6 +9,7 @@ public abstract class BaseSettingsApplier : MonoBehaviour
 
     protected virtual void Awake()
     {
+        inBatchMode = true;
         InitializeReferences();
     }
 

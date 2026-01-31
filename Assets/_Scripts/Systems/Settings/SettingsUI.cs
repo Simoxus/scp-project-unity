@@ -14,6 +14,7 @@ public class SettingsUI : MonoBehaviour
         public TMP_Text buttonText;
     }
 
+    [Space]
     [SerializeField] private List<Tab> tabs = new List<Tab>();
 
     private void Awake()

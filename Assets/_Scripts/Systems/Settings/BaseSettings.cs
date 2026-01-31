@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class BaseSettings : MonoBehaviour
 {
     public abstract string CATEGORY { get; }
-
     protected bool _isWaitingToSave = false;
 
     protected virtual void Awake()
@@ -14,15 +13,19 @@ public abstract class BaseSettings : MonoBehaviour
     }
 
     protected abstract void InitializeReferences();
-
     public abstract void SaveSettings();
     public abstract void LoadSettings();
 
+    public virtual async UniTask LoadSettingsAsync()
+    {
+        await UniTask.CompletedTask;
+        LoadSettings();
+    }
+
     public void ResetCategorySettings()
     {
-        if (SettingsManager.Instance == null) return;
-
-        SettingsManager.Instance.ResetCategory(CATEGORY);
+        if (Core.SettingsManager == null) return;
+        Core.SettingsManager.ResetCategory(CATEGORY);
         LoadSettings();
         SaveSettings();
     }
@@ -35,7 +38,6 @@ public abstract class BaseSettings : MonoBehaviour
     public async void SaveSettingsWithDelay(float delay = 0.5f)
     {
         if (_isWaitingToSave) return;
-
         _isWaitingToSave = true;
         try
         {
