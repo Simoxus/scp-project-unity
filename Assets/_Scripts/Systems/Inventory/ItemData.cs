@@ -43,9 +43,9 @@ public class ItemData : ScriptableObject
         return behaviors.Any(b => b != null && b.CanUse(this));
     }
 
-    public void Use()
+    public void Use(bool playSound = true)
     {
-        if (!useSound.IsNull)
+        if (playSound && !useSound.IsNull)
         {
             FMODHelper.PlayOneShot(useSound);
         }
@@ -59,9 +59,9 @@ public class ItemData : ScriptableObject
         }
     }
 
-    public void Equip()
+    public void Equip(bool playSound = true)
     {
-        if (!equipSound.IsNull)
+        if (playSound && !equipSound.IsNull)
         {
             FMODHelper.PlayOneShot(equipSound);
         }
@@ -72,9 +72,9 @@ public class ItemData : ScriptableObject
         }
     }
 
-    public void Unequip()
+    public void Unequip(bool playSound = true)
     {
-        if (!unequipSound.IsNull)
+        if (playSound && !unequipSound.IsNull)
         {
             FMODHelper.PlayOneShot(unequipSound);
         }

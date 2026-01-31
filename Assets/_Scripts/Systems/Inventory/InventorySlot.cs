@@ -11,21 +11,33 @@ public class InventorySlot : MonoBehaviour,
     IPointerEnterHandler,
     IPointerExitHandler
 {
-    [Header("Visual")]
+    [Space]
     [SerializeField] private Image slotImage;
     [SerializeField] private Image iconImage;
     [SerializeField] private GameObject highlightBorder;
 
-    public ItemData itemData;
+    [Header("Drag Settings")]
+    [SerializeField] private Vector2 dragIconSize = new Vector2(80, 80);
+    [SerializeField] private float dragIconAlpha = 1f;
+
+    [Header("Interaction Settings")]
+    [SerializeField] private float doubleClickTime = 0.3f;
+
+    public ItemData ItemData
+    {
+        get => _itemData;
+        private set => _itemData = value;
+    }
+
+    public bool IsEmpty => _itemData == null;
+
+    private ItemData _itemData;
+    private float _lastClickTime;
+    private bool _isDragging;
 
     private static InventorySlot _draggedSlot;
     private static GameObject _dragIcon;
     private static Canvas _canvas;
-
-    private float _lastClickTime;
-    private bool _isDragging;
-
-    public bool IsEmpty => itemData == null;
 
     private void Awake()
     {
@@ -55,9 +67,9 @@ public class InventorySlot : MonoBehaviour,
 
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            if (Time.time - _lastClickTime < 0.3f)
+            if (Time.time - _lastClickTime < doubleClickTime)
             {
-                UseItem();
+                EquipItem();
                 _lastClickTime = 0f;
             }
             else
@@ -94,25 +106,17 @@ public class InventorySlot : MonoBehaviour,
         _isDragging = true;
         _draggedSlot = this;
 
-        _dragIcon = new GameObject("DragIcon");
-        _dragIcon.transform.SetParent(_canvas.transform, false);
-
-        Image dragImage = _dragIcon.AddComponent<Image>();
-        dragImage.sprite = itemData.icon;
-        dragImage.raycastTarget = false;
-
-        CanvasGroup canvasGroup = _dragIcon.AddComponent<CanvasGroup>();
-        canvasGroup.alpha = 1f;
-        canvasGroup.blocksRaycasts = false;
-
-        RectTransform rectTransform = _dragIcon.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(80, 80);
+        CreateDragIcon();
 
         if (iconImage != null)
+        {
             iconImage.enabled = false;
+        }
 
         if (Core.UI.Tooltips != null)
+        {
             Core.UI.Tooltips.Hide();
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -127,18 +131,12 @@ public class InventorySlot : MonoBehaviour,
     {
         _isDragging = false;
 
-        if (_dragIcon != null)
-            Destroy(_dragIcon);
+        DestroyDragIcon();
 
         if (iconImage != null)
             iconImage.enabled = !IsEmpty;
 
-        // Drop into world if dragged outside inventory
-        if (Core.InventoryManager != null &&
-            !RectTransformUtility.RectangleContainsScreenPoint(
-                Core.UI.Inventory.InventoryPanelRect,
-                eventData.position,
-                eventData.pressEventCamera))
+        if (ShouldDropIntoWorld(eventData))
         {
             DropIntoWorld();
         }
@@ -150,12 +148,7 @@ public class InventorySlot : MonoBehaviour,
     {
         if (_draggedSlot == null || _draggedSlot == this) return;
 
-        ItemData temp = itemData;
-        itemData = _draggedSlot.itemData;
-        _draggedSlot.itemData = temp;
-
-        UpdateVisuals();
-        _draggedSlot.UpdateVisuals();
+        SwapItems(_draggedSlot);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -164,7 +157,7 @@ public class InventorySlot : MonoBehaviour,
             highlightBorder.SetActive(true);
 
         if (!IsEmpty && Core.UI.Tooltips != null)
-            Core.UI.Tooltips.Show(itemData.GetTooltipText()).Forget();
+            Core.UI.Tooltips.Show(_itemData.GetTooltipText()).Forget();
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -176,37 +169,60 @@ public class InventorySlot : MonoBehaviour,
             Core.UI.Tooltips.Hide();
     }
 
-    public bool AddItem(ItemData item)
+    private void CreateDragIcon()
     {
-        if (!IsEmpty) return false;
+        if (_dragIcon != null)
+            Destroy(_dragIcon);
 
-        itemData = item;
-        UpdateVisuals();
+        _dragIcon = new GameObject("DragIcon");
+        _dragIcon.transform.SetParent(_canvas.transform, false);
 
-        if (Core.InventoryManager != null)
-            Core.InventoryManager.TrackItem(itemData);
+        Image dragImage = _dragIcon.AddComponent<Image>();
+        dragImage.sprite = _itemData.icon;
+        dragImage.raycastTarget = false;
 
-        itemData.Pickup();
+        CanvasGroup canvasGroup = _dragIcon.AddComponent<CanvasGroup>();
+        canvasGroup.alpha = dragIconAlpha;
+        canvasGroup.blocksRaycasts = false;
 
-        return true;
+        RectTransform rectTransform = _dragIcon.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = dragIconSize;
     }
 
-    public void RemoveItem()
+    private void DestroyDragIcon()
     {
-        if (IsEmpty) return;
+        if (_dragIcon != null)
+        {
+            Destroy(_dragIcon);
+            _dragIcon = null;
+        }
+    }
 
-        if (Core.InventoryManager != null)
-            Core.InventoryManager.UntrackItem(itemData);
+    private bool ShouldDropIntoWorld(PointerEventData eventData)
+    {
+        if (Core.UI.Inventory == null) return false;
 
-        itemData = null;
+        return !RectTransformUtility.RectangleContainsScreenPoint(
+            Core.UI.Inventory.InventoryPanelRect,
+            eventData.position,
+            eventData.pressEventCamera);
+    }
+
+    private void SwapItems(InventorySlot otherSlot)
+    {
+        ItemData temp = _itemData;
+        _itemData = otherSlot._itemData;
+        otherSlot._itemData = temp;
+
         UpdateVisuals();
+        otherSlot.UpdateVisuals();
     }
 
     private void UpdateVisuals()
     {
         if (iconImage != null)
         {
-            iconImage.sprite = itemData?.icon;
+            iconImage.sprite = _itemData?.icon;
             iconImage.enabled = !IsEmpty;
         }
     }
@@ -221,10 +237,9 @@ public class InventorySlot : MonoBehaviour,
         if (highlightBorder != null)
             highlightBorder.SetActive(false);
 
-        // Check if usable item
-        if (itemData.CanBeUsed())
+        if (_itemData.CanBeUsed())
         {
-            itemData.Use();
+            _itemData.Use();
         }
         else
         {
