@@ -36,7 +36,7 @@ namespace Console.Commands
 
         private void ListMods()
         {
-            var mods = ModManager.Instance.GetAllModInfo();
+            var mods = Core.ModManager.GetAllModInfo();
 
             if (mods.Count == 0)
             {
@@ -48,7 +48,7 @@ namespace Console.Commands
 
             foreach (var mod in mods)
             {
-                var modInstance = ModManager.Instance.GetMod(mod.id);
+                var modInstance = Core.ModManager.GetMod(mod.id);
                 string status = modInstance != null && modInstance.IsEnabled ? "Enabled".AsSuccess() : "Disabled".AsError();
 
                 ConsoleManager.LogToConsole($"<u><b>[{mod.id}] {mod.name} v{mod.version}</b></u> - <b>{status}</b>".AsInfo());
@@ -63,7 +63,7 @@ namespace Console.Commands
 
         private void ReloadMod(string modId)
         {
-            var mod = ModManager.Instance.GetMod(modId);
+            var mod = Core.ModManager.GetMod(modId);
             if (mod == null)
             {
                 ConsoleManager.LogToConsole($"Mod '{modId}' not found.".AsError());
@@ -78,7 +78,7 @@ namespace Console.Commands
             try
             {
                 ConsoleManager.LogToConsole($"Reloading mod '{modId}'...".AsInfo());
-                await ModManager.Instance.ReloadMod(modId);
+                await Core.ModManager.ReloadMod(modId);
                 ConsoleManager.LogToConsole($"Mod '{modId}' reloaded successfully.".AsSuccess());
             }
             catch (System.Exception ex)
@@ -98,7 +98,7 @@ namespace Console.Commands
             try
             {
                 ConsoleManager.LogToConsole("Reloading all mods...".AsInfo());
-                await ModManager.Instance.ReloadAllMods();
+                await Core.ModManager.ReloadAllMods();
                 ConsoleManager.LogToConsole("All mods reloaded successfully.".AsSuccess());
             }
             catch (System.Exception ex)

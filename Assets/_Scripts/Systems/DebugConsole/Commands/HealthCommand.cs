@@ -39,7 +39,7 @@ namespace Console.Commands
                     ConsoleManager.LogToConsole($"Player took {value} damage.".AsSuccess());
                     break;
                 default:
-                    ConsoleManager.LogToConsole("Unknown health method. Use 'set', 'heal', or 'damage'.".AsError());
+                    ConsoleManager.LogToConsole(Usage.AsError());
                     break;
             }
         }

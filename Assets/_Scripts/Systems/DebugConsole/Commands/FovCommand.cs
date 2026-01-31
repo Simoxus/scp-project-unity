@@ -7,7 +7,7 @@ namespace Console.Commands
     public class FovCommand : BaseConsole
     {
         public override string CommandWord => "fov";
-        public override string Description => "Adjusts the vertical field of view.";
+        public override string Description => "Adjusts the field of view.";
         protected override string RawUsage => "fov <value>";
 
         public override void Execute(string[] args)
@@ -34,21 +34,19 @@ namespace Console.Commands
                 Tween.Custom(
                     currentFOV,
                     targetFOV,
-                    0.55f,
+                    0.6f,
                     onValueChange: fov =>
                     {
                         var lens = cinemachineCamera.Lens;
                         lens.FieldOfView = fov;
                         cinemachineCamera.Lens = lens;
                     },
-                    Ease.InOutCirc
+                    Ease.InOutCubic,
+                    useUnscaledTime: true
                 ).OnComplete(() =>
-                {
-                    // Save to settings after animation completes
-                    SaveFOVToSettings(targetFOV);
-                });
+                { SaveFOVToSettings(targetFOV); });
 
-                ConsoleManager.LogToConsole($"Field of view set to {targetFOV}.".AsSuccess());
+                ConsoleManager.LogToConsole($"Field of view set to: {targetFOV}.".AsSuccess());
             }
             else
             {
@@ -59,11 +57,8 @@ namespace Console.Commands
         private void SaveFOVToSettings(float fovValue)
         {
             if (Core.SettingsManager == null) return;
-
-            // Save the FOV value using the same category/key as SettingsGraphics
             Core.SettingsManager.SaveFloat("Graphics", "FieldOfView", fovValue);
 
-            // Update the UI slider if it exists
             SettingsGraphics settingsGraphics = Object.FindFirstObjectByType<SettingsGraphics>();
             if (settingsGraphics != null && settingsGraphics.fieldOfViewSlider != null)
             {
