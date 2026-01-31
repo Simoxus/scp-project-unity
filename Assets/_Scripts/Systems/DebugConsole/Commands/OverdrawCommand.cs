@@ -7,7 +7,7 @@ namespace Console.Commands
     public class OverdrawCommand : BaseConsole
     {
         public override string CommandWord => "overdraw";
-        public override string Description => "Toggles overdraw visualization.";
+        public override string Description => "Toggles overdraw visualization." + " (editor-only)".AsEditor();
         protected override string RawUsage => "overdraw";
 
         private static bool isOverdraw = false;

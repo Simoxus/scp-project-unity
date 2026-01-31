@@ -7,7 +7,7 @@ namespace Console.Commands
     public class NoLightsCommand : BaseConsole
     {
         public override string CommandWord => "nolights";
-        public override string Description => "Disables all lighting.";
+        public override string Description => "Disables all lighting." + " (editor-only)".AsEditor();
         protected override string RawUsage => "nolights";
 
         private static bool isEnabled = false;
