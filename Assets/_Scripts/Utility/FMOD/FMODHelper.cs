@@ -13,166 +13,98 @@ public static class FMODHelper
         public int occlusionId = -1;
     }
 
-    private static readonly Dictionary<string, ManagedInstance> activeInstances = new();
+    private static readonly Dictionary<int, ManagedInstance> _activeInstances = new Dictionary<int, ManagedInstance>();
+    private static int _nextInstanceHandle = 1;
 
     public static void PlayOneShot(EventReference fmodEvent)
     {
         RuntimeManager.PlayOneShot(fmodEvent);
     }
 
-    public static void PlayOneShot3D(EventReference fmodEvent, Vector3 position)
-    {
-        RuntimeManager.PlayOneShot(fmodEvent, position);
-    }
-
-    public static void PlayOneShotWithParameters(EventReference fmodEvent, Vector3 position, params (string name, float value)[] parameters)
+    public static void PlayOneShot3D(EventReference fmodEvent, Vector3 position, (string name, float value)[] parameters = null, bool useOcclusion = false, float occlusionMaxDistance = -1f, float occlusionMinDuration = 0.5f)
     {
         var instance = RuntimeManager.CreateInstance(fmodEvent);
         instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
 
-        foreach (var (name, value) in parameters)
+        if (parameters != null)
         {
-            instance.setParameterByName(name, value);
-        }
-
-        instance.start();
-        instance.release();
-    }
-
-    public static void PlayOneShotWithOcclusion(EventReference fmodEvent, Vector3 position, int raysPerSound = -1, float raySpread = -1f, float maxDistance = -1f)
-    {
-        var instance = RuntimeManager.CreateInstance(fmodEvent);
-        instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
-
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.RegisterSound(instance, position, raysPerSound, raySpread, maxDistance);
-        }
-
-        instance.start();
-        instance.release();
-    }
-
-    public static void PlayOneShotWithDynamicOcclusion(EventReference fmodEvent, Vector3 position, float minDuration = 0.5f, int raysPerSound = -1, float raySpread = -1f, float maxDistance = -1f)
-    {
-        var instance = RuntimeManager.CreateInstance(fmodEvent);
-        instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
-
-        int occlusionId = -1;
-        if (AudioManager.Instance != null)
-        {
-            occlusionId = AudioManager.Instance.RegisterSound(instance, position, raysPerSound, maxDistance);
-        }
-
-        instance.start();
-
-        MonitorAndCleanup(instance, occlusionId, minDuration).Forget();
-    }
-
-    public static void PlayOneShotWithParametersAndOcclusion(EventReference fmodEvent, Vector3 position, float minDuration = 0.5f, int raysPerSound = -1, float raySpread = -1f, float maxDistance = -1f, params (string name, float value)[] parameters)
-    {
-        var instance = RuntimeManager.CreateInstance(fmodEvent);
-        instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
-
-        foreach (var (name, value) in parameters)
-        {
-            instance.setParameterByName(name, value);
+            foreach (var (name, value) in parameters)
+            {
+                instance.setParameterByName(name, value);
+            }
         }
 
         int occlusionId = -1;
-        if (AudioManager.Instance != null)
+        if (useOcclusion && Core.AudioManager != null)
         {
-            occlusionId = AudioManager.Instance.RegisterSound(instance, position, raysPerSound, maxDistance);
+            occlusionId = Core.AudioManager.RegisterSound(instance, position, occlusionMaxDistance, useOcclusion: true);
         }
 
         instance.start();
 
-        MonitorAndCleanup(instance, occlusionId, minDuration).Forget();
+        if (useOcclusion && occlusionId >= 0)
+        {
+            MonitorAndCleanup(instance, occlusionId, occlusionMinDuration).Forget();
+        }
+        else
+        {
+            instance.release();
+        }
     }
 
-    public static void PlayInstance(EventReference fmodEvent, string key, Vector3 position)
+    public static int PlayInstance(EventReference fmodEvent, GameObject gameObject, Rigidbody rigidbody = null, bool useOcclusion = false, float occlusionMaxDistance = -1f)
     {
-        if (activeInstances.TryGetValue(key, out var existing))
-        {
-            if (existing.occlusionId >= 0 && AudioManager.Instance != null)
-            {
-                AudioManager.Instance.UnregisterSound(existing.occlusionId);
-            }
-
-            existing.instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            existing.instance.release();
-            activeInstances.Remove(key);
-        }
-
         var instance = RuntimeManager.CreateInstance(fmodEvent);
-        instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
-        instance.start();
 
-        var managed = new ManagedInstance { instance = instance };
-        activeInstances[key] = managed;
-    }
+        if (rigidbody != null)
+            RuntimeManager.AttachInstanceToGameObject(instance, gameObject, rigidbody);
+        else
+            RuntimeManager.AttachInstanceToGameObject(instance, gameObject);
 
-    public static void PlayInstanceWithOcclusion(EventReference fmodEvent, string key, Vector3 position, int raysPerSound = -1, float raySpread = -1f, float maxDistance = -1f)
-    {
-        if (activeInstances.TryGetValue(key, out var existing))
-        {
-            if (existing.occlusionId >= 0 && AudioManager.Instance != null)
-            {
-                AudioManager.Instance.UnregisterSound(existing.occlusionId);
-            }
-
-            existing.instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            existing.instance.release();
-            activeInstances.Remove(key);
-        }
-
-        var instance = RuntimeManager.CreateInstance(fmodEvent);
-        instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
         instance.start();
 
         var managed = new ManagedInstance { instance = instance };
 
-        if (AudioManager.Instance != null)
+        if (useOcclusion && Core.AudioManager != null)
         {
-            managed.occlusionId = AudioManager.Instance.RegisterSound(instance, position, raysPerSound, maxDistance);
+            managed.occlusionId = Core.AudioManager.RegisterSound(instance, gameObject.transform.position, occlusionMaxDistance, useOcclusion: true);
         }
 
-        activeInstances[key] = managed;
+        int handle = _nextInstanceHandle++;
+        _activeInstances[handle] = managed;
+
+        return handle;
     }
 
-    public static void StopInstance(string key, bool allowFadeout = true)
+    public static void StopInstance(int handle, bool allowFadeout = true)
     {
-        if (activeInstances.TryGetValue(key, out var managed))
+        if (_activeInstances.TryGetValue(handle, out var managed))
         {
-            if (managed.occlusionId >= 0 && AudioManager.Instance != null)
+            if (managed.occlusionId >= 0 && Core.AudioManager != null)
             {
-                AudioManager.Instance.UnregisterSound(managed.occlusionId);
+                Core.AudioManager.UnregisterSound(managed.occlusionId);
             }
 
             managed.instance.stop(allowFadeout ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
             managed.instance.release();
-            activeInstances.Remove(key);
-
-            return;
+            _activeInstances.Remove(handle);
         }
     }
 
-    public static void UpdateInstancePosition(string key, Vector3 position)
+    public static void UpdateInstancePosition(int handle, Vector3 position)
     {
-        if (activeInstances.TryGetValue(key, out var managed))
+        if (_activeInstances.TryGetValue(handle, out var managed))
         {
-            managed.instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
-
-            if (managed.occlusionId >= 0 && AudioManager.Instance != null)
+            if (managed.occlusionId >= 0 && Core.AudioManager != null)
             {
-                AudioManager.Instance.UpdateSoundPosition(managed.occlusionId, position);
+                Core.AudioManager.UpdateSoundPosition(managed.occlusionId, position);
             }
         }
     }
 
-    public static FMOD.Studio.EventInstance GetInstance(string key)
+    public static EventInstance GetInstance(int handle)
     {
-        if (activeInstances.TryGetValue(key, out var managed))
+        if (_activeInstances.TryGetValue(handle, out var managed))
         {
             return managed.instance;
         }
@@ -180,28 +112,160 @@ public static class FMODHelper
         return default;
     }
 
+    public static void SetInstanceParameter(int handle, string paramName, float value)
+    {
+        if (_activeInstances.TryGetValue(handle, out var managed) && managed.instance.isValid())
+        {
+            managed.instance.setParameterByName(paramName, value);
+        }
+    }
+
+    public static float GetInstanceParameter(int handle, string paramName)
+    {
+        if (_activeInstances.TryGetValue(handle, out var managed) && managed.instance.isValid())
+        {
+            managed.instance.getParameterByName(paramName, out float value);
+            return value;
+        }
+        return 0f;
+    }
+
+    public static EventReference PickRandomEvent(params EventReference[] fmodEvents)
+    {
+        if (fmodEvents == null || fmodEvents.Length == 0)
+        {
+            return default;
+        }
+
+        return fmodEvents[UnityEngine.Random.Range(0, fmodEvents.Length)];
+    }
+
+    public static bool IsInstanceValid(int handle)
+    {
+        return _activeInstances.TryGetValue(handle, out var managed) && managed.instance.isValid();
+    }
+
     public static void SetGlobalParameter(string parameterName, float value)
     {
         RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
     }
 
-    private static async UniTaskVoid MonitorAndCleanup(FMOD.Studio.EventInstance instance, int occlusionId, float minDuration)
+    public static void PlayOneShotWithSubtitle(EventReference fmodEvent, string tableName, string key, string speaker = null)
+    {
+        var instance = RuntimeManager.CreateInstance(fmodEvent);
+
+        if (Core.UI?.Subtitles != null)
+        {
+            Core.UI.Subtitles.ShowLocalizedSubtitleForSound(tableName, key, instance, speaker);
+        }
+
+        instance.start();
+        instance.release();
+    }
+
+    public static void PlayOneShot3DWithSubtitle(EventReference fmodEvent, Vector3 position, string tableName, string key, string speaker = null)
+    {
+        var instance = RuntimeManager.CreateInstance(fmodEvent);
+        instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
+
+        if (Core.UI?.Subtitles != null)
+        {
+            Core.UI.Subtitles.ShowLocalizedSubtitleForSound(tableName, key, instance, speaker);
+        }
+
+        instance.start();
+        instance.release();
+    }
+
+    public static void PlayOneShotWithSubtitles(EventReference fmodEvent)
+    {
+        var instance = RuntimeManager.CreateInstance(fmodEvent);
+        FMODSubtitles.RegisterEvent(instance);
+        instance.start();
+        instance.release();
+    }
+
+    public static void PlayOneShot3DWithSubtitles(EventReference fmodEvent, Vector3 position)
+    {
+        var instance = RuntimeManager.CreateInstance(fmodEvent);
+        instance.set3DAttributes(RuntimeUtils.To3DAttributes(position));
+        FMODSubtitles.RegisterEvent(instance);
+        instance.start();
+        instance.release();
+    }
+
+    public static int PlayInstanceWithSubtitle(EventReference fmodEvent, GameObject gameObject, string tableName, string key, string speaker = null, Rigidbody rigidbody = null, bool useOcclusion = false, float occlusionMaxDistance = -1f)
+    {
+        var instance = RuntimeManager.CreateInstance(fmodEvent);
+
+        if (rigidbody != null)
+            RuntimeManager.AttachInstanceToGameObject(instance, gameObject, rigidbody);
+        else
+            RuntimeManager.AttachInstanceToGameObject(instance, gameObject);
+
+        if (Core.UI?.Subtitles != null)
+        {
+            Core.UI.Subtitles.ShowLocalizedSubtitleForSound(tableName, key, instance, speaker);
+        }
+
+        instance.start();
+
+        var managed = new ManagedInstance { instance = instance };
+
+        if (useOcclusion && Core.AudioManager != null)
+        {
+            managed.occlusionId = Core.AudioManager.RegisterSound(instance, gameObject.transform.position, occlusionMaxDistance, useOcclusion: true);
+        }
+
+        int handle = _nextInstanceHandle++;
+        _activeInstances[handle] = managed;
+
+        return handle;
+    }
+
+    public static int PlayInstanceWithSubtitles(EventReference fmodEvent, GameObject gameObject, Rigidbody rigidbody = null, bool useOcclusion = false, float occlusionMaxDistance = -1f)
+    {
+        var instance = RuntimeManager.CreateInstance(fmodEvent);
+
+        if (rigidbody != null)
+            RuntimeManager.AttachInstanceToGameObject(instance, gameObject, rigidbody);
+        else
+            RuntimeManager.AttachInstanceToGameObject(instance, gameObject);
+
+        FMODSubtitles.RegisterEvent(instance);
+
+        instance.start();
+
+        var managed = new ManagedInstance { instance = instance };
+
+        if (useOcclusion && Core.AudioManager != null)
+        {
+            managed.occlusionId = Core.AudioManager.RegisterSound(instance, gameObject.transform.position, occlusionMaxDistance, useOcclusion: true);
+        }
+
+        int handle = _nextInstanceHandle++;
+        _activeInstances[handle] = managed;
+
+        return handle;
+    }
+
+    private static async UniTaskVoid MonitorAndCleanup(EventInstance instance, int occlusionId, float minDuration)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(minDuration));
 
         while (instance.isValid())
         {
             instance.getPlaybackState(out var state);
-            if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED || state == FMOD.Studio.PLAYBACK_STATE.STOPPING)
+            if (state == PLAYBACK_STATE.STOPPED || state == PLAYBACK_STATE.STOPPING)
                 break;
 
             await UniTask.Yield();
         }
 
         // Cleanup
-        if (occlusionId >= 0 && AudioManager.Instance != null)
+        if (occlusionId >= 0 && Core.AudioManager != null)
         {
-            AudioManager.Instance.UnregisterSound(occlusionId);
+            Core.AudioManager.UnregisterSound(occlusionId);
         }
 
         if (instance.isValid())

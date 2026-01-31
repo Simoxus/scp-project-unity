@@ -5,9 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerFootsteps : MonoBehaviour
 {
-    [Header("Behavior Settings")]
+    [Space]
     public List<FootstepData> footstepSurfaces = new List<FootstepData>();
-    public bool useBobSyncedFootsteps = true;
 
     [Header("FMOD Setup")]
     public Transform footstepPlayTransform;
@@ -61,10 +60,10 @@ public class PlayerFootsteps : MonoBehaviour
         if (footstepEvent.IsNull)
             return;
 
-        FMODHelper.PlayOneShotWithParameters(
+        FMODHelper.PlayOneShot3D(
             footstepEvent,
             footstepPlayTransform.position,
-            (surfaceParameterName, _currentFootstepData.fmodParameterValue)
+            parameters: new[] { (surfaceParameterName, _currentFootstepData.fmodParameterValue) }
         );
     }
 
@@ -74,11 +73,7 @@ public class PlayerFootsteps : MonoBehaviour
 
         foreach (FootstepData surface in footstepSurfaces)
         {
-            if (surface == null)
-            {
-                Log.VerboseWarning($"A FootstepData entry is null. Make sure to check your list in {name}.");
-                continue;
-            }
+            if (surface == null) continue;
 
             foreach (Texture texture in surface.textures)
             {
@@ -91,10 +86,6 @@ public class PlayerFootsteps : MonoBehaviour
                 {
                     _surfaceByTextureName.Add(identifier, surface);
                 }
-                else
-                {
-                    Log.VerboseInfo($"Duplicate texture identifier '{identifier}' found. Ignoring duplicate.");
-                }
             }
         }
     }
@@ -104,13 +95,13 @@ public class PlayerFootsteps : MonoBehaviour
         switch (state)
         {
             case PlayerState.Sprinting:
-                return AudioDataAccess.Instance.Player.RunFootstepSound;
+                return Core.AudioDataAccess.Player.RunFootstepSound;
             case PlayerState.Walking:
             case PlayerState.Crouching:
             case PlayerState.Idle:
             case PlayerState.Freefall:
             default:
-                return AudioDataAccess.Instance.Player.WalkFootstepSound;
+                return Core.AudioDataAccess.Player.WalkFootstepSound;
         }
     }
 
@@ -196,10 +187,14 @@ public class PlayerFootsteps : MonoBehaviour
         if (mat == null) return null;
 
         if (mat.HasProperty("_BaseMap"))
+        {
             return mat.GetTexture("_BaseMap");
+        }
 
         if (mat.HasProperty("_MainTex"))
+        {
             return mat.GetTexture("_MainTex");
+        }
 
         return null;
     }
