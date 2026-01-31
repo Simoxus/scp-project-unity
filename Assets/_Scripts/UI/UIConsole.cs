@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UIConsole : MonoBehaviour
 {
-    [Header("UI Base")]
+    [Space]
     public Canvas canvas;
 
     [Header("Tab Buttons")]
@@ -79,7 +79,7 @@ public class UIConsole : MonoBehaviour
         // Input events
         if (Core.Player != null)
         {
-            _inputs = Core.Player.PlayerInputs;
+            _inputs = Core.Player.Inputs;
             if (_inputs != null)
                 _inputs.OnDebugUI += Toggle;
         }
@@ -122,7 +122,7 @@ public class UIConsole : MonoBehaviour
 
     private void Update()
     {
-        if (commandInputField != null && commandInputField.isFocused)
+        if (_isVisible && commandInputField != null && commandInputField.isFocused)
         {
             HandleCommandsInput();
         }
@@ -355,9 +355,9 @@ public class UIConsole : MonoBehaviour
 
         AppendToCommands($"> {input}".AsInput());
 
-        if (ConsoleManager.Instance != null)
+        if (Core.ConsoleManager != null)
         {
-            ConsoleManager.Instance.ProcessCommand(input);
+            Core.ConsoleManager.ProcessCommand(input);
         }
         else
         {
@@ -402,7 +402,7 @@ public class UIConsole : MonoBehaviour
 
     private void PopulateSuggestions(string currentInput)
     {
-        if (autocompleteSuggestionsText == null || ConsoleManager.Instance == null)
+        if (autocompleteSuggestionsText == null || Core.ConsoleManager == null)
             return;
 
         _currentSuggestions.Clear();
@@ -417,8 +417,11 @@ public class UIConsole : MonoBehaviour
         string lowerInput = currentInput.ToLower();
         string commandWordPartial = lowerInput.Split(' ')[0];
 
-        _currentSuggestions = ConsoleManager.Instance.GetCommands().Keys
-            .Where(cmd => cmd.StartsWith(commandWordPartial))
+        // Get matching commands/aliases and map them to their actual CommandWord
+        _currentSuggestions = ConsoleManager.Instance.GetCommandsForAutocomplete()
+            .Where(kvp => kvp.Key.StartsWith(commandWordPartial))
+            .Select(kvp => kvp.Value.CommandWord.ToLower())
+            .Distinct()
             .OrderBy(cmd => cmd)
             .ToList();
 
@@ -568,6 +571,6 @@ public class UIConsole : MonoBehaviour
     private void PlayPressSound()
     {
         if (Core.AudioDataAccess?.UI != null)
-            FMODHelper.PlayOneShot(AudioDataAccess.Instance.UI.PressSound);
+            FMODHelper.PlayOneShot(Core.AudioDataAccess.UI.PressSound);
     }
 }

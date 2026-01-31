@@ -2,6 +2,7 @@ function OnInit()
     Console.RegisterCommand(
         "hello",
         "Hello i'm a very friendly example command",
+        {"helloagain", "helloagain2"},
         "hello [name]",
         function(args)
             if #args > 0 then

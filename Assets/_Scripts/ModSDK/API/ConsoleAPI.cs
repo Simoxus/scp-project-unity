@@ -8,24 +8,38 @@ public class ConsoleAPI
     private Dictionary<string, LuaConsoleCommand> _luaCommands = new Dictionary<string, LuaConsoleCommand>();
 
     [MoonSharpVisible(true)]
-    public void RegisterCommand(string commandWord, string description, string usage, Closure executeCallback)
+    public void RegisterCommand(string commandWord, string description, Table aliases, string usage, Closure executeCallback)
     {
         string key = commandWord.ToLower();
-
-        // Unregister existing Lua command if it exists
         if (_luaCommands.ContainsKey(key))
         {
             UnregisterCommand(commandWord);
         }
 
+        // Lua table to string array
+        string[] aliasArray = null;
+        if (aliases != null)
+        {
+            var aliasList = new System.Collections.Generic.List<string>();
+            foreach (var pair in aliases.Pairs)
+            {
+                if (pair.Value.Type == DataType.String)
+                {
+                    aliasList.Add(pair.Value.String);
+                }
+            }
+            aliasArray = aliasList.ToArray();
+        }
+
         LuaConsoleCommand luaCommand = new LuaConsoleCommand(
             commandWord,
             description,
+            aliasArray,
             usage,
             executeCallback
         );
+        Core.ConsoleManager.RegisterCommand(luaCommand);
 
-        ConsoleManager.Instance.RegisterCommand(luaCommand);
         _luaCommands[key] = luaCommand;
     }
 
@@ -36,7 +50,7 @@ public class ConsoleAPI
 
         if (_luaCommands.ContainsKey(key))
         {
-            ConsoleManager.Instance.UnregisterCommand(commandWord);
+            Core.ConsoleManager.UnregisterCommand(commandWord);
             _luaCommands.Remove(key);
         }
     }
@@ -74,7 +88,7 @@ public class ConsoleAPI
     [MoonSharpVisible(true)]
     public Table GetAllCommands()
     {
-        if (ConsoleManager.Instance == null)
+        if (Core.ConsoleManager == null)
         {
             return new Table(new Script());
         }
@@ -82,7 +96,7 @@ public class ConsoleAPI
         Script script = new Script();
         Table result = new Table(script);
 
-        var commands = ConsoleManager.Instance.GetCommands();
+        var commands = Core.ConsoleManager.GetCommands();
         int index = 1;
 
         foreach (var cmd in commands)
@@ -101,7 +115,7 @@ public class ConsoleAPI
     {
         foreach (var commandKey in _luaCommands.Keys)
         {
-            ConsoleManager.Instance?.UnregisterCommand(commandKey);
+            Core.ConsoleManager?.UnregisterCommand(commandKey);
         }
         _luaCommands.Clear();
     }
@@ -111,14 +125,15 @@ public class LuaConsoleCommand : IConsoleCommand
 {
     public string CommandWord { get; }
     public string Description { get; }
+    public string[] Aliases { get; }
     public string Usage { get; }
-
     private Closure _executeCallback;
 
-    public LuaConsoleCommand(string commandWord, string description, string usage, Closure executeCallback)
+    public LuaConsoleCommand(string commandWord, string description, string[] aliases, string usage, Closure executeCallback)
     {
         CommandWord = commandWord;
         Description = description;
+        Aliases = aliases ?? new string[0];
         Usage = usage;
         _executeCallback = executeCallback;
     }
@@ -130,7 +145,6 @@ public class LuaConsoleCommand : IConsoleCommand
             ConsoleManager.LogToConsole($"Command '{CommandWord}' has no execute callback!".AsError());
             return;
         }
-
         try
         {
             Script script = _executeCallback.OwnerScript;
@@ -139,7 +153,6 @@ public class LuaConsoleCommand : IConsoleCommand
             {
                 argsTable[i + 1] = args[i];
             }
-
             _executeCallback.Call(argsTable);
         }
         catch (ScriptRuntimeException ex)

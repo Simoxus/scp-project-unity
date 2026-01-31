@@ -3,27 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 
-public class ConsoleManager : MonoBehaviour
+public class ConsoleManager : Singleton<ConsoleManager>
 {
-    public static ConsoleManager Instance { get; private set; }
     private Dictionary<string, IConsoleCommand> commands = new();
+    private HashSet<string> aliasKeys = new();
 
     public static event Action<string> OnConsoleMessage;
 
-    private void Awake()
+    protected override void OnSingletonAwake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Log.VerboseWarning($"Duplicate instance of {GetType().Name} found. Destroying the new one.");
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
         InitializeCommands();
     }
 
@@ -33,7 +22,7 @@ public class ConsoleManager : MonoBehaviour
         var commandTypes = Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(t => typeof(IConsoleCommand).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
-            .Where(t => t.Namespace == "Console.Commands"); // <--- restricted to the command namespace
+            .Where(t => t.Namespace == Core.COMMAND_NAMESPACE); // <--- restricted to the command namespace
 
         foreach (var type in commandTypes)
         {
@@ -52,11 +41,6 @@ public class ConsoleManager : MonoBehaviour
         {
             SceneCommand.PopulateAvailableScenes();
         }
-
-        if (commands.TryGetValue("worldfog", out var fogCmd) && fogCmd is WorldFogCommand fc)
-        {
-            WorldFogCommand.SetDefaultFogDensity();
-        }
     }
 
     public void RegisterCommand(IConsoleCommand command)
@@ -73,12 +57,41 @@ public class ConsoleManager : MonoBehaviour
             commands.Add(key, command);
             Log.VerboseInfo($"Registered console command '{key}'.");
         }
+
+        if (command.Aliases != null && command.Aliases.Length > 0)
+        {
+            foreach (string alias in command.Aliases)
+            {
+                string aliasKey = alias.ToLower();
+                if (commands.ContainsKey(aliasKey))
+                {
+                    continue;
+                }
+
+                commands.Add(aliasKey, command);
+                aliasKeys.Add(aliasKey);
+            }
+        }
     }
 
     public void UnregisterCommand(string commandWord)
     {
-        if (commands.Remove(commandWord.ToLower()))
+        string key = commandWord.ToLower();
+
+        if (commands.TryGetValue(key, out IConsoleCommand command))
         {
+            commands.Remove(key);
+
+            if (command.Aliases != null)
+            {
+                foreach (string alias in command.Aliases)
+                {
+                    string aliasKey = alias.ToLower();
+                    commands.Remove(aliasKey);
+                    aliasKeys.Remove(aliasKey);
+                }
+            }
+
             Log.VerboseInfo($"Unregistered console command '{commandWord}'.", this);
         }
     }
@@ -109,6 +122,12 @@ public class ConsoleManager : MonoBehaviour
         }
     }
 
-    public static void LogToConsole(string message) => OnConsoleMessage?.Invoke(message); // Helper method to log messages to the console UI.
-    public IReadOnlyDictionary<string, IConsoleCommand> GetCommands() => commands; // Provides access to all registered commands for the HelpCommand (and others).
+    public static void LogToConsole(string message) => OnConsoleMessage?.Invoke(message);
+
+    public IReadOnlyDictionary<string, IConsoleCommand> GetCommands() => commands;
+
+    // Returns all commands including aliases for autocomplete
+    public IReadOnlyDictionary<string, IConsoleCommand> GetCommandsForAutocomplete() => commands;
+
+    public bool IsAlias(string commandWord) => aliasKeys.Contains(commandWord.ToLower());
 }

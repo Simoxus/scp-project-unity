@@ -1,20 +1,20 @@
-﻿using UnityEngine;
-namespace Console.Commands
+﻿namespace Console.Commands
 {
     public class WorldFogCommand : BaseConsole
     {
         public override string CommandWord => "worldfog";
         public override string Description => "Controls fog visibility and density settings.";
-        protected override string RawUsage => "worldfog <toggle|density> [amount|reset]";
-
-        public static float defaultFogDensity;
-        public static void SetDefaultFogDensity() => defaultFogDensity = RenderSettings.fogDensity;
+        public override string[] Aliases => new string[] { "camerafog" };
+        protected override string RawUsage => "worldfog <density[value]|reset>";
 
         public override void Execute(string[] args)
         {
             if (args.Length < 1)
             {
-                ConsoleManager.LogToConsole(Usage.AsError());
+                bool currentState = Core.FacilityManager.GetFogEnabled();
+                Core.FacilityManager.SetFogEnabled(!currentState, 0f);
+                string status = !currentState ? "enabled" : "disabled";
+                ConsoleManager.LogToConsole($"Fog has been {status}.".AsSuccess());
                 return;
             }
 
@@ -22,21 +22,7 @@ namespace Console.Commands
 
             switch (action)
             {
-                case "toggle":
-
-                    if (args.Length > 1)
-                    {
-                        ConsoleManager.LogToConsole(Usage.AsError());
-                        return;
-                    }
-                    RenderSettings.fog = !RenderSettings.fog;
-                    string status = RenderSettings.fog ? "enabled" : "disabled";
-                    ConsoleManager.LogToConsole($"Fog has been {status}.".AsSuccess());
-
-                    break;
-
                 case "density":
-
                     if (args.Length < 2)
                     {
                         ConsoleManager.LogToConsole(Usage.AsError());
@@ -45,8 +31,9 @@ namespace Console.Commands
 
                     if (args[1].ToLower() == "reset")
                     {
-                        RenderSettings.fogDensity = defaultFogDensity;
-                        ConsoleManager.LogToConsole($"Fog density reset to default ({defaultFogDensity}).".AsSuccess());
+                        float defaultDensity = Core.FacilityManager.GetDefaultFogDensity();
+                        Core.FacilityManager.SetFogDensity(defaultDensity, 0f);
+                        ConsoleManager.LogToConsole($"Fog density reset to default ({defaultDensity}).".AsSuccess());
                     }
                     else if (float.TryParse(args[1], out float density))
                     {
@@ -55,19 +42,22 @@ namespace Console.Commands
                             ConsoleManager.LogToConsole("Invalid density value. Must be 0 or greater.".AsError());
                             return;
                         }
-
-                        RenderSettings.fogDensity = density;
+                        Core.FacilityManager.SetFogDensity(density, 0f);
                         ConsoleManager.LogToConsole($"Fog density set to {density}.".AsSuccess());
                     }
                     else
                     {
-                        ConsoleManager.LogToConsole("Invalid value. Please provide a valid number or 'reset'.".AsError());
+                        ConsoleManager.LogToConsole(Usage.AsError());
                     }
+                    break;
 
+                case "clear":
+                    Core.FacilityManager.ClearFogQueue();
+                    ConsoleManager.LogToConsole("Fog queue cleared.".AsSuccess());
                     break;
 
                 default:
-                    ConsoleManager.LogToConsole($"Invalid action. Use 'toggle' or 'density'.".AsError());
+                    ConsoleManager.LogToConsole(Usage.AsError());
                     break;
             }
         }
