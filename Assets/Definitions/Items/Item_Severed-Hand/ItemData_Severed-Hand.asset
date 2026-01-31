@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 017f2b8e794026a4f9e71521c47daf3d, type: 3}
   m_Name: ItemData_Severed-Hand
   m_EditorClassIdentifier: 
-  itemID: quarter
-  itemType: 0
+  itemID: severed-hand
+  itemType: 1
   icon: {fileID: 21300000, guid: 9950dd2b8e34d414292b4351f6d11b9a, type: 3}
   worldPrefab: {fileID: 919132149155446097, guid: 961f8a6b538e43347b6ea309f5f45aa7, type: 3}
   pickupSound:
@@ -22,29 +22,30 @@ MonoBehaviour:
       Data2: 1252745257
       Data3: 287934104
       Data4: 2129097810
-    Path: event:/UI/UI_Item_Pick1
+    Path: event:/UI/Item-Pick-1
   equipSound:
     Guid:
       Data1: 1797962823
       Data2: 1252745257
       Data3: 287934104
       Data4: 2129097810
-    Path: event:/UI/UI_Item_Pick1
+    Path: event:/UI/Item-Pick-1
   unequipSound:
     Guid:
       Data1: 1797962823
       Data2: 1252745257
       Data3: 287934104
       Data4: 2129097810
-    Path: event:/UI/UI_Item_Pick1
+    Path: event:/UI/Item-Pick-1
   useSound:
     Guid:
       Data1: 708710943
       Data2: 1224482057
       Data3: -1364115041
       Data4: -757847235
-    Path: event:/UI/UI_SliderSnap
-  behaviors: []
+    Path: event:/UI/Press-Slider
+  behaviors:
+  - {fileID: 11400000, guid: 4341c2e5e436d1a4a80036e6739a9891, type: 2}
   localizedName:
     m_TableReference:
       m_TableCollectionName: GUID:912814a9ef2c4ed42b59ec09ad533d5f
