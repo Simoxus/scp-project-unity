@@ -41,7 +41,15 @@ public class InventorySlot : MonoBehaviour,
 
         if (eventData.button == PointerEventData.InputButton.Right && !_isDragging)
         {
-            DropIntoWorld();
+            // Check if this item is currently equipped
+            if (Core.Player?.Inventory != null && Core.Player.Inventory.EquippedItem == _itemData)
+            {
+                Core.Player.Inventory.UnequipItem();
+            }
+            else
+            {
+                DropIntoWorld();
+            }
             return;
         }
 
@@ -56,6 +64,26 @@ public class InventorySlot : MonoBehaviour,
             {
                 _lastClickTime = Time.time;
             }
+        }
+    }
+
+    private void EquipItem()
+    {
+        if (IsEmpty || Core.Player?.Inventory == null) return;
+
+        if (Core.UI.Tooltips != null)
+            Core.UI.Tooltips.Hide();
+
+        if (highlightBorder != null)
+            highlightBorder.SetActive(false);
+
+        if (_itemData.CanBeUsed())
+        {
+            _itemData.Use();
+        }
+        else
+        {
+            Core.Player.Inventory.EquipItem(_itemData);
         }
     }
 
@@ -185,9 +213,8 @@ public class InventorySlot : MonoBehaviour,
 
     private void UseItem()
     {
-        if (IsEmpty || Core.InventoryManager == null) return;
+        if (IsEmpty || Core.Player?.Inventory == null) return;
 
-        // Hide tooltip and outline
         if (Core.UI.Tooltips != null)
             Core.UI.Tooltips.Hide();
 
@@ -201,27 +228,51 @@ public class InventorySlot : MonoBehaviour,
         }
         else
         {
-            Core.InventoryManager.EquipItem(itemData);
+            Core.Player.Inventory.EquipItem(_itemData);
         }
     }
 
     private void DropIntoWorld()
     {
-        if (IsEmpty || itemData.worldPrefab == null) return;
+        if (IsEmpty || Core.Player?.Inventory == null) return;
 
-        Camera cam = Camera.main;
-        if (cam == null) return;
+        if (Core.Player.Inventory.DropItemIntoWorld(_itemData))
+        {
+            RemoveItem();
+        }
+    }
 
-        Vector3 dropPosition = cam.transform.position + cam.transform.forward * 2f;
+    public bool AddItem(ItemData item)
+    {
+        if (!IsEmpty) return false;
 
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, 4f))
-            dropPosition = hit.point + Vector3.up * 0.1f;
+        _itemData = item;
+        UpdateVisuals();
 
-        string itemName = itemData.GetItemName();
+        if (Core.Player?.Inventory != null)
+            Core.Player.Inventory.TrackItem(_itemData);
 
-        Instantiate(itemData.worldPrefab, dropPosition, Quaternion.identity);
-        RemoveItem();
+        _itemData.Pickup();
 
-        Log.VerboseInfo($"Dropped item '{itemName}'");
+        return true;
+    }
+
+    public void RemoveItem()
+    {
+        if (IsEmpty) return;
+
+        if (Core.Player?.Inventory != null)
+            Core.Player.Inventory.UntrackItem(_itemData);
+
+        _itemData = null;
+        UpdateVisuals();
+    }
+
+    public void ClearOutline()
+    {
+        if (highlightBorder != null)
+        {
+            highlightBorder.SetActive(false);
+        }
     }
 }

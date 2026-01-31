@@ -23,7 +23,7 @@ namespace Console.Commands
                 return;
             }
 
-            PlayerHealth playerHealth = Core.Player.PlayerHealth;
+            PlayerHealth playerHealth = Core.Player.Health;
             switch (method)
             {
                 case "set":

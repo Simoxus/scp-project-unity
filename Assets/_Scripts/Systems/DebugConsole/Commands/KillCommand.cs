@@ -14,7 +14,7 @@ namespace Console.Commands
                 return;
             }
 
-            PlayerHealth playerHealth = Core.Player.PlayerHealth;
+            PlayerHealth playerHealth = Core.Player.Health;
             if (playerHealth.GetHealth() <= 0)
             {
                 ConsoleManager.LogToConsole("Player is already dead.".AsSuccess());

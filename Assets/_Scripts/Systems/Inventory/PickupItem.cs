@@ -37,15 +37,15 @@ public class PickupItem : MonoBehaviour, IInteractable
     public void Interact()
     {
         if (itemData == null) return;
-        if (InventoryManager.Instance == null) return;
+        if (Core.Player.Inventory == null) return;
 
-        if (InventoryManager.Instance.IsFull)
+        if (Core.Player.Inventory.IsFull)
         {
             Debug.Log("Inventory is full!");
             return;
         }
 
-        if (InventoryManager.Instance.AddItem(itemData))
+        if (Core.Player.Inventory.AddItem(itemData))
         {
             Destroy(gameObject);
         }

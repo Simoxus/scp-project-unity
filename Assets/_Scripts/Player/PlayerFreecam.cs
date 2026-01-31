@@ -55,25 +55,25 @@ public class PlayerFreecam : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_player?.PlayerInputs != null)
+        if (_player?.Inputs != null)
         {
-            _player.PlayerInputs.OnFreecamLock += HandleFreecamLock;
-            _player.PlayerInputs.OnFreecamWobble += HandleFreecamWobble;
-            _player.PlayerInputs.OnFreecamPause += HandleFreecamPause;
-            _player.PlayerInputs.OnFreecamTutorial += HandleToggleTutorial;
-            _player.PlayerInputs.OnFreecamSmooth += HandleFreecamSmooth;
+            _player.Inputs.OnFreecamLock += HandleFreecamLock;
+            _player.Inputs.OnFreecamWobble += HandleFreecamWobble;
+            _player.Inputs.OnFreecamPause += HandleFreecamPause;
+            _player.Inputs.OnFreecamTutorial += HandleToggleTutorial;
+            _player.Inputs.OnFreecamSmooth += HandleFreecamSmooth;
         }
     }
 
     private void OnDisable()
     {
-        if (_player?.PlayerInputs != null)
+        if (_player?.Inputs != null)
         {
-            _player.PlayerInputs.OnFreecamLock -= HandleFreecamLock;
-            _player.PlayerInputs.OnFreecamWobble -= HandleFreecamWobble;
-            _player.PlayerInputs.OnFreecamPause -= HandleFreecamPause;
-            _player.PlayerInputs.OnFreecamTutorial -= HandleToggleTutorial;
-            _player.PlayerInputs.OnFreecamSmooth -= HandleFreecamSmooth;
+            _player.Inputs.OnFreecamLock -= HandleFreecamLock;
+            _player.Inputs.OnFreecamWobble -= HandleFreecamWobble;
+            _player.Inputs.OnFreecamPause -= HandleFreecamPause;
+            _player.Inputs.OnFreecamTutorial -= HandleToggleTutorial;
+            _player.Inputs.OnFreecamSmooth -= HandleFreecamSmooth;
         }
 
         if (_isFreecamActive && Core.GameManager != null)
@@ -146,16 +146,16 @@ public class PlayerFreecam : MonoBehaviour
 
     private void HandleFreecamMovement()
     {
-        Vector2 moveInput = _player.PlayerInputs.FreecamMoveInput;
+        Vector2 moveInput = _player.Inputs.FreecamMoveInput;
         float yInput = 0f;
 
-        if (_player.PlayerInputs.FreecamUpHeld) yInput = 1f;
-        if (_player.PlayerInputs.FreecamDownHeld) yInput = -1f;
+        if (_player.Inputs.FreecamUpHeld) yInput = 1f;
+        if (_player.Inputs.FreecamDownHeld) yInput = -1f;
 
         float currentMoveSpeed = moveSpeed;
-        if (_player.PlayerInputs.FreecamAccelerateHeld)
+        if (_player.Inputs.FreecamAccelerateHeld)
             currentMoveSpeed *= sprintMultiplier;
-        else if (_player.PlayerInputs.FreecamDecelerateHeld)
+        else if (_player.Inputs.FreecamDecelerateHeld)
             currentMoveSpeed *= decelerateMultiplier;
 
         if (_smoothEnabled)
@@ -189,24 +189,23 @@ public class PlayerFreecam : MonoBehaviour
     private void HandleFreecamRotation()
     {
         if (_cameraLocked) return;
+        if (_player.Inputs.FreecamZoomModifierHeld) return;
 
-        if (_player.PlayerInputs.FreecamZoomModifierHeld) return;
+        Vector2 lookInput = _player.Inputs.FreecamLookInput * _player.Controller.LookSpeed;
 
-        Vector2 lookInput = _player.PlayerInputs.FreecamLookInput * _player.PlayerController.LookSpeed;
-
-        if (!_player.PlayerController.InvertYAxis)
+        if (!_player.Controller.InvertYAxis)
         {
             lookInput.y = -lookInput.y;
         }
 
         Vector2 processedLook;
-        if (_player.PlayerController.SmoothLook)
+        if (_player.Controller.SmoothLook)
         {
             processedLook = Vector2.SmoothDamp(
                 _currentLook,
                 lookInput,
                 ref _currentLookVelocity,
-                _player.PlayerController.LookSmoothTime,
+                _player.Controller.LookSmoothTime,
                 Mathf.Infinity,
                 Time.unscaledDeltaTime
             );
@@ -248,12 +247,12 @@ public class PlayerFreecam : MonoBehaviour
 
     private void HandleFreecamFOV()
     {
-        float zoomInput = _player.PlayerInputs.FreecamZoomInput;
+        float zoomInput = _player.Inputs.FreecamZoomInput;
         if (zoomInput == 0f) return;
 
         if (Gamepad.current != null && Mouse.current != null && Gamepad.current.lastUpdateTime > Mouse.current.lastUpdateTime)
         {
-            if (!_player.PlayerInputs.FreecamZoomModifierHeld)
+            if (!_player.Inputs.FreecamZoomModifierHeld)
                 return;
         }
 

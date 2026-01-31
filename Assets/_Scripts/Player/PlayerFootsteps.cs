@@ -33,23 +33,23 @@ public class PlayerFootsteps : MonoBehaviour
 
     private void OnEnable()
     {
-        if (useBobSyncedFootsteps && Core.Player.PlayerBobbing != null)
+        if (Core.Player.Bobbing != null)
         {
-            Core.Player.PlayerBobbing.OnFootstepTrigger += PlayFootstepAudio;
+            Core.Player.Bobbing.OnFootstepTrigger += PlayFootstepAudio;
         }
     }
 
     private void OnDisable()
     {
-        if (Core.Player.PlayerBobbing != null)
+        if (Core.Player.Bobbing != null)
         {
-            Core.Player.PlayerBobbing.OnFootstepTrigger -= PlayFootstepAudio;
+            Core.Player.Bobbing.OnFootstepTrigger -= PlayFootstepAudio;
         }
     }
 
     public void PlayFootstepAudio()
     {
-        if (Core.Player.PlayerController == null) return;
+        if (Core.Player.Controller == null) return;
         if (!Core.Player.IsMoving() || Core.Player.IsInState(PlayerState.Noclip)) return;
 
         DetectGroundSurface();

@@ -95,16 +95,16 @@ public class PlayerBobbing : MonoBehaviour
 
     private void Start()
     {
-        if (player.CameraRoot.transform != null)
+        if (Core.Player.CameraRoot.transform != null)
         {
-            _defaultLocalPosition = player.CameraRoot.transform.localPosition;
-            _defaultRotation = player.CameraRoot.transform.localRotation.eulerAngles;
+            _defaultLocalPosition = Core.Player.CameraRoot.transform.localPosition;
+            _defaultRotation = Core.Player.CameraRoot.transform.localRotation.eulerAngles;
         }
 
-        if (player.PlayerHealth != null)
+        if (Core.Player.Health != null)
         {
-            player.PlayerHealth.OnInjuryChanged += UpdateInjuryFactor;
-            UpdateInjuryFactor(player.PlayerHealth.GetInjuryFactor());
+            Core.Player.Health.OnInjuryChanged += UpdateInjuryFactor;
+            UpdateInjuryFactor(Core.Player.Health.GetInjuryFactor());
         }
 
         _currentBobSpeed = walkState.bobSpeed;
@@ -121,9 +121,9 @@ public class PlayerBobbing : MonoBehaviour
 
     private void Update()
     {
-        if (player.CameraRoot.transform == null || !enabled) return;
-        if (player.PlayerController == null) return;
-        if (player.PlayerController.IsNoclipping) return;
+        if (Core.Player.CameraRoot.transform == null || !enabled) return;
+        if (Core.Player.Controller == null) return;
+        if (Core.Player.Controller.IsNoclipping) return;
 
         BobbingState targetState = GetCurrentTargetState();
         BlendToState(targetState, Time.deltaTime * stateTransitionSpeed);
@@ -134,7 +134,7 @@ public class PlayerBobbing : MonoBehaviour
     private void UpdateBobbing()
     {
         // Only increment shake when movign
-        if (player.PlayerController.IsMoving && player.CharacterController.isGrounded)
+        if (Core.Player.Controller.IsMoving && Core.Player.CharacterController.isGrounded)
         {
             float previousShake = _shake;
             _shake += Time.deltaTime * _currentBobSpeed * 60f;
@@ -150,7 +150,7 @@ public class PlayerBobbing : MonoBehaviour
         float shakeRadians = _shake * Mathf.Deg2Rad;
         float shakeHalfRadians = (_shake / 2f) * Mathf.Deg2Rad;
 
-        float crouchState = player.PlayerController.CrouchState;
+        float crouchState = Core.Player.Controller.CrouchState;
 
         float up = 0f;
         float side = 0f;
@@ -171,10 +171,10 @@ public class PlayerBobbing : MonoBehaviour
             roll *= _currentRollIntensity;
         }
 
-        player.CameraRoot.transform.localPosition = _defaultLocalPosition;
-        player.CameraRoot.transform.localRotation = Quaternion.Euler(_defaultRotation);
+        Core.Player.CameraRoot.transform.localPosition = _defaultLocalPosition;
+        Core.Player.CameraRoot.transform.localRotation = Quaternion.Euler(_defaultRotation);
 
-        player.CameraRoot.transform.localRotation = Quaternion.Euler(
+        Core.Player.CameraRoot.transform.localRotation = Quaternion.Euler(
             _defaultRotation.x,
             _defaultRotation.y,
             _defaultRotation.z + roll * 0.5f
@@ -186,12 +186,12 @@ public class PlayerBobbing : MonoBehaviour
             0f
         );
 
-        player.CameraRoot.transform.localPosition = _defaultLocalPosition + offset;
+        Core.Player.CameraRoot.transform.localPosition = _defaultLocalPosition + offset;
     }
 
     private BobbingState GetCurrentTargetState()
     {
-        switch (player.CurrentState)
+        switch (Core.Player.CurrentState)
         {
             case PlayerState.Idle:
             case PlayerState.Walking:

@@ -29,17 +29,17 @@ public class KeypadDoorActivator : BaseDoorActivator
 
     private void OnEnable()
     {
-        if (Core.Player != null && Core.Player.PlayerInputs != null)
+        if (Core.Player != null && Core.Player.Inputs != null)
         {
-            Core.Player.PlayerInputs.OnKeypadInput += HandleKeypadInput;
+            Core.Player.Inputs.OnKeypadInput += HandleKeypadInput;
         }
     }
 
     private void OnDisable()
     {
-        if (Core.Player != null && Core.Player.PlayerInputs != null)
+        if (Core.Player != null && Core.Player.Inputs != null)
         {
-            Core.Player.PlayerInputs.OnKeypadInput -= HandleKeypadInput;
+            Core.Player.Inputs.OnKeypadInput -= HandleKeypadInput;
         }
 
         if (Core.GameManager != null && Core.GameManager.HasDisableControlsRequest(this))
@@ -70,11 +70,12 @@ public class KeypadDoorActivator : BaseDoorActivator
         _isProcessing = true;
         _currentInput = "";
 
-        Core.Player.PlayerInputs.DisableGameplayInputs();
-        Core.Player.PlayerInputs.DisableUIInputs();
-        Core.Player.PlayerInputs.EnableKeypadInputs();
+        Core.Player.Inputs.DisableGameplayInputs();
+        Core.Player.Inputs.DisableUIInputs();
+        Core.Player.Inputs.EnableKeypadInputs();
 
-        Core.Player.PlayerController.ForceRotate(keypadCamera.transform.rotation.eulerAngles);
+        Core.Player.Controller.ForceRotate(keypadCamera.transform.rotation.eulerAngles);
+        Core.Player.Inventory.UnequipItem(false);
 
         Core.GameManager.RequestDisableControls(this, shouldDisable: true);
         Core.GameManager.UpdateCursorVisiblity(forceDisable: true);
@@ -152,9 +153,9 @@ public class KeypadDoorActivator : BaseDoorActivator
 
     private async UniTask CheckCode(string input)
     {
-        Core.Player.PlayerInputs.DisableKeypadInputs();
+        Core.Player.Inputs.DisableKeypadInputs();
 
-        keypadTweener.PlayEnterKeyTween().Forget();
+        KeypadVisual.PlayEnterKeyTween().Forget();
 
         FMODHelper.PlayOneShot3D(Core.AudioDataAccess.Doors.ButtonSound, transform.position);
         VibrationHelper.Vibrate();
@@ -185,9 +186,9 @@ public class KeypadDoorActivator : BaseDoorActivator
 
         _isProcessing = false;
 
-        Core.Player.PlayerInputs.DisableKeypadInputs();
-        Core.Player.PlayerInputs.EnableUIInputs();
-        Core.Player.PlayerInputs.EnableGameplayInputs();
+        Core.Player.Inputs.DisableKeypadInputs();
+        Core.Player.Inputs.EnableUIInputs();
+        Core.Player.Inputs.EnableGameplayInputs();
 
         await ResetPlayerCamera();
     }
@@ -196,9 +197,9 @@ public class KeypadDoorActivator : BaseDoorActivator
     {
         _isProcessing = false;
 
-        Core.Player.PlayerInputs.DisableKeypadInputs();
-        Core.Player.PlayerInputs.EnableUIInputs();
-        Core.Player.PlayerInputs.EnableGameplayInputs();
+        Core.Player.Inputs.DisableKeypadInputs();
+        Core.Player.Inputs.EnableUIInputs();
+        Core.Player.Inputs.EnableGameplayInputs();
 
         ResetPlayerCamera(wasForceExit: true).Forget();
     }

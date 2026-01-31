@@ -51,8 +51,9 @@ namespace Console.Commands
                             break;
 
                         case "playinst":
-                            FMODHelper.PlayInstance(evRef, eventPath, Vector3.zero);
-                            ConsoleManager.LogToConsole($">Started FMOD sound instance '{eventPath}'".AsSuccess());
+                            instanceHandle = FMODHelper.PlayInstance(evRef, Core.Player.gameObject);
+                            _debugHandles[eventPath] = instanceHandle;
+                            ConsoleManager.LogToConsole($"Started FMOD sound instance '{eventPath}' (handle: {instanceHandle})".AsSuccess());
                             break;
 
                         case "stop":

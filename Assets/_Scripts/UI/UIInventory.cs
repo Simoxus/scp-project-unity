@@ -37,7 +37,7 @@ public class UIInventory : MonoBehaviour
         // Input events
         if (Core.Player != null)
         {
-            _inputs = Core.Player.PlayerInputs;
+            _inputs = Core.Player.Inputs;
             if (_inputs != null)
                 _inputs.OnInventoryUI += Toggle;
         }
@@ -95,8 +95,8 @@ public class UIInventory : MonoBehaviour
     {
         if (_isVisible) return;
 
-        // Prevent opening inventory while holding an equipped item
-        if (InventoryManager.Instance != null && InventoryManager.Instance.GetEquippedItem() != null)
+        PlayerInventory inventory = Core.Player?.Inventory;
+        if (inventory != null && inventory.EquippedItem != null)
             return;
 
         if (Canvas == null)
@@ -179,10 +179,10 @@ public class UIInventory : MonoBehaviour
                 Hide();
             }
 
-            // Unequip held item when paused by something else
-            if (InventoryManager.Instance != null && InventoryManager.Instance.GetEquippedItem() != null)
+            PlayerInventory inventory = Core.Player?.Inventory;
+            if (inventory != null && inventory.EquippedItem != null)
             {
-                InventoryManager.Instance.UnequipItem();
+                inventory.UnequipItem(false);
             }
         }
     }

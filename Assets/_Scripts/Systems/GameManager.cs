@@ -244,10 +244,10 @@ public class GameManager : Singleton<GameManager>
 
         if (Core.Player != null)
         {
-            Core.Player.PlayerController.enabled = enableComponents;
-            Core.Player.PlayerBobbing.enabled = enableComponents;
-            Core.Player.PlayerInteract.enabled = enableComponents;
-            Core.Player.PlayerFootsteps.enabled = enableComponents;
+            Core.Player.Controller.enabled = enableComponents;
+            Core.Player.Bobbing.enabled = enableComponents;
+            Core.Player.Interact.enabled = enableComponents;
+            Core.Player.Footsteps.enabled = enableComponents;
         }
     }
 

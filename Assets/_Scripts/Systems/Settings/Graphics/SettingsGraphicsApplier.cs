@@ -198,14 +198,61 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
                 break;
         }
 
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
     }
 
-    public async void ApplyAntiAliasing(int index)
+    public void ApplyAntiAliasing(int index)
     {
-        await WaitForPlayerAsync(_cts.Token);
+        ApplyAntiAliasingAsync(index).Forget();
+    }
 
-        if (Core.Player.CameraBrain == null) return;
+    public void ApplyRenderShadows(bool enabled)
+    {
+        ApplyRenderShadowsAsync(enabled).Forget();
+    }
+
+    public void ApplyBloom(bool enabled)
+    {
+        if (settingsGraphics.postProcessVolume == null || settingsGraphics.postProcessVolume.profile == null) return;
+
+        if (settingsGraphics.postProcessVolume.profile.TryGet<UnityEngine.Rendering.Universal.Bloom>(out var bloom))
+        {
+            bloom.active = enabled;
+        }
+
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
+    }
+
+    public void ApplyVignette(bool enabled)
+    {
+        if (settingsGraphics.postProcessVolume == null || settingsGraphics.postProcessVolume.profile == null) return;
+
+        if (settingsGraphics.postProcessVolume.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out var vignette))
+        {
+            vignette.active = enabled;
+        }
+
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
+    }
+
+    public async UniTask ApplyFieldOfViewAsync(float value)
+    {
+        if (Core.Player == null || Core.Player.CameraMain == null)
+        {
+            await WaitForPlayerAsync(_cts.Token);
+        }
+
+        Core.Player.CameraMain.Lens.FieldOfView = value;
+
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
+    }
+
+    public async UniTask ApplyAntiAliasingAsync(int index)
+    {
+        if (Core.Player == null || Core.Player.CameraMain == null)
+        {
+            await WaitForPlayerAsync(_cts.Token);
+        }
 
         Camera cameraBrain = Core.Player.CameraBrain;
         UniversalAdditionalCameraData cameraData = cameraBrain.GetUniversalAdditionalCameraData();
@@ -244,42 +291,19 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
         if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
     }
 
-    public async void ApplyRenderShadows(bool enabled)
+    public async UniTask ApplyRenderShadowsAsync(bool enabled)
     {
-        await WaitForPlayerAsync(_cts.Token);
-
-        if (Core.Player.CameraBrain == null) return;
+        if (Core.Player == null || Core.Player.CameraMain == null)
+        {
+            await WaitForPlayerAsync(_cts.Token);
+        }
 
         Camera cameraBrain = Core.Player.CameraBrain;
         UniversalAdditionalCameraData cameraData = cameraBrain.GetUniversalAdditionalCameraData();
 
         cameraData.renderShadows = enabled;
 
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
-    }
-
-    public void ApplyBloom(bool enabled)
-    {
-        if (settingsGraphics.postProcessVolume == null || settingsGraphics.postProcessVolume.profile == null) return;
-
-        if (settingsGraphics.postProcessVolume.profile.TryGet<Bloom>(out var bloom))
-        {
-            bloom.active = enabled;
-        }
-
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
-    }
-
-    public void ApplyVignette(bool enabled)
-    {
-        if (settingsGraphics.postProcessVolume == null || settingsGraphics.postProcessVolume.profile == null) return;
-
-        if (settingsGraphics.postProcessVolume.profile.TryGet<Vignette>(out var vignette))
-        {
-            vignette.active = enabled;
-        }
-
-        if (inBatchMode == false) { settingsGraphics.SaveSettings(); }
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
     }
 
     private async UniTask WaitForPlayerAsync(CancellationToken cancellationToken)

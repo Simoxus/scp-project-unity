@@ -23,9 +23,9 @@ public class PlayerInteract : MonoBehaviour
 
     private void OnEnable()
     {
-        if (Core.Player != null && Core.Player.PlayerInputs != null)
+        if (Core.Player != null && Core.Player.Inputs != null)
         {
-            Core.Player.PlayerInputs.OnInteract += HandleInteraction;
+            Core.Player.Inputs.OnInteract += HandleInteraction;
         }
 
         FindNearestInteractable();
@@ -34,9 +34,9 @@ public class PlayerInteract : MonoBehaviour
 
     private void OnDisable()
     {
-        if (Core.Player != null && Core.Player.PlayerInputs != null)
+        if (Core.Player != null && Core.Player.Inputs != null)
         {
-            Core.Player.PlayerInputs.OnInteract -= HandleInteraction;
+            Core.Player.Inputs.OnInteract -= HandleInteraction;
         }
 
         DisableCurrentOutline();

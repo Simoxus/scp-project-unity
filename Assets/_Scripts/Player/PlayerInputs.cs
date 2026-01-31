@@ -193,10 +193,10 @@ public class PlayerInputs : MonoBehaviour
         // Manage Freecam action map state
         // Freecam should be active when freecam mode is enabled, but blocked if game is paused by something OTHER than freecam
         bool isFreecamMapActive = _contexts.IsContextActive(InputContext.Freecam);
-        bool isInFreecamMode = Core.Player?.PlayerFreecam != null && Core.Player.PlayerFreecam.IsFreecamActive;
+        bool isInFreecamMode = Core.Player?.Freecam != null && Core.Player.Freecam.IsFreecamActive;
 
         bool isFreecamPaused = Core.GameManager != null &&
-                               Core.GameManager.HasPauseRequest(Core.Player.PlayerFreecam) &&
+                               Core.GameManager.HasPauseRequest(Core.Player.Freecam) &&
                                Core.GameManager.pauseRequestCount == 1;
         bool shouldFreecamBeBlocked = Core.GameManager != null && Core.GameManager.gamePaused && !isFreecamPaused;
 

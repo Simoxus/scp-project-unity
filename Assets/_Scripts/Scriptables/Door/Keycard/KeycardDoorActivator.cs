@@ -34,7 +34,7 @@ public class KeycardDoorActivator : BaseDoorActivator
         {
             targetDoorController.ToggleDoor().Forget();
 
-            if (Core.InventoryManager != null && Core.UI.Inventory.IsVisible)
+            if (Core.Player.Inventory != null && Core.UI.Inventory.IsVisible)
             {
                 Core.UI.Inventory.Hide();
             }
@@ -45,18 +45,18 @@ public class KeycardDoorActivator : BaseDoorActivator
 
     private int GetPlayerKeycardLevel()
     {
-        if (Core.InventoryManager == null)
-            return 0;
+        if (Core.Player.Inventory == null)
+            return -1;
 
-        ItemData equippedItem = Core.InventoryManager.GetEquippedItem();
+        ItemData equippedItem = Core.Player.Inventory.EquippedItem;
 
         if (equippedItem == null)
-            return 0;
+            return -1;
 
-        var keycardBehavior = Core.InventoryManager.GetEquippedBehavior<KeycardBehavior>();
+        var keycardBehavior = Core.Player.Inventory.GetEquippedBehavior<KeycardBehavior>();
         if (keycardBehavior != null)
         {
-            Core.InventoryManager.UnequipItem();
+            Core.Player.Inventory.UnequipItem();
             return keycardBehavior.keycardLevel;
         }
 

@@ -17,7 +17,7 @@ public class SettingsControlsApplier : BaseSettingsApplier
     {
         if (settingsControls.CheckIfMainMenu()) return;
 
-        Core.Player.PlayerController.InvertYAxis = enabled;
+        Core.Player.Controller.InvertYAxis = enabled;
 
         if (!inBatchMode) settingsControls.SaveSettings();
     }
@@ -26,7 +26,7 @@ public class SettingsControlsApplier : BaseSettingsApplier
     {
         if (settingsControls.CheckIfMainMenu()) return;
 
-        Core.Player.PlayerController.LookSpeed = Mathf.Clamp(value, 0.1f, 5f);
+        Core.Player.Controller.LookSpeed = Mathf.Clamp(value, 0.1f, 5f);
 
         if (!inBatchMode) settingsControls.SaveSettingsWithDelay();
     }
@@ -35,7 +35,7 @@ public class SettingsControlsApplier : BaseSettingsApplier
     {
         if (settingsControls.CheckIfMainMenu()) return;
 
-        Core.Player.PlayerController.SmoothLook = enabled;
+        Core.Player.Controller.SmoothLook = enabled;
 
         if (!inBatchMode) settingsControls.SaveSettings();
     }

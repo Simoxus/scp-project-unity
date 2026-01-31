@@ -164,15 +164,15 @@ public class PlayerController : MonoBehaviour
         GameManager gameManager = Core.GameManager;
         if (gameManager && gameManager.gamePaused) return;
 
-        PlayerInputs inputs = _player.PlayerInputs;
+        PlayerInputs inputs = _player.Inputs;
         bool canMove = !gameManager.disablePlayerInputs;
 
         IsMoving = inputs.MoveInput.sqrMagnitude > 0.01f;
         _isCrouching = inputs.CrouchHeld;
-        IsSprinting = _player.PlayerStats.CanSprint() && inputs.SprintHeld && !_isCrouching;
+        IsSprinting = _player.Sprint.CanSprint() && inputs.SprintHeld && !_isCrouching;
 
         UpdatePlayerState(IsMoving, IsSprinting);
-        _player.PlayerStats.SetCurrentState(IsSprinting, IsMoving, _isCrouching);
+        _player.Sprint.SetCurrentState(IsSprinting, IsMoving, _isCrouching);
 
         if (canMove && !_isForceRotating)
         {
@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleNoclipMove()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
         Vector2 moveInput = inputs.MoveInput;
         Vector3 forward = _cameraTransform.forward;
         Vector3 right = _cameraTransform.right;
@@ -254,7 +254,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLook()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
         Vector2 lookInput = inputs.LookInput * lookSpeed;
         if (!invertYAxis) lookInput.y = -lookInput.y;
 
@@ -277,7 +277,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleCrouch()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
 
         if (inputs.CrouchHeld)
         {
@@ -390,9 +390,9 @@ public class PlayerController : MonoBehaviour
 
     public float DetermineCurrentSpeed()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
         if (inputs.CrouchHeld) return crouchSpeed;
-        if (_player.PlayerStats.CanSprint() && inputs.SprintHeld && !_isCrouching) return sprintSpeed;
+        if (_player.Sprint.CanSprint() && inputs.SprintHeld && !_isCrouching) return sprintSpeed;
         return walkSpeed;
     }
 
