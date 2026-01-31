@@ -3,8 +3,8 @@ using UnityEngine;
 public class CameraWobble : MonoBehaviour
 {
     [Header("Wobble Intensity")]
-    [SerializeField] private float positionAmplitude = 0.06f;
-    [SerializeField] private float rotationAmplitude = 0.6f;
+    [SerializeField] private float positionAmplitude = 0.04f;
+    [SerializeField] private float rotationAmplitude = 0.5f;
 
     [Header("Motion Settings")]
     [SerializeField] private float baseFrequency = 0.5f;
