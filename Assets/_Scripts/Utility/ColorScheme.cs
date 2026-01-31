@@ -10,6 +10,7 @@ public static class ColorScheme
     public static readonly Color Jorge = new Color32(199, 21, 133, 255);
     public static readonly Color Input = new Color32(255, 255, 255, 255);
 
+    public static readonly Color ConsoleHeader = new Color32(0, 255, 255, 255);
     public static readonly Color ConsoleInfo = new Color32(216, 230, 255, 255);
     public static readonly Color ConsoleWarning = new Color32(255, 193, 7, 255);
     public static readonly Color ConsoleError = new Color32(255, 83, 74, 255);
