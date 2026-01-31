@@ -3,7 +3,7 @@
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Move Settings")]
+    [Space]
     [SerializeField, Min(0)] private float walkSpeed = 12f;
     [SerializeField, Min(0)] private float sprintSpeed = 19.5f;
     [SerializeField, Min(0)] private float crouchSpeed = 5.4f;
@@ -131,6 +131,7 @@ public class PlayerController : MonoBehaviour
 
     private float _currentCharacterHeight;
     private float _heightVelocity;
+
     private float _crouchCheckDistance;
 
     private Vector3 _forceRotateTarget = Vector3.zero;
@@ -155,6 +156,7 @@ public class PlayerController : MonoBehaviour
 
         _currentCharacterHeight = _characterController.height;
         standingHeight = _currentCharacterHeight;
+
         _currentSpeed = walkSpeed;
         _crouchCheckDistance = standingHeight - crouchHeight + crouchCheckOffset;
     }
@@ -195,7 +197,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMove()
     {
-        var inputs = _player.PlayerInputs;
+        var inputs = _player.Inputs;
         Vector2 moveInput = inputs.MoveInput;
         Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
 
@@ -291,21 +293,33 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        float previousHeight = _currentCharacterHeight;
         float targetHeight = _isCrouching ? crouchHeight : standingHeight;
 
+        if (Mathf.Abs(_characterController.height - targetHeight) > 0.01f)
+        {
+            AdjustController(targetHeight);
+        }
+    }
+
+    private void AdjustController(float targetHeight)
+    {
+        float previousHeight = _characterController.height;
+
+        // Smooth the height transition
         _currentCharacterHeight = Mathf.SmoothDamp(
             _currentCharacterHeight,
             targetHeight,
             ref _heightVelocity,
             1f / crouchTransitionSpeed
         );
+
         _characterController.height = _currentCharacterHeight;
 
         float heightDifference = _currentCharacterHeight - previousHeight;
-        if (Mathf.Abs(heightDifference) > 0.001f)
+        if (Mathf.Abs(heightDifference) > 0.0001f)
         {
-            _characterController.transform.position += Vector3.up * (heightDifference / 2f);
+            Vector3 wiggle = Random.onUnitSphere * 0.05f;
+            _characterController.Move((Vector3.down + wiggle) * Time.deltaTime);
         }
     }
 
@@ -313,6 +327,7 @@ public class PlayerController : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(_forceRotateTarget);
         _cameraTransform.localRotation = Quaternion.Euler(_forceRotateTarget);
+        _rotationX = _forceRotateTarget.x;
         _isForceRotating = false;
     }
 
@@ -373,6 +388,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ResetLookRotation()
+    {
+        _rotationX = 0f;
+        _currentLook = Vector2.zero;
+        _currentLookVelocity = Vector2.zero;
+        _cameraTransform.localRotation = Quaternion.identity;
+    }
+
     public float CrouchState
     {
         get
@@ -386,6 +409,12 @@ public class PlayerController : MonoBehaviour
     {
         _forceRotateTarget = targetRotation;
         _isForceRotating = true;
+    }
+
+    public void ResetMoveDirection()
+    {
+        _moveDirection = Vector3.zero;
+        _currentSpeed = walkSpeed;
     }
 
     public float DetermineCurrentSpeed()
