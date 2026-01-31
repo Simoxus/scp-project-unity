@@ -2,7 +2,6 @@
 
 public class SettingsAudioApplier : BaseSettingsApplier
 {
-    [Header("References")]
     [SerializeField] private SettingsAudio settingsAudio;
 
     protected override void InitializeReferences()
@@ -15,66 +14,66 @@ public class SettingsAudioApplier : BaseSettingsApplier
 
     public void ApplyMasterVolume(float value)
     {
-        if (AudioManager.Instance != null)
+        if (Core.AudioManager != null)
         {
             float clampedVolumeValue = Mathf.Clamp(value, 0.0f, 1.0f);
-            AudioManager.Instance.SetMasterVolume(clampedVolumeValue);
+            Core.AudioManager.SetMasterVolume(clampedVolumeValue);
         }
 
-        if (inBatchMode == false) { settingsAudio.SaveSettingsWithDelay(); }
+        if (inBatchMode == false) settingsAudio.SaveSettingsWithDelay();
     }
 
     public void ApplySoundVolume(float value)
     {
-        if (AudioManager.Instance != null)
+        if (Core.AudioManager != null)
         {
             float clampedVolumeValue = Mathf.Clamp(value, 0.0f, 1.0f);
-            AudioManager.Instance.SetSFXVolume(clampedVolumeValue);
+            Core.AudioManager.SetSFXVolume(clampedVolumeValue);
         }
 
-        if (inBatchMode == false) { settingsAudio.SaveSettingsWithDelay(); }
+        if (inBatchMode == false) settingsAudio.SaveSettingsWithDelay();
     }
 
     public void ApplyMusicVolume(float value)
     {
-        if (AudioManager.Instance != null)
+        if (Core.AudioManager != null)
         {
             float clampedVolumeValue = Mathf.Clamp(value, 0.0f, 1.0f);
-            AudioManager.Instance.SetMusicVolume(clampedVolumeValue);
+            Core.AudioManager.SetMusicVolume(clampedVolumeValue);
         }
 
-        if (inBatchMode == false) { settingsAudio.SaveSettingsWithDelay(); }
+        if (inBatchMode == false) settingsAudio.SaveSettingsWithDelay();
     }
 
     public void ApplyVoiceoverVolume(float value)
     {
-        if (AudioManager.Instance != null)
+        if (Core.AudioManager != null)
         {
             float clampedVolumeValue = Mathf.Clamp(value, 0.0f, 1.0f);
-            AudioManager.Instance.SetVOVolume(clampedVolumeValue);
+            Core.AudioManager.SetVOVolume(clampedVolumeValue);
         }
 
-        if (inBatchMode == false) { settingsAudio.SaveSettingsWithDelay(); }
+        if (inBatchMode == false) settingsAudio.SaveSettingsWithDelay();
     }
 
     public void ApplyInterfaceVolume(float value)
     {
-        if (AudioManager.Instance != null)
+        if (Core.AudioManager != null)
         {
             float clampedVolumeValue = Mathf.Clamp(value, 0.0f, 1.0f);
-            AudioManager.Instance.SetUIVolume(clampedVolumeValue);
+            Core.AudioManager.SetUIVolume(clampedVolumeValue);
         }
 
-        if (inBatchMode == false) { settingsAudio.SaveSettingsWithDelay(); }
+        if (inBatchMode == false) settingsAudio.SaveSettingsWithDelay();
     }
 
     public void ApplyRealtimeOcclusion(bool enabled)
     {
-        if (AudioManager.Instance != null)
+        if (Core.AudioManager != null)
         {
-            AudioManager.Instance.SetOcclusionEnabled(enabled);
+            Core.AudioManager.SetOcclusionEnabled(enabled);
         }
 
-        if (inBatchMode == false) { settingsAudio.SaveSettings(); }
+        if (inBatchMode == false) settingsAudio.SaveSettings();
     }
 }

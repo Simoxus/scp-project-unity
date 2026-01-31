@@ -2,7 +2,6 @@
 
 public class SettingsControlsApplier : BaseSettingsApplier
 {
-    [Header("References")]
     [SerializeField] private SettingsControls settingsControls;
 
     protected override void InitializeReferences()

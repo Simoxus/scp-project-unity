@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class SettingsAdvancedApplier : BaseSettingsApplier
 {
-    [Header("References")]
     [SerializeField] private SettingsAdvanced settingsAdvanced;
 
     private bool _hasReapplied = false;
@@ -29,14 +28,14 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
         await UniTask.DelayFrame(3);
 
         // Reapply all UI-dependent settings
-        if (SettingsManager.Instance != null)
+        if (Core.SettingsManager != null)
         {
-            bool showCrosshair = SettingsManager.Instance.LoadBool("Advanced", "ShowCrosshair", false);
-            bool showHUD = SettingsManager.Instance.LoadBool("Advanced", "ShowHUD", true);
+            bool showCrosshair = Core.SettingsManager.LoadBool("Advanced", "ShowCrosshair", false);
+            bool showHUD = Core.SettingsManager.LoadBool("Advanced", "ShowHUD", true);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            bool showFPS = SettingsManager.Instance.LoadBool("Advanced", "ShowFPS", true);
+            bool showFPS = Core.SettingsManager.LoadBool("Advanced", "ShowFPS", true);
 #else
-            bool showFPS = SettingsManager.Instance.LoadBool("Advanced", "ShowFPS", false);
+            bool showFPS = Core.SettingsManager.LoadBool("Advanced", "ShowFPS", false);
 #endif
 
             inBatchMode = true;
@@ -62,7 +61,7 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
         var selectedLocale = settingsAdvanced.availableLocales[index];
         LocalizationHelper.ChangeLanguage(selectedLocale.Identifier.Code);
 
-        if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
+        if (inBatchMode == false) settingsAdvanced.SaveSettings();
     }
 
     public void ApplyShowHUD(bool enabled)
@@ -84,21 +83,21 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
             uiAccess.Interact.canvasGroup.gameObject.SetActive(enabled);
         }
 
-        if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
+        if (inBatchMode == false) settingsAdvanced.SaveSettings();
     }
 
     public void ApplyShowFPS(bool enabled)
     {
         if (settingsAdvanced.CheckIfMainMenu()) return;
 
-        UIAccess uiAccess = UIAccess.Instance;
+        UIAccess uiAccess = Core.UI;
         if (uiAccess != null && uiAccess.FpsCounter != null)
         {
             uiAccess.FpsCounter.gameObject.SetActive(enabled);
             uiAccess.FpsCounter.enabled = enabled;
         }
 
-        if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
+        if (inBatchMode == false) settingsAdvanced.SaveSettings();
     }
 
     public void ApplyShowCrosshair(bool enabled)
@@ -111,16 +110,16 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
             uiAccess.Crosshair.gameObject.SetActive(enabled);
         }
 
-        if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
+        if (inBatchMode == false) settingsAdvanced.SaveSettings();
     }
 
     public void ApplyAnimateOutlines(bool enabled)
     {
         if (settingsAdvanced.CheckIfMainMenu()) return;
 
-        Outline.GlobalFadingEnabled = enabled;
+        //Outline.GlobalFadingEnabled = enabled;
 
-        if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
+        if (inBatchMode == false) settingsAdvanced.SaveSettings();
     }
 
     public void ApplyShowAchievementPopups(bool enabled)
@@ -129,7 +128,7 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
 
         // TODO
 
-        if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
+        if (inBatchMode == false) settingsAdvanced.SaveSettings();
     }
 
     public void ApplyEnableConsole(bool enabled)
@@ -148,7 +147,7 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
             settingsAdvanced.openConsoleOnErrorToggle.gameObject.SetActive(enabled);
         }
 
-        if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
+        if (inBatchMode == false) settingsAdvanced.SaveSettings();
     }
 
     public void ApplyOpenConsoleOnError(bool enabled)
@@ -157,6 +156,6 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
 
         // TODO
 
-        if (inBatchMode == false) { settingsAdvanced.SaveSettings(); }
+        if (inBatchMode == false) settingsAdvanced.SaveSettings();
     }
 }
