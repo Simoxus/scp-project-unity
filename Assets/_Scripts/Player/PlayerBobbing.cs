@@ -24,10 +24,7 @@ public class PlayerBobbing : MonoBehaviour
 {
     public event Action OnFootstepTrigger;
 
-    [Header("References")]
-    [SerializeField] private Player player;
-
-    [Header("Behavior Settings")]
+    [Space]
     [SerializeField] private bool enableBobbing = true;
     [SerializeField] private bool enableTilt = true;
 
@@ -36,10 +33,10 @@ public class PlayerBobbing : MonoBehaviour
     private BobbingState walkState = new BobbingState
     {
         bobSpeed = 7f,
-        verticalBobIntensity = 1f,
+        verticalBobIntensity = 0.6f,
         horizontalBobIntensity = 1f,
-        rollIntensity = 3.5f,
-        maxRollAngle = 17f
+        rollIntensity = 2.5f,
+        maxRollAngle = 8f
     };
 
     [SerializeField]
@@ -128,6 +125,12 @@ public class PlayerBobbing : MonoBehaviour
         BobbingState targetState = GetCurrentTargetState();
         BlendToState(targetState, Time.deltaTime * stateTransitionSpeed);
 
+        UpdateBobbing();
+    }
+
+    public void ResetBobbing()
+    {
+        _shake = 270f;
         UpdateBobbing();
     }
 
