@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class FMODCollision : MonoBehaviour
 {
-    [Header("References")]
+    [Space]
     [SerializeField] private Rigidbody rigidBody;
     [SerializeField] private EventReference fmodEvent;
 
@@ -73,12 +73,13 @@ public class FMODCollision : MonoBehaviour
     {
         await UniTask.Yield();
 
-        if (AudioManager.Instance != null)
+        if (Core.AudioManager != null)
         {
-            FMODHelper.PlayOneShotWithDynamicOcclusion(
+            FMODHelper.PlayOneShot3D(
                 fmodEvent,
                 transform.position,
-                1.5f
+                useOcclusion: true,
+                occlusionMinDuration: 1.5f
             );
         }
         else

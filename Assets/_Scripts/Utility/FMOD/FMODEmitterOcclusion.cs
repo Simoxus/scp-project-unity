@@ -6,50 +6,48 @@ using UnityEngine;
 [RequireComponent(typeof(StudioEventEmitter))]
 public class FMODEmitterOcclusion : MonoBehaviour
 {
+    [Space]
     [SerializeField] private bool useOcclusion = true;
+    [SerializeField, Range(0.1f, 5f)] private float movementThreshold = 0.5f;
 
-    [Header("Update Settings")]
-    [SerializeField, Range(0.1f, 5f)] private float minMovementThreshold = 0.5f;
-
-    [Header("Quality Settings")]
-    [SerializeField, Range(1, 5)] private int raysPerSound = 1;
-    [SerializeField, Range(0f, 45f)] private float raySpread = 0f;
-
-    [Header("Distance Settings")]
-    [SerializeField] private bool useCustomMaxDistance = true;
-    [SerializeField, Range(0f, 300f)] private float maxDistance = 50f;
-
-    private StudioEventEmitter emitter;
-    private int occlusionId = -1;
-    private bool wasPlayingLastFrame;
-    private Vector3 lastPosition;
-    private CancellationTokenSource cts;
+    private StudioEventEmitter _emitter;
+    private int _occlusionId = -1;
+    private bool _wasPlayingLastFrame;
+    private Vector3 _lastPosition;
+    private CancellationTokenSource _cts;
 
     private void Awake()
     {
-        emitter = GetComponent<StudioEventEmitter>();
-        lastPosition = transform.position;
+        _emitter = GetComponent<StudioEventEmitter>();
+        _lastPosition = transform.position;
     }
 
     private void OnEnable()
     {
-        cts = new CancellationTokenSource();
-        MonitorPlaybackAsync(cts.Token).Forget();
+        _cts = new CancellationTokenSource();
+
+        if (useOcclusion && _emitter != null && _emitter.IsPlaying())
+        {
+            _wasPlayingLastFrame = true;
+            RegisterOcclusion();
+        }
+
+        MonitorPlaybackAsync(_cts.Token).Forget();
     }
 
     private void OnDisable()
     {
-        cts?.Cancel();
-        cts?.Dispose();
-        cts = null;
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
         UnregisterOcclusion();
     }
 
     private void OnDestroy()
     {
-        cts?.Cancel();
-        cts?.Dispose();
-        cts = null;
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
         UnregisterOcclusion();
     }
 
@@ -57,79 +55,73 @@ public class FMODEmitterOcclusion : MonoBehaviour
     {
         while (!token.IsCancellationRequested)
         {
-            if (!useOcclusion || emitter == null)
+            if (!useOcclusion || _emitter == null)
             {
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
                 continue;
             }
 
-            bool isCurrentlyPlaying = emitter.IsPlaying();
-            if (isCurrentlyPlaying && !wasPlayingLastFrame)
+            bool isCurrentlyPlaying = _emitter.IsPlaying();
+
+            if (isCurrentlyPlaying && !_wasPlayingLastFrame)
             {
                 RegisterOcclusion();
             }
-            else if (!isCurrentlyPlaying && wasPlayingLastFrame)
+            else if (!isCurrentlyPlaying && _wasPlayingLastFrame)
             {
                 UnregisterOcclusion();
             }
 
-            wasPlayingLastFrame = isCurrentlyPlaying;
-
+            _wasPlayingLastFrame = isCurrentlyPlaying;
             await UniTask.Yield(PlayerLoopTiming.Update, token);
         }
     }
 
     private void LateUpdate()
     {
-        if (occlusionId >= 0 && useOcclusion)
+        if (_occlusionId >= 0 && useOcclusion)
         {
             Vector3 currentPos = transform.position;
-            if (Vector3.Distance(currentPos, lastPosition) > minMovementThreshold)
+            if (Vector3.Distance(currentPos, _lastPosition) > movementThreshold)
             {
                 UpdateOcclusionPosition();
-                lastPosition = currentPos;
+                _lastPosition = currentPos;
             }
         }
     }
 
     private void RegisterOcclusion()
     {
-        if (occlusionId >= 0)
-        {
-            UnregisterOcclusion();
-        }
+        if (_occlusionId >= 0) UnregisterOcclusion();
+        if (Core.AudioManager == null) return;
 
-        if (AudioManager.Instance == null) return;
-
-        if (emitter != null && emitter.EventInstance.isValid())
+        if (_emitter != null && _emitter.EventInstance.isValid())
         {
-            float distance = useCustomMaxDistance ? maxDistance : -1f;
-            occlusionId = AudioManager.Instance.RegisterSound(
-                emitter.EventInstance,
+            _occlusionId = Core.AudioManager.RegisterSound(
+                _emitter.EventInstance,
                 transform.position,
-                raysPerSound,
-                raySpread,
-                distance
+                useOcclusion: true
             );
 
-            lastPosition = transform.position;
+            _lastPosition = transform.position;
         }
     }
 
     private void UnregisterOcclusion()
     {
-        if (occlusionId >= 0 && AudioManager.Instance != null)
+        if (_occlusionId >= 0 && Core.AudioManager != null)
         {
-            AudioManager.Instance.UnregisterSound(occlusionId);
+            Core.AudioManager.UnregisterSound(_occlusionId);
         }
-        occlusionId = -1;
+
+        _occlusionId = -1;
     }
 
     private void UpdateOcclusionPosition()
     {
-        if (occlusionId >= 0 && AudioManager.Instance != null)
+        if (_occlusionId >= 0 && Core.AudioManager != null)
         {
-            AudioManager.Instance.UpdateSoundPosition(occlusionId, transform.position);
+            Core.AudioManager.UpdateSoundPosition(_occlusionId, transform.position);
         }
     }
 
@@ -140,7 +132,7 @@ public class FMODEmitterOcclusion : MonoBehaviour
         {
             UnregisterOcclusion();
         }
-        else if (emitter != null && emitter.IsPlaying())
+        else if (_emitter != null && _emitter.IsPlaying())
         {
             RegisterOcclusion();
         }
@@ -148,13 +140,13 @@ public class FMODEmitterOcclusion : MonoBehaviour
 
     public void ForcePositionUpdate()
     {
-        if (occlusionId >= 0)
+        if (_occlusionId >= 0)
         {
-            lastPosition = transform.position;
+            _lastPosition = transform.position;
             UpdateOcclusionPosition();
         }
     }
 
-    public int OcclusionId => occlusionId;
-    public bool IsRegistered => occlusionId >= 0;
+    public int OcclusionId => _occlusionId;
+    public bool IsRegistered => _occlusionId >= 0;
 }
