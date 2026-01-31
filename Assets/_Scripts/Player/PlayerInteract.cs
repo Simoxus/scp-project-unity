@@ -61,20 +61,29 @@ public class PlayerInteract : MonoBehaviour
         {
             Collider collider = _interactableColliders[i];
             if (collider == null) continue;
+
             if (!collider.TryGetComponent(out IInteractable interactable)) continue;
+
+            Collider interactionCollider = interactable.GetInteractionCollider();
+            if (interactionCollider != null && interactionCollider != collider)
+            {
+                continue;
+            }
 
             Vector3 targetPos = collider.transform.position;
             Vector3 directionToTarget = targetPos - playerPos;
             float distSqr = directionToTarget.sqrMagnitude;
 
-            // Check distance first before raycast
             if (distSqr >= closestDistSqr) continue;
 
-            float distance = Mathf.Sqrt(distSqr);
+            // Use the interactable's specified raycast target
+            Vector3 raycastTarget = interactable.GetRaycastTarget();
+            Vector3 rayDirection = raycastTarget - playerPos;
+            float distance = rayDirection.magnitude;
 
-            if (Physics.Raycast(playerPos, directionToTarget / distance, distance, obstacleLayers))
+            if (Physics.Raycast(playerPos, rayDirection / distance, distance, obstacleLayers))
             {
-                continue; // Obstacle blocking line of sight
+                continue;
             }
 
             closestDistSqr = distSqr;
@@ -146,5 +155,55 @@ public class PlayerInteract : MonoBehaviour
         }
 
         VibrationHelper.VibrateLight();
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Draw interaction sphere
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, interactionRange);
+
+        // Draw raycast to current target
+        if (_currentTargetTransform != null)
+        {
+            Vector3 playerPos = transform.position;
+            Vector3 targetPos = _currentTargetTransform.position;
+            Vector3 direction = targetPos - playerPos;
+            float distance = direction.magnitude;
+
+            // Green line to valid target
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(playerPos, targetPos);
+            Gizmos.DrawWireSphere(targetPos, 0.2f);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Show blocked raycasts (more expensive, only when selected)
+        if (!Application.isPlaying) return;
+
+        Vector3 playerPos = transform.position;
+
+        for (int i = 0; i < _interactableColliders.Length; i++)
+        {
+            Collider collider = _interactableColliders[i];
+            if (collider == null) continue;
+            if (collider.transform == _currentTargetTransform) continue; // Already drawn
+
+            Vector3 targetPos = collider.transform.position;
+            Vector3 direction = targetPos - playerPos;
+            float distance = direction.magnitude;
+
+            if (distance > interactionRange) continue;
+
+            // Red line if raycast is blocked
+            if (Physics.Raycast(playerPos, direction.normalized, distance, obstacleLayers))
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(playerPos, targetPos);
+                Gizmos.DrawWireSphere(targetPos, 0.15f);
+            }
+        }
     }
 }
