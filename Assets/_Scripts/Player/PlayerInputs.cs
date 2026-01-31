@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputs : MonoBehaviour
 {
-    [Header("Input Actions")]
+    [Space]
     [SerializeField] private InputActionAsset playerInputAsset;
     public InputActionAsset PlayerInputAsset => playerInputAsset;
 
@@ -51,6 +51,10 @@ public class PlayerInputs : MonoBehaviour
 
     public event Action OnBlink;
     public event Action OnInteract;
+    public event Action OnUseItem;
+    public event Action OnUnequipItem;
+    public event Action OnQuickSave;
+    public event Action OnQuickLoad;
     public event Action OnDebugUI;
     public event Action OnPauseUI;
     public event Action OnInventoryUI;
@@ -122,6 +126,10 @@ public class PlayerInputs : MonoBehaviour
         CacheAction("Player/Crouch");
         CacheAction("Player/Blink");
         CacheAction("Player/Interact");
+        CacheAction("Player/Use");
+        CacheAction("Player/Unequip");
+        CacheAction("Player/Quick Save");
+        CacheAction("Player/Quick Load");
 
         CacheAction("Menus/DebugUI");
         CacheAction("Menus/PauseUI");
@@ -234,6 +242,11 @@ public class PlayerInputs : MonoBehaviour
             }
         });
         BindPress("Player/Interact", () => OnInteract?.Invoke());
+        BindPress("Player/Use", () => OnUseItem?.Invoke());
+        BindPress("Player/Unequip", () => OnUnequipItem?.Invoke());
+
+        BindPress("Player/Quick Save", () => OnQuickSave?.Invoke());
+        BindPress("Player/Quick Load", () => OnQuickLoad?.Invoke());
 
         BindPress("Menus/DebugUI", () => OnDebugUI?.Invoke());
         BindPress("Menus/PauseUI", () => OnPauseUI?.Invoke());
