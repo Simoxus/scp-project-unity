@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017f2b8e794026a4f9e71521c47daf3d, type: 3}
+  m_Name: ItemData_Doc_Orientation
+  m_EditorClassIdentifier: 
+  itemID: doc-ori-leaf
+  itemType: 2
+  icon: {fileID: 21300000, guid: 184187cafa1b60a46a66865549e3a64f, type: 3}
+  worldPrefab: {fileID: 9195310054127797551, guid: d4890c2f34c90b54eb6dba83cc27cbb7, type: 3}
+  pickupSound:
+    Guid:
+      Data1: 41189696
+      Data2: 1107594485
+      Data3: -1279335793
+      Data4: -1771338244
+    Path: event:/UI/Item-Pick-Document
+  equipSound:
+    Guid:
+      Data1: 41189696
+      Data2: 1107594485
+      Data3: -1279335793
+      Data4: -1771338244
+    Path: event:/UI/Item-Pick-Document
+  unequipSound:
+    Guid:
+      Data1: 41189696
+      Data2: 1107594485
+      Data3: -1279335793
+      Data4: -1771338244
+    Path: event:/UI/Item-Pick-Document
+  useSound:
+    Guid:
+      Data1: 41189696
+      Data2: 1107594485
+      Data3: -1279335793
+      Data4: -1771338244
+    Path: event:/UI/Item-Pick-Document
+  behaviors:
+  - {fileID: 11400000, guid: 123a5e388fc68484f9f553d6102a7e22, type: 2}
+  localizedName:
+    m_TableReference:
+      m_TableCollectionName: GUID:912814a9ef2c4ed42b59ec09ad533d5f
+    m_TableEntryReference:
+      m_KeyId: 12975433494110208
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:912814a9ef2c4ed42b59ec09ad533d5f
+    m_TableEntryReference:
+      m_KeyId: 12975433494110208
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  hasUseMessage: 0
+  itemUseMessage:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
