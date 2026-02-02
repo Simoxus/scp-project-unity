@@ -1,24 +1,18 @@
 ################################################## TEMP ##################################################
 *.afdesign~lock~
 *.afdesign
-.afdesign.meta
+*.afdesign.meta
 /[Aa]ssets/filelist.txt
 /[Aa]ssets/filelist.txt.meta
 /[Aa]ssets/DoNotReloadDipshit.cs
 /[Aa]ssets/DoNotReloadDipshit.cs.meta
-/[Aa]ssets/filelist.txt.meta
 FacilityGeneration/Editor
 FacilityGeneration/Editor.meta
 
 ################################################## UNITY ##################################################
 
 # Unity plugins (that are utility and/or paid/test-only, so we can ignore)
-/[Aa]ssets/_Game_/Shared/Plugins/Internal/ProductionTools/
-/[Aa]ssets/_Game_/Shared/Plugins/Internal/vSeries/
-/[Aa]ssets/_Game_/Shared/Plugins/Internal/SurfaceAlignTool/
-/[Aa]ssets/_Game_/Shared/Plugins/Internal/vSeries.meta
-/[Aa]ssets/_Game_/Shared/Plugins/Internal/ProductionTools.meta
-/[Aa]ssets/_Game_/Shared/Plugins/Internal/SurfaceAlignTool.meta
+/[Aa]ssets/[Pp]lugins/[Pp]rivate/*
 
 # Unity auto-generated files
 .utmp/
@@ -56,9 +50,9 @@ sysinfo.txt
 /[Mm]emoryCaptures/
 /[Rr]ecordings/
 
-# Unity bank files in the StreamingAssets folder
-/[Aa]ssets/StreamingAssets/**/*.bank
-/[Aa]ssets/StreamingAssets/**/*.bank.meta
+# Bank files in the StreamingAssets folder
+/[Aa]ssets/[Ss]treamingAssets/**/*.bank
+/[Aa]ssets/[Ss]treamingAssets/**/*.bank.meta
 
 # Unity Crashlytics auto-generated file
 crashlytics-build.properties
@@ -69,16 +63,14 @@ crashlytics-build.properties
 ################################################## FMOD ##################################################
 
 # Never ignore DLLs in the FMOD subfolder
-!/[Aa]ssets/_Game_/Shared/Plugins/External/FMOD/**/lib/*
-!/[Aa]ssets/_Game_/Shared/Plugins/External/FMOD/**/lib/*
+!/[Aa]ssets/Plugins/External/FMOD/**/lib/*
 
 # Don't ignore images and gizmos used by FMOD in the Unity Editor
 !/[Aa]ssets/Gizmos/FMOD/*
 !/[Aa]ssets/Editor Default Resources/FMOD/*
 
 # Ignore the Cache folder used by FMOD, since it's updated locally
-/[Aa]ssets/_Game_/Shared/Plugins/External/FMOD/Cache/*
-/[Aa]ssets/_Game_/Shared/Plugins/External/FMOD/Cache/*
+/[Aa]ssets/Plugins/External/FMOD/Cache/*
 
 # Ignore FMOD Studio outputs if it's there
 FmodStudio/.cache/
@@ -91,9 +83,9 @@ fmod_editor.log
 
 ################################################## MISCELLANOUS ##################################################
 
-/Saves
+/[Ss]aves
 
-# Modding (stuff gets auto-generated)
+# Modding (gets auto-generated)
 .vscode/
 *.code-workspace
 

@@ -3,8 +3,14 @@
 [attr]unity-json        eol=lf linguist-language=json
 [attr]unity-yaml        merge=unityyamlmerge eol=lf linguist-language=yaml
 
-# Hide certain files from GitHub's language stats
-Assets/Plugins/Internal/DoubleClickFBX/Editor/unity_fbx_bridge.py linguist-vendored
+# Exclude third-party plugins from GitHub stats
+Assets/Plugins/**       linguist-vendored
+
+# FMOD
+Assets/Plugins/External/FMOD/**/*.bundle text eol=lf
+Assets/Plugins/External/FMOD/**/Info.plist text eol=lf
+Assets/Plugins/External/FMOD/**/*.bundle text eol=lf
+Assets/Plugins/External/FMOD/**/Info.plist text eol=lf
 
 # Unity source files
 *.cginc                 text
@@ -53,12 +59,7 @@ Assets/Plugins/Internal/DoubleClickFBX/Editor/unity_fbx_bridge.py linguist-vendo
 *.spriteatlasv2         unity-yaml
 *.terrainlayer          unity-yaml
 *.unity                 unity-yaml
-
-# "physic" for 3D
 *.physicMaterial        unity-yaml
-
-# Exclude third-party plugins from GitHub stats
-Assets/Plugins/**       linguist-vendored
 
 # Unity LFS
 *.cubemap               lfs
@@ -161,9 +162,3 @@ Assets/Plugins/**       linguist-vendored
 
 # Exceptions for .asset files such as lightning pre-baking
 LightingData.asset     binary
-
-# FMOD
-Assets/Plugins/FMOD/**/*.bundle text eol=lf
-Assets/Plugins/FMOD/**/Info.plist text eol=lf
-Assets/Plugins/Internal/FMOD/**/*.bundle text eol=lf
-Assets/Plugins/Internal/FMOD/**/Info.plist text eol=lf
