@@ -1,12 +1,24 @@
+################################################## TEMP ##################################################
+*.afdesign~lock~
+*.afdesign
+.afdesign.meta
+/[Aa]ssets/filelist.txt
+/[Aa]ssets/filelist.txt.meta
+/[Aa]ssets/DoNotReloadDipshit.cs
+/[Aa]ssets/DoNotReloadDipshit.cs.meta
+/[Aa]ssets/filelist.txt.meta
+FacilityGeneration/Editor
+FacilityGeneration/Editor.meta
+
 ################################################## UNITY ##################################################
 
 # Unity plugins (that are utility and/or paid/test-only, so we can ignore)
-/[Aa]ssets/Plugins/Internal/ProductionTools/
-/[Aa]ssets/Plugins/Internal/vSeries/
-/[Aa]ssets/Plugins/Internal/SurfaceAlignTool/
-/[Aa]ssets/Plugins/Internal/vSeries.meta
-/[Aa]ssets/Plugins/Internal/ProductionTools.meta
-/[Aa]ssets/Plugins/Internal/SurfaceAlignTool.meta
+/[Aa]ssets/_Game_/Shared/Plugins/Internal/ProductionTools/
+/[Aa]ssets/_Game_/Shared/Plugins/Internal/vSeries/
+/[Aa]ssets/_Game_/Shared/Plugins/Internal/SurfaceAlignTool/
+/[Aa]ssets/_Game_/Shared/Plugins/Internal/vSeries.meta
+/[Aa]ssets/_Game_/Shared/Plugins/Internal/ProductionTools.meta
+/[Aa]ssets/_Game_/Shared/Plugins/Internal/SurfaceAlignTool.meta
 
 # Unity auto-generated files
 .utmp/
@@ -57,16 +69,16 @@ crashlytics-build.properties
 ################################################## FMOD ##################################################
 
 # Never ignore DLLs in the FMOD subfolder
-!/[Aa]ssets/Plugins/FMOD/**/lib/*
-!/[Aa]ssets/Plugins/Internal/FMOD/**/lib/*
+!/[Aa]ssets/_Game_/Shared/Plugins/External/FMOD/**/lib/*
+!/[Aa]ssets/_Game_/Shared/Plugins/External/FMOD/**/lib/*
 
 # Don't ignore images and gizmos used by FMOD in the Unity Editor
 !/[Aa]ssets/Gizmos/FMOD/*
 !/[Aa]ssets/Editor Default Resources/FMOD/*
 
 # Ignore the Cache folder used by FMOD, since it's updated locally
-/[Aa]ssets/Plugins/FMOD/Cache/*
-/[Aa]ssets/Plugins/Internal/FMOD/Cache/*
+/[Aa]ssets/_Game_/Shared/Plugins/External/FMOD/Cache/*
+/[Aa]ssets/_Game_/Shared/Plugins/External/FMOD/Cache/*
 
 # Ignore FMOD Studio outputs if it's there
 FmodStudio/.cache/
@@ -78,6 +90,8 @@ FmodStudio/*.lock
 fmod_editor.log
 
 ################################################## MISCELLANOUS ##################################################
+
+/Saves
 
 # Modding (stuff gets auto-generated)
 .vscode/
