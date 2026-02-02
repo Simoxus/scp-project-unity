@@ -1,0 +1,5375 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9167931746203070111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Ambient.bank
+  m_EditorClassIdentifier: 
+  Path: FmodStudio/Build/Desktop/Ambient.bank
+  Name: Ambient
+  StudioPath: bank:/Ambient
+  lastModified: 639053992811902981
+  FileSizes: []
+  Exists: 1
+--- !u!114 &-8914140334718501900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State/State
+  m_EditorClassIdentifier: 
+  Name: State
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2950676430
+    data2: 519884044
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Close
+  - Open
+  Exists: 1
+--- !u!114 &-8849504925894239645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/D_9341
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/D_9341
+  Guid:
+    Data1: -1954889233
+    Data2: 1110870778
+    Data3: 1425769886
+    Data4: 1666763221
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-8827257041676292593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track-1/Static Occlusion
+  m_EditorClassIdentifier: 
+  Name: Static Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1417420337
+    data2: 3001201020
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-8743038159165442512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Convo-B
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Convo-B
+  Guid:
+    Data1: -98004268
+    Data2: 1206888350
+    Data3: 964342156
+    Data4: -779777477
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 28282
+--- !u!114 &-8498459887490445697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Convo-A
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Convo-A
+  Guid:
+    Data1: 1728654780
+    Data2: 1092830957
+    Data3: -2010093164
+    Data4: -1980970864
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 27510
+--- !u!114 &-8440228624409562097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Refuse-B
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Refuse-B
+  Guid:
+    Data1: -1556186618
+    Data2: 1310359759
+    Data3: 753010858
+    Data4: -1147536083
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3761
+--- !u!114 &-8335392950320146757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: FmodStudio/Build/Desktop/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+  lastModified: 639054490278643280
+  FileSizes:
+  - Name: 
+    Value: 8224
+  Exists: 1
+--- !u!114 &-8320986945345149556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/012/Ambience-Chamber
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/012/Ambience-Chamber
+  Guid:
+    Data1: 1035487783
+    Data2: 1193581013
+    Data3: -1979002183
+    Data4: 439479244
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 23925
+--- !u!114 &-8313514975773372418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Balcony/OhShit
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Balcony/OhShit
+  Guid:
+    Data1: 1232256211
+    Data2: 1218493982
+    Data3: -350837597
+    Data4: 984562140
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 1737748685856515388}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2218
+--- !u!114 &-8008970909748763299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Agent_Balcony
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Agent_Balcony
+  Guid:
+    Data1: -1661508127
+    Data2: 1140975542
+    Data3: 636741791
+    Data4: 1820814542
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7989128250385511367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Elevator/State
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Elevator/State
+  Guid:
+    Data1: 892931594
+    Data2: 1191359335
+    Data3: 977219261
+    Data4: 1847832258
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -434123828582886770}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7925796271053929727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/079/Speech
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/079/Speech
+  Guid:
+    Data1: 374466535
+    Data2: 1295813532
+    Data3: 256975011
+    Data4: -404207824
+  Banks:
+  - {fileID: -4911727159920214467}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 55590
+--- !u!114 &-7845136362337959592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Intro
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Intro
+  Guid:
+    Data1: 1293062922
+    Data2: 1108055764
+    Data3: 57677207
+    Data4: -1514511819
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 139245
+--- !u!114 &-7801920052937152229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Heavy/Broken-Loop
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Heavy/Broken-Loop
+  Guid:
+    Data1: 113849604
+    Data2: 1123336449
+    Data3: -520669283
+    Data4: 2036438258
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 500
+  Length: 27000
+--- !u!114 &-7704751120526650745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049/Footsteps-Walk
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049/Footsteps-Walk
+  Guid:
+    Data1: -2119998924
+    Data2: 1158025037
+    Data3: -737722485
+    Data4: 895598579
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 35
+  Length: 610
+--- !u!114 &-7700592913486923714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambient/Zones/Entrance
+  m_EditorClassIdentifier: 
+  Path: event:/Ambient/Zones/Entrance
+  Guid:
+    Data1: -300005362
+    Data2: 1231998641
+    Data3: -1536648781
+    Data4: 1898174533
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6586
+--- !u!114 &-7615432884887556641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Menu
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Menu
+  Guid:
+    Data1: -541606475
+    Data2: 1197061648
+    Data3: -798327901
+    Data4: 251154173
+  Banks:
+  - {fileID: 1986347315569109078}
+  - {fileID: -4785648930416261882}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 49500
+--- !u!114 &-7472045820858473115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Done-1A
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Done-1A
+  Guid:
+    Data1: 1033150078
+    Data2: 1116480464
+    Data3: -739332991
+    Data4: -1265091900
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7703
+--- !u!114 &-7338902480610880223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049/TakeOffGarment
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049/TakeOffGarment
+  Guid:
+    Data1: -766509315
+    Data2: 1201904276
+    Data3: 501379493
+    Data4: 1765800318
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3752
+--- !u!114 &-7329301234955841811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Done-2
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Done-2
+  Guid:
+    Data1: 1143165283
+    Data2: 1131393470
+    Data3: 169852293
+    Data4: -2114955558
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 9057
+--- !u!114 &-7263277398470229506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/State-Forced-079
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/State-Forced-079
+  Guid:
+    Data1: 444597061
+    Data2: 1310352850
+    Data3: 1336725403
+    Data4: 946667394
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 4276120625653395534}
+  - {fileID: 6238739360283730493}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7235714809149949737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Glenn-420J-Song/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-7215552533652131929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/914/Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/914/Ambience
+  Guid:
+    Data1: 531004973
+    Data2: 1188968531
+    Data3: 18992827
+    Data4: 143603941
+  Banks:
+  - {fileID: 1986347315569109078}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 29071
+--- !u!114 &-7164454144975424425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambient/Zones/Forest
+  m_EditorClassIdentifier: 
+  Path: event:/Ambient/Zones/Forest
+  Guid:
+    Data1: 697084895
+    Data2: 1332317894
+    Data3: -294260840
+    Data4: -694959297
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 8647
+--- !u!114 &-7113250499360106956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Item-Pick-2
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Item-Pick-2
+  Guid:
+    Data1: 382052728
+    Data2: 1308782324
+    Data3: 1512182154
+    Data4: 2083723237
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 487
+--- !u!114 &-6800618038496770768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Movement/Footsteps-Run
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Movement/Footsteps-Run
+  Guid:
+    Data1: -1776108468
+    Data2: 1190607566
+    Data3: -1050965834
+    Data4: -493257741
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 2044178533396693177}
+  MinDistance: 1
+  MaxDistance: 35
+  Length: 0
+--- !u!114 &-6769910176352157860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Fall/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-6670488326663255012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Roberts/Escort_Convo-A
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Roberts/Escort_Convo-A
+  Guid:
+    Data1: 219093491
+    Data2: 1117179648
+    Data3: -236813943
+    Data4: 1133380182
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 27510
+--- !u!114 &-6361009204001440642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Convo-C
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Convo-C
+  Guid:
+    Data1: -710501259
+    Data2: 1277728008
+    Data3: -761867136
+    Data4: 181891528
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 27016
+--- !u!114 &-6336335362563669229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Alarms/Alarm-Airlock
+  m_EditorClassIdentifier: 
+  Path: event:/World/Alarms/Alarm-Airlock
+  Guid:
+    Data1: 137598317
+    Data2: 1285548803
+    Data3: 1289499831
+    Data4: -791002241
+  Banks:
+  - {fileID: -9167931746203070111}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1971
+--- !u!114 &-6039892614064908679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Break/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-5589744035618523018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049/DetectedEvent
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049/DetectedEvent
+  Guid:
+    Data1: 1011197097
+    Data2: 1197512317
+    Data3: 1841195915
+    Data4: -634476582
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6282
+--- !u!114 &-5488040404328914433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Press
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Press
+  Guid:
+    Data1: 1807382103
+    Data2: 1100232730
+    Data3: 1698246309
+    Data4: -643697669
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 173
+--- !u!114 &-5336095706396086466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Break/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-5321855479670779139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Gate/Broken-Loop
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Gate/Broken-Loop
+  Guid:
+    Data1: 1374242683
+    Data2: 1321000886
+    Data3: 866730168
+    Data4: 906199512
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 500
+  Length: 27000
+--- !u!114 &-5123591340379375916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Airpods/Track-3
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Airpods/Track-3
+  Guid:
+    Data1: -348984108
+    Data2: 1087477867
+    Data3: 826151048
+    Data4: 373676316
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -4706046628938050269}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 29538
+--- !u!114 &-4969007226779717252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Warning/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-4968045681091617250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Convo-D
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Convo-D
+  Guid:
+    Data1: 92246242
+    Data2: 1207431844
+    Data3: -695532917
+    Data4: -1673195630
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 32513
+--- !u!114 &-4911727159920214467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/VO.bank
+  m_EditorClassIdentifier: 
+  Path: FmodStudio/Build/Desktop/VO.bank
+  Name: VO
+  StudioPath: bank:/VO
+  lastModified: 639054490282355476
+  FileSizes: []
+  Exists: 1
+--- !u!114 &-4785648930416261882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FmodStudio/Build/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 639054490278606533
+  FileSizes: []
+  Exists: 1
+--- !u!114 &-4716740304332961349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Gate/State
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Gate/State
+  Guid:
+    Data1: 1155132866
+    Data2: 1183082153
+    Data3: -1969528697
+    Data4: -136469759
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 4988537785143735635}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4706046628938050269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track-3/Static Occlusion
+  m_EditorClassIdentifier: 
+  Name: Static Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1417420337
+    data2: 3001201020
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-4652748207099471199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Deaf
+  m_EditorClassIdentifier: 
+  Name: Deaf
+  StudioPath: parameter:/Deaf
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1695707096
+    data2: 1869668707
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &-4491856956136657054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Damage/Body-Fall
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Damage/Body-Fall
+  Guid:
+    Data1: -1518805060
+    Data2: 1099816700
+    Data3: 1987575943
+    Data4: -1485016153
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 8800
+--- !u!114 &-4444107674901409639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Alarms/Alarm-Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/World/Alarms/Alarm-Lockdown
+  Guid:
+    Data1: 1070968018
+    Data2: 1200995726
+    Data3: -1199423838
+    Data4: -439446551
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 6864759779062756546}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2257
+--- !u!114 &-4425036887888224933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Exit-Cell-Kill-B/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-4384990052208291168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Roberts/Escort_Convo-E
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Roberts/Escort_Convo-E
+  Guid:
+    Data1: -1135407602
+    Data2: 1289302946
+    Data3: 1423611522
+    Data4: -2018148975
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 18980
+--- !u!114 &-4196980088531313228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Airpods/Track-1
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Airpods/Track-1
+  Guid:
+    Data1: -595830650
+    Data2: 1138867208
+    Data3: 1609271681
+    Data4: -1349876503
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -8827257041676292593}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 20875
+--- !u!114 &-4167813289063807797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/939/Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/939/Ambience
+  Guid:
+    Data1: -1188165500
+    Data2: 1207956573
+    Data3: -55434077
+    Data4: -1924583752
+  Banks:
+  - {fileID: 1986347315569109078}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 16021
+--- !u!114 &-4149640152246168410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Button
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Button
+  Guid:
+    Data1: 695519176
+    Data2: 1261895117
+    Data3: 1849746340
+    Data4: -574814676
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 173
+--- !u!114 &-4093408493843748476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Airpods/Track-2
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Airpods/Track-2
+  Guid:
+    Data1: -45689347
+    Data2: 1209583945
+    Data3: 451570325
+    Data4: 907599839
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 2967887440543959385}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 20870
+--- !u!114 &-3989327849382666647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Broken-Loop
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Broken-Loop
+  Guid:
+    Data1: 881702286
+    Data2: 1255307725
+    Data3: 973634697
+    Data4: 2122392019
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 500
+  Length: 27000
+--- !u!114 &-3964584373130681686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Damage/Attacked
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Damage/Attacked
+  Guid:
+    Data1: 2130240359
+    Data2: 1221030517
+    Data3: -1204008784
+    Data4: -1009682936
+  Banks:
+  - {fileID: -9167931746203070111}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2998
+--- !u!114 &-3903421466346188327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State-Open-Forced-173/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-3796363590537495708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049/Kidnap
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049/Kidnap
+  Guid:
+    Data1: 1293293609
+    Data2: 1099962457
+    Data3: -1978472307
+    Data4: 1840647943
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4797
+--- !u!114 &-3737051302823256946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Heavy/Break
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Heavy/Break
+  Guid:
+    Data1: -1474819787
+    Data2: 1211384407
+    Data3: 1481500340
+    Data4: -1075228800
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -6039892614064908679}
+  MinDistance: 1
+  MaxDistance: 500
+  Length: 3173
+--- !u!114 &-3477659314751525186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Heavy/Fall
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Heavy/Fall
+  Guid:
+    Data1: -1332122135
+    Data2: 1118391317
+    Data3: -1499529585
+    Data4: -2141103874
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -6769910176352157860}
+  MinDistance: 1
+  MaxDistance: 85
+  Length: 1048
+--- !u!114 &-3178395179255631317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Damage/Blood-Drip
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Damage/Blood-Drip
+  Guid:
+    Data1: 1570118676
+    Data2: 1194875216
+    Data3: -1309872760
+    Data4: 124447177
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 117
+--- !u!114 &-3073410729522752400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/State-Open-Forced-173
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/State-Open-Forced-173
+  Guid:
+    Data1: 202039708
+    Data2: 1303348462
+    Data3: 1878384516
+    Data4: -254507792
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -3903421466346188327}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5007
+--- !u!114 &-3063031123643807103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Alarm/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-2753966546935875164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/106/Ambience-PocketDimension
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/106/Ambience-PocketDimension
+  Guid:
+    Data1: 1943767891
+    Data2: 1312672714
+    Data3: -108112248
+    Data4: 1602403805
+  Banks:
+  - {fileID: 1986347315569109078}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 32693
+--- !u!114 &-2572689169957127544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Gate/Fall
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Gate/Fall
+  Guid:
+    Data1: -232183254
+    Data2: 1255938718
+    Data3: -544735820
+    Data4: 150365667
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 85
+  Length: 1048
+--- !u!114 &-2392351581921329183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Roberts/Escort_Convo-D
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Roberts/Escort_Convo-D
+  Guid:
+    Data1: 581724316
+    Data2: 1085364539
+    Data3: 420839063
+    Data4: -2108605352
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 32513
+--- !u!114 &-2184627360332703297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Button-Keycard/Result
+  m_EditorClassIdentifier: 
+  Name: Result
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 4261105743
+    data2: 2509601830
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Granted
+  - Denied
+  Exists: 1
+--- !u!114 &-2009620304962310012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Balcony/Warning
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Balcony/Warning
+  Guid:
+    Data1: -1729570521
+    Data2: 1167423107
+    Data3: -232357960
+    Data4: -1159327739
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -4969007226779717252}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7112
+--- !u!114 &-1807905811408993825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/173/Horror-Near
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/173/Horror-Near
+  Guid:
+    Data1: 1880715183
+    Data2: 1185273360
+    Data3: 1266274967
+    Data4: 1722211142
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 8374
+--- !u!114 &-1717020590751851451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Airpods/Track-4
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Airpods/Track-4
+  Guid:
+    Data1: -528223636
+    Data2: 1253722319
+    Data3: 954045325
+    Data4: -265289331
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 3153160055163274706}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 30264
+--- !u!114 &-1330740164678362431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Damage/Body-Exchange
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Damage/Body-Exchange
+  Guid:
+    Data1: -65917435
+    Data2: 1271910699
+    Data3: -690469966
+    Data4: 2067606416
+  Banks:
+  - {fileID: -9167931746203070111}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2324
+--- !u!114 &-1321888833039898876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Item-Pick-Metal
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Item-Pick-Metal
+  Guid:
+    Data1: 962240848
+    Data2: 1260998136
+    Data3: 142021017
+    Data4: -1271537198
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 223
+--- !u!114 &-1192072095601463272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Button-Keypad/Result
+  m_EditorClassIdentifier: 
+  Name: Result
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 4261105743
+    data2: 2509601830
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Granted
+  - Denied
+  Exists: 1
+--- !u!114 &-1069073555933582759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Exit-Cell-Refuse-A
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Exit-Cell-Refuse-A
+  Guid:
+    Data1: -618014160
+    Data2: 1164696820
+    Data3: 115143816
+    Data4: 1636950552
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6349
+--- !u!114 &-989061562112946747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Alarm-Airlock-Broken/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-809047709586945754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: 
+  Guid:
+    Data1: 687721400
+    Data2: 1328240832
+    Data3: -629599560
+    Data4: 1649344610
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2998
+--- !u!114 &-651884520842460824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/PA_Control
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/PA_Control
+  Guid:
+    Data1: -2066525592
+    Data2: 1131035016
+    Data3: 1846608824
+    Data4: -1203385300
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-598965476030549100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Alarms/Alarm-Announ-Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/World/Alarms/Alarm-Announ-Lockdown
+  Guid:
+    Data1: 2029092425
+    Data2: 1114073201
+    Data3: -2129032565
+    Data4: 638826527
+  Banks:
+  - {fileID: -9167931746203070111}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6222
+--- !u!114 &-435313816951384258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Button-Error
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Button-Error
+  Guid:
+    Data1: 1512529467
+    Data2: 1131190304
+    Data3: 973783966
+    Data4: 1207693362
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 562
+--- !u!114 &-434123828582886770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State/State
+  m_EditorClassIdentifier: 
+  Name: State
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2950676430
+    data2: 519884044
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Close
+  - Open
+  Exists: 1
+--- !u!114 &-182194339991601935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/D_FemurVictim
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/D_FemurVictim
+  Guid:
+    Data1: -871069495
+    Data2: 1273630824
+    Data3: 574237318
+    Data4: -155322102
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-136584724641551208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Apache
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Apache
+  Guid:
+    Data1: -1292995994
+    Data2: 1099114199
+    Data3: -1906194516
+    Data4: 1280158565
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
+  m_Name: FMODStudioCache
+  m_EditorClassIdentifier: 
+  EditorBanks:
+  - {fileID: -8335392950320146757}
+  - {fileID: -9167931746203070111}
+  - {fileID: -4785648930416261882}
+  - {fileID: 1986347315569109078}
+  - {fileID: 6558796898345577853}
+  - {fileID: -4911727159920214467}
+  EditorEvents:
+  - {fileID: -809047709586945754}
+  - {fileID: 4266032388104440718}
+  - {fileID: -7615432884887556641}
+  - {fileID: 1406012392275175258}
+  - {fileID: -7215552533652131929}
+  - {fileID: -2753966546935875164}
+  - {fileID: -4167813289063807797}
+  - {fileID: 8884422914351211101}
+  - {fileID: 4898285524356627467}
+  - {fileID: -7801920052937152229}
+  - {fileID: 7579289213244657007}
+  - {fileID: -1330740164678362431}
+  - {fileID: 6448163342063531592}
+  - {fileID: -7989128250385511367}
+  - {fileID: -3178395179255631317}
+  - {fileID: 4908046354564114238}
+  - {fileID: 6072078791228364732}
+  - {fileID: 6572951382647945140}
+  - {fileID: 3835523793453204408}
+  - {fileID: 5268844565127496539}
+  - {fileID: -8320986945345149556}
+  - {fileID: -2572689169957127544}
+  - {fileID: 4147000345099463449}
+  - {fileID: 3366153637486808264}
+  - {fileID: -7704751120526650745}
+  - {fileID: -3737051302823256946}
+  - {fileID: 5310161730339166108}
+  - {fileID: 5253534580238225464}
+  - {fileID: -435313816951384258}
+  - {fileID: 1878893130453512768}
+  - {fileID: -7263277398470229506}
+  - {fileID: 8126451339351883721}
+  - {fileID: -598965476030549100}
+  - {fileID: -6800618038496770768}
+  - {fileID: -1321888833039898876}
+  - {fileID: -5488040404328914433}
+  - {fileID: -3964584373130681686}
+  - {fileID: 4938145490865555114}
+  - {fileID: -6336335362563669229}
+  - {fileID: 34926367099662916}
+  - {fileID: 8110793563581074116}
+  - {fileID: -7113250499360106956}
+  - {fileID: -5321855479670779139}
+  - {fileID: 211518693184214728}
+  - {fileID: 1973385437125369076}
+  - {fileID: -3989327849382666647}
+  - {fileID: 3335125708920295026}
+  - {fileID: 503861488560761860}
+  - {fileID: 3950090883233513968}
+  - {fileID: -3073410729522752400}
+  - {fileID: 1943948856128430535}
+  - {fileID: 4399930145756020085}
+  - {fileID: 6842812149106864230}
+  - {fileID: 2642132193699822644}
+  - {fileID: 2450365415949175819}
+  - {fileID: 1632333570553862617}
+  - {fileID: -4491856956136657054}
+  - {fileID: 9067692846126522074}
+  - {fileID: -4716740304332961349}
+  - {fileID: 3500791627774362846}
+  - {fileID: 877213762001974431}
+  - {fileID: -4149640152246168410}
+  - {fileID: 8631532468659925570}
+  - {fileID: 2216236530326981176}
+  - {fileID: 3133906316276658776}
+  - {fileID: -4444107674901409639}
+  - {fileID: 1218572609944624009}
+  - {fileID: 798022434768666433}
+  - {fileID: 8676720777874134779}
+  - {fileID: 2464557695393911809}
+  - {fileID: -7925796271053929727}
+  - {fileID: -3477659314751525186}
+  - {fileID: 4917196751918054524}
+  - {fileID: -7845136362337959592}
+  - {fileID: -7700592913486923714}
+  - {fileID: 748079418616599743}
+  - {fileID: 4282227986153895674}
+  - {fileID: 5671831836313725754}
+  - {fileID: 6277555738455834754}
+  - {fileID: -1807905811408993825}
+  - {fileID: 2453665483149030934}
+  - {fileID: 3742367175834720357}
+  - {fileID: -7164454144975424425}
+  - {fileID: 4024404982572445332}
+  - {fileID: 6870762832736411980}
+  - {fileID: -3796363590537495708}
+  - {fileID: 6479141576297141857}
+  - {fileID: 5416199635222833361}
+  - {fileID: -5589744035618523018}
+  - {fileID: 5141203603020112218}
+  - {fileID: 4364317572395814705}
+  - {fileID: -7338902480610880223}
+  - {fileID: 2519506786874660185}
+  - {fileID: -8440228624409562097}
+  - {fileID: 1857692635652417070}
+  - {fileID: -4384990052208291168}
+  - {fileID: 4502919763747260156}
+  - {fileID: 2888249375040125596}
+  - {fileID: 79364706309517160}
+  - {fileID: -2009620304962310012}
+  - {fileID: 2599624897905378645}
+  - {fileID: -1069073555933582759}
+  - {fileID: 7395177128546595073}
+  - {fileID: 1469560617439419042}
+  - {fileID: 4696707351443808416}
+  - {fileID: -7329301234955841811}
+  - {fileID: -136584724641551208}
+  - {fileID: 3651723854867896769}
+  - {fileID: -651884520842460824}
+  - {fileID: 7350842746437648674}
+  - {fileID: -6361009204001440642}
+  - {fileID: 4154875225321065614}
+  - {fileID: 4635514786621608986}
+  - {fileID: -7472045820858473115}
+  - {fileID: 2152431565325439382}
+  - {fileID: 335412496188901391}
+  - {fileID: 9177980506659254110}
+  - {fileID: 8437497278911224776}
+  - {fileID: 7456098295673329237}
+  - {fileID: 7263150135427733148}
+  - {fileID: -2392351581921329183}
+  - {fileID: 1508205138960156554}
+  - {fileID: 2187415529120270715}
+  - {fileID: 273750285890987354}
+  - {fileID: -8498459887490445697}
+  - {fileID: -182194339991601935}
+  - {fileID: 1726831442058371683}
+  - {fileID: 9114136825197713022}
+  - {fileID: 7293511648695124943}
+  - {fileID: -8313514975773372418}
+  - {fileID: -8743038159165442512}
+  - {fileID: 3702852605471061811}
+  - {fileID: 4044608072685511816}
+  - {fileID: -8008970909748763299}
+  - {fileID: -4968045681091617250}
+  - {fileID: -8849504925894239645}
+  - {fileID: 3832144890652506523}
+  - {fileID: 170887395456586185}
+  - {fileID: -6670488326663255012}
+  - {fileID: -1717020590751851451}
+  - {fileID: -4196980088531313228}
+  - {fileID: -5123591340379375916}
+  - {fileID: 8072856308458583657}
+  - {fileID: -4093408493843748476}
+  EditorParameters:
+  - {fileID: -4652748207099471199}
+  MasterBanks:
+  - {fileID: -4785648930416261882}
+  StringsBanks:
+  - {fileID: -8335392950320146757}
+  cacheVersion: 131857
+  cacheTime: 639054807818708854
+  SerializableEventsDict:
+  - key: 
+    index: 0
+  - key: event:/Music/Credits
+    index: 1
+  - key: event:/Music/Menu
+    index: 2
+  - key: event:/SCPs/409/Ambience
+    index: 3
+  - key: event:/SCPs/914/Ambience
+    index: 4
+  - key: event:/SCPs/106/Ambience-PocketDimension
+    index: 5
+  - key: event:/SCPs/939/Ambience
+    index: 6
+  - key: event:/SCPs/205/Ambience
+    index: 7
+  - key: event:/SCPs/012/Ambience
+    index: 8
+  - key: event:/World/Doors/Heavy/Broken-Loop
+    index: 9
+  - key: event:/World/Doors/Button-Keycard
+    index: 10
+  - key: event:/Player/Damage/Body-Exchange
+    index: 11
+  - key: event:/Player/Damage/106-Grab
+    index: 12
+  - key: event:/World/Doors/Elevator/State
+    index: 13
+  - key: event:/Player/Damage/Blood-Drip
+    index: 14
+  - key: event:/World/Doors/Heavy/State-Error
+    index: 15
+  - key: event:/UI/Press-Slider
+    index: 16
+  - key: event:/World/Decontaminate
+    index: 17
+  - key: event:/World/Alarms/Alarm-Warhead
+    index: 18
+  - key: event:/World/Doors/Office/State
+    index: 19
+  - key: event:/SCPs/012/Ambience-Chamber
+    index: 20
+  - key: event:/World/Doors/Gate/Fall
+    index: 21
+  - key: event:/Player/Damage/Heartbeat
+    index: 22
+  - key: event:/SCPs/106/Sinkhole-Fall
+    index: 23
+  - key: event:/SCPs/049/Footsteps-Walk
+    index: 24
+  - key: event:/World/Doors/Heavy/Break
+    index: 25
+  - key: event:/Player/Damage/Vomit
+    index: 26
+  - key: event:/World/Camera
+    index: 27
+  - key: event:/World/Doors/Button-Error
+    index: 28
+  - key: event:/UI/Item-Pick-Document
+    index: 29
+  - key: event:/World/Doors/State-Forced-079
+    index: 30
+  - key: event:/UI/Item-Pick-1
+    index: 31
+  - key: event:/World/Alarms/Alarm-Announ-Lockdown
+    index: 32
+  - key: event:/Player/Movement/Footsteps-Run
+    index: 33
+  - key: event:/UI/Item-Pick-Metal
+    index: 34
+  - key: event:/UI/Press
+    index: 35
+  - key: event:/Player/Damage/Attacked
+    index: 36
+  - key: event:/World/Alarms/Alarm
+    index: 37
+  - key: event:/World/Alarms/Alarm-Airlock
+    index: 38
+  - key: event:/UI/Press-Fail
+    index: 39
+  - key: event:/Player/Breathing/Exhausted-GasMask
+    index: 40
+  - key: event:/UI/Item-Pick-2
+    index: 41
+  - key: event:/World/Doors/Gate/Broken-Loop
+    index: 42
+  - key: event:/World/Doors/State
+    index: 43
+  - key: event:/World/Doors/Gate/Break
+    index: 44
+  - key: event:/World/Doors/Broken-Loop
+    index: 45
+  - key: event:/World/Doors/Button-Keypad
+    index: 46
+  - key: event:/UI/Press-Tooltip
+    index: 47
+  - key: event:/World/Doors/Heavy/State
+    index: 48
+  - key: event:/World/Doors/State-Open-Forced-173
+    index: 49
+  - key: event:/SCPs/049-2/Idle
+    index: 50
+  - key: event:/Player/Movement/Footsteps-Walk
+    index: 51
+  - key: event:/SCPs/939/Spotted
+    index: 52
+  - key: event:/Player/Damage/Cough
+    index: 53
+  - key: event:/Player/Damage/096-Yummers
+    index: 54
+  - key: event:/Player/Breathing/Exhausted
+    index: 55
+  - key: event:/Player/Damage/Body-Fall
+    index: 56
+  - key: event:/World/Doors/Fall
+    index: 57
+  - key: event:/World/Doors/Gate/State
+    index: 58
+  - key: event:/World/Doors/Office/Handle
+    index: 59
+  - key: event:/World/Doors/Break
+    index: 60
+  - key: event:/World/Doors/Button
+    index: 61
+  - key: event:/UI/Fcveny
+    index: 62
+  - key: event:/World/Alarms/Alarm-Airlock-Broken
+    index: 63
+  - key: event:/World/Doors/Checkpoint/Open
+    index: 64
+  - key: event:/World/Alarms/Alarm-Lockdown
+    index: 65
+  - key: event:/SCPs/106/Sinkhole
+    index: 66
+  - key: event:/Player/Movement/Footsteps-GetUp
+    index: 67
+  - key: event:/World/Gas-Hiss
+    index: 68
+  - key: event:/SCPs/049/Footsteps-Run
+    index: 69
+  - key: event:/SCPs/079/Speech
+    index: 70
+  - key: event:/World/Doors/Heavy/Fall
+    index: 71
+  - key: event:/Player/Nostalgia
+    index: 72
+  - key: event:/Music/Intro
+    index: 73
+  - key: event:/Ambient/Zones/Entrance
+    index: 74
+  - key: event:/Music/Zones/LightContainment
+    index: 75
+  - key: event:/Music/Zones/HeavyContainment
+    index: 76
+  - key: event:/Ambient/Zones/LightContainment
+    index: 77
+  - key: event:/Ambient/Intro
+    index: 78
+  - key: event:/SCPs/173/Horror-Near
+    index: 79
+  - key: event:/Ambient/Zones/HeavyContainment
+    index: 80
+  - key: event:/Music/Zones/Entrance
+    index: 81
+  - key: event:/Ambient/Zones/Forest
+    index: 82
+  - key: event:/Ambient/General
+    index: 83
+  - key: event:/SCPs/420-J/Glenn-420J-Song
+    index: 84
+  - key: event:/SCPs/049/Kidnap
+    index: 85
+  - key: event:/SCPs/049/Searching
+    index: 86
+  - key: event:/SCPs/049/YapSesh
+    index: 87
+  - key: event:/SCPs/049/DetectedEvent
+    index: 88
+  - key: event:/SCPs/049/Spotted
+    index: 89
+  - key: event:/SCPs/049/StopResisting
+    index: 90
+  - key: event:/SCPs/049/TakeOffGarment
+    index: 91
+  - key: event:/Characters/Agent_SexyWhiteGuy
+    index: 92
+  - key: event:/Characters/Guards/Ulgrin/Escort_Refuse-B
+    index: 93
+  - key: event:/Characters/Guards/Ulgrin/Escort_Pissed-B
+    index: 94
+  - key: event:/Characters/Guards/Roberts/Escort_Convo-E
+    index: 95
+  - key: event:/Characters/MTF
+    index: 96
+  - key: event:/Characters/Agent_Roberts
+    index: 97
+  - key: event:/Characters/Guards/Ulgrin/Escort_Done-4
+    index: 98
+  - key: event:/Characters/Guards/Balcony/Warning
+    index: 99
+  - key: event:/Characters/Guards/Ulgrin/Escort_Kill-A
+    index: 100
+  - key: event:/Characters/Guards/Ulgrin/Exit-Cell-Refuse-A
+    index: 101
+  - key: event:/Characters/Guards/Balcony/WTF
+    index: 102
+  - key: event:/Characters/Guards/Ulgrin/Escort_Refuse-A
+    index: 103
+  - key: event:/Characters/Guards/Ulgrin/Escort_Pissed-A
+    index: 104
+  - key: event:/Characters/Guards/Ulgrin/Escort_Done-2
+    index: 105
+  - key: event:/Characters/Apache
+    index: 106
+  - key: event:/Characters/Agent_Sad
+    index: 107
+  - key: event:/Characters/PA_Control
+    index: 108
+  - key: event:/Characters/Guards/Ulgrin/Escort_Done-3C
+    index: 109
+  - key: event:/Characters/Guards/Ulgrin/Escort_Convo-C
+    index: 110
+  - key: event:/Characters/Guards/Ulgrin/Escort_Done-2B
+    index: 111
+  - key: event:/Characters/Guards/Ulgrin/Escort_Start-B
+    index: 112
+  - key: event:/Characters/Guards/Ulgrin/Escort_Done-1A
+    index: 113
+  - key: event:/Characters/Guards/Ulgrin/Escort_Wrong-Way
+    index: 114
+  - key: event:/Characters/Guards/Ulgrin/Exit-Cell-Kill-A
+    index: 115
+  - key: event:/Characters/Guards/Ulgrin/Escort_Kill-B
+    index: 116
+  - key: event:/Characters/Agent_MusicLover
+    index: 117
+  - key: event:/Characters/Guards/Roberts/Escort_Convo-C
+    index: 118
+  - key: event:/Characters/Guards/Ulgrin/Exit-Cell-Kill-B
+    index: 119
+  - key: event:/Characters/Guards/Roberts/Escort_Convo-D
+    index: 120
+  - key: event:/Characters/PA
+    index: 121
+  - key: event:/Characters/Janitor_Arnoldass
+    index: 122
+  - key: event:/Characters/Guards/Ulgrin/Before-Cell-Open
+    index: 123
+  - key: event:/Characters/Guards/Ulgrin/Escort_Convo-A
+    index: 124
+  - key: event:/Characters/D_FemurVictim
+    index: 125
+  - key: event:/Characters/Guards/Ulgrin/Escort_Done-3
+    index: 126
+  - key: event:/Characters/Researcher_Emily
+    index: 127
+  - key: event:/Characters/Guards/Ulgrin/Exit-Cell-Refuse-B
+    index: 128
+  - key: event:/Characters/Guards/Balcony/OhShit
+    index: 129
+  - key: event:/Characters/Guards/Ulgrin/Escort_Convo-B
+    index: 130
+  - key: event:/Characters/Guards/Ulgrin/Escort_Start-A
+    index: 131
+  - key: event:/Characters/Guards/Ulgrin/Exit-Cell-Request
+    index: 132
+  - key: event:/Characters/Agent_Balcony
+    index: 133
+  - key: event:/Characters/Guards/Ulgrin/Escort_Convo-D
+    index: 134
+  - key: event:/Characters/D_9341
+    index: 135
+  - key: event:/Characters/Guards/Roberts/Escort_Convo-B
+    index: 136
+  - key: event:/Characters/Guards/Ulgrin/Escort_Convo-E
+    index: 137
+  - key: event:/Characters/Guards/Roberts/Escort_Convo-A
+    index: 138
+  - key: event:/Characters/Guards/Airpods/Track-4
+    index: 139
+  - key: event:/Characters/Guards/Airpods/Track-1
+    index: 140
+  - key: event:/Characters/Guards/Airpods/Track-3
+    index: 141
+  - key: event:/Characters/Guards/Airpods/Track-5
+    index: 142
+  - key: event:/Characters/Guards/Airpods/Track-2
+    index: 143
+--- !u!114 &34926367099662916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Press-Fail
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Press-Fail
+  Guid:
+    Data1: 1591974509
+    Data2: 1111964826
+    Data3: 1675831205
+    Data4: 480935778
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 460
+--- !u!114 &79364706309517160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Done-4
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Done-4
+  Guid:
+    Data1: 915210535
+    Data2: 1287873518
+    Data3: 1413301401
+    Data4: -212776218
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1094
+--- !u!114 &170887395456586185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Convo-E
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Convo-E
+  Guid:
+    Data1: 967483889
+    Data2: 1279680084
+    Data3: 1350586517
+    Data4: 1148812569
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 16560
+--- !u!114 &211518693184214728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/State
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/State
+  Guid:
+    Data1: 420893315
+    Data2: 1162257272
+    Data3: -395256647
+    Data4: 1064140581
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -8914140334718501900}
+  - {fileID: 2559833372430457724}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &273750285890987354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Before-Cell-Open
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Before-Cell-Open
+  Guid:
+    Data1: 745545138
+    Data2: 1324840043
+    Data3: 1592915387
+    Data4: 215549917
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 1069240617475290849}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 11230
+--- !u!114 &335412496188901391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Exit-Cell-Kill-A
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Exit-Cell-Kill-A
+  Guid:
+    Data1: -753376378
+    Data2: 1204414118
+    Data3: -890484829
+    Data4: 593784947
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 850703328478069626}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7047
+--- !u!114 &503861488560761860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Press-Tooltip
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Press-Tooltip
+  Guid:
+    Data1: -1646009453
+    Data2: 1215562308
+    Data3: 1602000256
+    Data4: 395685167
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 173
+--- !u!114 &748079418616599743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Zones/LightContainment
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Zones/LightContainment
+  Guid:
+    Data1: 1483203111
+    Data2: 1093612993
+    Data3: 622295949
+    Data4: 1586527578
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 194000
+--- !u!114 &798022434768666433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Movement/Footsteps-GetUp
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Movement/Footsteps-GetUp
+  Guid:
+    Data1: -1775492642
+    Data2: 1118498008
+    Data3: 198142892
+    Data4: 84877960
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 35
+  Length: 840
+--- !u!114 &850703328478069626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Exit-Cell-Kill-A/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &877213762001974431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Break
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Break
+  Guid:
+    Data1: -2099762745
+    Data2: 1079054529
+    Data3: -1591891560
+    Data4: 1497429722
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -5336095706396086466}
+  MinDistance: 1
+  MaxDistance: 500
+  Length: 3173
+--- !u!114 &1069240617475290849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Before-Cell-Open/Static Occlusion
+  m_EditorClassIdentifier: 
+  Name: Static Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1417420337
+    data2: 3001201020
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &1218572609944624009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/106/Sinkhole
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/106/Sinkhole
+  Guid:
+    Data1: -220331053
+    Data2: 1120318595
+    Data3: -1127496572
+    Data4: -349102271
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5759
+--- !u!114 &1229897741801376563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Footsteps-Walk/Surface
+  m_EditorClassIdentifier: 
+  Name: Surface
+  StudioPath: 
+  Min: 0
+  Max: 5
+  Default: 0
+  ID:
+    data1: 3298533428
+    data2: 1491302479
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Tile
+  - Metal
+  - Corrosion
+  - Grass
+  - Concrete
+  - Carpet
+  Exists: 1
+--- !u!114 &1406012392275175258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/409/Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/409/Ambience
+  Guid:
+    Data1: -1303588832
+    Data2: 1285136486
+    Data3: -1361773902
+    Data4: 438343484
+  Banks:
+  - {fileID: 1986347315569109078}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 35294
+--- !u!114 &1469560617439419042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Refuse-A
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Refuse-A
+  Guid:
+    Data1: 1108029515
+    Data2: 1083702582
+    Data3: -1775960948
+    Data4: 832785798
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2287
+--- !u!114 &1508205138960156554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/PA
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/PA
+  Guid:
+    Data1: 1757979046
+    Data2: 1214716896
+    Data3: 1304712618
+    Data4: 1118661183
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1632333570553862617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Breathing/Exhausted
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Breathing/Exhausted
+  Guid:
+    Data1: -71319878
+    Data2: 1244155867
+    Data3: 544662946
+    Data4: -1058864526
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 824
+--- !u!114 &1726831442058371683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Done-3
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Done-3
+  Guid:
+    Data1: -1682928434
+    Data2: 1301586529
+    Data3: 719496349
+    Data4: -1387224146
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3778
+--- !u!114 &1737748685856515388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/OhShit/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &1857692635652417070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Pissed-B
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Pissed-B
+  Guid:
+    Data1: 1850146312
+    Data2: 1156319468
+    Data3: 352915134
+    Data4: -336974162
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5769
+--- !u!114 &1878893130453512768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Item-Pick-Document
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Item-Pick-Document
+  Guid:
+    Data1: 41189696
+    Data2: 1107594485
+    Data3: -1279335793
+    Data4: -1771338244
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 434
+--- !u!114 &1943948856128430535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049-2/Idle
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049-2/Idle
+  Guid:
+    Data1: 1788675751
+    Data2: 1086458236
+    Data3: 2141103779
+    Data4: 832509441
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 9400
+--- !u!114 &1973385437125369076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Gate/Break
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Gate/Break
+  Guid:
+    Data1: -1591755132
+    Data2: 1206827687
+    Data3: -399057741
+    Data4: 37383942
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 500
+  Length: 3173
+--- !u!114 &1986347315569109078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Music.bank
+  m_EditorClassIdentifier: 
+  Path: FmodStudio/Build/Desktop/Music.bank
+  Name: Music
+  StudioPath: bank:/Music
+  lastModified: 639053216294519335
+  FileSizes: []
+  Exists: 1
+--- !u!114 &2044178533396693177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Footsteps-Run/Surface
+  m_EditorClassIdentifier: 
+  Name: Surface
+  StudioPath: 
+  Min: 0
+  Max: 5
+  Default: 0
+  ID:
+    data1: 3298533428
+    data2: 1491302479
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Tile
+  - Metal
+  - Corrosion
+  - Grass
+  - Concrete
+  - Carpet
+  Exists: 1
+--- !u!114 &2137698661732230268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Camera/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &2152431565325439382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Wrong-Way
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Wrong-Way
+  Guid:
+    Data1: 1456484996
+    Data2: 1219510986
+    Data3: -2642786
+    Data4: 825468597
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4635
+--- !u!114 &2187415529120270715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Janitor_Arnoldass
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Janitor_Arnoldass
+  Guid:
+    Data1: -1517876306
+    Data2: 1115787070
+    Data3: 1951620524
+    Data4: -537220343
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2216236530326981176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Alarms/Alarm-Airlock-Broken
+  m_EditorClassIdentifier: 
+  Path: event:/World/Alarms/Alarm-Airlock-Broken
+  Guid:
+    Data1: -1039841334
+    Data2: 1329026872
+    Data3: 699746436
+    Data4: 1262653369
+  Banks:
+  - {fileID: -9167931746203070111}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -989061562112946747}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1714
+--- !u!114 &2450365415949175819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Damage/096-Yummers
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Damage/096-Yummers
+  Guid:
+    Data1: 687721400
+    Data2: 1328240832
+    Data3: -629599560
+    Data4: 1649344610
+  Banks:
+  - {fileID: -9167931746203070111}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2998
+--- !u!114 &2453665483149030934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambient/Zones/HeavyContainment
+  m_EditorClassIdentifier: 
+  Path: event:/Ambient/Zones/HeavyContainment
+  Guid:
+    Data1: -168630600
+    Data2: 1142614790
+    Data3: -931621225
+    Data4: -355366483
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 9509
+--- !u!114 &2464557695393911809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049/Footsteps-Run
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049/Footsteps-Run
+  Guid:
+    Data1: 999042534
+    Data2: 1104066876
+    Data3: 43365795
+    Data4: 458906492
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 35
+  Length: 610
+--- !u!114 &2519465773973852556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State/State
+  m_EditorClassIdentifier: 
+  Name: State
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2950676430
+    data2: 519884044
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Close
+  - Open
+  Exists: 1
+--- !u!114 &2519506786874660185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Agent_SexyWhiteGuy
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Agent_SexyWhiteGuy
+  Guid:
+    Data1: -1196851707
+    Data2: 1275393227
+    Data3: 571556236
+    Data4: -1977606342
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2559833372430457724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &2599624897905378645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Kill-A
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Kill-A
+  Guid:
+    Data1: 525319977
+    Data2: 1146308824
+    Data3: -1133276015
+    Data4: 2035022563
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4228
+--- !u!114 &2642132193699822644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Damage/Cough
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Damage/Cough
+  Guid:
+    Data1: -1503973455
+    Data2: 1136988176
+    Data3: -792516936
+    Data4: 450012220
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2254
+--- !u!114 &2888249375040125596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Agent_Roberts
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Agent_Roberts
+  Guid:
+    Data1: -1150220510
+    Data2: 1180078644
+    Data3: -544992366
+    Data4: -1982754009
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2967887440543959385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track-2/Static Occlusion
+  m_EditorClassIdentifier: 
+  Name: Static Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1417420337
+    data2: 3001201020
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &3133906316276658776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Checkpoint/Open
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Checkpoint/Open
+  Guid:
+    Data1: 467247823
+    Data2: 1241802483
+    Data3: 175946145
+    Data4: 1875087004
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2317
+--- !u!114 &3153160055163274706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track-4/Static Occlusion
+  m_EditorClassIdentifier: 
+  Name: Static Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1417420337
+    data2: 3001201020
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &3303829275216708977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &3335125708920295026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Button-Keypad
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Button-Keypad
+  Guid:
+    Data1: -2007113072
+    Data2: 1326101700
+    Data3: 204317346
+    Data4: -229371291
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -1192072095601463272}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3366153637486808264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/106/Sinkhole-Fall
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/106/Sinkhole-Fall
+  Guid:
+    Data1: -982847188
+    Data2: 1120824631
+    Data3: 1072253855
+    Data4: 386966971
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 14635
+--- !u!114 &3500791627774362846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Office/Handle
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Office/Handle
+  Guid:
+    Data1: 1239996868
+    Data2: 1176462727
+    Data3: -116673906
+    Data4: -1174063948
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 943
+--- !u!114 &3651723854867896769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Agent_Sad
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Agent_Sad
+  Guid:
+    Data1: -649399961
+    Data2: 1243036469
+    Data3: -2067858022
+    Data4: 842489309
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3702852605471061811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Start-A
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Start-A
+  Guid:
+    Data1: -838901288
+    Data2: 1334813279
+    Data3: 1206737811
+    Data4: 461195774
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7700
+--- !u!114 &3742367175834720357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Zones/Entrance
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Zones/Entrance
+  Guid:
+    Data1: 528849884
+    Data2: 1081605859
+    Data3: -915853657
+    Data4: -1935555142
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 112000
+--- !u!114 &3832144890652506523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Roberts/Escort_Convo-B
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Roberts/Escort_Convo-B
+  Guid:
+    Data1: 1312208368
+    Data2: 1281560820
+    Data3: -68858190
+    Data4: -1187874363
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 28282
+--- !u!114 &3835523793453204408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Alarms/Alarm-Warhead
+  m_EditorClassIdentifier: 
+  Path: event:/World/Alarms/Alarm-Warhead
+  Guid:
+    Data1: 707198240
+    Data2: 1167799500
+    Data3: 362467772
+    Data4: 394580462
+  Banks:
+  - {fileID: -9167931746203070111}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7071
+--- !u!114 &3950090883233513968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Heavy/State
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Heavy/State
+  Guid:
+    Data1: -1887720296
+    Data2: 1339152866
+    Data3: -1105965915
+    Data4: 1510007694
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 8379748874812973376}
+  - {fileID: 3303829275216708977}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &4024404982572445332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambient/General
+  m_EditorClassIdentifier: 
+  Path: event:/Ambient/General
+  Guid:
+    Data1: -1831655451
+    Data2: 1175880990
+    Data3: 382238862
+    Data4: 32880434
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 8212
+--- !u!114 &4044608072685511816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Exit-Cell-Request
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Exit-Cell-Request
+  Guid:
+    Data1: -1654563363
+    Data2: 1138931635
+    Data3: 933326523
+    Data4: 1262130641
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4132
+--- !u!114 &4062756412111661267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/WTF/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &4147000345099463449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Damage/Heartbeat
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Damage/Heartbeat
+  Guid:
+    Data1: 1477695020
+    Data2: 1080811500
+    Data3: 99274423
+    Data4: 1253699047
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 961
+--- !u!114 &4154875225321065614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Done-2B
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Done-2B
+  Guid:
+    Data1: -412733059
+    Data2: 1077317749
+    Data3: -217482597
+    Data4: -926764450
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4586
+--- !u!114 &4266032388104440718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Credits
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Credits
+  Guid:
+    Data1: 922647130
+    Data2: 1172256569
+    Data3: -34690683
+    Data4: -1520084514
+  Banks:
+  - {fileID: 1986347315569109078}
+  - {fileID: -4785648930416261882}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 156000
+--- !u!114 &4276120625653395534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State-Forced-079/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &4282227986153895674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Zones/HeavyContainment
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Zones/HeavyContainment
+  Guid:
+    Data1: 964318505
+    Data2: 1259804534
+    Data3: -498130262
+    Data4: -144722251
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 187156
+--- !u!114 &4364317572395814705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049/StopResisting
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049/StopResisting
+  Guid:
+    Data1: -1316677433
+    Data2: 1154168460
+    Data3: 744679046
+    Data4: -85081494
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3711
+--- !u!114 &4399930145756020085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Movement/Footsteps-Walk
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Movement/Footsteps-Walk
+  Guid:
+    Data1: 1617678507
+    Data2: 1109545212
+    Data3: -919862089
+    Data4: 60329817
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 1229897741801376563}
+  MinDistance: 1
+  MaxDistance: 35
+  Length: 0
+--- !u!114 &4502919763747260156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/MTF
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/MTF
+  Guid:
+    Data1: 2070748699
+    Data2: 1288642060
+    Data3: -1856242003
+    Data4: 1028504870
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &4635514786621608986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Start-B
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Start-B
+  Guid:
+    Data1: -826737283
+    Data2: 1154569094
+    Data3: -165957445
+    Data4: 1264227348
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 9461
+--- !u!114 &4696707351443808416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Pissed-A
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Pissed-A
+  Guid:
+    Data1: -683721384
+    Data2: 1310210949
+    Data3: 1620498561
+    Data4: 490301054
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5979
+--- !u!114 &4898285524356627467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/012/Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/012/Ambience
+  Guid:
+    Data1: -1265690127
+    Data2: 1156867976
+    Data3: -1066252655
+    Data4: 903030377
+  Banks:
+  - {fileID: 1986347315569109078}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 43258
+--- !u!114 &4908046354564114238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Heavy/State-Error
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Heavy/State-Error
+  Guid:
+    Data1: 1710740757
+    Data2: 1215334889
+    Data3: 1129442207
+    Data4: -402403444
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3591
+--- !u!114 &4917196751918054524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Nostalgia
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Nostalgia
+  Guid:
+    Data1: -711047436
+    Data2: 1323945126
+    Data3: -479036008
+    Data4: -1059833113
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 13153
+--- !u!114 &4938145490865555114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Alarms/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/World/Alarms/Alarm
+  Guid:
+    Data1: 1713338218
+    Data2: 1146044240
+    Data3: -2129828960
+    Data4: 1930642118
+  Banks:
+  - {fileID: -9167931746203070111}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -3063031123643807103}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2722
+--- !u!114 &4988537785143735635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State/State
+  m_EditorClassIdentifier: 
+  Name: State
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2950676430
+    data2: 519884044
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Close
+  - Open
+  Exists: 1
+--- !u!114 &5141203603020112218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049/Spotted
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049/Spotted
+  Guid:
+    Data1: -377382980
+    Data2: 1088400614
+    Data3: 1938952098
+    Data4: 2094821137
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3948
+--- !u!114 &5253534580238225464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Camera
+  m_EditorClassIdentifier: 
+  Path: event:/World/Camera
+  Guid:
+    Data1: -1469142215
+    Data2: 1126974005
+    Data3: 1882270879
+    Data4: 2046459119
+  Banks:
+  - {fileID: -9167931746203070111}
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 2137698661732230268}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5048
+--- !u!114 &5268844565127496539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Office/State
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Office/State
+  Guid:
+    Data1: -892107230
+    Data2: 1092481890
+    Data3: 1274315453
+    Data4: 2061635685
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 2519465773973852556}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &5310161730339166108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Damage/Vomit
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Damage/Vomit
+  Guid:
+    Data1: 2039205687
+    Data2: 1299918109
+    Data3: -949969487
+    Data4: -1734651685
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 9578
+--- !u!114 &5416199635222833361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049/YapSesh
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049/YapSesh
+  Guid:
+    Data1: -844664711
+    Data2: 1291921106
+    Data3: 74061201
+    Data4: 647686353
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 16373
+--- !u!114 &5671831836313725754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambient/Zones/LightContainment
+  m_EditorClassIdentifier: 
+  Path: event:/Ambient/Zones/LightContainment
+  Guid:
+    Data1: 1596856894
+    Data2: 1294047112
+    Data3: 136673460
+    Data4: 624210804
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 11734
+--- !u!114 &6072078791228364732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Press-Slider
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Press-Slider
+  Guid:
+    Data1: 708710943
+    Data2: 1224482057
+    Data3: -1364115041
+    Data4: -757847235
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 173
+--- !u!114 &6238739360283730493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State-Forced-079/StateForced
+  m_EditorClassIdentifier: 
+  Name: StateForced
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 35769983
+    data2: 2316311032
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - 079Close
+  - 079Open
+  Exists: 1
+--- !u!114 &6277555738455834754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambient/Intro
+  m_EditorClassIdentifier: 
+  Path: event:/Ambient/Intro
+  Guid:
+    Data1: 1207268188
+    Data2: 1298765843
+    Data3: -2012065915
+    Data4: 1098304946
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 8374
+--- !u!114 &6448163342063531592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Damage/106-Grab
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Damage/106-Grab
+  Guid:
+    Data1: 1093824518
+    Data2: 1258738331
+    Data3: -196923487
+    Data4: -750449448
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2880
+--- !u!114 &6479141576297141857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/049/Searching
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/049/Searching
+  Guid:
+    Data1: -690204576
+    Data2: 1210193952
+    Data3: -809432900
+    Data4: -1744904753
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 12878
+--- !u!114 &6558796898345577853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: FmodStudio/Build/Desktop/SFX.bank
+  Name: SFX
+  StudioPath: bank:/SFX
+  lastModified: 639054807818708854
+  FileSizes: []
+  Exists: 1
+--- !u!114 &6572951382647945140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Decontaminate
+  m_EditorClassIdentifier: 
+  Path: event:/World/Decontaminate
+  Guid:
+    Data1: 1967472416
+    Data2: 1201769468
+    Data3: 1052886972
+    Data4: 1664832009
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6308
+--- !u!114 &6842812149106864230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/939/Spotted
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/939/Spotted
+  Guid:
+    Data1: 828343724
+    Data2: 1094219825
+    Data3: -325382997
+    Data4: 1150615209
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 17740
+--- !u!114 &6864759779062756546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Alarm-Lockdown/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &6870762832736411980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/420-J/Glenn-420J-Song
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/420-J/Glenn-420J-Song
+  Guid:
+    Data1: 1792848126
+    Data2: 1331428319
+    Data3: 706954388
+    Data4: 391554955
+  Banks:
+  - {fileID: -9167931746203070111}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -7235714809149949737}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 89292
+--- !u!114 &7263150135427733148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Exit-Cell-Kill-B
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Exit-Cell-Kill-B
+  Guid:
+    Data1: -1531995239
+    Data2: 1172209116
+    Data3: 726519217
+    Data4: -937406399
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -4425036887888224933}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5711
+--- !u!114 &7293511648695124943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Exit-Cell-Refuse-B
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Exit-Cell-Refuse-B
+  Guid:
+    Data1: -376872749
+    Data2: 1161300133
+    Data3: 15117210
+    Data4: 1303334651
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5596
+--- !u!114 &7350842746437648674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Done-3C
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Done-3C
+  Guid:
+    Data1: -1665024151
+    Data2: 1210751183
+    Data3: 2092094867
+    Data4: -1342625526
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5538
+--- !u!114 &7395177128546595073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Balcony/WTF
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Balcony/WTF
+  Guid:
+    Data1: 445281608
+    Data2: 1171821589
+    Data3: -1997998697
+    Data4: -920221839
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 4062756412111661267}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1644
+--- !u!114 &7456098295673329237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Roberts/Escort_Convo-C
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Roberts/Escort_Convo-C
+  Guid:
+    Data1: 1027309715
+    Data2: 1157744567
+    Data3: -238168175
+    Data4: 1003340917
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 27016
+--- !u!114 &7579289213244657007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Button-Keycard
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Button-Keycard
+  Guid:
+    Data1: -1858015740
+    Data2: 1335252114
+    Data3: -470492538
+    Data4: -1342430567
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -2184627360332703297}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8072856308458583657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Airpods/Track-5
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Airpods/Track-5
+  Guid:
+    Data1: -842390292
+    Data2: 1335756309
+    Data3: 1915257475
+    Data4: -317869073
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 9091754925694631728}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 29519
+--- !u!114 &8110793563581074116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Player/Breathing/Exhausted-GasMask
+  m_EditorClassIdentifier: 
+  Path: event:/Player/Breathing/Exhausted-GasMask
+  Guid:
+    Data1: 1417556087
+    Data2: 1086684044
+    Data3: 1709582758
+    Data4: 1210208366
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 783
+--- !u!114 &8126451339351883721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Item-Pick-1
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Item-Pick-1
+  Guid:
+    Data1: 1797962823
+    Data2: 1252745257
+    Data3: 287934104
+    Data4: 2129097810
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 384
+--- !u!114 &8352218799886233651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Fall/Occlusion
+  m_EditorClassIdentifier: 
+  Name: Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3913467721
+    data2: 2968528349
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &8379748874812973376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/State/State
+  m_EditorClassIdentifier: 
+  Name: State
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2950676430
+    data2: 519884044
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - Close
+  - Open
+  Exists: 1
+--- !u!114 &8437497278911224776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Agent_MusicLover
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Agent_MusicLover
+  Guid:
+    Data1: -206447727
+    Data2: 1109317218
+    Data3: 115379879
+    Data4: 437553056
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8631532468659925570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Fcveny
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Fcveny
+  Guid:
+    Data1: -1890194232
+    Data2: 1148438059
+    Data3: -1990282061
+    Data4: -451580152
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5702
+--- !u!114 &8676720777874134779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Gas-Hiss
+  m_EditorClassIdentifier: 
+  Path: event:/World/Gas-Hiss
+  Guid:
+    Data1: -266584352
+    Data2: 1180837964
+    Data3: 1702317494
+    Data4: 1425146107
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 518
+--- !u!114 &8884422914351211101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SCPs/205/Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/SCPs/205/Ambience
+  Guid:
+    Data1: 404101770
+    Data2: 1200467407
+    Data3: 160265144
+    Data4: -1492455047
+  Banks:
+  - {fileID: 1986347315569109078}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 40472
+--- !u!114 &9067692846126522074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/World/Doors/Fall
+  m_EditorClassIdentifier: 
+  Path: event:/World/Doors/Fall
+  Guid:
+    Data1: 1581605309
+    Data2: 1207848220
+    Data3: 948144303
+    Data4: 1656419060
+  Banks:
+  - {fileID: 6558796898345577853}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 8352218799886233651}
+  MinDistance: 1
+  MaxDistance: 85
+  Length: 1048
+--- !u!114 &9091754925694631728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Track-5/Static Occlusion
+  m_EditorClassIdentifier: 
+  Name: Static Occlusion
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1417420337
+    data2: 3001201020
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &9114136825197713022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Researcher_Emily
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Researcher_Emily
+  Guid:
+    Data1: 32227281
+    Data2: 1114303401
+    Data3: 1940277649
+    Data4: -42110621
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &9177980506659254110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Characters/Guards/Ulgrin/Escort_Kill-B
+  m_EditorClassIdentifier: 
+  Path: event:/Characters/Guards/Ulgrin/Escort_Kill-B
+  Guid:
+    Data1: 21330571
+    Data2: 1232039182
+    Data3: -1634881865
+    Data4: -830299734
+  Banks:
+  - {fileID: -4911727159920214467}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3115
