@@ -219,7 +219,7 @@ public static class FMODSubtitles
         int currentIndex = 1;
         string nextPart = parts[currentIndex].Trim();
 
-        // Check if this is a localized subtitle (contains a dot)
+        // Check if localized subtitle
         if (nextPart.Contains("."))
         {
             string[] locParts = nextPart.Split(new[] { '.' }, 2);
@@ -231,9 +231,10 @@ public static class FMODSubtitles
                     tableName = "Subtitles_" + tableName;
                 }
                 localizationKey = locParts[1].Trim();
-                identifier = nextPart; // Use full "Table.Key" as identifier
+                identifier = nextPart;
             }
         }
+
         // Check for speaker:message format
         else if (parts.Length > currentIndex + 1)
         {
@@ -269,8 +270,10 @@ public static class FMODSubtitles
 
         if (string.IsNullOrEmpty(identifier)) return;
 
-        // Show subtitle with a very long duration (will be stopped by END marker or event end)
-        float duration = 999f;
+        float duration = GetSoundDuration(eventInstance);
+        if (duration <= 0f) duration = 3f;
+        duration += ExtraSubtitleTime;
+
         int handle = -1;
 
         if (!string.IsNullOrEmpty(tableName) && !string.IsNullOrEmpty(localizationKey))
