@@ -7,10 +7,11 @@ public class PlayerFootsteps : MonoBehaviour
 {
     [Space]
     public List<FootstepData> footstepSurfaces = new List<FootstepData>();
-
-    [Header("FMOD Setup")]
+    [Space]
     public Transform footstepPlayTransform;
     public string surfaceParameterName = "Surface";
+    public string volumeParameterName = "Volume";
+    [Range(0f, 1f)] public float crouchVolumeMultiplier = 0.5f;
 
     [Header("Raycast Settings")]
     public Transform raycastOrigin;
@@ -56,14 +57,16 @@ public class PlayerFootsteps : MonoBehaviour
         if (_currentFootstepData == null) return;
 
         EventReference footstepEvent = GetFootstepEventForState(Core.Player.CurrentState);
+        if (footstepEvent.IsNull) return;
 
-        if (footstepEvent.IsNull)
-            return;
-
+        float volumeValue = GetVolumeForState(Core.Player.CurrentState);
         FMODHelper.PlayOneShot3D(
             footstepEvent,
             footstepPlayTransform.position,
-            parameters: new[] { (surfaceParameterName, _currentFootstepData.fmodParameterValue) }
+            parameters: new[] {
+                (surfaceParameterName, _currentFootstepData.fmodParameterValue),
+                (volumeParameterName, volumeValue)
+            }
         );
     }
 
@@ -102,6 +105,21 @@ public class PlayerFootsteps : MonoBehaviour
             case PlayerState.Freefall:
             default:
                 return Core.AudioDataAccess.Player.WalkFootstepSound;
+        }
+    }
+
+    private float GetVolumeForState(PlayerState state)
+    {
+        switch (state)
+        {
+            case PlayerState.Crouching:
+                return crouchVolumeMultiplier;
+            case PlayerState.Sprinting:
+            case PlayerState.Walking:
+            case PlayerState.Idle:
+            case PlayerState.Freefall:
+            default:
+                return 1f;
         }
     }
 
@@ -171,8 +189,7 @@ public class PlayerFootsteps : MonoBehaviour
                 }
             }
 
-            if (hitRenderer.sharedMaterials.Length > 0)
-                return hitRenderer.sharedMaterials[0];
+            if (hitRenderer.sharedMaterials.Length > 0) return hitRenderer.sharedMaterials[0];
         }
         else if (hitRenderer.sharedMaterial != null)
         {
@@ -199,7 +216,7 @@ public class PlayerFootsteps : MonoBehaviour
         return null;
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if (raycastOrigin != null)
         {
