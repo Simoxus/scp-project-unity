@@ -1,4 +1,4 @@
-﻿using EditorAttributes;
+﻿using TriInspector;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,12 +18,12 @@ public class LightBeamSettings : MonoBehaviour
     [SerializeField] private bool overrideNoiseIntensity = false;
 
     [Header("Override Values")]
-    [ShowField(nameof(overrideColor))] public Color baseColor = Color.white;
-    [ShowField(nameof(overrideIntensity)), Range(0, 5)] public float intensity = 1f;
-    [ShowField(nameof(overrideBeamDensity)), Range(0, 1)] public float beamDensity = 0.3f;
-    [ShowField(nameof(overrideFadeDistance)), Range(0, 50)] public float fadeDistance = 12f;
-    [ShowField(nameof(overrideFadePower)), Range(0.1f, 10f)] public float fadePower = 2f;
-    [ShowField(nameof(overrideNoiseIntensity)), Range(0, 1)] public float noiseIntensity = 0.3f;
+    [ShowIf(nameof(overrideColor))] public Color baseColor = Color.white;
+    [ShowIf(nameof(overrideIntensity)), Range(0, 5)] public float intensity = 1f;
+    [ShowIf(nameof(overrideBeamDensity)), Range(0, 1)] public float beamDensity = 0.3f;
+    [ShowIf(nameof(overrideFadeDistance)), Range(0, 50)] public float fadeDistance = 12f;
+    [ShowIf(nameof(overrideFadePower)), Range(0.1f, 10f)] public float fadePower = 2f;
+    [ShowIf(nameof(overrideNoiseIntensity)), Range(0, 1)] public float noiseIntensity = 0.3f;
 
     private MaterialPropertyBlock _propBlock;
     private Renderer _beamMeshRenderer;

@@ -1,8 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
-using EditorAttributes;
 using PrimeTween;
 using System;
 using System.Threading;
+using TriInspector;
 using UnityEngine;
 
 public class PlayerBlink : MonoBehaviour

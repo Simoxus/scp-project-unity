@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
-using EditorAttributes;
 using Facility.Generation;
+using TriInspector;
 using UnityEngine;
 
 public class IntroSequence : MonoBehaviour

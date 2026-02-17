@@ -1,7 +1,7 @@
-﻿using EditorAttributes;
-using PrimeTween;
+﻿using PrimeTween;
 using System.Threading;
 using TMPro;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 

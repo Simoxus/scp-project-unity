@@ -1,8 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
-using EditorAttributes;
 using Facility.Persistence.Types;
 using System.Collections.Generic;
 using System.Diagnostics;
+using TriInspector;
 using UnityEngine;
 
 namespace Facility.Generation
@@ -18,9 +18,9 @@ namespace Facility.Generation
         [Header("Seed Configuration")]
         [SerializeField] private bool checkForExistingSeed = true;
         [SerializeField] private bool useRandomSeed = false;
-        [SerializeField, HideField(nameof(useRandomSeed))] private bool useStringSeed = false;
-        [SerializeField, HideField(nameof(useRandomSeed)), ShowField(nameof(useStringSeed))] private string seedString = "";
-        [SerializeField, HideField(nameof(useRandomSeed))] private int numericSeed;
+        [SerializeField, HideIf(nameof(useRandomSeed))] private bool useStringSeed = false;
+        [SerializeField, HideIf(nameof(useRandomSeed)), ShowIf(nameof(useStringSeed))] private string seedString = "";
+        [SerializeField, HideIf(nameof(useRandomSeed))] private int numericSeed;
 
         [Header("Anchors")]
         [SerializeField] private Transform facilityRoot;

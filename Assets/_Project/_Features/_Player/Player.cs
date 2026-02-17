@@ -1,5 +1,5 @@
-using EditorAttributes;
 using FMODUnity;
+using TriInspector;
 using Unity.Cinemachine;
 using UnityEngine;
 

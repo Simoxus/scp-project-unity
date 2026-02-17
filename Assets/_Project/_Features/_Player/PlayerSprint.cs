@@ -1,4 +1,4 @@
-﻿using EditorAttributes;
+﻿using TriInspector;
 using UnityEngine;
 
 public class PlayerSprint : MonoBehaviour

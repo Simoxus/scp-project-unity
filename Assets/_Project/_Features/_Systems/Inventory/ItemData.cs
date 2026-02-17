@@ -1,7 +1,7 @@
-﻿using EditorAttributes;
-using FMODUnity;
+﻿using FMODUnity;
 using System.Collections.Generic;
 using System.Linq;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.Localization;
 
@@ -38,7 +38,7 @@ public class ItemData : ScriptableObject
     public LocalizedString localizedName;
     public LocalizedString localizedDescription;
     public bool hasUseMessage;
-    [ShowField(nameof(hasUseMessage))] public LocalizedString itemUseMessage;
+    [ShowIf(nameof(hasUseMessage))] public LocalizedString itemUseMessage;
 
     public bool CanBeUsed()
     {

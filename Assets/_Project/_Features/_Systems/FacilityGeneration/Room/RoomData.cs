@@ -1,6 +1,6 @@
-using EditorAttributes;
 using FMODUnity;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -20,10 +20,10 @@ namespace Facility.Generation
         [SerializeField] private RoomLayout roomLayout;
         [SerializeField] private bool isRequired;
         [SerializeField] private bool isUnique;
-        [HideField(nameof(isRequired))]
+        [HideIf(nameof(isRequired))]
         [SerializeField] private float spawnWeight = 1f;
         [SerializeField] private bool isLarge;
-        [ShowField(nameof(isLarge)), Tooltip("Additional cells this room occupies relative to its origin/anchor point")]
+        [ShowIf(nameof(isLarge)), Tooltip("Additional cells this room occupies relative to its origin/anchor point")]
         [SerializeField] private Vector2Int[] expandRelativeToOrigin = new Vector2Int[] { };
 
         [Header("Room Positioning")]
@@ -31,11 +31,11 @@ namespace Facility.Generation
         [SerializeField] private bool hasCustomOffset = false;
 
         [Tooltip("Positional offset to apply when instantiating this room (local space)")]
-        [SerializeField, ShowField(nameof(hasCustomOffset))]
+        [SerializeField, ShowIf(nameof(hasCustomOffset))]
         private Vector3 roomOffset = Vector3.zero;
 
         [Tooltip("Additional rotation offset (in degrees, Y-axis)")]
-        [SerializeField, ShowField(nameof(hasCustomOffset))]
+        [SerializeField, ShowIf(nameof(hasCustomOffset))]
         private float rotationOffset = 0f;
 
         [Header("Room Orientation")]
@@ -47,27 +47,27 @@ namespace Facility.Generation
 
         [Header("Environment")]
         [SerializeField] private bool hasCustomMusic;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(hasCustomMusic))]
+        [SerializeField, Indent(15), ShowIf(nameof(hasCustomMusic))]
         private EventReference customMusic;
 
         [SerializeField] private bool hasCustomAmbientLoop;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(hasCustomAmbientLoop))]
+        [SerializeField, Indent(15), ShowIf(nameof(hasCustomAmbientLoop))]
         private EventReference customAmbientLoop;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(hasCustomAmbientLoop))]
+        [SerializeField, Indent(15), ShowIf(nameof(hasCustomAmbientLoop))]
         private float minPlayInterval = 30f;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(hasCustomAmbientLoop))]
+        [SerializeField, Indent(15), ShowIf(nameof(hasCustomAmbientLoop))]
         private float maxPlayInterval = 90f;
 
         [SerializeField] private bool hasCustomFog;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(hasCustomFog))]
+        [SerializeField, Indent(15), ShowIf(nameof(hasCustomFog))]
         private Color customFogColor = Color.gray;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(hasCustomFog))]
+        [SerializeField, Indent(15), ShowIf(nameof(hasCustomFog))]
         private float customFogFadeTime = 2f;
 
         [SerializeField] private bool hasCustomAmbient;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(hasCustomAmbient))]
+        [SerializeField, Indent(15), ShowIf(nameof(hasCustomAmbient))]
         private Color customAmbientColor = Color.white;
-        [SerializeField, IndentProperty(15f), ShowField(nameof(hasCustomAmbient))]
+        [SerializeField, Indent(15), ShowIf(nameof(hasCustomAmbient))]
         private float customAmbientFadeTime = 2f;
 
         public AssetReferenceGameObject RoomPrefabReference => roomPrefabReference;

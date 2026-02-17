@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
-using EditorAttributes;
 using System;
 using System.Collections.Generic;
+using TriInspector;
 using UnityEngine;
 
 namespace Facility.Generation

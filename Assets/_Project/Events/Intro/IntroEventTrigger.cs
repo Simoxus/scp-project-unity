@@ -1,5 +1,5 @@
-﻿using EditorAttributes;
-using System;
+﻿using System;
+using TriInspector;
 using UnityEngine;
 
 public class IntroEventTrigger : MonoBehaviour
@@ -14,8 +14,8 @@ public class IntroEventTrigger : MonoBehaviour
     [Header("Behavior")]
     public bool TriggerOnce = true;
     public bool ModifyDoor = false;
-    [SerializeField, ShowField(nameof(ModifyDoor))] public bool openDoor = true;
-    [SerializeField, ShowField(nameof(ModifyDoor))] private BaseDoorController door;
+    [SerializeField, ShowIf(nameof(ModifyDoor))] public bool openDoor = true;
+    [SerializeField, ShowIf(nameof(ModifyDoor))] private BaseDoorController door;
 
     private bool _playerInside = false;
     private Collider _collider;

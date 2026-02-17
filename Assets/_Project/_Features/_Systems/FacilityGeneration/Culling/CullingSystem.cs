@@ -5,6 +5,8 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 
+using ReadOnlyAttribute = TriInspector.ReadOnlyAttribute;
+
 namespace Facility.Generation
 {
     public class CullingSystem : Singleton<CullingSystem>
@@ -26,10 +28,10 @@ namespace Facility.Generation
         [SerializeField] private float lightShowDistance = 15f;
 
         [Header("Debug")]
-        [SerializeField, EditorAttributes.ReadOnly] private int visibleRoomCount = 0;
-        [SerializeField, EditorAttributes.ReadOnly] private int totalRoomCount = 0;
-        [SerializeField, EditorAttributes.ReadOnly] private int visibleLightCount = 0;
-        [SerializeField, EditorAttributes.ReadOnly] private int totalLightCount = 0;
+        [SerializeField, ReadOnly] private int visibleRoomCount = 0;
+        [SerializeField, ReadOnly] private int totalRoomCount = 0;
+        [SerializeField, ReadOnly] private int visibleLightCount = 0;
+        [SerializeField, ReadOnly] private int totalLightCount = 0;
 
         // Room tracking
         private readonly List<RoomInstance> _rooms = new List<RoomInstance>();

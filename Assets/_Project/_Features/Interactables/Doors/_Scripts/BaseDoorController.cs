@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
-using EditorAttributes;
 using FMODUnity;
 using PrimeTween;
 using System;
 using System.Threading;
+using TriInspector;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -27,12 +27,12 @@ public abstract class BaseDoorController : MonoBehaviour
 
     [Header("Initial State")]
     public bool locked = false;
-    [SerializeField, ShowField(nameof(locked))]
+    [SerializeField, ShowIf(nameof(locked))]
     public string lockedMessage = string.Empty;
     public bool startOpened = false;
-    [SerializeField, ShowField(nameof(startOpened))]
+    [SerializeField, ShowIf(nameof(startOpened))]
     public bool chanceToStartOpened = false;
-    [SerializeField, ShowField(nameof(chanceToStartOpened)), Range(0, 1)]
+    [SerializeField, ShowIf(nameof(chanceToStartOpened)), Range(0, 1)]
     public float percentChanceToStartOpened = 0.5f;
     public bool breakable = true;
 

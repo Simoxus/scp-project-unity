@@ -1,5 +1,5 @@
-using EditorAttributes;
 using System;
+using TriInspector;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
