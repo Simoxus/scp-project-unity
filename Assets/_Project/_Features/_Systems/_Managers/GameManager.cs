@@ -137,9 +137,6 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    /// <summary>
-    /// Allows manual control of cursor state. Only works if requester has already called RequestCursorControl.
-    /// </summary>
     public void SetCursorState(object requester, bool visible, CursorLockMode lockMode = CursorLockMode.None)
     {
         if (requester == null)

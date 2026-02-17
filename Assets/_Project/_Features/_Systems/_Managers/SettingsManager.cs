@@ -37,14 +37,12 @@ public class SettingsManager : Singleton<SettingsManager>
 
     protected override void OnSingletonAwake()
     {
-        DontDestroyOnLoad(gameObject);
         InitializeSettings();
     }
 
     private void InitializeSettings()
     {
-        if (isInitialized)
-            return;
+        if (isInitialized) return;
 
         string buildFolder = Directory.GetParent(Application.dataPath).FullName;
         settingsFolder = buildFolder;
