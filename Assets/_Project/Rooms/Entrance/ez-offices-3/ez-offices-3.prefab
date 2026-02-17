@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 4565806352735873335}
-  bakeOnStart: 0
   geometryLayerMask:
     serializedVersion: 2
     m_Bits: 43
@@ -760,12 +759,16 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 383374618086786584, guid: bc435fdabcf52784c9843acad7b3a15c, type: 3}
+      propertyPath: m_Intensity
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 383374618086786584, guid: bc435fdabcf52784c9843acad7b3a15c, type: 3}
       propertyPath: m_SpotAngle
-      value: 138.50848
+      value: 137.34615
       objectReference: {fileID: 0}
     - target: {fileID: 383374618086786584, guid: bc435fdabcf52784c9843acad7b3a15c, type: 3}
       propertyPath: m_InnerSpotAngle
-      value: 116.21642
+      value: 109.2424
       objectReference: {fileID: 0}
     - target: {fileID: 383374618086786584, guid: bc435fdabcf52784c9843acad7b3a15c, type: 3}
       propertyPath: m_Shadows.m_Type

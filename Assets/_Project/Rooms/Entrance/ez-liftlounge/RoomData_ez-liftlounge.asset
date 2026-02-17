@@ -26,23 +26,32 @@ MonoBehaviour:
   isUnique: 1
   spawnWeight: 1
   isLarge: 0
-  roomSize: {x: 0, y: 0}
-  anchorOffset: {x: 0, y: 0}
-  hasCustomOffset: 0
+  expandRelativeToOrigin: []
+  hasCustomOffset: 1
   roomOffset: {x: 0, y: 0, z: 0}
   rotationOffset: 0
   defaultExitNorth: 1
   defaultExitEast: 0
   defaultExitSouth: 0
   defaultExitWest: 0
-  hasCustomAmbience: 0
-  customAmbienceAudio:
+  hasCustomMusic: 0
+  customMusic:
     Guid:
       Data1: 0
       Data2: 0
       Data3: 0
       Data4: 0
     Path: 
+  hasCustomAmbientLoop: 0
+  customAmbientLoop:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  minPlayInterval: 30
+  maxPlayInterval: 90
   hasCustomFog: 0
   customFogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   customFogFadeTime: 2
