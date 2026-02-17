@@ -425,22 +425,10 @@ public class PlayerController : MonoBehaviour
         return walkSpeed;
     }
 
-    public void ToggleNoclip()
+    public void EnableNoclip()
     {
         _isNoclipping = !_isNoclipping;
 
-        if (_isNoclipping)
-        {
-            EnableNoclip();
-        }
-        else
-        {
-            DisableNoclip();
-        }
-    }
-
-    private void EnableNoclip()
-    {
         _characterController.enabled = false;
         _moveDirection = Vector3.zero;
 
@@ -448,8 +436,10 @@ public class PlayerController : MonoBehaviour
         _currentCharacterHeight = standingHeight;
     }
 
-    private void DisableNoclip()
+    public void DisableNoclip()
     {
+        _isNoclipping = !_isNoclipping;
+
         _characterController.enabled = true;
         _characterController.height = standingHeight;
 

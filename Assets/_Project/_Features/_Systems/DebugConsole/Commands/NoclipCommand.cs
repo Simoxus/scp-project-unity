@@ -17,10 +17,16 @@
             Player player = Core.Player;
             if (player == null) return;
 
-            player.Controller.ToggleNoclip();
-
-            string status = player.IsInState(PlayerState.Noclip) ? "enabled" : "disabled";
-            ConsoleManager.LogToConsole($"Noclip has been {status}.".AsSuccess());
+            if (player.Controller.IsNoclipping)
+            {
+                player.Controller.DisableNoclip();
+                ConsoleManager.LogToConsole($"Noclip has been disabled.".AsSuccess());
+            }
+            else
+            {
+                player.Controller.EnableNoclip();
+                ConsoleManager.LogToConsole($"Noclip has been enabled.".AsSuccess());
+            }
         }
     }
 }
