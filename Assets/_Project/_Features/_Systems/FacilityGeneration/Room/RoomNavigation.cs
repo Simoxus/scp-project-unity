@@ -1,4 +1,5 @@
-﻿using Unity.AI.Navigation;
+﻿using Cysharp.Threading.Tasks;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,7 +10,6 @@ namespace Facility.Generation
         [SerializeField] private NavMeshSurface navMeshSurface;
 
         [Header("Settings")]
-        [SerializeField] private bool bakeOnStart = false;
         [SerializeField] private LayerMask geometryLayerMask = -1;
         [SerializeField] private Vector3 volumePadding = new Vector3(2f, 5f, 2f);
 
@@ -21,14 +21,6 @@ namespace Facility.Generation
         {
             InitializeNavMeshSurface();
             ConfigureNavMeshSurface();
-        }
-
-        private void Start()
-        {
-            if (bakeOnStart)
-            {
-                BakeNavMesh();
-            }
         }
 
         private void OnDestroy()
@@ -73,12 +65,18 @@ namespace Facility.Generation
             navMeshSurface.size = worldSize + volumePadding;
         }
 
-        public void BakeNavMesh()
+        public async UniTask BakeNavMeshAsync()
         {
             if (navMeshSurface == null) return;
             if (_isBaked) return;
 
-            navMeshSurface.BuildNavMesh();
+            var asyncOp = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+            while (!asyncOp.isDone)
+            {
+                await UniTask.Yield();
+            }
+
             _isBaked = true;
         }
 

@@ -37,32 +37,31 @@ namespace Facility.Generation
         public async UniTask InstantiateRoomsAsync(List<GridCell> occupiedCells)
         {
             _roomInstances.Clear();
+            int instantiatedCount = 0;
+            const int BATCH_SIZE = 10;
 
-            List<UniTask<(Vector2Int pos, RoomInstance instance)>> tasks = new List<UniTask<(Vector2Int, RoomInstance)>>();
-
-            foreach (var cell in occupiedCells)
+            for (int i = 0; i < occupiedCells.Count; i += BATCH_SIZE)
             {
-                if (cell.isBlocked) continue;
+                List<UniTask<(Vector2Int pos, RoomInstance instance)>> batchTasks = new List<UniTask<(Vector2Int, RoomInstance)>>();
 
-                if (cell.assignedRoom == null)
+                for (int j = i; j < Mathf.Min(i + BATCH_SIZE, occupiedCells.Count); j++)
                 {
-                    Log.VerboseInfo($"Cell at [{cell.position}] has no assigned room");
-                    continue;
+                    var cell = occupiedCells[j];
+                    if (cell.isBlocked || cell.assignedRoom == null) continue;
+
+                    Vector3 worldPos = FG_GridUtility.GridToWorldPosition(cell.position, _settings.CellSize);
+                    batchTasks.Add(InstantiateRoomWithPositionAsync(cell.assignedRoom, worldPos, cell));
                 }
 
-                Vector3 worldPos = FG_GridUtility.GridToWorldPosition(cell.position, _settings.CellSize);
-                tasks.Add(InstantiateRoomWithPositionAsync(cell.assignedRoom, worldPos, cell));
-            }
+                var batchResults = await UniTask.WhenAll(batchTasks);
 
-            var results = await UniTask.WhenAll(tasks);
-
-            int instantiatedCount = 0;
-            foreach (var (pos, roomInstance) in results)
-            {
-                if (roomInstance != null)
+                foreach (var (pos, roomInstance) in batchResults)
                 {
-                    _roomInstances[pos] = roomInstance;
-                    instantiatedCount++;
+                    if (roomInstance != null)
+                    {
+                        _roomInstances[pos] = roomInstance;
+                        instantiatedCount++;
+                    }
                 }
             }
 
@@ -109,12 +108,10 @@ namespace Facility.Generation
                 }
                 else
                 {
-                    Log.VerboseWarning($"Room prefab '{roomData.RoomName}' is missing RoomInstance component.");
-                }
-
-                if (_cullingSystem != null)
-                {
-                    _cullingSystem.RegisterRoom(roomInstance);
+                    if (roomData != _settings.StartingRoom)
+                    {
+                        Log.VerboseWarning($"Room prefab '{roomData.RoomName}' is missing RoomInstance component.");
+                    }
                 }
 
                 return roomInstance;
@@ -221,18 +218,27 @@ namespace Facility.Generation
         public async UniTask BakeAllNavigationAsync(Dictionary<Vector2Int, RoomInstance> roomInstances)
         {
             int bakedCount = 0;
-            List<UniTask> bakeTasks = new List<UniTask>();
+            const int BAKE_BATCH_SIZE = 3; // 3 rooms a frame
 
-            foreach (var roomInstance in roomInstances.Values)
+            var roomList = new List<RoomInstance>(roomInstances.Values);
+
+            for (int i = 0; i < roomList.Count; i += BAKE_BATCH_SIZE)
             {
-                if (roomInstance != null)
+                List<UniTask> batchTasks = new List<UniTask>();
+
+                for (int j = i; j < Mathf.Min(i + BAKE_BATCH_SIZE, roomList.Count); j++)
                 {
-                    bakeTasks.Add(roomInstance.BakeNavigationAsync());
-                    bakedCount++;
+                    if (roomList[j] != null)
+                    {
+                        batchTasks.Add(roomList[j].BakeNavigationAsync());
+                        bakedCount++;
+                    }
                 }
+
+                await UniTask.WhenAll(batchTasks);
+                await UniTask.DelayFrame(1);
             }
 
-            await UniTask.WhenAll(bakeTasks);
             Log.VerboseSuccess($"Baked navigation for {bakedCount} rooms");
         }
     }

@@ -123,13 +123,6 @@ namespace Facility.Generation
                 int crossroads = zoneCells.Count(c => c.layout == RoomLayout.Crossroads);
 
                 Log.VerboseInfo($"Zone {zoneSettings.zoneName}: DeadEnds={deadEnds} Corners={corners} Crossroads={crossroads}");
-
-                if (deadEnds < _settings.MinDeadEnds)
-                    Log.VerboseWarning($"Zone {zoneSettings.zoneName} has only {deadEnds} dead ends (minimum: {_settings.MinDeadEnds})");
-                if (corners < _settings.MinCorners)
-                    Log.VerboseWarning($"Zone {zoneSettings.zoneName} has only {corners} corners (minimum: {_settings.MinCorners})");
-                if (crossroads < _settings.MinCrossroads)
-                    Log.VerboseWarning($"Zone {zoneSettings.zoneName} has only {crossroads} crossroads (minimum: {_settings.MinCrossroads})");
             }
         }
     }

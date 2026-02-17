@@ -8,6 +8,7 @@ namespace Facility.Generation
 {
     public class RoomInstance : MonoBehaviour
     {
+        [Space]
         [SerializeField] private BoxCollider roomBounds;
         [SerializeField] private GameObject roomGeometry;
         [SerializeField] private GameObject roomLights;
@@ -105,13 +106,11 @@ namespace Facility.Generation
             if (_cullingSystem != null)
             {
                 _cullingSystem.RegisterRoom(this);
-                Log.VerboseInfo($"Room '{gameObject.name}' registered with CullingSystem");
             }
 
             if (Core.FacilityManager != null)
             {
                 Core.FacilityManager.RegisterRoom(this);
-                Log.VerboseInfo($"Room '{gameObject.name}' registered with FacilityManager");
             }
 
             EnsureComponentsCached();
@@ -125,7 +124,23 @@ namespace Facility.Generation
         private void CacheSpawnPoints()
         {
             _spawnPoints.Clear();
-            SpawnPoint[] points = GetComponentsInChildren<SpawnPoint>(includeInactive: true);
+
+            SpawnPoint[] points;
+
+            // Check roomSpawns first, then roomPoints
+            if (roomSpawns)
+            {
+                points = roomSpawns.GetComponentsInChildren<SpawnPoint>(includeInactive: true);
+            }
+            else if (roomPoints)
+            {
+                points = roomPoints.GetComponentsInChildren<SpawnPoint>(includeInactive: true);
+            }
+            else
+            {
+                points = GetComponentsInChildren<SpawnPoint>(includeInactive: true);
+            }
+
             _spawnPoints.AddRange(points);
         }
 
@@ -178,16 +193,7 @@ namespace Facility.Generation
         {
             if (_roomNavigationComponent != null)
             {
-                await UniTask.SwitchToMainThread();
-                _roomNavigationComponent.BakeNavMesh();
-            }
-        }
-
-        public void BakeNavigation()
-        {
-            if (_roomNavigationComponent != null)
-            {
-                _roomNavigationComponent.BakeNavMesh();
+                await _roomNavigationComponent.BakeNavMeshAsync();
             }
         }
 

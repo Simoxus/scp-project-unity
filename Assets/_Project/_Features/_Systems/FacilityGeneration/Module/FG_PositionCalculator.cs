@@ -33,8 +33,6 @@ namespace Facility.Generation
             }
 
             float finalAngle = baseAngle + roomData.RotationOffset;
-            Log.VerboseInfo($"Applied rotation offset to '{roomData.RoomName}': {baseAngle}° + {roomData.RotationOffset}° = {finalAngle}°");
-
             return finalAngle;
         }
 

@@ -39,8 +39,6 @@ namespace Facility.Generation
                 .ThenByDescending(c => c.position.x)  // Right to left
                 .ToList();
 
-            Log.Info($"Assigning rooms to {sortedCells.Count} cells");
-
             // Phase 1: Assign start room
             if (startCell != null)
             {
@@ -53,7 +51,7 @@ namespace Facility.Generation
                 if (cell == startCell) continue;
                 if (cell.assignedRoom != null) continue;
 
-                await AssignUniqueRoomToCell(cell);
+                AssignUniqueRoomToCell(cell);
             }
 
             // Phase 3: Fill remaining cells with generic rooms
@@ -61,7 +59,7 @@ namespace Facility.Generation
             {
                 if (cell.assignedRoom == null)
                 {
-                    await AssignGenericRoomToCell(cell);
+                    AssignGenericRoomToCell(cell);
                 }
             }
 
@@ -91,11 +89,9 @@ namespace Facility.Generation
                 if (CanPlaceRoom(cell, _settings.StartingRoom))
                 {
                     PlaceRoom(cell, _settings.StartingRoom);
-                    Log.Info($"Assigned designated start room: '{_settings.StartingRoom.RoomName}' at {cell.position} (rotation: {cell.rotation * 90}°)");
                 }
                 else
                 {
-                    Log.Warning($"Starting room '{_settings.StartingRoom.RoomName}' doesn't fit at {cell.position}");
                     var fallback = GetMatchingRoom(zoneSettings.roomPool, cell, cellSeed, false);
                     if (fallback != null)
                     {
@@ -109,14 +105,13 @@ namespace Facility.Generation
                 if (room != null)
                 {
                     PlaceRoom(cell, room);
-                    Log.Info($"Assigned random start room: '{room.RoomName}' at {cell.position}");
                 }
             }
 
             await UniTask.Yield();
         }
 
-        private async UniTask AssignUniqueRoomToCell(GridCell cell)
+        private void AssignUniqueRoomToCell(GridCell cell)
         {
             var zoneSettings = _settings.GetZoneSettings(cell.zone);
             if (zoneSettings?.roomPool == null) return;
@@ -128,13 +123,10 @@ namespace Facility.Generation
             if (uniqueRoom != null)
             {
                 PlaceRoom(cell, uniqueRoom);
-                Log.Info($"Assigned unique room '{uniqueRoom.RoomName}' at {cell.position}");
             }
-
-            await UniTask.Yield();
         }
 
-        private async UniTask AssignGenericRoomToCell(GridCell cell)
+        private void AssignGenericRoomToCell(GridCell cell)
         {
             var zoneSettings = _settings.GetZoneSettings(cell.zone);
             if (zoneSettings?.roomPool == null)
@@ -145,38 +137,16 @@ namespace Facility.Generation
 
             int cellSeed = _seed + cell.position.x * 1000 + cell.position.y;
 
-            bool isCheckpoint = cell.layout == RoomLayout.Checkpoint;
-
-            if (isCheckpoint)
-            {
-                Log.Info($"Assigning checkpoint room to cell at {cell.position} (Zone: {cell.zone}, Exits: {cell.exitCount})");
-            }
-
             var room = GetMatchingRoom(zoneSettings.roomPool, cell, cellSeed, false);
             if (room != null)
             {
                 PlaceRoom(cell, room);
-
-                if (isCheckpoint)
-                {
-                    Log.Info($"✓ Assigned checkpoint room '{room.RoomName}' at {cell.position}");
-                }
-                else
-                {
-                    Log.VerboseInfo($"Assigned generic room '{room.RoomName}' ({cell.layout}) at {cell.position}");
-                }
             }
-            else
-            {
-                Log.Warning($"No room found for layout {cell.layout} in zone {cell.zone} at {cell.position}");
-            }
-
-            await UniTask.Yield();
         }
 
         private RoomData GetMatchingRoom(RoomPool pool, GridCell cell, int cellSeed, bool uniqueOnly)
         {
-            Random.InitState(cellSeed);
+            var localRandom = new System.Random(cellSeed);
 
             // Get all rooms that match the layout
             var candidateRooms = pool.NormalRooms
@@ -204,11 +174,13 @@ namespace Facility.Generation
                 .ToList();
 
             if (candidateRooms.Count == 0)
+            {
                 return null;
+            }
 
             // Weighted random selection
             float totalWeight = candidateRooms.Sum(r => r.SpawnWeight);
-            float randomValue = Random.Range(0f, totalWeight);
+            float randomValue = (float)(localRandom.NextDouble() * totalWeight);
             float currentWeight = 0f;
 
             foreach (var room in candidateRooms)
@@ -266,7 +238,6 @@ namespace Facility.Generation
             if (roomData.IsUnique)
             {
                 _placedUniqueRooms.Add(roomData.RoomID);
-                Log.VerboseInfo($"Marked unique room '{roomData.RoomID}' as placed");
             }
 
             // Handle large rooms using ROTATED cells
@@ -304,8 +275,6 @@ namespace Facility.Generation
                 {
                     _grid[blockCol, blockRow].MarkAsBlocked(anchorPosition);
                 }
-
-                Log.VerboseInfo($"Marked ({blockCol}, {blockRow}) as blocked by large room at {anchorPosition} (rotation: {rotation * 90}°)");
             }
         }
     }

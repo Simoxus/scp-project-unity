@@ -37,7 +37,7 @@ namespace Facility.Generation
             int temp = 0;
 
             int iterations = 0;
-            int maxIterations = _settings.MaxGenerationAttempts * 100;
+            int maxIterations = _settings.MaxGenerationAttempts * 50;
 
             do
             {
@@ -78,11 +78,8 @@ namespace Facility.Generation
                     if (y < _settings.GridHeight - 1 && GetZoneForRow(y) != GetZoneForRow(y + 1))
                     {
                         cell.isCheckpoint = true;
-                        Log.Info($"Marked horizontal cell at ({i}, {y}) as checkpoint (crosses from zone {GetZoneForRow(y)} to {GetZoneForRow(y + 1)})");
                     }
                 }
-
-                Log.VerboseInfo($"Built horizontal hallway at row {y} from {x} to {x + width} (Zone: {GetZoneForRow(y)})");
 
                 height = _random.Next(_settings.VerticalHallwayLengthMin, _settings.VerticalHallwayLengthMax + 1);
 
@@ -128,7 +125,6 @@ namespace Facility.Generation
                             if (y2 < _settings.GridHeight - 1 && GetZoneForRow(y2) != GetZoneForRow(y2 + 1))
                             {
                                 cell.isCheckpoint = true;
-                                Log.Info($"Marked cell at ({x2}, {y2}) as checkpoint (crosses from zone {GetZoneForRow(y2)} to {GetZoneForRow(y2 + 1)})");
                             }
                         }
 
@@ -136,8 +132,6 @@ namespace Facility.Generation
                         {
                             temp = x2;
                         }
-
-                        Log.VerboseInfo($"Built vertical hallway at col {x2} height {tempHeight}");
                     }
                 }
 
