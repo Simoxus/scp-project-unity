@@ -43,9 +43,11 @@ namespace Console.Commands
         private void TeleportPlayer(RoomInstance room)
         {
             if (Core.Player.Controller == null) return;
-            if (Core.Player.Controller.IsNoclipping)
+
+            bool wasNoclipping = Core.Player.Controller.IsNoclipping;
+            if (wasNoclipping)
             {
-                Core.Player.Controller.ToggleNoclip();
+                Core.Player.Controller.DisableNoclip();
             }
 
             SpawnPoint playerSpawn = room.GetSpawnPoint(SpawnType.Player);
@@ -60,6 +62,11 @@ namespace Console.Commands
                 Bounds roomBounds = room.GetRoomBounds();
                 teleportPosition = roomBounds.center;
                 teleportPosition.y = roomBounds.min.y + 2f;
+            }
+
+            if (wasNoclipping)
+            {
+                Core.Player.Controller.EnableNoclip();
             }
 
             if (Core.Player.CharacterController != null)
