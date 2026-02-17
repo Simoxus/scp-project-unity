@@ -74,6 +74,8 @@ public static class FMODSubtitles
 
     private static void ParseAndShowSubtitle(string markerName, EventInstance eventInstance)
     {
+        if (!UISubtitles.SubtitlesEnabled) return;
+
         // Remove "subtitle:" prefix
         string content = markerName.Substring(9);
         if (string.IsNullOrEmpty(content)) return;
