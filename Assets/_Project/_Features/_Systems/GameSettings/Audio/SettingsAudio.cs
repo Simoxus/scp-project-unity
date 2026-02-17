@@ -46,12 +46,12 @@ public class SettingsAudio : BaseSettings
 
         applier.inBatchMode = true;
 
-        masterVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "MasterVolume", 1f);
-        soundVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "SoundVolume", 1f);
-        musicVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "MusicVolume", 1f);
-        voiceoverVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "VoiceoverVolume", 1f);
-        interfaceVolumeSlider.value = settingsManager.LoadFloat(CATEGORY, "InterfaceVolume", 1f);
-        realtimeOcclusionToggle.isOn = settingsManager.LoadBool(CATEGORY, "RealtimeOcclusion", true);
+        masterVolumeSlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "MasterVolume", 1f));
+        soundVolumeSlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "SoundVolume", 1f));
+        musicVolumeSlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "MusicVolume", 1f));
+        voiceoverVolumeSlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "VoiceoverVolume", 1f));
+        interfaceVolumeSlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "InterfaceVolume", 1f));
+        realtimeOcclusionToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "RealtimeOcclusion", true));
 
         applier.ApplyMasterVolume(masterVolumeSlider.value);
         applier.ApplySoundVolume(soundVolumeSlider.value);

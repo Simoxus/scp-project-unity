@@ -117,7 +117,7 @@ public class SettingsAdvancedApplier : BaseSettingsApplier
     {
         if (settingsAdvanced.CheckIfMainMenu()) return;
 
-        //Outline.GlobalFadingEnabled = enabled;
+        Outline.GlobalFadingEnabled = enabled;
 
         if (inBatchMode == false) settingsAdvanced.SaveSettings();
     }

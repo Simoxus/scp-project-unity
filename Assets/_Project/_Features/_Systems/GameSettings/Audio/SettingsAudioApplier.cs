@@ -76,4 +76,17 @@ public class SettingsAudioApplier : BaseSettingsApplier
 
         if (inBatchMode == false) settingsAudio.SaveSettings();
     }
+
+    public void ApplyShowSubtitles(bool enabled)
+    {
+        if (Core.UI.Subtitles != null)
+        {
+            Core.UI.Subtitles.SetSubtitlesEnabled(
+                enabled,
+                clearExisting: !enabled
+            );
+        }
+
+        if (inBatchMode == false) settingsAudio.SaveSettings();
+    }
 }

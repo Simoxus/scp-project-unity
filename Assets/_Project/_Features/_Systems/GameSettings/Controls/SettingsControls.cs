@@ -45,12 +45,12 @@ public class SettingsControls : BaseSettings
 
         applier.inBatchMode = true;
 
-        invertYAxisToggle.isOn = settingsManager.LoadBool(CATEGORY, "InvertYAxis", false);
-        mouseSensitivitySlider.value = settingsManager.LoadFloat(CATEGORY, "MouseSensitivity", 2.5f);
-        cameraSmoothingToggle.isOn = settingsManager.LoadBool(CATEGORY, "CameraSmoothing", true);
-        controllerSensitivitySlider.value = settingsManager.LoadFloat(CATEGORY, "ControllerSensitivity", 2f);
-        controllerSmoothingToggle.isOn = settingsManager.LoadBool(CATEGORY, "ControllerSmoothing", true);
-        controllerRumbleToggle.isOn = settingsManager.LoadBool(CATEGORY, "ControllerRumble", true);
+        invertYAxisToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "InvertYAxis", false));
+        mouseSensitivitySlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "MouseSensitivity", 2.5f));
+        cameraSmoothingToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "CameraSmoothing", true));
+        controllerSensitivitySlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "ControllerSensitivity", 2f));
+        controllerSmoothingToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "ControllerSmoothing", true));
+        controllerRumbleToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "ControllerRumble", true));
 
         applier.ApplyInvertYAxis(invertYAxisToggle.isOn);
         applier.ApplyMouseSensitivity(mouseSensitivitySlider.value);

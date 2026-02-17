@@ -62,20 +62,20 @@ public class SettingsAdvanced : BaseSettings
         applier.inBatchMode = true;
 
         // Load settings with different defaults for editor vs build
-        gameLanguageDropdown.value = settingsManager.LoadInt(CATEGORY, "GameLanguage", 0);
-        showHUDToggle.isOn = settingsManager.LoadBool(CATEGORY, "ShowHUD", true);
+        gameLanguageDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "GameLanguage", 0));
+        showHUDToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "ShowHUD", true));
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        showFPSToggle.isOn = settingsManager.LoadBool(CATEGORY, "ShowFPS", true);
+        showFPSToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "ShowFPS", true));
 #else
-        showFPSToggle.isOn = settingsManager.LoadBool(CATEGORY, "ShowFPS", false);
+        showFPSToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "ShowFPS", false));
 #endif
 
-        showCrosshairToggle.isOn = settingsManager.LoadBool(CATEGORY, "ShowCrosshair", false);
-        animateOutlinesToggle.isOn = settingsManager.LoadBool(CATEGORY, "AnimateOutlines", true);
-        showAchievementPopupsToggle.isOn = settingsManager.LoadBool(CATEGORY, "ShowAchievementPopups", true);
-        enableConsoleToggle.isOn = settingsManager.LoadBool(CATEGORY, "EnableConsole", true);
-        openConsoleOnErrorToggle.isOn = settingsManager.LoadBool(CATEGORY, "OpenConsoleOnError", false);
+        showCrosshairToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "ShowCrosshair", false));
+        animateOutlinesToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "AnimateOutlines", true));
+        showAchievementPopupsToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "ShowAchievementPopups", true));
+        enableConsoleToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "EnableConsole", true));
+        openConsoleOnErrorToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "OpenConsoleOnError", false));
 
         // Apply all settings
         applier.ApplyGameLanguage(gameLanguageDropdown.value);
