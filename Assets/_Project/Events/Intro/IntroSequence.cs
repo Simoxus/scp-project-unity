@@ -15,15 +15,15 @@ public class IntroSequence : MonoBehaviour
     [SerializeField] private DocumentBehavior introDocument;
 
     [Header("Timers")]
-    [SerializeField, Range(0, 40)] private float delayAfterWakeUp = 1f;
-    [SerializeField, Range(0, 40)] private float delayAfterReadDocument = 4f;
-    [SerializeField, Range(0, 40)] private float delayBeforeCellDoorOpens = 11.3f;
-    [SerializeField, Range(0, 40)] private float delayAfterDoorOpensToSpeak = 0.7f;
-    [SerializeField, Range(0, 40)] private float delayAfterCellExitToWalk = 9f;
-    [SerializeField, Range(0, 40)] private float minTimeToExit = 18f;
-    [SerializeField, Range(0, 40)] private float maxTimeToExit = 26f;
-    [SerializeField, Range(0, 40)] private float delayBeforeCellDoorClosesOnKill = 3.8f;
-    [SerializeField, Range(0, 40)] private float delayBeforeGasEmitted = 4.2f;
+    [SerializeField, Range(0, 30)] private float delayAfterWakeUp = 1f;
+    [SerializeField, Range(0, 30)] private float delayAfterReadDocument = 4f;
+    [SerializeField, Range(0, 30)] private float delayBeforeCellDoorOpens = 11.3f;
+    [SerializeField, Range(0, 30)] private float delayAfterDoorOpensToSpeak = 0.7f;
+    [SerializeField, Range(0, 30)] private float delayAfterCellExitToWalk = 8f;
+    [SerializeField, Range(0, 30)] private float minTimeToExit = 18f;
+    [SerializeField, Range(0, 30)] private float maxTimeToExit = 26f;
+    [SerializeField, Range(0, 30)] private float delayBeforeCellDoorClosesOnKill = 3.8f;
+    [SerializeField, Range(0, 30)] private float delayBeforeGasEmitted = 4.2f;
 
     [Header("NPCs")]
     [SerializeField] private NPC_Guard agentUlgrin;
@@ -128,7 +128,8 @@ public class IntroSequence : MonoBehaviour
         {
             FMODHelper.PlayInstanceWithSubtitles(FMODHelper.PickRandomEvent(
                 Core.AudioDataAccess.Characters.Ulgrin.ExitCellRefuseA,
-                Core.AudioDataAccess.Characters.Ulgrin.ExitCellRefuseB), agentUlgrin.VoiceEmitter
+                Core.AudioDataAccess.Characters.Ulgrin.ExitCellRefuseB),
+                agentUlgrin.VoiceEmitter
             );
 
             await UniTask.WaitForSeconds(6f);
@@ -152,6 +153,21 @@ public class IntroSequence : MonoBehaviour
             _escortingPlayer = true;
             GuardWalkSequenceAsync().Forget();
         }
+    }
+
+    public async UniTaskVoid FinishEscortingPlayerAsync()
+    {
+        if (_escortingPlayer) return;
+        queueExitDoor.CloseDoor();
+        await UniTask.WaitForSeconds(0.15f);
+
+        FMODHelper.PlayInstanceWithSubtitles(FMODHelper.PickRandomEvent(
+            Core.AudioDataAccess.Characters.Ulgrin.EscortDone1A,
+            Core.AudioDataAccess.Characters.Ulgrin.EscortDone2B,
+            Core.AudioDataAccess.Characters.Ulgrin.EscortDone3C),
+            agentUlgrin.VoiceEmitter,
+            useOcclusion: true
+        );
     }
 
     public void EndIntro()
@@ -184,7 +200,8 @@ public class IntroSequence : MonoBehaviour
 
         FMODHelper.PlayInstanceWithSubtitles(FMODHelper.PickRandomEvent(
             Core.AudioDataAccess.Characters.Ulgrin.ExitCellKillA,
-            Core.AudioDataAccess.Characters.Ulgrin.ExitCellKillB), agentUlgrin.VoiceEmitter,
+            Core.AudioDataAccess.Characters.Ulgrin.ExitCellKillB),
+            agentUlgrin.VoiceEmitter,
             useOcclusion: true
         );
 
@@ -212,7 +229,8 @@ public class IntroSequence : MonoBehaviour
             agentUlgrin.LookAtPlayer(true);
             FMODHelper.PlayInstanceWithSubtitles(FMODHelper.PickRandomEvent(
                 Core.AudioDataAccess.Characters.Ulgrin.EscortStartA,
-                Core.AudioDataAccess.Characters.Ulgrin.EscortStartB), agentUlgrin.VoiceEmitter
+                Core.AudioDataAccess.Characters.Ulgrin.EscortStartB),
+                agentUlgrin.VoiceEmitter
             );
             ContinueIntroAfterCellExitAsync().Forget();
         }
@@ -225,7 +243,8 @@ public class IntroSequence : MonoBehaviour
             Core.AudioDataAccess.Characters.Ulgrin.EscortConvoB,
             Core.AudioDataAccess.Characters.Ulgrin.EscortConvoC,
             Core.AudioDataAccess.Characters.Ulgrin.EscortConvoD,
-            Core.AudioDataAccess.Characters.Ulgrin.EscortConvoE), agentUlgrin.VoiceEmitter
+            Core.AudioDataAccess.Characters.Ulgrin.EscortConvoE),
+            agentUlgrin.VoiceEmitter
         );
     }
 
