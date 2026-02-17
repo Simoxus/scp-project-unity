@@ -147,16 +147,19 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
     {
         switch (index)
         {
-            case 0: // Eighth
+            case 0: // Sixty-fourth (Potato)
+                QualitySettings.globalTextureMipmapLimit = 6;
+                break;
+            case 1: // Eighth
                 QualitySettings.globalTextureMipmapLimit = 3;
                 break;
-            case 1: // Quarter
+            case 2: // Quarter
                 QualitySettings.globalTextureMipmapLimit = 2;
                 break;
-            case 2: // Half
+            case 3: // Half
                 QualitySettings.globalTextureMipmapLimit = 1;
                 break;
-            case 3: // Full
+            case 4: // Full
                 QualitySettings.globalTextureMipmapLimit = 0;
                 break;
         }
@@ -167,6 +170,11 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
     public void ApplyAntiAliasing(int index)
     {
         ApplyAntiAliasingAsync(index).Forget();
+    }
+
+    public void ApplyAmbientOcclusion(bool enabled)
+    {
+        ApplyAmbientOcclusionAsync(enabled).Forget();
     }
 
     public void ApplyRenderShadows(bool enabled)
@@ -250,6 +258,18 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
                 cameraData.antialiasing = AntialiasingMode.None;
                 break;
         }
+
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
+    }
+
+    public async UniTask ApplyAmbientOcclusionAsync(bool enabled)
+    {
+        if (Core.Player == null || Core.Player.CameraMain == null)
+        {
+            await WaitForPlayerAsync(_cts.Token);
+        }
+
+        settingsGraphics.ssaoFeature.SetActive(enabled);
 
         if (inBatchMode == false) settingsGraphics.SaveSettings();
     }

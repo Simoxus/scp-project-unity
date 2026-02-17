@@ -16,6 +16,7 @@ public class SettingsGraphics : BaseSettings
 
     [Space]
     public SettingsGraphicsApplier applier;
+    public ScriptableRendererFeature ssaoFeature;
     public Volume postProcessVolume;
 
     [Header("UI Elements")]
@@ -28,6 +29,7 @@ public class SettingsGraphics : BaseSettings
     public Slider fieldOfViewSlider;
     public TMP_Dropdown textureQualityDropdown;
     public TMP_Dropdown antiAliasingDropdown;
+    public Toggle ambientOcclusionToggle;
     public Toggle renderShadowsToggle;
     public Toggle bloomToggle;
     public Toggle vignetteToggle;
@@ -69,6 +71,7 @@ public class SettingsGraphics : BaseSettings
         settingsManager.SaveFloat(CATEGORY, "FieldOfView", fieldOfViewSlider.value);
         settingsManager.SaveInt(CATEGORY, "TextureQuality", textureQualityDropdown.value);
         settingsManager.SaveInt(CATEGORY, "AntiAliasing", antiAliasingDropdown.value);
+        settingsManager.SaveBool(CATEGORY, "AmbientOcclusion", ambientOcclusionToggle.isOn);
         settingsManager.SaveBool(CATEGORY, "RenderShadows", renderShadowsToggle.isOn);
         settingsManager.SaveBool(CATEGORY, "Bloom", bloomToggle.isOn);
         settingsManager.SaveBool(CATEGORY, "Vignette", vignetteToggle.isOn);
@@ -91,17 +94,20 @@ public class SettingsGraphics : BaseSettings
             return;
         }
 
-        windowModeDropdown.value = settingsManager.LoadInt(CATEGORY, "WindowMode", 0);
-        windowResolutionDropdown.value = settingsManager.LoadInt(CATEGORY, "WindowResolution", windowResolutionDropdown.value);
-        renderScaleSlider.value = settingsManager.LoadFloat(CATEGORY, "RenderScale", 1f);
-        vSyncToggle.isOn = settingsManager.LoadBool(CATEGORY, "VSync", false);
-        framerateDropdown.value = settingsManager.LoadInt(CATEGORY, "Framerate", 0);
-        fieldOfViewSlider.value = settingsManager.LoadFloat(CATEGORY, "FieldOfView", 70f);
-        textureQualityDropdown.value = settingsManager.LoadInt(CATEGORY, "TextureQuality", 3);
-        antiAliasingDropdown.value = settingsManager.LoadInt(CATEGORY, "AntiAliasing", 3);
-        renderShadowsToggle.isOn = settingsManager.LoadBool(CATEGORY, "RenderShadows", true);
-        bloomToggle.isOn = settingsManager.LoadBool(CATEGORY, "Bloom", true);
-        vignetteToggle.isOn = settingsManager.LoadBool(CATEGORY, "Vignette", true);
+        windowModeDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "WindowMode", 0));
+        windowResolutionDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "WindowResolution", windowResolutionDropdown.value));
+        renderScaleSlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "RenderScale", 1f));
+        vSyncToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "VSync", false));
+        framerateDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "Framerate", 0));
+        fieldOfViewSlider.value = settingsManager.LoadFloat(CATEGORY, "FieldOfView", 70f); // This literally only applies if you set the value with notification and i have no idea why
+        textureQualityDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "TextureQuality", 4));
+        antiAliasingDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "AntiAliasing", 3));
+        ambientOcclusionToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "AmbientOcclusion", true));
+        renderShadowsToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "RenderShadows", true));
+        bloomToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "Bloom", true));
+        vignetteToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "Vignette", true));
+
+        ssaoFeature.SetActive(ambientOcclusionToggle.isOn);
 
         applier.ApplyWindowMode(windowModeDropdown.value);
         applier.ApplyWindowResolution(windowResolutionDropdown.value);
@@ -111,6 +117,7 @@ public class SettingsGraphics : BaseSettings
         await applier.ApplyFieldOfViewAsync(fieldOfViewSlider.value);
         applier.ApplyTextureQuality(textureQualityDropdown.value);
         await applier.ApplyAntiAliasingAsync(antiAliasingDropdown.value);
+        await applier.ApplyAmbientOcclusionAsync(ambientOcclusionToggle.isOn);
         await applier.ApplyRenderShadowsAsync(renderShadowsToggle.isOn);
         applier.ApplyBloom(bloomToggle.isOn);
         applier.ApplyVignette(vignetteToggle.isOn);
