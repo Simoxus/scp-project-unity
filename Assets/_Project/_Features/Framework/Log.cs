@@ -70,6 +70,48 @@ public static class Log
         Debug.Log(message.ToString().AsSuccess(consoleColors: true), context);
     }
 
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Status(object message)
+    {
+        Debug.Log($"[STATUS] {message}".AsStatus(consoleColors: true));
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Status(object message, Object context)
+    {
+        Debug.Log($"[STATUS] {message}".AsStatus(consoleColors: true), context);
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Duration(object message, float actualTime = 0, float recommendedTime = 0)
+    {
+        bool overBudget = false;
+        if (actualTime != 0 && recommendedTime != 0)
+        {
+            overBudget = actualTime > recommendedTime;
+        }
+
+        string log = $"[STATUS: DURATION] {message}";
+        Debug.Log(overBudget
+            ? log.AsWarning(verbose: true, consoleColors: true)
+            : log.AsDuration(verbose: true, consoleColors: true));
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Duration(object message, Object context, float actualTime = 0, float recommendedTime = 0)
+    {
+        bool overBudget = false;
+        if (actualTime != 0 && recommendedTime != 0)
+        {
+            overBudget = actualTime > recommendedTime;
+        }
+
+        string log = $"[STATUS: DURATION] {message}";
+        Debug.Log(overBudget
+            ? log.AsWarning(verbose: true, consoleColors: true)
+            : log.AsDuration(verbose: true, consoleColors: true), context);
+    }
+
     #endregion
 
     #region Verbose logging
@@ -121,6 +163,54 @@ public static class Log
     {
         if (!VerboseEnabled) return;
         Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".AsSuccess(verbose: true, consoleColors: true), context);
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void VerboseStatus(object message)
+    {
+        if (!VerboseEnabled) return;
+        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] [STATUS] {message}</size>".AsStatus(verbose: true, consoleColors: true));
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void VerboseStatus(object message, Object context)
+    {
+        if (!VerboseEnabled) return;
+        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] [STATUS] {message}</size>".AsStatus(verbose: true, consoleColors: true), context);
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void VerboseDuration(object message, float actualTime = 0, float recommendedTime = 0)
+    {
+        if (!VerboseEnabled) return;
+
+        bool overBudget = false;
+        if (actualTime != 0 && recommendedTime != 0)
+        {
+            overBudget = actualTime > recommendedTime;
+        }
+
+        string log = $"<size={VERBOSE_SIZE}%>[VERBOSE] [STATUS: DURATION] {message}</size>";
+        Debug.Log(overBudget
+            ? log.AsWarning(verbose: true, consoleColors: true)
+            : log.AsDuration(verbose: true, consoleColors: true));
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void VerboseDuration(object message, Object context, float actualTime = 0, float recommendedTime = 0)
+    {
+        if (!VerboseEnabled) return;
+
+        bool overBudget = false;
+        if (actualTime != 0 && recommendedTime != 0)
+        {
+            overBudget = actualTime > recommendedTime;
+        }
+
+        string log = $"<size={VERBOSE_SIZE}%>[VERBOSE] [STATUS: DURATION] {message}</size>";
+        Debug.Log(overBudget
+            ? log.AsWarning(verbose: true, consoleColors: true)
+            : log.AsDuration(verbose: true, consoleColors: true), context);
     }
 
     #endregion

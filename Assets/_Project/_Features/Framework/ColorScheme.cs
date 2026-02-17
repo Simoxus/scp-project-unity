@@ -7,6 +7,8 @@ public static class ColorScheme
     public static readonly Color Warning = new Color32(255, 165, 0, 255);
     public static readonly Color Error = new Color32(255, 0, 0, 255);
     public static readonly Color Success = new Color32(51, 204, 51, 255);
+    public static readonly Color Status = new Color32(30, 144, 255, 255);
+    public static readonly Color Duration = new Color32(170, 180, 190, 255);
     public static readonly Color Jorge = new Color32(199, 21, 133, 255);
     public static readonly Color Input = new Color32(255, 255, 255, 255);
 
@@ -15,6 +17,8 @@ public static class ColorScheme
     public static readonly Color ConsoleWarning = new Color32(255, 193, 7, 255);
     public static readonly Color ConsoleError = new Color32(255, 83, 74, 255);
     public static readonly Color ConsoleSuccess = new Color32(51, 204, 51, 255);
+    public static readonly Color ConsoleStatus = new Color32(30, 144, 255, 255);
+    public static readonly Color ConsoleDuration = new Color32(170, 180, 190, 255);
 
     public static readonly Color Editor = new Color32(255, 153, 204, 255);
 

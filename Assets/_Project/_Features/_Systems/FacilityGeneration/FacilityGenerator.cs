@@ -2,6 +2,7 @@
 using EditorAttributes;
 using Facility.Persistence.Types;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace Facility.Generation
@@ -17,9 +18,9 @@ namespace Facility.Generation
         [Header("Seed Configuration")]
         [SerializeField] private bool checkForExistingSeed = true;
         [SerializeField] private bool useRandomSeed = false;
-        [SerializeField, ShowField(nameof(useRandomSeed))] private bool useStringSeed = false;
-        [SerializeField, ShowField(nameof(useStringSeed))] private string seedString = "";
-        [SerializeField, ShowField(nameof(useRandomSeed))] private int numericSeed;
+        [SerializeField, HideField(nameof(useRandomSeed))] private bool useStringSeed = false;
+        [SerializeField, HideField(nameof(useRandomSeed)), ShowField(nameof(useStringSeed))] private string seedString = "";
+        [SerializeField, HideField(nameof(useRandomSeed))] private int numericSeed;
 
         [Header("Anchors")]
         [SerializeField] private Transform facilityRoot;
@@ -50,6 +51,7 @@ namespace Facility.Generation
         private Dictionary<Vector2Int, RoomInstance> _roomInstances = new Dictionary<Vector2Int, RoomInstance>();
         private List<GameObject> _doorInstances = new List<GameObject>();
         private System.Random _random;
+        private Stopwatch _totalTimer;
         private GridCell _startRoomCell;
 
         public GridCell[,] Grid => _grid;
@@ -129,7 +131,6 @@ namespace Facility.Generation
                 {
                     await LoadFromFacilityData(facilityData, navLinksData, doorStatesData);
                     Log.Success($"Facility loaded from existing save (seed: {numericSeed})");
-                    Core.Player.Controller.enabled = true;
                     return;
                 }
             }
@@ -137,8 +138,6 @@ namespace Facility.Generation
             await GenerateNewFacility();
 
             IsGenerated = true;
-            Log.Success("Facility generation complete!");
-            Core.Player.Controller.enabled = true;
         }
 
         private void DetermineSeed()
@@ -170,6 +169,8 @@ namespace Facility.Generation
         {
             Log.Header($"Generating new facility with seed '{numericSeed}' (string: '{seedString}')");
 
+            _totalTimer = Stopwatch.StartNew();
+
             _layoutBuilder = new FG_LayoutBuilder(settings, _random);
             _pathBuilder = new FG_PathBuilder(settings);
             _roomAssigner = new FG_RoomAssigner(settings, numericSeed, _random);
@@ -183,20 +184,34 @@ namespace Facility.Generation
                 }
             }
 
-            Log.Info("Step 1: Generating grid structure");
+            var stepTimer = Stopwatch.StartNew();
+
+            Log.Status("Step 1: Generating grid structure");
             var gridResult = _layoutBuilder.GenerateGrid();
             _grid = gridResult.grid;
             _occupiedCells = gridResult.occupiedCells;
             _startRoomCell = gridResult.startCell;
 
-            Log.Info("Step 2: Connecting cells and determining room types");
+            Log.Duration($"Step 1 took {stepTimer.ElapsedMilliseconds}ms", stepTimer.ElapsedMilliseconds, settings.GridStructureRecommendedTime);
+            stepTimer.Restart();
+
+            Log.Status("Step 2: Connecting cells and determining room types");
             _pathBuilder.ConnectCells(_grid, _occupiedCells);
 
-            Log.Info("Step 3: Validating minimum requirements");
+            Log.Duration($"Step 2 took {stepTimer.ElapsedMilliseconds}ms", stepTimer.ElapsedMilliseconds, settings.CellConnectionRecommendedTime);
+            stepTimer.Restart();
+
+            Log.Status("Step 3: Validating minimum requirements");
             _pathBuilder.EnsureMinimumRequirements();
 
-            Log.Info("Step 4: Assigning rooms to cells");
+            Log.Duration($"Step 3 took {stepTimer.ElapsedMilliseconds}ms", stepTimer.ElapsedMilliseconds, settings.ValidationRecommendedTime);
+            stepTimer.Restart();
+
+            Log.Status("Step 4: Assigning rooms to cells");
             await _roomAssigner.AssignRooms(_grid, _occupiedCells, _startRoomCell);
+
+            Log.Duration($"Step 4 took {stepTimer.ElapsedMilliseconds}ms", stepTimer.ElapsedMilliseconds, settings.RoomAssignmentRecommendedTime);
+            stepTimer.Restart();
 
             await FinalizeGeneration(null, null);
         }
@@ -228,48 +243,73 @@ namespace Facility.Generation
 
         private async UniTask FinalizeGeneration(NavLinksPersistData navLinksData, DoorStatesPersistData doorStatesData = null)
         {
-            Log.Info("Step 5: Instantiating rooms");
+            var stepTimer = Stopwatch.StartNew();
+
+            Log.Status("Step 5: Instantiating rooms");
             await _instantiator.InstantiateRoomsAsync(_occupiedCells);
+
+            Log.Duration($"Step 5 took {stepTimer.ElapsedMilliseconds}ms", stepTimer.ElapsedMilliseconds, settings.InstantiationRecommendedTime);
+            stepTimer.Restart();
 
             if (bakeNavigationOnGenerate)
             {
-                Log.Info("Step 6: Baking navigation meshes");
+                Log.Status("Step 6: Baking navigation meshes");
                 await _instantiator.BakeAllNavigationAsync(_roomInstances);
+
+                Log.Duration($"Step 6 took {stepTimer.ElapsedMilliseconds}ms", stepTimer.ElapsedMilliseconds, settings.NavigationRecommendedTime);
+                stepTimer.Restart();
             }
 
             if (createNavigationLinks)
             {
                 if (navLinksData != null && navLinksData.links != null && navLinksData.links.Count > 0)
                 {
-                    Log.Info("Step 7: Loading navigation links from save data");
+                    Log.Status("Step 7: Loading navigation links from save data");
                     _navMeshLinker.LoadNavigationLinksFromData(navLinksData.links, _roomInstances);
                 }
                 else
                 {
-                    Log.Info("Step 7: Creating navigation links");
+                    Log.Status("Step 7: Creating navigation links");
                     _navMeshLinker.CreateNavigationLinks(_grid, _occupiedCells);
                 }
+
+                Log.Duration($"Step 7 took {stepTimer.ElapsedMilliseconds}ms", stepTimer.ElapsedMilliseconds, settings.NavigationLinksRecommendedTime);
+                stepTimer.Restart();
             }
 
-            Log.Info("Step 8: Creating doors");
+            Log.Status("Step 8: Creating doors");
             await _instantiator.CreateDoorsAsync(_grid, _occupiedCells);
+
+            Log.Duration($"Step 8 took {stepTimer.ElapsedMilliseconds}ms", stepTimer.ElapsedMilliseconds, settings.DoorCreationRecommendedTime);
+            stepTimer.Restart();
 
             if (doorStatesData != null)
             {
-                Log.Info("Step 8.5: Loading door states");
+                Log.Status("Step 8.5: Loading door states");
                 _persistence.LoadDoorStates(doorStatesData, _doorInstances);
+
+                Log.Duration($"Step 8.5 took {stepTimer.ElapsedMilliseconds}ms", stepTimer.ElapsedMilliseconds, 2);
+                stepTimer.Restart();
             }
 
             if (cullingSystem != null)
             {
-                Log.Info("Step 9: Setting up culling system");
+                Log.Status("Step 9: Setting up culling system");
                 _navMeshLinker.SetupCullingSystem(cullingSystem, _roomInstances.Count);
+
+                Log.Duration($"Step 9 took {stepTimer.ElapsedMilliseconds}ms");
+                stepTimer.Restart();
             }
 
             if (_gizmoDrawer != null)
             {
                 _gizmoDrawer.SetData(_grid, _occupiedCells, _startRoomCell);
             }
+
+            stepTimer.Stop();
+            Log.Status("Facility generation complete!");
+            Log.Duration($"Generation took {_totalTimer.Elapsed.TotalSeconds} seconds", (float)_totalTimer.Elapsed.TotalMilliseconds, settings.GenerationRecommendedTime);
+            _totalTimer.Stop();
         }
 
         [ContextMenu("Clear Facility")]
@@ -365,8 +405,6 @@ namespace Facility.Generation
 
             IsGenerated = true;
             Log.Success("Facility loaded successfully!");
-
-            Core.Player.Controller.enabled = true;
         }
 
         [ContextMenu("Quick Save")]
