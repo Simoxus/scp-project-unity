@@ -8,6 +8,9 @@ namespace Facility.Generation
     [CreateAssetMenu(fileName = "FacilityGeneratorSettings", menuName = "Custom/Map Gen/Facility Generator Settings")]
     public class FacilityGeneratorSettings : ScriptableObject
     {
+        [Space]
+        [SerializeField] private List<ZoneSettings> zones = new List<ZoneSettings>();
+
         [Header("Grid Settings")]
         [SerializeField] private int gridWidth = 19;
         [SerializeField] private int gridHeight = 19;
@@ -15,7 +18,7 @@ namespace Facility.Generation
 
         [Header("Start Room Settings")]
         [SerializeField] private RoomData startingRoom;
-        [SerializeField] private int startRoomIsolationRows = 1;
+        [SerializeField] private int startRoomIsolationRows = 0;
 
         [Header("Hallway Generation")]
         [Tooltip("Min/max length for the initial hallway after isolation")]
@@ -34,9 +37,6 @@ namespace Facility.Generation
         [SerializeField] private int verticalHallwayLengthMin = 3;
         [SerializeField] private int verticalHallwayLengthMax = 4;
 
-        [Header("Zones")]
-        [SerializeField] private List<ZoneSettings> zones = new List<ZoneSettings>();
-
         [Header("Room Requirements")]
         [SerializeField] private int minDeadEnds = 5;
         [SerializeField] private int minCorners = 1;
@@ -45,6 +45,17 @@ namespace Facility.Generation
         [Header("Generation Settings")]
         [SerializeField] private int maxGenerationAttempts = 10;
         [SerializeField] private bool allowOverlaps = true;
+
+        [Header("Stopwatch Settings (in milliseconds)")]
+        [SerializeField] private float gridStructureRecommendedTime = 20;
+        [SerializeField] private float cellConnectionRecommendedTime = 10;
+        [SerializeField] private float validationRecommendedTime = 6;
+        [SerializeField] private float roomAssignmentRecommendedTime = 2500;
+        [SerializeField] private float instantiationRecommendedTime = 4000;
+        [SerializeField] private float navigationRecommendedTime = 2000;
+        [SerializeField] private float navigationLinksRecommendedTime = 35;
+        [SerializeField] private float doorCreationRecommendedTime = 500;
+        [SerializeField] private float generationRecommendedTime = 10000;
 
         public int GridWidth => gridWidth;
         public int GridHeight => gridHeight;
@@ -70,6 +81,16 @@ namespace Facility.Generation
 
         public int MaxGenerationAttempts => maxGenerationAttempts;
         public bool AllowOverlaps => allowOverlaps;
+
+        public float GridStructureRecommendedTime => gridStructureRecommendedTime;
+        public float CellConnectionRecommendedTime => cellConnectionRecommendedTime;
+        public float ValidationRecommendedTime => validationRecommendedTime;
+        public float RoomAssignmentRecommendedTime => roomAssignmentRecommendedTime;
+        public float InstantiationRecommendedTime => instantiationRecommendedTime;
+        public float NavigationRecommendedTime => navigationRecommendedTime;
+        public float NavigationLinksRecommendedTime => navigationLinksRecommendedTime;
+        public float DoorCreationRecommendedTime => doorCreationRecommendedTime;
+        public float GenerationRecommendedTime => generationRecommendedTime;
 
         public ZoneSettings GetZoneSettings(ZoneLocation location)
         {
