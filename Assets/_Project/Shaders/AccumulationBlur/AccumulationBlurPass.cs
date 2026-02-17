@@ -20,6 +20,7 @@ public class AccumulationBlurPass : ScriptableRenderPass
     private static readonly int TintColorID = Shader.PropertyToID("_TintColor");
 
     private bool _isFirstFrame = true;
+    private Camera _lastCamera;
 
     private class PassData
     {
@@ -55,11 +56,14 @@ public class AccumulationBlurPass : ScriptableRenderPass
         var stack = VolumeManager.instance.stack;
         var effect = stack.GetComponent<AccumulationBlur>();
 
-        if (effect == null || !effect.IsActive())
+        if (cameraData.camera != _lastCamera)
         {
             _isFirstFrame = true;
-            accumulationTexture?.Release();
-            accumulationTexture = null;
+            _lastCamera = cameraData.camera;
+        }
+
+        if (effect == null || !effect.IsActive())
+        {
             return;
         }
 
