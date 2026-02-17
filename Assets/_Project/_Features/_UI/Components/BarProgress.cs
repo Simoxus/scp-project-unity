@@ -1,16 +1,21 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class BarProgress : MonoBehaviour
 {
     private GameObject[] bars; // array for the bars
 
-    void Awake()
+    private void Awake()
     {
+        InitializeBars();
+    }
+
+    private void InitializeBars()
+    {
+        if (bars != null) return;
+
         // Get all children and store them in an array
         bars = new GameObject[transform.childCount];
-
         for (int i = 0; i < transform.childCount; i++)
         {
             bars[i] = transform.GetChild(i).gameObject;
@@ -20,19 +25,31 @@ public class BarProgress : MonoBehaviour
     // Get progress from 0 to 1
     public float GetProgress()
     {
-        int activeBars = bars.Count(b => b.activeSelf);
+        InitializeBars();
+
+        if (bars == null || bars.Length == 0) return 0f;
+
+        int activeBars = bars.Count(b => b != null && b.activeSelf);
         return (float)activeBars / bars.Length;
     }
 
     // Get progress by bar count
     public int GetProgressBars()
     {
-        return bars.Count(b => b.activeSelf);
+        InitializeBars();
+
+        if (bars == null || bars.Length == 0) return 0;
+
+        return bars.Count(b => b != null && b.activeSelf);
     }
 
     // Set progress from 0 to 1
     public void SetProgress(float progress)
     {
+        InitializeBars();
+
+        if (bars == null || bars.Length == 0) return;
+
         progress = Mathf.Clamp01(progress);
         int activeBars = Mathf.RoundToInt(progress * bars.Length);
         UpdateBars(activeBars);
@@ -41,6 +58,10 @@ public class BarProgress : MonoBehaviour
     // Set progress by bar count
     public void SetProgressBars(int count)
     {
+        InitializeBars();
+
+        if (bars == null || bars.Length == 0) return;
+
         count = Mathf.Clamp(count, 0, bars.Length);
         UpdateBars(count);
     }
@@ -49,7 +70,7 @@ public class BarProgress : MonoBehaviour
     {
         for (int i = bars.Length - 1; i >= activeCount; i--)
         {
-            if (bars[i].activeSelf)
+            if (bars[i] != null && bars[i].activeSelf)
             {
                 bars[i].SetActive(false);
             }
@@ -57,7 +78,7 @@ public class BarProgress : MonoBehaviour
 
         for (int i = 0; i < activeCount; i++)
         {
-            if (!bars[i].activeSelf)
+            if (bars[i] != null && !bars[i].activeSelf)
             {
                 bars[i].SetActive(true);
             }

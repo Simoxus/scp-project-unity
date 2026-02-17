@@ -9,4 +9,9 @@ public class AudioData_UI : ScriptableObject
     public EventReference PressFailSound;
     public EventReference PressTooltipSound;
     public EventReference SliderSnapSound;
+
+    [Header("Saving/Loading")]
+    public EventReference SaveSound;
+    public EventReference LoadSound;
+    public EventReference ShitHiderSound;
 }

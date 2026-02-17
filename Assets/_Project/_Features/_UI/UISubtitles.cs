@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class UISubtitles : MonoBehaviour
 {
+    public static bool SubtitlesEnabled { get; set; } = true;
+
     [Space]
     public CanvasGroup canvasGroup;
     public RectTransform linesContainer;
@@ -115,28 +117,54 @@ public class UISubtitles : MonoBehaviour
             });
     }
 
+    public void SetSubtitlesEnabled(bool enabled, bool clearExisting = true)
+    {
+        SubtitlesEnabled = enabled;
+
+        if (!enabled && clearExisting)
+        {
+            Clear();
+        }
+    }
+
     public void ShowSubtitle(string message, float duration = 3f, string speaker = null)
     {
-        if (string.IsNullOrEmpty(message)) return;
+        if (!SubtitlesEnabled || string.IsNullOrEmpty(message)) return;
         CreateSubtitleLine(message, duration, false, null, null, speaker);
     }
 
     public int ShowSubtitleWithHandle(string message, float duration = 3f, string speaker = null)
     {
-        if (string.IsNullOrEmpty(message)) return -1;
+        if (!SubtitlesEnabled || string.IsNullOrEmpty(message)) return -1;
         return CreateSubtitleLineWithHandle(message, duration, false, null, null, speaker);
     }
 
     public void ShowLocalizedSubtitle(string tableName, string key, float duration = 3f, string speaker = null)
     {
-        if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(key)) return;
+        if (!SubtitlesEnabled || string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(key)) return;
         CreateSubtitleLine(null, duration, true, tableName, key, speaker);
     }
 
     public int ShowLocalizedSubtitleWithHandle(string tableName, string key, float duration = 3f, string speaker = null)
     {
-        if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(key)) return -1;
+        if (!SubtitlesEnabled || string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(key)) return -1;
         return CreateSubtitleLineWithHandle(null, duration, true, tableName, key, speaker);
+    }
+
+    public void ShowSubtitleForSound(string message, FMOD.Studio.EventInstance soundEvent, string speaker = null)
+    {
+        if (!SubtitlesEnabled || string.IsNullOrEmpty(message)) return;
+        float duration = GetSoundDuration(soundEvent);
+        if (duration <= 0f) duration = 3f;
+        ShowSubtitle(message, duration, speaker);
+    }
+
+    public void ShowLocalizedSubtitleForSound(string tableName, string key, FMOD.Studio.EventInstance soundEvent, string speaker = null)
+    {
+        if (!SubtitlesEnabled || string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(key)) return;
+        float duration = GetSoundDuration(soundEvent);
+        if (duration <= 0f) duration = 3f;
+        ShowLocalizedSubtitle(tableName, key, duration, speaker);
     }
 
     public void RemoveSubtitle(int handle)
@@ -155,22 +183,6 @@ public class UISubtitles : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void ShowSubtitleForSound(string message, FMOD.Studio.EventInstance soundEvent, string speaker = null)
-    {
-        if (string.IsNullOrEmpty(message)) return;
-        float duration = GetSoundDuration(soundEvent);
-        if (duration <= 0f) duration = 3f;
-        ShowSubtitle(message, duration, speaker);
-    }
-
-    public void ShowLocalizedSubtitleForSound(string tableName, string key, FMOD.Studio.EventInstance soundEvent, string speaker = null)
-    {
-        if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(key)) return;
-        float duration = GetSoundDuration(soundEvent);
-        if (duration <= 0f) duration = 3f;
-        ShowLocalizedSubtitle(tableName, key, duration, speaker);
     }
 
     public void Clear()
