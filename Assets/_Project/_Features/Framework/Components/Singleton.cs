@@ -2,6 +2,8 @@
 
 public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
+    protected virtual bool PersistAcrossScenes => false;
+
     private static T _instance;
     private static readonly object _lock = new object();
     private static bool _applicationIsQuitting = false;
@@ -20,10 +22,6 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 if (_instance == null)
                 {
                     _instance = FindAnyObjectByType<T>();
-                    if (_instance == null)
-                    {
-                        Log.VerboseWarning($"No instance of {typeof(T)} found in scene.");
-                    }
                 }
                 return _instance;
             }
@@ -34,12 +32,16 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
-            Log.VerboseWarning($"Duplicate instance of {GetType().Name} found. Destroying the new one.");
             Destroy(gameObject);
             return;
         }
 
         _instance = this as T;
+
+        if (PersistAcrossScenes)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
 
         OnSingletonAwake();
     }

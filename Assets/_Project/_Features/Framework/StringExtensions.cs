@@ -23,6 +23,12 @@ public static class StringExtensions
     public static string AsSuccess(this string text, bool verbose = false, bool consoleColors = false)
         => text.Color(consoleColors ? ColorScheme.ConsoleSuccess : ColorScheme.Success, verbose);
 
+    public static string AsStatus(this string text, bool verbose = false, bool consoleColors = false)
+        => text.Color(consoleColors ? ColorScheme.ConsoleStatus : ColorScheme.Status, verbose);
+
+    public static string AsDuration(this string text, bool verbose = false, bool consoleColors = false)
+        => text.Color(consoleColors ? ColorScheme.ConsoleDuration : ColorScheme.Duration, verbose);
+
     public static string AsInput(this string text, bool verbose = false, bool consoleColors = false)
         => text.Color(ColorScheme.Input, verbose);
 
