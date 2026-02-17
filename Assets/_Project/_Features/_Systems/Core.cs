@@ -22,6 +22,7 @@ public static class Core
     private static FacilityManager _facilityManager;
     private static GameManager _gameManager;
     private static HintManager _hintManager;
+    private static LoadingManager _loadingManager;
     private static ModManager _modManager;
     private static MusicManager _musicManager;
     private static ProgressManager _progressManager;
@@ -30,13 +31,11 @@ public static class Core
 
     private static bool _hasSubscribedToSceneEvents = false;
     private static bool _isQuitting = false;
-    private static bool _isChangingScenes = false;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void Initialize()
     {
         _isQuitting = false;
-        _isChangingScenes = false;
         Application.quitting += OnApplicationQuitting;
     }
 
@@ -47,14 +46,10 @@ public static class Core
             try
             {
                 field = getInstance();
-                if (field == null && !_isChangingScenes)
-                {
-                    Log.VerboseWarning($"Core: {managerName} not found in scene.");
-                }
             }
             catch (NullReferenceException ex)
             {
-                Log.Editor($"Core: NullReferenceException accessing {managerName} during shutdown: {ex.Message}");
+                Log.Editor($"NullReferenceException accessing {managerName} during shutdown: {ex.Message}");
             }
         }
         return field;
@@ -67,14 +62,10 @@ public static class Core
             try
             {
                 field = loader();
-                if (field == null && !_isChangingScenes)
-                {
-                    Log.VerboseWarning($"Core: {accessorName} could not be loaded.");
-                }
             }
             catch (Exception ex)
             {
-                Log.Error($"Core: Error loading {accessorName}: {ex.Message}");
+                Log.Error($"Error loading {accessorName}: {ex.Message}");
             }
         }
         return field;
@@ -100,15 +91,10 @@ public static class Core
                             _player = playerObject.GetComponent<Player>();
                         }
                     }
-
-                    if (_player == null && !_isChangingScenes)
-                    {
-                        Log.VerboseWarning("Core: Could not find Player instance in scene.");
-                    }
                 }
                 catch (NullReferenceException ex)
                 {
-                    Log.Editor($"Core: NullReferenceException accessing Player during shutdown: {ex.Message}");
+                    Log.Editor($"NullReferenceException accessing Player during shutdown: {ex.Message}");
                 }
             }
 
@@ -129,6 +115,7 @@ public static class Core
     public static FacilityManager FacilityManager => GetOrCreateManager(ref _facilityManager, () => FacilityManager.Instance, "FacilityManager");
     public static GameManager GameManager => GetOrCreateManager(ref _gameManager, () => GameManager.Instance, "GameManager");
     public static HintManager HintManager => GetOrCreateManager(ref _hintManager, () => HintManager.Instance, "HintManager");
+    public static LoadingManager LoadingManager => GetOrCreateManager(ref _loadingManager, () => LoadingManager.Instance, "LoadingManager");
     public static ModManager ModManager => GetOrCreateManager(ref _modManager, () => ModManager.Instance, "ModManager");
     public static MusicManager MusicManager => GetOrCreateManager(ref _musicManager, () => MusicManager.Instance, "MusicManager");
     public static PersistenceManager PersistenceManager => GetOrCreateManager(ref _persistenceManager, () => PersistenceManager.Instance, "PersistenceManager");
@@ -169,20 +156,13 @@ public static class Core
         if (!_hasSubscribedToSceneEvents)
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
             _hasSubscribedToSceneEvents = true;
         }
     }
 
     private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        _isChangingScenes = false;
         ClearCache();
-    }
-
-    private static void OnSceneUnloaded(Scene scene)
-    {
-        _isChangingScenes = true;
     }
 
     private static void OnApplicationQuitting()
