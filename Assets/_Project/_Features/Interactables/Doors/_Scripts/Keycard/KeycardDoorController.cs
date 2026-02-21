@@ -22,14 +22,14 @@ public class KeycardDoorController : BaseDoorController
 
     protected override void OnApplyLockedVisuals(Color color, string message)
     {
-        if (doorActivator1 != null)
+        if (doorActivator1 != null && doorActivator1.KeycardVisual != null)
         {
             doorActivator1.KeycardVisual.ToggleLogo(false);
             doorActivator1.KeycardVisual.ToggleText(true);
             doorActivator1.KeycardVisual.ChangeScreenText(message);
             doorActivator1.KeycardVisual.ChangeScreenColor(color, true);
         }
-        if (doorActivator2 != null)
+        if (doorActivator2 != null && doorActivator2.KeycardVisual != null)
         {
             doorActivator2.KeycardVisual.ToggleLogo(false);
             doorActivator2.KeycardVisual.ToggleText(true);
@@ -42,14 +42,14 @@ public class KeycardDoorController : BaseDoorController
     {
         string brokenMessage = "-- CODE 4 --\nTechnician dispatched";
 
-        if (doorActivator1 != null)
+        if (doorActivator1 != null && doorActivator1.KeycardVisual != null)
         {
             doorActivator1.KeycardVisual.ToggleLogo(false);
             doorActivator1.KeycardVisual.ToggleText(true);
             doorActivator1.KeycardVisual.ChangeScreenColor(color, true);
             doorActivator1.KeycardVisual.ChangeScreenText(brokenMessage);
         }
-        if (doorActivator2 != null)
+        if (doorActivator2 != null && doorActivator2.KeycardVisual != null)
         {
             doorActivator2.KeycardVisual.ToggleLogo(false);
             doorActivator2.KeycardVisual.ToggleText(true);
@@ -60,13 +60,13 @@ public class KeycardDoorController : BaseDoorController
 
     protected override void OnResetActivatorVisuals(Color color)
     {
-        if (doorActivator1 != null)
+        if (doorActivator1 != null && doorActivator1.KeycardVisual != null)
         {
             doorActivator1.KeycardVisual.ToggleLogo(true);
             doorActivator1.KeycardVisual.ToggleText(false);
             doorActivator1.KeycardVisual.ChangeScreenColor(color, true, 0.4f);
         }
-        if (doorActivator2 != null)
+        if (doorActivator2 != null && doorActivator2.KeycardVisual != null)
         {
             doorActivator2.KeycardVisual.ToggleLogo(true);
             doorActivator2.KeycardVisual.ToggleText(false);

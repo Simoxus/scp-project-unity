@@ -142,7 +142,20 @@ namespace Facility.Generation
 
         private void DetermineSeed()
         {
-            if (useRandomSeed)
+            // First check if there's a seed from the main menu (PlayerPrefs)
+            string menuSeed = PlayerPrefs.GetString("MapSeed", null);
+            if (!string.IsNullOrWhiteSpace(menuSeed))
+            {
+                // Use the seed from main menu
+                seedString = menuSeed;
+                numericSeed = FG_SeedUtility.ConvertToNumericSeed(seedString);
+                Log.Info($"Using seed from main menu '{seedString}' (numeric: {numericSeed})");
+                
+                // Clear the PlayerPrefs so it's not reused on next generation
+                PlayerPrefs.DeleteKey("MapSeed");
+                PlayerPrefs.Save();
+            }
+            else if (useRandomSeed)
             {
                 numericSeed = FG_SeedUtility.GenerateRandomNumericSeed();
                 seedString = numericSeed.ToString();
@@ -310,6 +323,176 @@ namespace Facility.Generation
             Log.Status("Facility generation complete!");
             Log.Duration($"Generation took {_totalTimer.Elapsed.TotalSeconds} seconds", (float)_totalTimer.Elapsed.TotalMilliseconds, settings.GenerationRecommendedTime);
             _totalTimer.Stop();
+
+            // Spawn player at start room
+            SpawnPlayerAtStart();
+        }
+
+        private void SpawnPlayerAtStart()
+        {
+            UnityEngine.Debug.Log("[FacilityGenerator] SpawnPlayerAtStart called");
+            
+            if (_startRoomCell == null)
+            {
+                UnityEngine.Debug.LogWarning("[FacilityGenerator] Cannot spawn player: _startRoomCell is null");
+                FallbackSpawnPlayer();
+                return;
+            }
+            
+            if (_startRoomCell.assignedRoom == null)
+            {
+                UnityEngine.Debug.LogWarning("[FacilityGenerator] Cannot spawn player: _startRoomCell.assignedRoom is null");
+                FallbackSpawnPlayer();
+                return;
+            }
+
+            // Find the IntroSequence in the start room
+            var startRoomInstance = GetRoomInstanceAtCell(_startRoomCell);
+            if (startRoomInstance == null)
+            {
+                UnityEngine.Debug.LogWarning("[FacilityGenerator] Cannot spawn player: Start room instance not found");
+                FallbackSpawnPlayer();
+                return;
+            }
+
+            UnityEngine.Debug.Log($"[FacilityGenerator] Found start room: {startRoomInstance.name}");
+
+            // Always teleport player directly for now - skip intro to avoid spawn issues
+            UnityEngine.Debug.Log("[FacilityGenerator] Teleporting player directly to start room");
+            TeleportPlayerToStartRoom(startRoomInstance);
+        }
+
+        private void FallbackSpawnPlayer()
+        {
+            UnityEngine.Debug.Log("[FacilityGenerator] FallbackSpawnPlayer: Attempting to spawn player at first available room");
+            
+            if (Core.Player == null)
+            {
+                UnityEngine.Debug.LogError("[FacilityGenerator] FallbackSpawnPlayer: Core.Player is null! Cannot spawn.");
+                return;
+            }
+
+            // Try to find any room instance
+            if (_roomInstances != null && _roomInstances.Count > 0)
+            {
+                foreach (var kvp in _roomInstances)
+                {
+                    var roomInstance = kvp.Value;
+                    if (roomInstance != null)
+                    {
+                        UnityEngine.Debug.Log($"[FacilityGenerator] FallbackSpawnPlayer: Attempting room {roomInstance.name}");
+                        
+                        // Start high and raycast down to find floor
+                        Vector3 roomCenter = roomInstance.transform.position + Vector3.up * 10f;
+                        Vector3 spawnPos;
+                        
+                        if (Physics.Raycast(roomCenter, Vector3.down, out RaycastHit hit, 30f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                        {
+                            spawnPos = hit.point + Vector3.up * 1.5f;
+                            UnityEngine.Debug.Log($"[FacilityGenerator] FallbackSpawnPlayer: Raycast found floor at {hit.point}");
+                        }
+                        else
+                        {
+                            spawnPos = roomInstance.transform.position + Vector3.up * 2f;
+                            UnityEngine.Debug.Log($"[FacilityGenerator] FallbackSpawnPlayer: No floor found, using {spawnPos}");
+                        }
+                        
+                        if (Core.Player.CharacterController != null)
+                        {
+                            Core.Player.CharacterController.enabled = false;
+                            Core.Player.transform.position = spawnPos;
+                            Core.Player.CharacterController.enabled = true;
+                        }
+                        else
+                        {
+                            Core.Player.transform.position = spawnPos;
+                        }
+                        
+                        UnityEngine.Debug.Log($"[FacilityGenerator] Player spawned at {spawnPos}");
+                        return;
+                    }
+                }
+            }
+
+            // Ultimate fallback - spawn at origin
+            UnityEngine.Debug.LogWarning("[FacilityGenerator] FallbackSpawnPlayer: No rooms found, spawning at origin");
+            if (Core.Player.CharacterController != null)
+            {
+                Core.Player.CharacterController.enabled = false;
+                Core.Player.transform.position = Vector3.up * 2f;
+                Core.Player.CharacterController.enabled = true;
+            }
+            else
+            {
+                Core.Player.transform.position = Vector3.up * 2f;
+            }
+        }
+
+        private void TeleportPlayerToStartRoom(RoomInstance startRoom)
+        {
+            UnityEngine.Debug.Log($"[FacilityGenerator] TeleportPlayerToStartRoom: {startRoom?.name ?? "null"}");
+            
+            if (Core.Player == null)
+            {
+                UnityEngine.Debug.LogError("[FacilityGenerator] Cannot teleport player: Core.Player is null!");
+                return;
+            }
+
+            // Try to find a spawn point in the start room
+            var spawnPoint = startRoom.GetSpawnPoint(SpawnType.Player);
+            Vector3 spawnPosition;
+            Quaternion spawnRotation;
+
+            if (spawnPoint != null)
+            {
+                spawnPosition = spawnPoint.transform.position;
+                spawnRotation = spawnPoint.transform.rotation;
+                UnityEngine.Debug.Log($"[FacilityGenerator] Using spawn point at {spawnPosition}");
+            }
+            else
+            {
+                // Fallback to room center with raycast to find floor
+                Vector3 roomCenter = startRoom.transform.position + Vector3.up * 5f;
+                
+                // Raycast down to find the floor
+                if (Physics.Raycast(roomCenter, Vector3.down, out RaycastHit hit, 20f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                {
+                    spawnPosition = hit.point + Vector3.up * 1.5f;
+                    UnityEngine.Debug.Log($"[FacilityGenerator] Raycast found floor at {hit.point}, spawning at {spawnPosition}");
+                }
+                else
+                {
+                    // Ultimate fallback
+                    spawnPosition = startRoom.transform.position + Vector3.up * 2f;
+                    UnityEngine.Debug.Log($"[FacilityGenerator] No floor found via raycast, using fallback at {spawnPosition}");
+                }
+                spawnRotation = startRoom.transform.rotation;
+            }
+
+            // Teleport player
+            if (Core.Player.CharacterController != null)
+            {
+                Core.Player.CharacterController.enabled = false;
+                Core.Player.transform.position = spawnPosition;
+                Core.Player.transform.rotation = spawnRotation;
+                Core.Player.CharacterController.enabled = true;
+            }
+            else
+            {
+                Core.Player.transform.position = spawnPosition;
+                Core.Player.transform.rotation = spawnRotation;
+            }
+            
+            UnityEngine.Debug.Log($"[FacilityGenerator] Player teleported to {spawnPosition}");
+
+            Log.Info($"Player teleported to start room at {spawnPosition}");
+        }
+
+        private RoomInstance GetRoomInstanceAtCell(GridCell cell)
+        {
+            if (cell == null) return null;
+            _roomInstances.TryGetValue(cell.position, out var instance);
+            return instance;
         }
 
         [ContextMenu("Clear Facility")]

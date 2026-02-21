@@ -1,6 +1,7 @@
 ﻿using TriInspector;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [ExecuteAlways]
 [RequireComponent(typeof(Renderer))]
@@ -176,14 +177,24 @@ public class LightBeamSettings : MonoBehaviour
         Material mat = _beamMeshRenderer.sharedMaterial;
         if (mat == null) return;
 
-        if (texture) mat.EnableKeyword("USE_TEXTURE");
-        else mat.DisableKeyword("USE_TEXTURE");
+        // Check if the shader is valid (not the internal error shader)
+        if (mat.shader == null || mat.shader.name == "Hidden/InternalErrorShader")
+            return;
 
-        if (noise) mat.EnableKeyword("USE_NOISE");
-        else mat.DisableKeyword("USE_NOISE");
-
-        if (dust) mat.EnableKeyword("USE_DUST");
-        else mat.DisableKeyword("USE_DUST");
+        // Use SetKeyword with LocalKeyword for proper keyword space handling
+        var shader = mat.shader;
+        
+        var textureKeyword = shader.keywordSpace.FindKeyword("USE_TEXTURE");
+        if (textureKeyword.isValid)
+            mat.SetKeyword(textureKeyword, texture);
+        
+        var noiseKeyword = shader.keywordSpace.FindKeyword("USE_NOISE");
+        if (noiseKeyword.isValid)
+            mat.SetKeyword(noiseKeyword, noise);
+        
+        var dustKeyword = shader.keywordSpace.FindKeyword("USE_DUST");
+        if (dustKeyword.isValid)
+            mat.SetKeyword(dustKeyword, dust);
     }
 
     private void OnValidate()
