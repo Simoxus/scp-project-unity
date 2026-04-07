@@ -5,8 +5,8 @@ public static class Log
 {
     // percentage
     private const int HEADER_SIZE = 110;
-    private const int VERBOSE_HEADER_SIZE = 90;
-    private const int VERBOSE_SIZE = 85;
+    private const int VERBOSE_HEADER_SIZE = 85;
+    private const int VERBOSE_SIZE = 80;
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
     public static bool VerboseEnabled { get; set; } = true;
@@ -14,102 +14,141 @@ public static class Log
     public static bool VerboseEnabled { get; set; } = false;
 #endif
 
+    private static bool _isQuitting = false;
+
+    [RuntimeInitializeOnLoadMethod]
+    private static void Init()
+    {
+        Application.quitting += () => _isQuitting = true;
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static string Punctuate(object message)
+    {
+        string text = message.ToString();
+        if (text.Length == 0) return text;
+
+        char last = text[^1];
+
+        if (text.EndsWith("..."))
+        {
+            return text;
+        }
+
+        if (last is '.' or '!' or '?' or ':' or ';')
+        {
+            return text;
+        }
+
+        return text + '.';
+    }
+
     #region Regular logging
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Header(object message)
     {
-        Debug.Log($"<size={HEADER_SIZE}%><u>{message.ToString()}</size></u>".AsHeader(consoleColors: true));
+        Debug.Log($"<size={HEADER_SIZE}%><b><u>{message}</size></u></b>".AsHeader(consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Info(object message)
     {
-        Debug.Log(message.ToString().AsInfo(consoleColors: true));
+        Debug.Log(Punctuate(message).AsInfo(consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Info(object message, Object context)
     {
-        Debug.Log(message.ToString().AsInfo(consoleColors: true), context);
+        Debug.Log(Punctuate(message).AsInfo(consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Warning(object message)
     {
-        Debug.LogWarning(message.ToString().AsWarning(consoleColors: true));
+        Debug.LogWarning(Punctuate(message).AsWarning(consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Warning(object message, Object context)
     {
-        Debug.LogWarning(message.ToString().AsWarning(consoleColors: true), context);
+        Debug.LogWarning(Punctuate(message).AsWarning(consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Error(object message)
     {
-        Debug.LogError(message.ToString().AsError(consoleColors: true));
+        Debug.LogError(Punctuate(message).AsError(consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Error(object message, Object context)
     {
-        Debug.LogError(message.ToString().AsError(consoleColors: true), context);
+        Debug.LogError(Punctuate(message).AsError(consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Success(object message)
     {
-        Debug.Log(message.ToString().AsSuccess(consoleColors: true));
+        Debug.Log(Punctuate(message).AsSuccess(consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Success(object message, Object context)
     {
-        Debug.Log(message.ToString().AsSuccess(consoleColors: true), context);
+        Debug.Log(Punctuate(message).AsSuccess(consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Status(object message)
     {
-        Debug.Log($"[STATUS] {message}".AsStatus(consoleColors: true));
+        Debug.Log($"<b>[STATUS]</b> {message}".AsStatus(consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Status(object message, Object context)
     {
-        Debug.Log($"[STATUS] {message}".AsStatus(consoleColors: true), context);
+        Debug.Log($"<b>[STATUS]</b> {message}".AsStatus(consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Duration(object message, float actualTime = 0, float recommendedTime = 0)
+    public static void Duration(object message)
     {
-        bool overBudget = false;
-        if (actualTime != 0 && recommendedTime != 0)
-        {
-            overBudget = actualTime > recommendedTime;
-        }
-
-        string log = $"[STATUS: DURATION] {message}";
-        Debug.Log(overBudget
-            ? log.AsWarning(verbose: true, consoleColors: true)
-            : log.AsDuration(verbose: true, consoleColors: true));
+        Debug.Log($"<b>[DURATION]</b> {Punctuate(message)}".AsDuration(consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Duration(object message, Object context, float actualTime = 0, float recommendedTime = 0)
+    public static void Duration(object message, Object context)
     {
-        bool overBudget = false;
-        if (actualTime != 0 && recommendedTime != 0)
-        {
-            overBudget = actualTime > recommendedTime;
-        }
+        Debug.Log($"<b>[DURATION]</b> {Punctuate(message)}".AsDuration(consoleColors: true), context);
+    }
 
-        string log = $"[STATUS: DURATION] {message}";
-        Debug.Log(overBudget
-            ? log.AsWarning(verbose: true, consoleColors: true)
-            : log.AsDuration(verbose: true, consoleColors: true), context);
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Exception(string message, string header = null)
+    {
+        if (_isQuitting) return;
+        string label = header != null ? $"EXCEPTION: {header.ToUpper()}" : "EXCEPTION";
+        Debug.Log($"<b>[{label}]</b> {Punctuate(message)}".AsException(consoleColors: true));
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Exception(System.Exception exception, string message = null, string header = null)
+    {
+        if (_isQuitting) return;
+        string text = message != null ? Punctuate(message) : Punctuate(exception.Message);
+        string label = header ?? exception.GetType().Name.ToUpper();
+        string formatted = label == "EXCEPTION" ? "EXCEPTION" : $"EXCEPTION: {label}";
+        Debug.Log($"<b>[{formatted}]</b> {text}\n{exception.StackTrace}".AsException(consoleColors: true));
+    }
+
+    [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Exception(System.Exception exception, Object context, string message = null, string header = null)
+    {
+        if (_isQuitting) return;
+        string text = message != null ? Punctuate(message) : Punctuate(exception.Message);
+        string label = header ?? exception.GetType().Name.ToUpper();
+        string formatted = label == "EXCEPTION" ? "EXCEPTION" : $"EXCEPTION: {label}";
+        Debug.Log($"<b>[{formatted}]</b> {text}\n{exception.StackTrace}".AsException(consoleColors: true), context);
     }
 
     #endregion
@@ -120,97 +159,77 @@ public static class Log
     public static void VerboseHeader(object message)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"<size={VERBOSE_HEADER_SIZE}%><u>[VERBOSE] {message.ToString()}</size></u>".AsHeader(verbose: true, consoleColors: true));
+        Debug.Log($"<size={VERBOSE_HEADER_SIZE}%><b><u>[VERBOSE]</b> {message}</size></u>".AsHeader(verbose: true, consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseInfo(object message)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".ToString().AsInfo(verbose: true, consoleColors: true));
+        Debug.Log($"<size={VERBOSE_SIZE}%><b>[VERBOSE]</b> {Punctuate(message)}</size>".AsInfo(verbose: true, consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseInfo(object message, Object context)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".ToString().AsInfo(verbose: true, consoleColors: true), context);
+        Debug.Log($"<size={VERBOSE_SIZE}%><b>[VERBOSE]</b> {Punctuate(message)}</size>".AsInfo(verbose: true, consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseWarning(object message)
     {
         if (!VerboseEnabled) return;
-        Debug.LogWarning($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".AsWarning(verbose: true, consoleColors: true));
+        Debug.LogWarning($"<size={VERBOSE_SIZE}%><b>[VERBOSE]</b> {Punctuate(message)}</size>".AsWarning(verbose: true, consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseWarning(object message, Object context)
     {
         if (!VerboseEnabled) return;
-        Debug.LogWarning($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".AsWarning(verbose: true, consoleColors: true), context);
+        Debug.LogWarning($"<size={VERBOSE_SIZE}%><b>[VERBOSE]</b> {Punctuate(message)}</size>".AsWarning(verbose: true, consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseSuccess(object message)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".AsSuccess(verbose: true, consoleColors: true));
+        Debug.Log($"<size={VERBOSE_SIZE}%><b>[VERBOSE]</b> {Punctuate(message)}</size>".AsSuccess(verbose: true, consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseSuccess(object message, Object context)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] {message}</size>".AsSuccess(verbose: true, consoleColors: true), context);
+        Debug.Log($"<size={VERBOSE_SIZE}%><b>[VERBOSE]</b> {Punctuate(message)}</size>".AsSuccess(verbose: true, consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseStatus(object message)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] [STATUS] {message}</size>".AsStatus(verbose: true, consoleColors: true));
+        Debug.Log($"<size={VERBOSE_SIZE}%><b>[VERBOSE] [STATUS]</b> {message}</size>".AsStatus(verbose: true, consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void VerboseStatus(object message, Object context)
     {
         if (!VerboseEnabled) return;
-        Debug.Log($"<size={VERBOSE_SIZE}%>[VERBOSE] [STATUS] {message}</size>".AsStatus(verbose: true, consoleColors: true), context);
+        Debug.Log($"<size={VERBOSE_SIZE}%><b>[VERBOSE] [STATUS]</b> {message}</size>".AsStatus(verbose: true, consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void VerboseDuration(object message, float actualTime = 0, float recommendedTime = 0)
+    public static void VerboseDuration(object message)
     {
         if (!VerboseEnabled) return;
-
-        bool overBudget = false;
-        if (actualTime != 0 && recommendedTime != 0)
-        {
-            overBudget = actualTime > recommendedTime;
-        }
-
-        string log = $"<size={VERBOSE_SIZE}%>[VERBOSE] [STATUS: DURATION] {message}</size>";
-        Debug.Log(overBudget
-            ? log.AsWarning(verbose: true, consoleColors: true)
-            : log.AsDuration(verbose: true, consoleColors: true));
+        Debug.Log($"<size={VERBOSE_SIZE}%><b>[VERBOSE] [DURATION]</b> {Punctuate(message)}</size>".AsDuration(verbose: true, consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void VerboseDuration(object message, Object context, float actualTime = 0, float recommendedTime = 0)
+    public static void VerboseDuration(object message, Object context)
     {
         if (!VerboseEnabled) return;
-
-        bool overBudget = false;
-        if (actualTime != 0 && recommendedTime != 0)
-        {
-            overBudget = actualTime > recommendedTime;
-        }
-
-        string log = $"<size={VERBOSE_SIZE}%>[VERBOSE] [STATUS: DURATION] {message}</size>";
-        Debug.Log(overBudget
-            ? log.AsWarning(verbose: true, consoleColors: true)
-            : log.AsDuration(verbose: true, consoleColors: true), context);
+        Debug.Log($"<size={VERBOSE_SIZE}%><b>[VERBOSE] [DURATION]</b> {Punctuate(message)}</size>".AsDuration(verbose: true, consoleColors: true), context);
     }
 
     #endregion
@@ -221,28 +240,28 @@ public static class Log
     public static void InfoIf(bool condition, object message)
     {
         if (!condition) return;
-        Debug.Log(message.ToString().AsInfo(consoleColors: true));
+        Debug.Log(Punctuate(message).AsInfo(consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void InfoIf(bool condition, object message, Object context)
     {
         if (!condition) return;
-        Debug.Log(message.ToString().AsInfo(consoleColors: true), context);
+        Debug.Log(Punctuate(message).AsInfo(consoleColors: true), context);
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void WarningIf(bool condition, object message)
     {
         if (!condition) return;
-        Debug.LogWarning(message.ToString().AsWarning(consoleColors: true));
+        Debug.LogWarning(Punctuate(message).AsWarning(consoleColors: true));
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void WarningIf(bool condition, object message, Object context)
     {
         if (!condition) return;
-        Debug.LogWarning(message.ToString().AsWarning(consoleColors: true), context);
+        Debug.LogWarning(Punctuate(message).AsWarning(consoleColors: true), context);
     }
 
     #endregion
@@ -254,7 +273,7 @@ public static class Log
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
     public static void Editor(object message)
     {
-        Debug.Log($"[EDITOR] {message}".ToString().AsEditor());
+        Debug.Log($"[EDITOR] {Punctuate(message)}".AsEditor());
     }
 
     [HideInCallstack, MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -262,7 +281,7 @@ public static class Log
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
     public static void Editor(object message, Object context)
     {
-        Debug.Log($"[EDITOR] {message}".ToString().AsEditor(), context);
+        Debug.Log($"[EDITOR] {Punctuate(message)}".AsEditor(), context);
     }
 
     #endregion
