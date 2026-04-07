@@ -22,12 +22,11 @@ MonoBehaviour:
   roomName: HCZ Tunnels
   description: 
   roomLayout: 1
-  isRequired: 0
-  isUnique: 0
+  isRequired: 1
+  isUnique: 1
   spawnWeight: 1
   isLarge: 0
-  roomSize: {x: 1, y: 1}
-  anchorOffset: {x: 0, y: 0}
+  expandRelativeToOrigin: []
   hasCustomOffset: 0
   roomOffset: {x: 0, y: 0, z: 0}
   rotationOffset: 0
@@ -35,14 +34,24 @@ MonoBehaviour:
   defaultExitEast: 0
   defaultExitSouth: 1
   defaultExitWest: 0
-  hasCustomAmbience: 0
-  customAmbienceAudio:
+  hasCustomMusic: 0
+  customMusic:
     Guid:
       Data1: 0
       Data2: 0
       Data3: 0
       Data4: 0
     Path: 
+  hasCustomAmbientLoop: 0
+  customAmbientLoop:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  minPlayInterval: 30
+  maxPlayInterval: 90
   hasCustomFog: 0
   customFogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   customFogFadeTime: 2

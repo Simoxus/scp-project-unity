@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b2ae528fa33db46a1da62d63feed7d, type: 3}
+  m_Name: _FacilityGeneratorSettings
+  m_EditorClassIdentifier: 
+  zones:
+  - zoneLocation: 3
+    zoneName: Light Containment Zone
+    startRow: 0
+    endRow: 6
+    roomPool: {fileID: 11400000, guid: d8f51dc5b22be924f8630ee678a58791, type: 2}
+    doorPool: {fileID: 11400000, guid: 6c6c9f77ada74ca4cbd5f66d593560b1, type: 2}
+    zoneMusic:
+      Guid:
+        Data1: 1483203111
+        Data2: 1093612993
+        Data3: 622295949
+        Data4: 1586527578
+      Path: event:/Music/Zones/LightContainment
+    zoneAmbientLoop:
+      Guid:
+        Data1: 1596856894
+        Data2: 1294047112
+        Data3: 136673460
+        Data4: 624210804
+      Path: event:/Ambient/Zones/LightContainment
+    minAmbientInterval: 30
+    maxAmbientInterval: 90
+    debugColor: {r: 0.7260754, g: 0.15294117, b: 0.78431374, a: 1}
+  - zoneLocation: 2
+    zoneName: Heavy Containment Zone
+    startRow: 7
+    endRow: 13
+    roomPool: {fileID: 11400000, guid: c3983e4136af04f4e896ba76acf17e3d, type: 2}
+    doorPool: {fileID: 11400000, guid: dacf0606dcae15441bed1f23db0451b0, type: 2}
+    zoneMusic:
+      Guid:
+        Data1: 964318505
+        Data2: 1259804534
+        Data3: -498130262
+        Data4: -144722251
+      Path: event:/Music/Zones/HeavyContainment
+    zoneAmbientLoop:
+      Guid:
+        Data1: -168630600
+        Data2: 1142614790
+        Data3: -931621225
+        Data4: -355366483
+      Path: event:/Ambient/Zones/HeavyContainment
+    minAmbientInterval: 30
+    maxAmbientInterval: 90
+    debugColor: {r: 0.8113208, g: 0.21048418, b: 0.21048418, a: 1}
+  - zoneLocation: 1
+    zoneName: Entrance Zone
+    startRow: 14
+    endRow: 22
+    roomPool: {fileID: 11400000, guid: 426f198490de1054bbe73fdbf8e64f97, type: 2}
+    doorPool: {fileID: 11400000, guid: b98943f62bdd4ca459fe38b80ac7e7cc, type: 2}
+    zoneMusic:
+      Guid:
+        Data1: 528849884
+        Data2: 1081605859
+        Data3: -915853657
+        Data4: -1935555142
+      Path: event:/Music/Zones/Entrance
+    zoneAmbientLoop:
+      Guid:
+        Data1: -300005362
+        Data2: 1231998641
+        Data3: -1536648781
+        Data4: 1898174533
+      Path: event:/Ambient/Zones/Entrance
+    minAmbientInterval: 30
+    maxAmbientInterval: 90
+    debugColor: {r: 1, g: 0.82234174, b: 0.2688679, a: 1}
+  gridWidth: 23
+  gridHeight: 23
+  cellSize: 12.603
+  startingRoom: {fileID: 11400000, guid: 2c8fddb543cb43649b14aabbc42f1d1c, type: 2}
+  startRoomIsolationRows: 0
+  initialHallwayLengthMin: 10
+  initialHallwayLengthMax: 15
+  horizontalHallwayLengthMin: 7
+  horizontalHallwayLengthMax: 15
+  verticalConnectionsMin: 4
+  verticalConnectionsMax: 5
+  verticalHallwayLengthMin: 3
+  verticalHallwayLengthMax: 4
+  minDeadEnds: 5
+  minCorners: 2
+  minCrossroads: 2
+  maxGenerationAttempts: 50
+  maxLayoutIterations: 150
+  allowOverlaps: 1
