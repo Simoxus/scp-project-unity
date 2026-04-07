@@ -1,0 +1,199 @@
+//--------------------------------------------------------------------------------------------------
+// Definitions
+//--------------------------------------------------------------------------------------------------
+
+#pragma enable_d3d11_debug_symbols
+#pragma only_renderers d3d11 playstation xboxone xboxseries vulkan metal switch
+
+#pragma kernel SmokeVolumeMaterial
+
+#define GROUP_SIZE_1D     8
+
+#define LOCALVOLUMETRICFOGFALLOFFMODE_LINEAR (0)
+#define LOCALVOLUMETRICFOGFALLOFFMODE_EXPONENTIAL (1)
+
+//--------------------------------------------------------------------------------------------------
+// Included headers
+//--------------------------------------------------------------------------------------------------
+
+#include "../VolumetricLightingCommon.hlsl"
+
+//--------------------------------------------------------------------------------------------------
+// Inputs & outputs
+//--------------------------------------------------------------------------------------------------
+
+CBUFFER_START(ShaderVariablesSmokeVolume)
+    // float _SmokeCameraFarPlane;
+    float4 _SmokeVolumeParams0; // (windSpeed, counterFlowSpeed, windDirection.xy)
+    float4 _SmokeVolumeParams1; // (tiling, detailNoiseTiling, flatten) 
+CBUFFER_END
+RW_TEXTURE3D(float4, _VBufferDensity); // RGB = sqrt(scattering), A = sqrt(extinction)
+TEXTURE2D(_MaskTexture);
+TEXTURE2D(_InteractiveSmokeMask);
+SAMPLER(s_point_repeat_sampler);
+SAMPLER(s_linear_clamp_sampler);
+SAMPLER(s_linear_repeat_sampler);
+
+//--------------------------------------------------------------------------------------------------
+// Implementation
+//--------------------------------------------------------------------------------------------------
+
+// Make custom function to support both URP 14 and 16
+float ComputeVolumeFadeFactor_Custom(float3 coordNDC, float dist,
+                        float3 rcpPosFaceFade, float3 rcpNegFaceFade, bool invertFade,
+                        float rcpDistFadeLen, float endTimesRcpDistFadeLen, bool exponentialFalloff)
+{
+    float3 posF = Remap10(coordNDC, rcpPosFaceFade, rcpPosFaceFade);
+    float3 negF = Remap01(coordNDC, rcpNegFaceFade, 0);
+    float  dstF = Remap10(dist, rcpDistFadeLen, endTimesRcpDistFadeLen);
+    float  fade = posF.x * posF.y * posF.z * negF.x * negF.y * negF.z;
+
+    // We only apply exponential falloff on the Blend Distance and not Distance Fade
+    if (exponentialFalloff)
+        fade = PositivePow(fade, 2.2);
+
+    fade = dstF * (invertFade ? (1 - fade) : fade);
+
+    return fade;
+}
+
+float ComputeFadeFactor(float3 coordNDC, float distance)
+{
+    bool exponential = uint(_VolumetricMaterialFalloffMode) == LOCALVOLUMETRICFOGFALLOFFMODE_EXPONENTIAL;
+
+    return ComputeVolumeFadeFactor_Custom(
+        coordNDC, distance,
+        _VolumetricMaterialRcpPosFaceFade.xyz,
+        _VolumetricMaterialRcpNegFaceFade.xyz,
+        _VolumetricMaterialInvertFade,
+        _VolumetricMaterialRcpDistFadeLen,
+        _VolumetricMaterialEndTimesRcpDistFadeLen,
+        exponential
+    );
+}
+
+float InverseLerp(float A, float B, float T)
+{
+    return (T - A) / (B - A);
+}
+
+void GetSmokeVolumeData(float3 voxelPositionOS, float3 voxelClipSpace, out float3 albedo, out float extinction)
+{
+    const float windSpeed = _SmokeVolumeParams0.x;
+    const float2 windDir = _SmokeVolumeParams0.zw;
+    const float counterFlowSpeed = _SmokeVolumeParams0.y;
+    const float tiling = _SmokeVolumeParams1.x;
+    const float detailTiling = _SmokeVolumeParams1.y;
+    const float flatten = _SmokeVolumeParams1.z;
+
+    const float3 positionSS = voxelClipSpace;
+    float3 texCoord = saturate(voxelClipSpace * 0.5 + 0.5);
+    float3 uv3 = float3(positionSS.x, texCoord.y * flatten, positionSS.z);
+
+    // extinction = extinction * SAMPLE_TEXTURE3D_LOD(_MaskTexture, s_point_repeat_sampler, texCoord + float3(_Time.x * 2, cos(_Time.x), _Time.x * 0.5), 0).rrr;
+    const float2 uvNoise = windDir.xy * (windSpeed * _Time.x);
+    const float2 detailUVNoise = windDir.xy * (counterFlowSpeed * _Time.x);
+    float maskVal = SAMPLE_TEXTURE2D_LOD(_MaskTexture, s_linear_repeat_sampler, uv3.xz * tiling + uvNoise, 0).r;
+    float detailVal = SAMPLE_TEXTURE2D_LOD(_MaskTexture, s_linear_repeat_sampler, uv3.xz * detailTiling + detailUVNoise, 0).r;
+    float heightShapeNoise = 1 - saturate(InverseLerp(0, maskVal, uv3.y));
+    float finalNoise = InverseLerp(0, detailVal, heightShapeNoise);
+
+    extinction = saturate(finalNoise);
+    albedo = 1;
+
+    // Flip z because smoke mask camera's VP matrix flips z
+    //texCoord.z = 1 - texCoord.z;
+    //float distFromSmoke = 1.0 - SAMPLE_TEXTURE2D_LOD(_InteractiveSmokeMask, s_linear_clamp_sampler, texCoord.xz, 0).r;
+    //float distToNormalized = _SmokeCameraFarPlane / _VolumetricMaterialObbExtents.y;
+    //float delta = (distFromSmoke * distToNormalized - texCoord.y);
+    //if (delta < 0)
+    //{
+    //    extinction = 0;
+    //}
+}
+
+void ComputeVolumetricMaterial(uint2 pixelPos, JitteredRay ray)
+{
+    float t0 = DecodeLogarithmicDepthGeneralized(0, _VBufferDistanceDecodingParams);
+    float de = _VBufferRcpSliceCount; // Log-encoded distance between slices
+
+    for (uint slice = 0; slice < _VBufferSliceCount; slice++)
+    {
+        float e1 = ((float)slice + 0.5) * de + de;
+        float sliceDistance = DecodeLogarithmicDepthGeneralized(e1, _VBufferDistanceDecodingParams);
+        // float dt = t1 - t0;
+        // float t  = t0 + 0.5 * dt;
+
+        uint3 voxelCoord = uint3(pixelPos, slice);
+        float3 voxelCenterWS = ray.originWS + sliceDistance * ray.centerDirWS;
+
+        // Cast local volume
+        float3x3 obbFrame = float3x3(_VolumetricMaterialObbRight.xyz, _VolumetricMaterialObbUp.xyz, cross(_VolumetricMaterialObbRight.xyz, _VolumetricMaterialObbUp.xyz));
+        float3 voxelCenterBS = mul(voxelCenterWS - _VolumetricMaterialObbCenter.xyz, transpose(obbFrame));
+        float3 voxelCenterCS = (voxelCenterBS * rcp(_VolumetricMaterialObbExtents.xyz));
+        bool overlap = Max3(abs(voxelCenterCS.x), abs(voxelCenterCS.y), abs(voxelCenterCS.z)) <= 1;
+
+        if (overlap)
+        {
+            float extinction;
+            float3 albedo;
+            GetSmokeVolumeData(voxelCenterBS, voxelCenterCS, albedo, extinction);
+
+            extinction *= _VolumetricMaterialExtinction;
+            albedo *= _VolumetricMaterialAlbedo.rgb;
+
+            float3 voxelCenterNDC = saturate(voxelCenterCS * 0.5 + 0.5);
+            float fade = ComputeFadeFactor(voxelCenterNDC, sliceDistance);
+
+            // When multiplying fog, we need to handle specifically the blend area to avoid creating gaps in the fog
+        #if defined(FOG_VOLUME_BLENDING_MULTIPLY)
+            _VBufferDensity[voxelCoord] += max(0, lerp(float4(1.0, 1.0, 1.0, 1.0), float4(saturate(albedo * extinction), extinction), fade.xxxx));
+        #else
+            extinction *= fade;
+            _VBufferDensity[voxelCoord] += max(0, float4(saturate(albedo * extinction), extinction));
+        #endif
+        }
+
+        // t0 = t1;
+    }
+}
+
+[numthreads(GROUP_SIZE_1D, GROUP_SIZE_1D, 1)]
+void SmokeVolumeMaterial(uint3 dispatchThreadId : SV_DispatchThreadID)
+{
+    // UNITY_XR_ASSIGN_VIEW_INDEX(dispatchThreadId.z);
+
+    // Reminder: our voxels are sphere-capped right frustums (truncated right pyramids).
+    // The curvature of the front and back faces is quite gentle, so we can use
+    // the right frustum approximation (thus the front and the back faces are squares).
+    // Note, that since we still rely on the perspective camera model, pixels at the center
+    // of the screen correspond to larger solid angles than those at the edges.
+    // Basically, sizes of front and back faces depend on the XY coordinate.
+    // https://www.desmos.com/calculator/i3rkesvidk
+
+    float3 F = GetViewForwardDir();
+    float3 U = GetViewUpDir();
+
+    uint2 pixelPos = dispatchThreadId.xy;
+    float2 centerCoord = pixelPos + float2(0.5, 0.5);
+
+    // Compute a ray direction s.t. ViewSpace(rayDirWS).z = 1.
+    float3 rayDirWS       = mul(-float4(centerCoord, 1, 1), _VBufferCoordToViewDirWS).xyz;  // _VBufferCoordToViewDirWS[unity_StereoEyeIndex]
+    float3 rightDirWS     = cross(rayDirWS, U);
+    float  rcpLenRayDir   = rsqrt(dot(rayDirWS, rayDirWS));
+    float  rcpLenRightDir = rsqrt(dot(rightDirWS, rightDirWS));
+
+    JitteredRay ray;
+    ray.originWS    = GetCurrentViewPosition();
+    ray.centerDirWS = rayDirWS * rcpLenRayDir; // Normalize
+
+    float FdotD = dot(F, ray.centerDirWS);
+    float unitDistFaceSize = _VBufferUnitDepthTexelSpacing * FdotD * rcpLenRayDir;
+
+    ray.xDirDerivWS = rightDirWS * (rcpLenRightDir * unitDistFaceSize); // Normalize & rescale
+    ray.yDirDerivWS = cross(ray.xDirDerivWS, ray.centerDirWS); // Will have the length of 'unitDistFaceSize' by construction
+    // ray.jitterDirWS = ray.centerDirWS;
+    ray.jitterDirWS = normalize(ray.centerDirWS + ray.xDirDerivWS + ray.yDirDerivWS);
+
+    ComputeVolumetricMaterial(pixelPos, ray);
+}
