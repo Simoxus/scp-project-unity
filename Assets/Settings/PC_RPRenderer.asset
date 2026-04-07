@@ -35,7 +35,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    renderPassEvent: 550
+    renderPassEvent: 1000
     shader: {fileID: 4800000, guid: eda8bece8d7cf6049951e2f0f3ea269e, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -67,7 +67,8 @@ MonoBehaviour:
   - {fileID: -401862101991172948}
   - {fileID: 1495119974746153580}
   - {fileID: -5127337404003609090}
-  m_RendererFeatureMap: 9757c7b74f30a22359cc90c06ad1ac74acd41f228c4c6cfa6ce2550fb2bbbf14fe95cafecb09d8b8
+  - {fileID: 6071925053455134333}
+  m_RendererFeatureMap: 9757c7b74f30a22359cc90c06ad1ac74acd41f228c4c6cfa6ce2550fb2bbbf14fe95cafecb09d8b87deefc69aacf4354
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -86,7 +87,7 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 0
-  m_RenderingMode: 1
+  m_RenderingMode: 2
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
   m_DepthAttachmentFormat: 0
@@ -134,6 +135,27 @@ MonoBehaviour:
     BlurQuality: 1
     Falloff: 200
     SampleCount: -1
+--- !u!114 &6071925053455134333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53f8f22c3df675e4ebb7549527109555, type: 3}
+  m_Name: FPVolumetricFog
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  renderPassEvent: 550
+  resources:
+    volumeVoxelizationCS: {fileID: 7200000, guid: dcae1ab958dd06047b691a4f76998d0f, type: 3}
+    volumetricLightingCS: {fileID: 7200000, guid: 633f6c93e531b7649877f1ee6af81206, type: 3}
+    volumetricLightingFilteringCS: {fileID: 7200000, guid: e7c6734610ba8774789df5bebb773484, type: 3}
+    generateMaxZCS: {fileID: 7200000, guid: ef07e1cecfcf17849b9dabc5c283c5d1, type: 3}
+    defaultLocalVolumeShader: {fileID: 7200000, guid: 0661a81e303cf794890df5e603c4f35b, type: 3}
+    resolveMat: {fileID: 2100000, guid: 2acfffc3c62e9b24b813c8247c7ab5b7, type: 2}
 --- !u!114 &8407324860821326937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,5 +170,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    renderPassEvent: 600
+    renderPassEvent: 1000
     shader: {fileID: 4800000, guid: c5470c9dc7e40f641b56f45c898a4a73, type: 3}
