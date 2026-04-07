@@ -13,18 +13,9 @@ public class BuildCleaner : IPreprocessBuildWithReport, IPostprocessBuildWithRep
         if (isDevelopmentBuild) return;
 
         string buildFolder = Path.GetDirectoryName(report.summary.outputPath);
-        string settingsFilePath = Path.Combine(buildFolder, "settings.json");
-        string savesFolderPath = Path.Combine(buildFolder, "Saves");
 
-        if (File.Exists(settingsFilePath))
-        {
-            File.Delete(settingsFilePath);
-        }
-
-        if (Directory.Exists(savesFolderPath))
-        {
-            Directory.Delete(savesFolderPath, true);
-        }
+        DeleteFileIfExists(Path.Combine(buildFolder, "settings.json"));
+        DeleteDirectoryIfExists(Path.Combine(buildFolder, "Saves"));
     }
 
     public void OnPostprocessBuild(BuildReport report)
@@ -33,20 +24,50 @@ public class BuildCleaner : IPreprocessBuildWithReport, IPostprocessBuildWithRep
         if (isDevelopmentBuild) return;
 
         string buildFolder = Path.GetDirectoryName(report.summary.outputPath);
-        string burstFolder = Path.Combine(
-            buildFolder,
-            $"{Path.GetFileNameWithoutExtension(report.summary.outputPath)}_BurstDebugInformation_DoNotShip"
-        );
 
-        if (Directory.Exists(burstFolder))
+        DeleteBurstDebugFolders(buildFolder);
+        DeleteBackupFolders(buildFolder);
+    }
+
+    private static void DeleteBurstDebugFolders(string buildFolder)
+    {
+        var directories = Directory.GetDirectories(buildFolder);
+
+        foreach (var dir in directories)
         {
-            try
+            if (dir.EndsWith("_BurstDebugInformation_DoNotShip"))
             {
-                Directory.Delete(burstFolder, true);
+                DeleteDirectoryIfExists(dir);
             }
-            catch (IOException)
+        }
+    }
+
+    private static void DeleteBackupFolders(string buildFolder)
+    {
+        var directories = Directory.GetDirectories(buildFolder);
+
+        foreach (var dir in directories)
+        {
+            if (dir.EndsWith("_BackUpThisFolder_ButDontShipItWithYourGame"))
             {
+                DeleteDirectoryIfExists(dir);
             }
+        }
+    }
+
+    private static void DeleteFileIfExists(string path)
+    {
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
+
+    private static void DeleteDirectoryIfExists(string path)
+    {
+        if (Directory.Exists(path))
+        {
+            Directory.Delete(path, true);
         }
     }
 }
