@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
@@ -37,31 +38,45 @@ namespace Facility.Generation
         public async UniTask InstantiateRoomsAsync(List<GridCell> occupiedCells)
         {
             _roomInstances.Clear();
-            int instantiatedCount = 0;
-            const int BATCH_SIZE = 10;
 
-            for (int i = 0; i < occupiedCells.Count; i += BATCH_SIZE)
+            var validCells = occupiedCells
+                .Where(c => !c.isBlocked && c.assignedRoom?.RoomPrefabReference != null)
+                .ToList();
+
+            var uniqueRefs = validCells
+                .Select(c => c.assignedRoom.RoomPrefabReference)
+                .GroupBy(r => r.AssetGUID)
+                .Select(g => g.First())
+                .ToList();
+
+            var preloadHandles = uniqueRefs
+                .Where(r => !r.IsValid())
+                .Select(r => r.LoadAssetAsync<GameObject>())
+                .ToList();
+
+            if (preloadHandles.Count > 0)
             {
-                List<UniTask<(Vector2Int pos, RoomInstance instance)>> batchTasks = new List<UniTask<(Vector2Int, RoomInstance)>>();
+                await UniTask.WhenAll(preloadHandles.Select(h => h.Task.AsUniTask()));
+            }
 
-                for (int j = i; j < Mathf.Min(i + BATCH_SIZE, occupiedCells.Count); j++)
+            Log.VerboseInfo($"Preload complete, instantiating {validCells.Count} rooms...");
+
+            var allTasks = validCells
+                .Select(cell =>
                 {
-                    var cell = occupiedCells[j];
-                    if (cell.isBlocked || cell.assignedRoom == null) continue;
-
                     Vector3 worldPos = FG_GridUtility.GridToWorldPosition(cell.position, _settings.CellSize);
-                    batchTasks.Add(InstantiateRoomWithPositionAsync(cell.assignedRoom, worldPos, cell));
-                }
+                    return InstantiateRoomWithPositionAsync(cell.assignedRoom, worldPos, cell);
+                })
+                .ToList();
 
-                var batchResults = await UniTask.WhenAll(batchTasks);
-
-                foreach (var (pos, roomInstance) in batchResults)
+            var results = await UniTask.WhenAll(allTasks);
+            int instantiatedCount = 0;
+            foreach (var (pos, roomInstance) in results)
+            {
+                if (roomInstance != null)
                 {
-                    if (roomInstance != null)
-                    {
-                        _roomInstances[pos] = roomInstance;
-                        instantiatedCount++;
-                    }
+                    _roomInstances[pos] = roomInstance;
+                    instantiatedCount++;
                 }
             }
 
@@ -98,7 +113,9 @@ namespace Facility.Generation
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 GameObject roomObj = handle.Result;
-                roomObj.name = $"{roomData.RoomName}_{cell.position.x}_{cell.position.y}";
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                roomObj.name = $"{roomData.RoomName} ({cell.position.x}, {cell.position.y})";
+#endif
 
                 RoomInstance roomInstance = roomObj.GetComponent<RoomInstance>();
                 if (roomInstance != null)
@@ -125,6 +142,25 @@ namespace Facility.Generation
         {
             _doorInstances.Clear();
 
+            // Preload all unique door prefabs first
+            var uniqueDoorRefs = _settings.Zones
+                .Where(z => z.doorPool != null)
+                .SelectMany(z => z.doorPool.GetAllDoorReferences())
+                .GroupBy(r => r.AssetGUID)
+                .Select(g => g.First())
+                .ToList();
+
+            var preloadHandles = uniqueDoorRefs
+                .Where(r => !r.IsValid())
+                .Select(r => r.LoadAssetAsync<GameObject>())
+                .ToList();
+
+
+            if (preloadHandles.Count > 0)
+            {
+                await UniTask.WhenAll(preloadHandles.Select(h => h.Task.AsUniTask()));
+            }
+
             List<UniTask> doorTasks = new List<UniTask>();
             int doorCount = 0;
 
@@ -141,7 +177,15 @@ namespace Facility.Generation
                     if (!FG_GridUtility.IsValidGridPosition(neighborPos, _settings.GridWidth, _settings.GridHeight)) continue;
 
                     GridCell neighbor = grid[neighborPos.x, neighborPos.y];
-                    if (neighbor == null || neighbor.isBlocked) continue;
+                    if (neighbor == null) continue;
+
+                    if (neighbor.isBlocked)
+                    {
+                        if (neighbor.blockedByRoomAt == cell.position) continue;
+
+                        GridCell anchorCell = grid[neighbor.blockedByRoomAt.x, neighbor.blockedByRoomAt.y];
+                        if (anchorCell == null || anchorCell.assignedRoom == null) continue;
+                    }
 
                     if (FG_GridUtility.ShouldCreateDoor(cell.position, neighborPos))
                     {
@@ -182,7 +226,9 @@ namespace Facility.Generation
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 GameObject doorObj = handle.Result;
-                doorObj.name = $"Door_{cell1.position}_{cell2.position}";
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                doorObj.name = $"Door ({cell1.position}, {cell2.position})";
+#endif
 
                 RoomDoor roomDoor = doorObj.GetComponent<RoomDoor>();
                 if (roomDoor == null)
@@ -210,7 +256,6 @@ namespace Facility.Generation
                 }
 
                 roomDoor.Initialize(cell1.position, cell2.position, startsOpen);
-
                 _doorInstances.Add(doorObj);
             }
         }
@@ -218,26 +263,19 @@ namespace Facility.Generation
         public async UniTask BakeAllNavigationAsync(Dictionary<Vector2Int, RoomInstance> roomInstances)
         {
             int bakedCount = 0;
-            const int BAKE_BATCH_SIZE = 3; // 3 rooms a frame
-
             var roomList = new List<RoomInstance>(roomInstances.Values);
 
-            for (int i = 0; i < roomList.Count; i += BAKE_BATCH_SIZE)
+            var batchTasks = new List<UniTask>(roomList.Count);
+            foreach (var room in roomList)
             {
-                List<UniTask> batchTasks = new List<UniTask>();
-
-                for (int j = i; j < Mathf.Min(i + BAKE_BATCH_SIZE, roomList.Count); j++)
+                if (room != null)
                 {
-                    if (roomList[j] != null)
-                    {
-                        batchTasks.Add(roomList[j].BakeNavigationAsync());
-                        bakedCount++;
-                    }
+                    batchTasks.Add(room.BakeNavigationAsync());
+                    bakedCount++;
                 }
-
-                await UniTask.WhenAll(batchTasks);
-                await UniTask.DelayFrame(1);
             }
+
+            await UniTask.WhenAll(batchTasks);
 
             Log.VerboseSuccess($"Baked navigation for {bakedCount} rooms");
         }
