@@ -24,9 +24,14 @@ public abstract class BaseSettings : MonoBehaviour
 
     public void ResetCategorySettings()
     {
+        ResetCategorySettingsAsync().Forget();
+    }
+
+    public async UniTask ResetCategorySettingsAsync()
+    {
         if (Core.SettingsManager == null) return;
         Core.SettingsManager.ResetCategory(CATEGORY);
-        LoadSettings();
+        await LoadSettingsAsync();
         SaveSettings();
     }
 
