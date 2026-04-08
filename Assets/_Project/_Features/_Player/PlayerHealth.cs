@@ -56,7 +56,7 @@ public class PlayerHealth : MonoBehaviour
     {
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
-        var newLevel = GetHealthLevel();
+        HealthLevel newLevel = GetHealthLevel();
         if (newLevel != healthLevel)
         {
             healthLevel = newLevel;

@@ -174,7 +174,7 @@ public class PlayerInputs : MonoBehaviour
 
     private void OnDestroy()
     {
-        foreach (var unbind in _unbindCallbacks)
+        foreach (Action unbind in _unbindCallbacks)
             unbind?.Invoke();
 
         _unbindCallbacks.Clear();
@@ -269,21 +269,21 @@ public class PlayerInputs : MonoBehaviour
 
     private void CacheAction(string path)
     {
-        var split = path.Split('/');
+        string[] split = path.Split('/');
         if (split.Length != 2)
         {
             Log.Warning($"Invalid action path format: {path}");
             return;
         }
 
-        var map = playerInputAsset.FindActionMap(split[0]);
+        InputActionMap map = playerInputAsset.FindActionMap(split[0]);
         if (map == null)
         {
             Log.Error($"Action map not found: {split[0]}");
             return;
         }
 
-        var action = map.FindAction(split[1]);
+        InputAction action = map.FindAction(split[1]);
         if (action == null)
         {
             Log.Error($"Action not found: {path}");
@@ -294,7 +294,7 @@ public class PlayerInputs : MonoBehaviour
     }
 
     private T Read<T>(string path) where T : struct
-        => _actions.TryGetValue(path, out var act) ? act.ReadValue<T>() : default;
+        => _actions.TryGetValue(path, out InputAction act) ? act.ReadValue<T>() : default;
 
     private void BindHold(string path, Action<bool> onHold, Action onPress = null)
     {

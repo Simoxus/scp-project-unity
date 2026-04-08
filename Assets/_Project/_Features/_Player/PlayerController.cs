@@ -197,7 +197,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMove()
     {
-        var inputs = _player.Inputs;
+        PlayerInputs inputs = _player.Inputs;
         Vector2 moveInput = inputs.MoveInput;
         Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
 
@@ -225,7 +225,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleNoclipMove()
     {
-        var inputs = _player.Inputs;
+        PlayerInputs inputs = _player.Inputs;
         Vector2 moveInput = inputs.MoveInput;
         Vector3 forward = _cameraTransform.forward;
         Vector3 right = _cameraTransform.right;
@@ -256,7 +256,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLook()
     {
-        var inputs = _player.Inputs;
+        PlayerInputs inputs = _player.Inputs;
         Vector2 lookInput = inputs.LookInput * lookSpeed;
         if (!invertYAxis) lookInput.y = -lookInput.y;
 
@@ -279,7 +279,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleCrouch()
     {
-        var inputs = _player.Inputs;
+        PlayerInputs inputs = _player.Inputs;
 
         if (inputs.CrouchHeld)
         {
@@ -419,7 +419,7 @@ public class PlayerController : MonoBehaviour
 
     public float DetermineCurrentSpeed()
     {
-        var inputs = _player.Inputs;
+        PlayerInputs inputs = _player.Inputs;
         if (inputs.CrouchHeld) return crouchSpeed;
         if (_player.Sprint.CanSprint() && inputs.SprintHeld && !_isCrouching) return sprintSpeed;
         return walkSpeed;
