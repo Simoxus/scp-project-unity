@@ -33,13 +33,11 @@ namespace Facility.Generation
                 return 0;
             }
 
-            // Try to parse as integer first (speedrun mod style)
             if (int.TryParse(seedString, out int directSeed))
             {
                 return directSeed;
             }
 
-            // Fall back to vanilla algorithm
             return ConvertToNumericSeed(seedString);
         }
 
@@ -51,8 +49,6 @@ namespace Facility.Generation
                 return 0;
             }
 
-            // Use GetHashCode for a consistent hash
-            // Note: GetHashCode can vary between .NET versions, but is consistent within a session
             return Math.Abs(seedString.GetHashCode());
         }
 
@@ -74,15 +70,12 @@ namespace Facility.Generation
 
             for (int i = 0; i < length; i++)
             {
-                seedChars[i] = (char)random.Next(48, 58); // '0' to '9'
+                seedChars[i] = (char)random.Next(48, 58);
             }
 
             return new string(seedChars);
         }
 
-        public static int GenerateRandomNumericSeed()
-        {
-            return Environment.TickCount;
-        }
+        public static int GenerateRandomNumericSeed() => Environment.TickCount;
     }
 }
