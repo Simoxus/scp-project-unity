@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Facility.Persistence.Types;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,8 +33,6 @@ namespace Facility.Generation
                 Log.Error("Cannot deserialize null persist data");
                 return (null, null, null);
             }
-
-            InitializeRoomPools();
 
             var grid = new GridCell[persistData.gridWidth, persistData.gridHeight];
             var occupiedCells = new List<GridCell>();
@@ -215,17 +214,6 @@ namespace Facility.Generation
 
             Log.Info($"Serialized facility: {persistData.cells.Count} cells, seed {seed}");
             return persistData;
-        }
-
-        private void InitializeRoomPools()
-        {
-            foreach (var zoneSettings in _settings.Zones)
-            {
-                if (zoneSettings.roomPool != null)
-                {
-                    zoneSettings.roomPool.Initialize();
-                }
-            }
         }
     }
 }
