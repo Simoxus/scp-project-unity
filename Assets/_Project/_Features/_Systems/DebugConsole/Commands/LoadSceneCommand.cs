@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
@@ -80,9 +81,9 @@ namespace Console.Commands
 
                 ConsoleManager.LogToConsole($"Scene '{sceneName}' loaded successfully!".AsSuccess());
             }
-            catch (System.Exception exception)
+            catch (Exception ex)
             {
-                ConsoleManager.LogToConsole($"Error loading scene '{sceneName}': {exception.Message}.".AsError());
+                Log.Exception(ex, message: ex.Message);
             }
         }
     }

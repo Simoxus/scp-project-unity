@@ -75,9 +75,9 @@ public class SettingsManager : Singleton<SettingsManager>
                     settingsData = new SettingsData();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error($"Failed to load settings file {SETTINGS_FILE_NAME}: {e.Message}");
+                Log.Exception(ex);
                 settingsData = new SettingsData();
             }
         }
@@ -195,9 +195,9 @@ public class SettingsManager : Singleton<SettingsManager>
             string json = JsonConvert.SerializeObject(settingsData, Formatting.Indented);
             File.WriteAllText(settingsFilePath, json);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-
+            Log.Exception(ex);
         }
     }
 
@@ -224,7 +224,7 @@ public class SettingsManager : Singleton<SettingsManager>
             settingsData.categories.Remove(category);
             Save();
 
-            Log.VerboseInfo($"Settings category '{categoryName}' has been reset.");
+            Log.VerboseInfo($"Settings category '{categoryName}' has been reset");
         }
     }
 
@@ -237,7 +237,7 @@ public class SettingsManager : Singleton<SettingsManager>
         if (File.Exists(settingsFilePath))
         {
             File.Delete(settingsFilePath);
-            Log.VerboseInfo($"'{SETTINGS_FILE_NAME}' has been deleted successfully.");
+            Log.VerboseInfo($"'{SETTINGS_FILE_NAME}' has been deleted successfully");
         }
     }
 
@@ -253,7 +253,7 @@ public class SettingsManager : Singleton<SettingsManager>
         if (Directory.Exists(settingsFolder))
         {
             Application.OpenURL("file://" + settingsFolder);
-            Log.VerboseInfo($"Requesting that path to '{SETTINGS_FILE_NAME}' is opened.");
+            Log.VerboseInfo($"Requesting that path to '{SETTINGS_FILE_NAME}' is opened");
         }
     }
 

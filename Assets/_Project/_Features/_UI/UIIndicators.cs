@@ -32,7 +32,6 @@ public class UIIndicators : MonoBehaviour
             if (canvasGroup == null)
             {
                 canvasGroup = gameObject.AddComponent<CanvasGroup>();
-                Log.Warning("UIIndicators: CanvasGroup was missing and has been added automatically.");
             }
         }
     }
@@ -41,7 +40,6 @@ public class UIIndicators : MonoBehaviour
     {
         if (canvasGroup == null)
         {
-            Log.Error("UIIndicators: Cannot show UI - CanvasGroup is null");
             return;
         }
 
@@ -55,7 +53,6 @@ public class UIIndicators : MonoBehaviour
     {
         if (canvasGroup == null)
         {
-            Log.Error("UIIndicators: Cannot hide UI - CanvasGroup is null");
             return;
         }
 

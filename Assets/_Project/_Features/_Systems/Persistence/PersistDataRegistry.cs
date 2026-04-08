@@ -38,11 +38,11 @@ namespace Facility.Persistence
                         Deserialize = json => fromJsonMethod.Invoke(null, new object[] { json }) as IPersistData
                     };
 
-                    Log.Info($"Registered persist data type: {tempInstance.PersistDataType}");
+                    Log.VerboseInfo($"Registered persist data type '{tempInstance.PersistDataType}'");
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Log.Error($"Failed to register type {type.Name}: {e.Message}");
+                    Log.Exception(ex);
                 }
             }
         }

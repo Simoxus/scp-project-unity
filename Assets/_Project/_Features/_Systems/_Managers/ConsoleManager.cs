@@ -33,7 +33,7 @@ public class ConsoleManager : Singleton<ConsoleManager>
             }
             catch (Exception ex)
             {
-                Log.Error($"Failed to register console command {type.Name}: {ex}");
+                Log.Exception(ex, message: $"Failed to register {type.Name}: {ex.Message}");
             }
         }
 
@@ -49,13 +49,13 @@ public class ConsoleManager : Singleton<ConsoleManager>
 
         if (commands.ContainsKey(key))
         {
-            Log.VerboseWarning($"Console command '{key}' has already been registered. Overwriting.");
+            Log.VerboseWarning($"Console command '{key}' has already been registered; overwriting");
             commands[key] = command;
         }
         else
         {
             commands.Add(key, command);
-            Log.VerboseInfo($"Registered console command '{key}'.");
+            Log.VerboseInfo($"Registered console command '{key}'");
         }
 
         if (command.Aliases != null && command.Aliases.Length > 0)
@@ -92,7 +92,7 @@ public class ConsoleManager : Singleton<ConsoleManager>
                 }
             }
 
-            Log.VerboseInfo($"Unregistered console command '{commandWord}'.", this);
+            Log.VerboseInfo($"Unregistered console command '{commandWord}'", this);
         }
     }
 
@@ -113,7 +113,7 @@ public class ConsoleManager : Singleton<ConsoleManager>
             }
             catch (Exception ex)
             {
-                LogToConsole($"Error executing '{commandWord}': {ex.Message}".AsError());
+                Log.Exception(ex, message: $"Failed to execute {commandWord}: {ex.Message}");
             }
         }
         else

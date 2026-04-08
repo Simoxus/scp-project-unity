@@ -107,7 +107,7 @@ namespace Facility.Generation
         {
             if (doorStatesData == null || doorStatesData.doorStates == null || doorStatesData.doorStates.Count == 0)
             {
-                Log.Info("No door states to load");
+                Log.VerboseInfo("No door states to load");
                 return;
             }
 
@@ -175,9 +175,10 @@ namespace Facility.Generation
 
                 return (facilityData, navLinksData, doorStatesData);
             }
-            catch (System.Exception e)
+            catch (Exception ex)
             {
-                Log.Warning($"Failed to load from existing seed: {e.Message}");
+                Log.Exception(ex, message: ex.Message);
+                Log.Warning($"Failed to load from existing seed");
                 return (null, null, null);
             }
         }

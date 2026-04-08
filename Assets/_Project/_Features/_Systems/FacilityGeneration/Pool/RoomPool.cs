@@ -43,7 +43,7 @@ namespace Facility.Generation
                 }
                 else
                 {
-                    Log.Warning($"Room in pool '{name}' has no name set! This will cause issues with save/load.");
+                    Log.Warning($"Room in pool '{name}' has no name set");
                 }
             }
 

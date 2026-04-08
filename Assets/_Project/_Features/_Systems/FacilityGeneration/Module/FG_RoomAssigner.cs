@@ -131,7 +131,7 @@ namespace Facility.Generation
             var zoneSettings = _settings.GetZoneSettings(cell.zone);
             if (zoneSettings?.roomPool == null)
             {
-                Log.Warning($"No room pool for zone {cell.zone} at {cell.position}");
+                Log.Warning($"No room pool for zone '{cell.zone}' at {cell.position}");
                 return;
             }
 

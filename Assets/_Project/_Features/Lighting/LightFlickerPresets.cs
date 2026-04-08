@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Threading;
-using UnityEngine;
 
 public static class LightFlickerPresets
 {
@@ -25,14 +25,15 @@ public static class LightFlickerPresets
             {
                 if (cts.Token.IsCancellationRequested) break;
 
-                float targetIntensity = Random.Range(intensityMin * light.OriginalIntensity, intensityMax * light.OriginalIntensity);
+                float targetIntensity = UnityEngine.Random.Range(intensityMin * light.OriginalIntensity, intensityMax * light.OriginalIntensity);
                 await light.TweenIntensityAsync(targetIntensity, timeBetweenFlickers * 0.5f, cts.Token);
             }
 
             await light.TweenIntensityAsync(light.OriginalIntensity, timeBetweenFlickers * 0.5f, cts.Token);
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             light.SetIntensity(light.OriginalIntensity);
         }
     }
@@ -60,8 +61,9 @@ public static class LightFlickerPresets
 
             await light.SetIntensityInstant(light.OriginalIntensity);
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             light.SetIntensity(light.OriginalIntensity);
         }
     }
@@ -87,8 +89,9 @@ public static class LightFlickerPresets
 
             await light.TweenIntensityAsync(light.OriginalIntensity, pulseDuration * 0.25f, cts.Token);
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             light.SetIntensity(light.OriginalIntensity);
         }
     }
@@ -114,8 +117,9 @@ public static class LightFlickerPresets
 
             light.SetIntensity(light.OriginalIntensity);
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             light.SetIntensity(light.OriginalIntensity);
         }
     }
@@ -133,8 +137,9 @@ public static class LightFlickerPresets
             await UniTask.WaitForSeconds(stayOffDuration, cancellationToken: cts.Token);
             await light.TweenIntensityAsync(light.OriginalIntensity, fadeInDuration, cts.Token);
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             light.SetIntensity(light.OriginalIntensity);
         }
     }
@@ -165,8 +170,9 @@ public static class LightFlickerPresets
 
             light.SetIntensity(light.OriginalIntensity);
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             light.SetIntensity(light.OriginalIntensity);
         }
     }
@@ -183,8 +189,9 @@ public static class LightFlickerPresets
             await light.TweenIntensityAsync(light.OriginalIntensity * peakIntensityMultiplier, riseTime, cts.Token);
             await light.TweenIntensityAsync(light.OriginalIntensity, fallTime, cts.Token);
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             light.SetIntensity(light.OriginalIntensity);
         }
     }
@@ -212,8 +219,9 @@ public static class LightFlickerPresets
 
             await light.TweenIntensityAsync(light.OriginalIntensity, 0.4f, cts.Token);
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             light.SetIntensity(light.OriginalIntensity);
         }
     }

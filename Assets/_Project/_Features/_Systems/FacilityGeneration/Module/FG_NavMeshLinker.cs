@@ -104,9 +104,7 @@ namespace Facility.Generation
         public void SetupCullingSystem(CullingSystem cullingSystem, int roomCount)
         {
             if (cullingSystem == null) return;
-
             cullingSystem.IsActive = true;
-            Log.Info($"Culling system setup complete with {roomCount} rooms");
         }
 
         private Vector3 GetDoorwayPosition(Vector2Int gridPos, Direction direction)

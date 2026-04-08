@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Threading;
 using TMPro;
 using UnityEngine;
@@ -58,8 +59,9 @@ public class UITooltips : MonoBehaviour
             ResizeTooltip();
             UpdatePosition();
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             Hide();
         }
     }

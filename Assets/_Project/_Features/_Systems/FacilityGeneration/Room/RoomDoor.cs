@@ -117,7 +117,7 @@ namespace Facility.Generation
                 return _doorPersistence.GetDoorStateData();
             }
 
-            Log.Warning($"Door {DoorID} has no DoorPersistence instance - cannot save state");
+            Log.Warning($"Door {DoorID} has no DoorPersistence instance; cannot save state");
             return null;
         }
 
@@ -142,7 +142,7 @@ namespace Facility.Generation
             }
             else
             {
-                Log.Warning($"Door {DoorID} has no DoorPersistence instance - cannot load state");
+                Log.Warning($"Door {DoorID} has no DoorPersistence instance; cannot load state");
             }
 
             Log.VerboseInfo($"RoomDoor loaded: {DoorID}, Open={stateData.isOpen}, Broken={stateData.isBroken}");

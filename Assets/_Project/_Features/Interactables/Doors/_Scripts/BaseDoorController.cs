@@ -294,8 +294,9 @@ public abstract class BaseDoorController : MonoBehaviour
             await OpenDoorAsync(token);
             await SetActivatorsState(enabled: true);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             SetDoorState(DoorState.Closed);
             await SetActivatorsState(enabled: true);
         }
@@ -309,8 +310,9 @@ public abstract class BaseDoorController : MonoBehaviour
             await CloseDoorAsync(token);
             await SetActivatorsState(enabled: true);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
             SetDoorState(DoorState.Opened);
             await SetActivatorsState(enabled: true);
         }
@@ -347,13 +349,14 @@ public abstract class BaseDoorController : MonoBehaviour
                     await CloseDoorAsync(_doorCts.Token);
                 }
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
-                Log.VerboseInfo("ToggleDoor operation was cancelled.");
+                Log.Exception(ex);
                 SetDoorState(shouldOpen ? DoorState.Closed : DoorState.Opened);
             }
             catch (Exception ex)
             {
+                Log.Exception(ex);
                 Log.VerboseWarning($"ToggleDoor operation failed: {ex}");
                 SetDoorState(shouldOpen ? DoorState.Closed : DoorState.Opened);
             }
@@ -384,15 +387,15 @@ public abstract class BaseDoorController : MonoBehaviour
 
                 await SetActivatorsState(true);
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
-                Log.VerboseInfo("ToggleDoor operation was cancelled.");
+                Log.Exception(ex);
                 SetDoorState(shouldOpen ? DoorState.Closed : DoorState.Opened);
                 await SetActivatorsState(true);
             }
             catch (Exception ex)
             {
-                Log.VerboseWarning($"ToggleDoor operation failed: {ex}");
+                Log.Exception(ex);
                 SetDoorState(shouldOpen ? DoorState.Closed : DoorState.Opened);
                 await SetActivatorsState(true);
             }

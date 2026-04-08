@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Threading;
 using TMPro;
 using UnityEngine;
@@ -63,8 +64,9 @@ public class SecurityCamera : MonoBehaviour
                     RenderTexture.active = null;
                 }
             }
-            catch (System.OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
+                Log.Exception(ex);
                 break;
             }
         }

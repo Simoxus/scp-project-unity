@@ -36,9 +36,9 @@ namespace Facility.Persistence.Types
             {
                 return JsonConvert.SerializeObject(this, Formatting.Indented);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error($"Failed to serialize FacilityPersistData: {e.Message}");
+                Log.Exception(ex);
                 return null;
             }
         }
@@ -49,9 +49,9 @@ namespace Facility.Persistence.Types
             {
                 return JsonConvert.DeserializeObject<FacilityPersistData>(json);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error($"Failed to deserialize FacilityPersistData: {e.Message}");
+                Log.Exception(ex);
                 return null;
             }
         }
@@ -91,7 +91,7 @@ namespace Facility.Persistence.Types
                 assignedRoomID = cell.assignedRoom.RoomName;
                 if (string.IsNullOrEmpty(assignedRoomID))
                 {
-                    Log.Warning($"Room at {cell.position} has no room name!");
+                    Log.Warning($"Room at {cell.position} has no room name");
                 }
             }
             else
@@ -129,7 +129,7 @@ namespace Facility.Persistence.Types
                 {
                     if (zoneSettings.roomPool == null)
                     {
-                        Log.Error($"Zone {zone} has no room pool configured!");
+                        Log.Error($"Zone {zone} has no room pool configured");
                         return;
                     }
 
@@ -143,10 +143,6 @@ namespace Facility.Persistence.Types
                         Log.VerboseInfo($"Assigned room '{assignedRoomID}' to cell at {position}");
                     }
                 }
-            }
-            else
-            {
-                Log.Warning($"Cell at [{position}] has no assigned room name in persist data");
             }
         }
     }

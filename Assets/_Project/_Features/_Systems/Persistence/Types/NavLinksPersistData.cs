@@ -30,9 +30,9 @@ namespace Facility.Persistence.Types
                 };
                 return JsonConvert.SerializeObject(this, settings);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error($"Failed to serialize NavLinksPersistData: {e.Message}");
+                Log.Exception(ex);
                 return null;
             }
         }
@@ -43,9 +43,9 @@ namespace Facility.Persistence.Types
             {
                 return JsonConvert.DeserializeObject<NavLinksPersistData>(json);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error($"Failed to deserialize NavLinksPersistData: {e.Message}");
+                Log.Exception(ex);
                 return null;
             }
         }

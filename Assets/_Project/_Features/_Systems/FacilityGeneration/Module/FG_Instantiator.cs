@@ -110,7 +110,7 @@ namespace Facility.Generation
                 {
                     if (roomData != _settings.StartingRoom)
                     {
-                        Log.VerboseWarning($"Room prefab '{roomData.RoomName}' is missing RoomInstance component.");
+                        Log.VerboseWarning($"Room prefab '{roomData.RoomName}' is missing a RoomInstance component");
                     }
                 }
 

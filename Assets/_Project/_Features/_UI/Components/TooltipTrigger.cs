@@ -45,9 +45,9 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 Core.UI.Tooltips.Show(_cachedTooltipText).Forget();
             }
         }
-        catch (System.Exception e)
+        catch (System.Exception ex)
         {
-            Log.VerboseWarning($"Failed to load localized tooltip: {e.Message}");
+            Log.Exception(ex);
         }
     }
 

@@ -173,7 +173,9 @@ public class Outline : MonoBehaviour
             if (_currentAlpha <= 0.001f && !_isEnabled)
                 DetachOutlineMaterials();
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
     private void AttachOutlineMaterials()

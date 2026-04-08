@@ -47,8 +47,9 @@ public class FMODCollision : MonoBehaviour
 
             _collisionsEnabled = false;
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
         }
     }
 

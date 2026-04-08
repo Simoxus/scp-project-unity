@@ -487,8 +487,6 @@ namespace Facility.Generation
             totalLightCount = 0;
 
             DisposeNativeArrays();
-
-            Log.VerboseInfo("Cleared all culling data");
         }
     }
 

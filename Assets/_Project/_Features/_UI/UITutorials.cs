@@ -25,7 +25,7 @@ public class UITutorials : MonoBehaviour
             if (canvasGroup == null)
             {
                 canvasGroup = gameObject.AddComponent<CanvasGroup>();
-                Log.Warning("UITutorials: CanvasGroup was missing and has been added automatically.");
+                Log.Warning("UITutorials: CanvasGroup was missing and has been added automatically");
             }
         }
 
@@ -75,7 +75,6 @@ public class UITutorials : MonoBehaviour
     {
         if (canvasGroup == null)
         {
-            Log.Error("UITutorials: Cannot show UI - CanvasGroup is null");
             return;
         }
 
@@ -89,7 +88,6 @@ public class UITutorials : MonoBehaviour
     {
         if (canvasGroup == null)
         {
-            Log.Error("UITutorials: Cannot hide UI - CanvasGroup is null");
             return;
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
@@ -58,9 +59,10 @@ namespace Console.Commands
                         SceneManager.LoadScene(sceneIdentifier);
                         ConsoleManager.LogToConsole($"Loading scene using name method: '{sceneIdentifier}'...".AsWarning());
                     }
-                    catch (System.Exception exception)
+                    catch (Exception ex)
                     {
-                        ConsoleManager.LogToConsole($"Error loading scene '{sceneIdentifier}': {exception.Message}.".AsError());
+                        Log.Exception(ex, message: ex.Message);
+                        ConsoleManager.LogToConsole($"Error loading scene '{sceneIdentifier}': {ex.Message}.".AsError());
                     }
                 }
                 else

@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using MoonSharp.Interpreter;
-using System;
 using System.Collections.Generic;
 
 public class LuaMod
@@ -40,13 +39,15 @@ public class LuaMod
 
             await UniTask.Yield();
         }
-        catch (SyntaxErrorException e)
+        catch (SyntaxErrorException ex)
         {
-            throw new Exception($"Syntax error in mod script: {e.DecoratedMessage}");
+            Log.Exception(ex, message: $"SYNTAX: {ex.DecoratedMessage}");
+            throw;
         }
-        catch (ScriptRuntimeException e)
+        catch (ScriptRuntimeException ex)
         {
-            throw new Exception($"Runtime error loading mod script: {e.DecoratedMessage}");
+            Log.Exception(ex, message: $"RUNTIME: {ex.DecoratedMessage}");
+            throw;
         }
     }
 
@@ -68,9 +69,9 @@ public class LuaMod
                 Script.Call(_initFunction);
                 await UniTask.Yield();
             }
-            catch (ScriptRuntimeException e)
+            catch (ScriptRuntimeException ex)
             {
-                Log.Error($"Error in OnInit: {e.DecoratedMessage}");
+                Log.Exception(ex, message: ex.DecoratedMessage);
             }
         }
     }
@@ -83,9 +84,9 @@ public class LuaMod
             {
                 Script.Call(_unloadFunction);
             }
-            catch (ScriptRuntimeException e)
+            catch (ScriptRuntimeException ex)
             {
-                Log.Error($"Error in OnUnload: {e.DecoratedMessage}");
+                Log.Exception(ex, message: ex.DecoratedMessage);
             }
         }
 
@@ -137,9 +138,9 @@ public class LuaMod
             {
                 Script.Call(handler, args);
             }
-            catch (ScriptRuntimeException e)
+            catch (ScriptRuntimeException ex)
             {
-                Log.Error($"Error in event handler '{eventName}': {e.DecoratedMessage}");
+                Log.Exception(ex, message: ex.DecoratedMessage);
             }
         }
     }
@@ -158,9 +159,9 @@ public class LuaMod
         {
             return Script.Call(func, args);
         }
-        catch (ScriptRuntimeException e)
+        catch (ScriptRuntimeException ex)
         {
-            Log.Error($"Error calling '{functionName}': {e.DecoratedMessage}");
+            Log.Exception(ex, message: ex.DecoratedMessage);
             return DynValue.Nil;
         }
     }

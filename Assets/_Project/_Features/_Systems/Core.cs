@@ -49,7 +49,9 @@ public static class Core
             }
             catch (NullReferenceException ex)
             {
-                Log.Editor($"NullReferenceException accessing {managerName} during shutdown: {ex.Message}");
+#if UNITY_EDITOR
+                Log.Exception(ex, message: $"Failed to access {managerName}: {ex.Message}");
+#endif
             }
         }
         return field;
@@ -65,7 +67,9 @@ public static class Core
             }
             catch (Exception ex)
             {
-                Log.Error($"Error loading {accessorName}: {ex.Message}");
+#if UNITY_EDITOR
+                Log.Exception(ex, message: $"Failed to load {accessorName}: {ex.Message}");
+#endif
             }
         }
         return field;
@@ -94,7 +98,9 @@ public static class Core
                 }
                 catch (NullReferenceException ex)
                 {
-                    Log.Editor($"NullReferenceException accessing Player during shutdown: {ex.Message}");
+#if UNITY_EDITOR
+                    Log.Exception(ex, message: $"Failed to access Player: {ex.Message}");
+#endif
                 }
             }
 

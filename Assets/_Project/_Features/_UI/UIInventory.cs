@@ -80,14 +80,9 @@ public class UIInventory : MonoBehaviour
         if (_isVisible) return;
 
         PlayerInventory inventory = Core.Player?.Inventory;
-        if (inventory != null && inventory.EquippedItem != null)
-            return;
+        if (inventory != null && inventory.EquippedItem != null) return;
 
-        if (Canvas == null)
-        {
-            Log.Error("UIInventory: Cannot show - Canvas is null");
-            return;
-        }
+        if (Canvas == null) return;
 
         _isVisible = true;
 
@@ -160,7 +155,6 @@ public class UIInventory : MonoBehaviour
             if (Canvas == null)
             {
                 Canvas = gameObject.AddComponent<Canvas>();
-                Log.Warning("UIInventory: Canvas was missing and has been added automatically.");
             }
         }
     }

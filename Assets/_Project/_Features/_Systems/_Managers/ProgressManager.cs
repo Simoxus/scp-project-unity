@@ -150,10 +150,10 @@ public class ProgressManager : Singleton<ProgressManager>
             OnSaveCompleted?.Invoke(siteName);
             return true;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to create save: {e.Message}");
-            OnSaveError?.Invoke(siteName, e.Message);
+            Log.Exception(ex);
+            OnSaveError?.Invoke(siteName, ex.Message);
             return false;
         }
     }
@@ -196,9 +196,9 @@ public class ProgressManager : Singleton<ProgressManager>
 
             return true;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to update metadata: {e.Message}");
+            Log.Exception(ex);
             return false;
         }
     }
@@ -230,9 +230,9 @@ public class ProgressManager : Singleton<ProgressManager>
             Log.Info($"Saved {data.PersistDataType} to site root: {filePath}");
             return true;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to save {data.PersistDataType} to site root: {e.Message}");
+            Log.Exception(ex);
             return false;
         }
     }
@@ -241,7 +241,7 @@ public class ProgressManager : Singleton<ProgressManager>
     {
         if (!HasActiveSite)
         {
-            Log.Warning("No active site. Call SetCurrentSite() first.");
+            Log.Warning("No active site. Call SetCurrentSite() first");
             return false;
         }
 
@@ -275,9 +275,9 @@ public class ProgressManager : Singleton<ProgressManager>
             Log.Info($"Saved {persistData.PersistDataType} to {Path.GetFileName(slotPath)}");
             return true;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to save {persistData.PersistDataType}: {e.Message}");
+            Log.Exception(ex);
             return false;
         }
     }
@@ -305,9 +305,9 @@ public class ProgressManager : Singleton<ProgressManager>
 
             return data;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to load data: {e.Message}");
+            Log.Exception(ex);
             return null;
         }
     }
@@ -335,10 +335,10 @@ public class ProgressManager : Singleton<ProgressManager>
             OnLoadCompleted?.Invoke(siteName);
             return true;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to load site: {e.Message}");
-            OnSaveError?.Invoke(siteName, e.Message);
+            Log.Exception(ex);
+            OnSaveError?.Invoke(siteName, ex.Message);
             return false;
         }
     }
@@ -386,9 +386,9 @@ public class ProgressManager : Singleton<ProgressManager>
 
             Log.VerboseInfo($"Screenshot captured at {size}x{size}");
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Warning($"Failed to capture screenshot: {e.Message}");
+            Log.Exception(ex);
         }
     }
 
@@ -409,9 +409,9 @@ public class ProgressManager : Singleton<ProgressManager>
             texture.LoadImage(bytes);
             return texture;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Warning($"Failed to load screenshot: {e.Message}");
+            Log.Exception(ex);
             return null;
         }
     }
@@ -437,9 +437,9 @@ public class ProgressManager : Singleton<ProgressManager>
             Log.Info($"Deleted site: {siteName}");
             return true;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to delete site: {e.Message}");
+            Log.Exception(ex);
             return false;
         }
     }

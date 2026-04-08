@@ -101,8 +101,9 @@ public abstract class BaseDoorVisual : MonoBehaviour
                 _screenMaterial.SetColor(OverlayColorProperty, requestedColor);
             }
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
         }
     }
 
@@ -178,8 +179,9 @@ public abstract class BaseDoorVisual : MonoBehaviour
 
             StartPulse(targetColor, pulseDuration, pulseIntensity);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
         }
     }
 }

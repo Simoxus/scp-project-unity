@@ -29,6 +29,9 @@ public static class StringExtensions
     public static string AsDuration(this string text, bool verbose = false, bool consoleColors = false)
         => text.Color(consoleColors ? ColorScheme.ConsoleDuration : ColorScheme.Duration, verbose);
 
+    public static string AsException(this string text, bool verbose = false, bool consoleColors = false)
+        => text.Color(consoleColors ? ColorScheme.ConsoleException : ColorScheme.Exception, verbose);
+
     public static string AsInput(this string text, bool verbose = false, bool consoleColors = false)
         => text.Color(ColorScheme.Input, verbose);
 

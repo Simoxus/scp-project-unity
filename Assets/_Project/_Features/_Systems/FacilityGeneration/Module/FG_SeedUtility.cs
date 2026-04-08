@@ -29,7 +29,7 @@ namespace Facility.Generation
         {
             if (string.IsNullOrEmpty(seedString))
             {
-                Log.Warning("Empty seed string provided, using default seed 0");
+                Log.VerboseWarning("Empty seed string provided, using default seed 0");
                 return 0;
             }
 

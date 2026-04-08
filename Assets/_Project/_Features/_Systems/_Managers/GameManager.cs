@@ -54,7 +54,7 @@ public class GameManager : Singleton<GameManager>
 
         if (IsInMainMenu)
         {
-            Log.VerboseInfo("GameManager detected player is in MainMenu scene. Ensuring that cursor is shown.");
+            Log.VerboseInfo("GameManager detected player is in MainMenu scene. Ensuring that cursor is shown");
             UpdateCursorVisiblity(forceDisable: false);
         }
         else
@@ -67,7 +67,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (requester == null)
         {
-            Log.VerboseWarning("RequestPause was called, but with no requester provided!");
+            Log.VerboseWarning("RequestPause was called, but with no requester provided");
             return;
         }
 
@@ -86,7 +86,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (requester == null)
         {
-            Log.VerboseWarning("ReleasePause was called, but with no requester provided!");
+            Log.VerboseWarning("ReleasePause was called, but with no requester provided");
             return;
         }
 
@@ -105,7 +105,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (requester == null)
         {
-            Log.VerboseWarning("RequestCursorControl was called, but with no requester provided!");
+            Log.VerboseWarning("RequestCursorControl was called, but with no requester provided");
             return;
         }
 
@@ -124,7 +124,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (requester == null)
         {
-            Log.VerboseWarning("ReleaseCursorControl was called, but with no requester provided!");
+            Log.VerboseWarning("ReleaseCursorControl was called, but with no requester provided");
             return;
         }
 
@@ -141,7 +141,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (requester == null)
         {
-            Log.VerboseWarning("SetCursorState was called, but with no requester provided!");
+            Log.VerboseWarning("SetCursorState was called, but with no requester provided");
             return;
         }
 
@@ -152,7 +152,7 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            Log.VerboseWarning($"SetCursorState was called by {requester}, but they haven't requested cursor control!");
+            Log.VerboseWarning($"SetCursorState was called by {requester}, but they haven't requested cursor control");
         }
     }
 
@@ -173,7 +173,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (requester == null)
         {
-            Log.VerboseWarning("RequestDisableControls was called, but with no requester provided!");
+            Log.VerboseWarning("RequestDisableControls was called, but with no requester provided");
             return;
         }
 

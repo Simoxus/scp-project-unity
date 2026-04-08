@@ -89,7 +89,7 @@ namespace Facility.Generation
                 {
                     cell.layout = RoomLayout.Checkpoint;
                     convertedCount++;
-                    Log.Info($"Converted cell at ({cell.position.x}, {cell.position.y}) to Checkpoint layout");
+                    Log.VerboseInfo($"Converted cell at ({cell.position.x}, {cell.position.y}) to Checkpoint layout");
                 }
                 else
                 {
@@ -97,7 +97,7 @@ namespace Facility.Generation
                 }
             }
 
-            Log.Info($"Converted {convertedCount} cells to Checkpoint layout");
+            Log.VerboseSuccess($"Converted {convertedCount} cells to Checkpoint layout");
         }
 
         private Direction GetOppositeDirection(Direction dir)
@@ -122,7 +122,14 @@ namespace Facility.Generation
                 int corners = zoneCells.Count(c => c.layout == RoomLayout.Corner);
                 int crossroads = zoneCells.Count(c => c.layout == RoomLayout.Crossroads);
 
-                Log.VerboseInfo($"Zone {zoneSettings.zoneName}: DeadEnds={deadEnds} Corners={corners} Crossroads={crossroads}");
+                Log.VerboseInfo($"" +
+                    $"{zoneSettings.zoneName}: " +
+                    $"DeadEnds={deadEnds} " +
+                    $"Hallways={zoneCells.Count(c => c.layout == RoomLayout.Hallway)} " +
+                    $"Corners={corners} " +
+                    $"Junctions={zoneCells.Count(c => c.layout == RoomLayout.Junction)} " +
+                    $"Crossroads={crossroads}"
+                );
             }
         }
     }

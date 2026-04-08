@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
 
 namespace Console.Commands
 {
@@ -81,10 +82,10 @@ namespace Console.Commands
                 await Core.ModManager.ReloadMod(modId);
                 ConsoleManager.LogToConsole($"Mod '{modId}' reloaded successfully.".AsSuccess());
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
+                Log.Exception(ex, message: ex.Message);
                 ConsoleManager.LogToConsole($"Failed to reload mod '{modId}': {ex.Message}".AsError());
-                Log.Error($"ReloadMod error: {ex.Message}\n{ex.StackTrace}");
             }
         }
 
@@ -101,10 +102,10 @@ namespace Console.Commands
                 await Core.ModManager.ReloadAllMods();
                 ConsoleManager.LogToConsole("All mods reloaded successfully.".AsSuccess());
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
+                Log.Exception(ex, message: ex.Message);
                 ConsoleManager.LogToConsole($"Failed to reload mods: {ex.Message}".AsError());
-                Log.Error($"ReloadAllMods error: {ex.Message}\n{ex.StackTrace}");
             }
         }
     }

@@ -64,7 +64,6 @@ public class UIPauseMenu : MonoBehaviour
     {
         if (canvasGroup == null)
         {
-            Log.Error("PauseMenu: Cannot show UI - CanvasGroup is null");
             return;
         }
 
@@ -82,7 +81,6 @@ public class UIPauseMenu : MonoBehaviour
     {
         if (canvasGroup == null)
         {
-            Log.Error("PauseMenu: Cannot hide UI - CanvasGroup is null");
             return;
         }
 

@@ -112,7 +112,6 @@ public class PlayerInputs : MonoBehaviour
     {
         if (playerInputAsset == null)
         {
-            Log.Error("InputActionAsset is not assigned in the inspector!");
             enabled = false;
             return;
         }

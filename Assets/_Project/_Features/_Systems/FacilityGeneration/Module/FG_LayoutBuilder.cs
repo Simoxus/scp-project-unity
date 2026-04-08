@@ -24,7 +24,7 @@ namespace Facility.Generation
 
             foreach (var zone in _settings.Zones)
             {
-                Log.Info($"Zone '{zone.zoneName}' ({zone.zoneLocation}): Rows {zone.startRow}-{zone.endRow}");
+                Log.VerboseInfo($"Zone '{zone.zoneName}' ({zone.zoneLocation}): Rows {zone.startRow}-{zone.endRow}");
             }
 
             int x = _settings.GridWidth / 2;
@@ -37,7 +37,7 @@ namespace Facility.Generation
             int temp = 0;
 
             int iterations = 0;
-            int maxIterations = _settings.MaxGenerationAttempts * 50;
+            int maxIterations = _settings.MaxLayoutIterations;
 
             do
             {
@@ -140,7 +140,7 @@ namespace Facility.Generation
 
             } while (y <= _settings.GridHeight - 3);
 
-            Log.Info($"Generated {_occupiedCells.Count} cells");
+            Log.VerboseSuccess($"Generated {_occupiedCells.Count} cells");
             return (_grid, _occupiedCells, _startCell);
         }
 

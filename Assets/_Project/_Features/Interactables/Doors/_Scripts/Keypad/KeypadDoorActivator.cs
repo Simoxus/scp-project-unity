@@ -117,7 +117,7 @@ public class KeypadDoorActivator : BaseDoorActivator
             }
             else
             {
-                Log.Warning($"Keypad visual for number {number} is missing from the array.");
+                Log.Warning($"Keypad visual for number {number} is missing from the array");
             }
         }
     }

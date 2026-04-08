@@ -57,9 +57,9 @@ public static class LocalizationHelper
         {
             return string.Format(template, args);
         }
-        catch (FormatException e)
+        catch (FormatException ex)
         {
-            Log.Error($"Format error for key '{key}': {e.Message}");
+            Log.Exception(ex);
             return template;
         }
     }
@@ -110,9 +110,9 @@ public static class LocalizationHelper
         {
             return string.Format(template, args);
         }
-        catch (FormatException e)
+        catch (FormatException ex)
         {
-            Log.Error($"Format error for key '{key}': {e.Message}");
+            Log.Exception(ex);
             return template;
         }
     }

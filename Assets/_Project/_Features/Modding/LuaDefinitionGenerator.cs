@@ -155,8 +155,9 @@ public class LuaDefinitionGenerator
                     .Where(t => t.GetCustomAttribute<MoonSharpUserDataAttribute>() != null);
                 moonSharpTypes.AddRange(types);
             }
-            catch (ReflectionTypeLoadException)
+            catch (ReflectionTypeLoadException ex)
             {
+                Log.Exception(ex);
                 continue;
             }
         }

@@ -52,11 +52,7 @@ public class MusicManager : Singleton<MusicManager>
 
     public void PlayMusic(EventReference musicEvent)
     {
-        if (musicEvent.IsNull)
-        {
-            Log.Warning("MusicManager: Attempted to play null music event");
-            return;
-        }
+        if (musicEvent.IsNull) return;
 
         _gracePeriodCts?.Cancel();
         _gracePeriodCts?.Dispose();
@@ -89,11 +85,7 @@ public class MusicManager : Singleton<MusicManager>
 
     public void PlayMusicWithGracePeriod(EventReference musicEvent)
     {
-        if (musicEvent.IsNull)
-        {
-            Log.Warning("MusicManager: Attempted to play null music event with grace period");
-            return;
-        }
+        if (musicEvent.IsNull) return;
 
         if (IsSameMusic(musicEvent, _currentMusicReference))
         {
@@ -217,8 +209,9 @@ public class MusicManager : Singleton<MusicManager>
                 PlayMusic(musicToPlay);
             }
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            Log.Exception(ex);
         }
     }
 

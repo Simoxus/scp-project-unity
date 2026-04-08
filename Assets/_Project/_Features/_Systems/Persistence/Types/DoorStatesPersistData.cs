@@ -29,9 +29,9 @@ namespace Facility.Persistence.Types
                 };
                 return JsonConvert.SerializeObject(this, settings);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error($"Failed to serialize DoorStatesPersistData: {e.Message}");
+                Log.Exception(ex);
                 return null;
             }
         }
@@ -42,9 +42,9 @@ namespace Facility.Persistence.Types
             {
                 return JsonConvert.DeserializeObject<DoorStatesPersistData>(json);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error($"Failed to deserialize DoorStatesPersistData: {e.Message}");
+                Log.Exception(ex);
                 return null;
             }
         }

@@ -36,9 +36,9 @@ namespace Facility.Persistence
                     return new Vector3(x, y, z);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Warning($"Failed to parse player position: {e.Message}");
+                Log.Exception(ex);
             }
             return Vector3.zero;
         }

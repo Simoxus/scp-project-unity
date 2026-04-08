@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using PrimeTween;
+using System;
 using System.Threading;
 using TMPro;
 using UnityEngine;
@@ -33,7 +34,6 @@ public class UILoading : MonoBehaviour
         if (_mainCanvasGroup == null)
         {
             _mainCanvasGroup = gameObject.AddComponent<CanvasGroup>();
-            Log.Warning("UILoading: CanvasGroup was missing and has been added automatically.");
         }
 
         // Setup Localization
@@ -118,8 +118,9 @@ public class UILoading : MonoBehaviour
         {
             loadingText.text = string.Format(template, percentage);
         }
-        catch (System.FormatException)
+        catch (FormatException ex)
         {
+            Log.Exception(ex);
         }
     }
 
@@ -191,9 +192,9 @@ public class UILoading : MonoBehaviour
                 await Tween.Alpha(pressAnyKeyGroup, 1f, 0.5f / speed).ToYieldInstruction().ToUniTask(cancellationToken: ct);
             }
         }
-        catch (System.OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
-            // Expected when cancellation is requested
+            Log.Exception(ex);
         }
     }
 

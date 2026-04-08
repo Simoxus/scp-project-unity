@@ -19,7 +19,7 @@ public abstract class BaseDoorActivator : MonoBehaviour, IInteractable
     {
         if (ActivatorCollider == null && SecondActivatorCollider == null)
         {
-            Log.VerboseWarning($"Door activator on '{gameObject.name}' has no colliders assigned.");
+            Log.VerboseWarning($"Door activator on '{gameObject.name}' has no colliders assigned");
         }
     }
 

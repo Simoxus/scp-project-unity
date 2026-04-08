@@ -83,7 +83,7 @@ public class PersistenceManager : Singleton<PersistenceManager>
 
             if (success)
             {
-                Log.Success("Quick save complete!");
+                Log.Success("Quick save complete");
                 _autosaveTimer = 0f;
             }
 
@@ -181,9 +181,9 @@ public class PersistenceManager : Singleton<PersistenceManager>
 
             return allSucceeded;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to save game: {e.Message}");
+            Log.Exception(ex);
             return false;
         }
     }
@@ -228,9 +228,9 @@ public class PersistenceManager : Singleton<PersistenceManager>
 
             return allSucceeded;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to load game: {e.Message}");
+            Log.Exception(ex);
             return false;
         }
     }
