@@ -12,9 +12,17 @@ using UnityEngine;
 
 public class LuaDefinitionGenerator
 {
-    private static string vscodeDirectory = ".vscode";
-    private static string definitionsPath = ".vscode/lua-definitions";
-    private static string modsPath = "Mods";
+    private static string VSCODE_DIRECTORY = ".vscode";
+    private static string DEFINITIONS_PATH = ".vscode/lua-definitions";
+    private static string STATIC_DEFINITIONS_PATH = ".vscode/lua-definitions/Built-in";
+    private static string MODS_PATH = "Mods";
+
+    private static readonly HashSet<string> _luaKeywords = new HashSet<string>
+    {
+        "and", "break", "do", "else", "elseif", "end", "false", "for",
+        "function", "goto", "if", "in", "local", "nil", "not", "or",
+        "repeat", "return", "then", "true", "until", "while"
+    };
 
     [Serializable]
     private class VSCodeSettings
@@ -37,6 +45,16 @@ public class LuaDefinitionGenerator
     {
         public string Name;
         public Dictionary<string, string> Fields = new Dictionary<string, string>();
+    }
+
+    private static string SanitizeParamName(string name)
+    {
+        if (_luaKeywords.Contains(name))
+        {
+            return name + "_";
+        }
+
+        return name;
     }
 
     private static List<UnityTypeDefinition> GetUnityTypeDefinitions()
@@ -109,15 +127,17 @@ public class LuaDefinitionGenerator
         };
     }
 
-    [UnityEditor.Callbacks.DidReloadScripts] // The performance impact seems to be negligibl
+    [UnityEditor.Callbacks.DidReloadScripts]
     [MenuItem("Mods/Generate Lua Definitions")]
     public static void GenerateDefinitions()
     {
         string projectRoot = Path.Combine(Application.dataPath, "..");
-        string fullDefinitionsPath = Path.Combine(projectRoot, definitionsPath);
-        string fullVSCodePath = Path.Combine(projectRoot, vscodeDirectory);
+        string fullDefinitionsPath = Path.Combine(projectRoot, DEFINITIONS_PATH);
+        string fullStaticDefinitionsPath = Path.Combine(projectRoot, STATIC_DEFINITIONS_PATH);
+        string fullVSCodePath = Path.Combine(projectRoot, VSCODE_DIRECTORY);
 
         Directory.CreateDirectory(fullDefinitionsPath);
+        Directory.CreateDirectory(fullStaticDefinitionsPath);
         SetHiddenAttribute(fullVSCodePath);
 
         if (Directory.Exists(fullDefinitionsPath))
@@ -128,14 +148,20 @@ public class LuaDefinitionGenerator
             }
         }
 
-        var moonSharpTypes = GetMoonSharpTypes();
+        if (Directory.Exists(fullStaticDefinitionsPath))
+        {
+            foreach (string file in Directory.GetFiles(fullStaticDefinitionsPath, "*.lua"))
+            {
+                File.Delete(file);
+            }
+        }
 
-        foreach (var type in moonSharpTypes)
+        foreach (var type in GetMoonSharpTypes())
         {
             GenerateDefinitionForType(type, fullDefinitionsPath);
         }
 
-        GenerateGlobalDefinitions(fullDefinitionsPath);
+        GenerateGlobalDefinitions(fullDefinitionsPath, fullStaticDefinitionsPath);
         GenerateModdingWorkspace();
         GenerateExtensionsJson();
 
@@ -152,7 +178,9 @@ public class LuaDefinitionGenerator
             try
             {
                 var types = assembly.GetTypes()
-                    .Where(t => t.GetCustomAttribute<MoonSharpUserDataAttribute>() != null);
+                    .Where(t =>
+                        t.GetCustomAttribute<MoonSharpUserDataAttribute>() != null &&
+                        t.GetCustomAttribute<StaticModAPIAttribute>() == null);
                 moonSharpTypes.AddRange(types);
             }
             catch (ReflectionTypeLoadException ex)
@@ -210,12 +238,30 @@ public class LuaDefinitionGenerator
 
     private static void GenerateMethodDefinition(StringBuilder sb, string className, MethodInfo method)
     {
+        var docAttribute = method.GetCustomAttribute<LuaDocAttribute>();
+        var paramAttributes = method.GetCustomAttributes<LuaParamAttribute>()
+            .ToDictionary(p => p.Name, p => p.Description);
+
+        if (docAttribute != null)
+        {
+            sb.AppendLine($"--- {docAttribute.Description}");
+        }
+
         var parameters = method.GetParameters();
 
         foreach (var param in parameters)
         {
             string luaType = GetLuaType(param.ParameterType);
-            sb.AppendLine($"---@param {param.Name} {luaType}");
+            string safeName = SanitizeParamName(param.Name);
+
+            if (paramAttributes.TryGetValue(param.Name, out string paramDesc))
+            {
+                sb.AppendLine($"---@param {safeName} {luaType} {paramDesc}");
+            }
+            else
+            {
+                sb.AppendLine($"---@param {safeName} {luaType}");
+            }
         }
 
         if (method.ReturnType != typeof(void))
@@ -224,7 +270,7 @@ public class LuaDefinitionGenerator
             sb.AppendLine($"---@return {luaReturnType}");
         }
 
-        string paramList = string.Join(", ", parameters.Select(p => p.Name));
+        string paramList = string.Join(", ", parameters.Select(p => SanitizeParamName(p.Name)));
         sb.AppendLine($"function {className}.{method.Name}({paramList}) end");
         sb.AppendLine();
     }
@@ -256,7 +302,7 @@ public class LuaDefinitionGenerator
         return actualType.Name;
     }
 
-    private static void GenerateGlobalDefinitions(string outputPath)
+    private static void GenerateGlobalDefinitions(string outputPath, string staticOutputPath)
     {
         var sb = new StringBuilder();
 
@@ -301,12 +347,61 @@ public class LuaDefinitionGenerator
 
         string filePath = Path.Combine(outputPath, "Global.lua");
         File.WriteAllText(filePath, sb.ToString());
+
+        foreach (var api in ModSandboxSettings.GetStaticAPIs())
+        {
+            GenerateStaticAPIDefinition(api, staticOutputPath);
+        }
+    }
+
+    private static void GenerateStaticAPIDefinition(ModSandboxSettings.StaticAPI api, string outputPath)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"---@class {api.GlobalName}");
+        sb.AppendLine($"{api.GlobalName} = {{}}");
+        sb.AppendLine();
+
+        var methods = api.Type.GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .Where(m => !m.IsSpecialName)
+            .GroupBy(m => m.Name)
+            .Select(g => g.First());
+
+        foreach (var method in methods)
+        {
+            var parameters = method.GetParameters();
+
+            foreach (var param in parameters)
+            {
+                sb.AppendLine($"---@param {SanitizeParamName(param.Name)} {GetLuaType(param.ParameterType)}");
+            }
+
+            if (method.ReturnType != typeof(void))
+            {
+                sb.AppendLine($"---@return {GetLuaType(method.ReturnType)}");
+            }
+
+            string paramList = string.Join(", ", parameters.Select(p => SanitizeParamName(p.Name)));
+            sb.AppendLine($"function {api.GlobalName}.{method.Name}({paramList}) end");
+            sb.AppendLine();
+        }
+
+        var props = api.Type.GetProperties(BindingFlags.Public | BindingFlags.Static);
+
+        foreach (var prop in props)
+        {
+            sb.AppendLine($"---@type {GetLuaType(prop.PropertyType)}");
+            sb.AppendLine($"{api.GlobalName}.{prop.Name} = nil");
+            sb.AppendLine();
+        }
+
+        string filePath = Path.Combine(outputPath, $"{api.GlobalName}.lua");
+        File.WriteAllText(filePath, sb.ToString());
     }
 
     private static void GenerateExtensionsJson()
     {
         string projectRoot = Path.Combine(Application.dataPath, "..");
-        string fullVSCodePath = Path.Combine(projectRoot, vscodeDirectory);
+        string fullVSCodePath = Path.Combine(projectRoot, VSCODE_DIRECTORY);
         string extensionsPath = Path.Combine(fullVSCodePath, "extensions.json");
 
         Directory.CreateDirectory(fullVSCodePath);
@@ -329,7 +424,7 @@ public class LuaDefinitionGenerator
     private static void GenerateModdingWorkspace()
     {
         string projectRoot = Path.Combine(Application.dataPath, "..");
-        string fullModsPath = Path.Combine(projectRoot, modsPath);
+        string fullModsPath = Path.Combine(projectRoot, MODS_PATH);
         string workspacePath = Path.Combine(fullModsPath, "Modding.code-workspace");
 
         Directory.CreateDirectory(fullModsPath);
