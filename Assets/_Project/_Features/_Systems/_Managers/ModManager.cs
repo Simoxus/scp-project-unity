@@ -4,16 +4,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 public class ModManager : Singleton<ModManager>
 {
-    [Space]
     [SerializeField] private string modsFolder = "Mods";
 
-    private Dictionary<string, object> _registeredAPIs = new Dictionary<string, object>();
-    private Dictionary<string, LuaMod> _loadedMods = new Dictionary<string, LuaMod>();
-    private List<string> _loadOrder = new List<string>();
+    private readonly Dictionary<string, object> _registeredAPIs = new();
+    private readonly Dictionary<string, LuaMod> _loadedMods = new();
+    private readonly List<string> _loadOrder = new();
+    private readonly List<(string Name, Type Type)> _perModAPITypes = new();
 
     public event Action<string> OnModLoaded;
     public event Action<string> OnModUnloaded;
@@ -22,11 +23,11 @@ public class ModManager : Singleton<ModManager>
     protected override void OnSingletonAwake()
     {
         InitializeMoonSharp();
+        DiscoverAPIs();
     }
 
     private async void Start()
     {
-        await RegisterCoreAPIs();
         await LoadAllMods();
         await InitializeAllMods();
     }
@@ -43,17 +44,16 @@ public class ModManager : Singleton<ModManager>
     {
         foreach (var mod in _loadedMods.Values)
         {
-            if (mod.IsEnabled)
+            if (!mod.IsEnabled) { continue; }
+
+            try
             {
-                try
-                {
-                    mod.Update(Time.deltaTime);
-                }
-                catch (ScriptRuntimeException e)
-                {
-                    Log.Error($"Runtime error in mod '{mod.Info.id}': {e.DecoratedMessage}");
-                    OnModError?.Invoke(mod.Info.id, e.DecoratedMessage);
-                }
+                mod.Update(Time.deltaTime);
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                Log.Exception(ex, message: ex.DecoratedMessage);
+                OnModError?.Invoke(mod.Info.id, ex.DecoratedMessage);
             }
         }
     }
@@ -62,16 +62,15 @@ public class ModManager : Singleton<ModManager>
     {
         foreach (var mod in _loadedMods.Values)
         {
-            if (mod.IsEnabled)
+            if (!mod.IsEnabled) { continue; }
+
+            try
             {
-                try
-                {
-                    mod.FixedUpdate(Time.fixedDeltaTime);
-                }
-                catch (ScriptRuntimeException e)
-                {
-                    Log.Error($"Runtime error in mod '{mod.Info.id}': {e.DecoratedMessage}");
-                }
+                mod.FixedUpdate(Time.fixedDeltaTime);
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                Log.Exception(ex, message: ex.DecoratedMessage);
             }
         }
     }
@@ -80,16 +79,15 @@ public class ModManager : Singleton<ModManager>
     {
         foreach (var mod in _loadedMods.Values)
         {
-            if (mod.IsEnabled)
+            if (!mod.IsEnabled) { continue; }
+
+            try
             {
-                try
-                {
-                    mod.LateUpdate(Time.deltaTime);
-                }
-                catch (ScriptRuntimeException e)
-                {
-                    Log.Error($"Runtime error in mod '{mod.Info.id}': {e.DecoratedMessage}");
-                }
+                mod.LateUpdate(Time.deltaTime);
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                Log.Exception(ex, message: ex.DecoratedMessage);
             }
         }
     }
@@ -97,36 +95,46 @@ public class ModManager : Singleton<ModManager>
     private void InitializeMoonSharp()
     {
         UserData.RegisterAssembly();
+
         UserData.RegisterType<Vector3>();
         UserData.RegisterType<Vector2>();
         UserData.RegisterType<Quaternion>();
         UserData.RegisterType<Color>();
         UserData.RegisterType<Transform>();
         UserData.RegisterType<GameObject>();
-
+        UserData.RegisterType<RaycastHit>();
+        UserData.RegisterType<Mathf>();
+        UserData.RegisterType<Physics>();
+        UserData.RegisterType<Input>();
+        UserData.RegisterType<Screen>();
         UserData.RegisterType<Player>();
         UserData.RegisterType<PlayerState>();
         UserData.RegisterType<PlayerHealth.HealthLevel>();
 
-        Log.VerboseInfo("MoonSharp initialized");
+        Log.VerboseSuccess("MoonSharp initialized");
     }
 
-    private void ConfigureSandbox(Script script)
+    private void DiscoverAPIs()
     {
-        ModSandboxSettings.ConfigureSandbox(script);
-    }
+        var types = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a => { try { return a.GetTypes(); } catch { return Type.EmptyTypes; } })
+            .Where(t => t.GetCustomAttribute<ModAPIAttribute>() != null && !t.IsAbstract);
 
-    private async UniTask RegisterCoreAPIs()
-    {
-        Log.VerboseInfo("Registering core APIs...");
+        foreach (var type in types)
+        {
+            var attr = type.GetCustomAttribute<ModAPIAttribute>();
 
-        RegisterAPI("Console", new ConsoleAPI());
-        RegisterAPI("Player", new PlayerAPI());
-        RegisterAPI("Unity", new UnityAPI());
+            if (attr.PerMod)
+            {
+                _perModAPITypes.Add((attr.Name, type));
+            }
+            else
+            {
+                RegisterAPI(attr.Name, Activator.CreateInstance(type));
+            }
+        }
 
-        Log.VerboseSuccess($"Registered {_registeredAPIs.Count} APIs");
-
-        await UniTask.Yield();
+        Log.VerboseSuccess($"Discovered {_registeredAPIs.Count} global APIs, {_perModAPITypes.Count} per-mod APIs");
     }
 
     public void RegisterAPI(string name, object api)
@@ -146,30 +154,27 @@ public class ModManager : Singleton<ModManager>
 
     public T GetAPI<T>(string name) where T : class
     {
-        if (_registeredAPIs.TryGetValue(name, out object api))
-        {
-            return api as T;
-        }
-        return null;
+        _registeredAPIs.TryGetValue(name, out object api);
+        return api as T;
     }
 
     private void RegisterAllAPIsToMod(LuaMod mod)
     {
-        foreach (var apiEntry in _registeredAPIs)
+        foreach (var (name, api) in _registeredAPIs)
         {
-            mod.RegisterAPI(apiEntry.Key, apiEntry.Value);
+            mod.RegisterAPI(name, api);
+        }
+
+        foreach (var (name, type) in _perModAPITypes)
+        {
+            mod.RegisterAPI(name, Activator.CreateInstance(type, mod.Info.id));
         }
     }
 
     private string GetModsPath()
     {
-#if UNITY_EDITOR
-        string projectRoot = Directory.GetParent(Application.dataPath).FullName;
-        return Path.Combine(projectRoot, modsFolder);
-#else
-        string gameDirectory = Directory.GetParent(Application.dataPath).FullName;
-        return Path.Combine(gameDirectory, modsFolder);
-#endif
+        string root = Directory.GetParent(Application.dataPath).FullName;
+        return Path.Combine(root, modsFolder);
     }
 
     private async UniTask LoadAllMods()
@@ -183,33 +188,31 @@ public class ModManager : Singleton<ModManager>
             return;
         }
 
-        var modDirs = Directory.GetDirectories(modsPath);
         var modInfos = new List<ModInfo>();
 
-        foreach (var dir in modDirs)
+        foreach (var dir in Directory.GetDirectories(modsPath))
         {
             string modJsonPath = Path.Combine(dir, "mod.json");
+
             if (!File.Exists(modJsonPath))
             {
-                Log.Warning($"No mod.json found in {Path.GetFileName(dir)}, skipping");
+                Log.Warning($"No mod.json in {Path.GetFileName(dir)}, skipping");
                 continue;
             }
 
             try
             {
-                string json = File.ReadAllText(modJsonPath);
-                ModInfo info = JsonUtility.FromJson<ModInfo>(json);
+                ModInfo info = JsonUtility.FromJson<ModInfo>(File.ReadAllText(modJsonPath));
                 info.folderPath = dir;
                 modInfos.Add(info);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error($"Failed to parse mod.json in {Path.GetFileName(dir)}: {e.Message}");
+                Log.Exception(ex, message: ex.Message);
             }
         }
 
-        modInfos = modInfos.OrderBy(m => m.loadOrder).ToList();
-        foreach (var info in modInfos)
+        foreach (var info in modInfos.OrderBy(m => m.loadOrder))
         {
             await LoadMod(info);
         }
@@ -219,35 +222,34 @@ public class ModManager : Singleton<ModManager>
     {
         if (_loadedMods.ContainsKey(info.id))
         {
-            Log.VerboseWarning($"Mod '{info.id}' already loaded.");
+            Log.VerboseWarning($"Mod '{info.id}' already loaded");
             return;
+        }
+
+        foreach (var dep in info.dependencies)
+        {
+            if (!_loadedMods.ContainsKey(dep))
+            {
+                Log.Error($"Mod '{info.id}' requires '{dep}' which is not loaded");
+                return;
+            }
         }
 
         try
         {
-            foreach (var dep in info.dependencies)
-            {
-                if (!_loadedMods.ContainsKey(dep))
-                {
-                    Log.Error($"Mod '{info.id}' requires '{dep}' which is not loaded.");
-                    return;
-                }
-            }
-
             LuaMod mod = new LuaMod(info);
-
             RegisterAllAPIsToMod(mod);
-            ConfigureSandbox(mod.Script);
+            ModSandboxSettings.ConfigureSandbox(mod.Script, info.name);
 
             string mainScriptPath = Path.Combine(info.folderPath, info.entryPoint);
+
             if (!File.Exists(mainScriptPath))
             {
                 Log.Error($"Entry point '{info.entryPoint}' not found for mod '{info.id}'");
                 return;
             }
 
-            string mainScript = File.ReadAllText(mainScriptPath);
-            await mod.Load(mainScript);
+            await mod.Load(File.ReadAllText(mainScriptPath));
 
             _loadedMods[info.id] = mod;
             _loadOrder.Add(info.id);
@@ -255,10 +257,10 @@ public class ModManager : Singleton<ModManager>
             OnModLoaded?.Invoke(info.id);
             Log.VerboseSuccess($"Loaded mod '{info.name}'");
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to load mod '{info.id}': {e.Message}\n{e.StackTrace}");
-            OnModError?.Invoke(info.id, e.Message);
+            Log.Exception(ex, message: ex.Message);
+            OnModError?.Invoke(info.id, ex.Message);
         }
     }
 
@@ -266,17 +268,16 @@ public class ModManager : Singleton<ModManager>
     {
         foreach (var modId in _loadOrder)
         {
-            if (_loadedMods.TryGetValue(modId, out LuaMod mod))
+            if (!_loadedMods.TryGetValue(modId, out LuaMod mod)) { continue; }
+
+            try
             {
-                try
-                {
-                    await mod.Initialize();
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"Failed to initialize mod '{modId}': {e.Message}");
-                    OnModError?.Invoke(modId, e.Message);
-                }
+                await mod.Initialize();
+            }
+            catch (Exception ex)
+            {
+                Log.Exception(ex, message: ex.Message);
+                OnModError?.Invoke(modId, ex.Message);
             }
         }
 
@@ -287,23 +288,20 @@ public class ModManager : Singleton<ModManager>
     {
         if (!_loadedMods.TryGetValue(modId, out LuaMod mod))
         {
-            Log.Warning($"Cannot reload mod '{modId}' because it's not loaded");
+            Log.Warning($"Cannot reload mod '{modId}'; not loaded");
             return;
         }
 
-        Log.VerboseInfo($"Reloading mod '{mod.Info.name}'");
-
         ModInfo modInfo = mod.Info;
 
-        if (_registeredAPIs.TryGetValue("Console", out object api) && api is ConsoleAPI consoleAPI)
+        foreach (var api in _registeredAPIs.Values.OfType<IModAPICleanup>())
         {
-            consoleAPI.CleanupCommands();
+            api.OnModUnloaded(modId);
         }
 
         await mod.Unload();
         _loadedMods.Remove(modId);
         _loadOrder.Remove(modId);
-
         OnModUnloaded?.Invoke(modId);
 
         await LoadMod(modInfo);
@@ -316,16 +314,12 @@ public class ModManager : Singleton<ModManager>
 
     public async UniTask ReloadAllMods()
     {
-        Log.VerboseInfo("Reloading all mods...");
-
-        var modIds = _loadOrder.ToList();
-
-        foreach (var modId in modIds)
+        foreach (var modId in _loadOrder.ToList())
         {
             await ReloadMod(modId);
         }
 
-        Log.VerboseSuccess("All mods reloaded!");
+        Log.VerboseSuccess("All mods reloaded");
     }
 
     public void EnableMod(string modId)
@@ -333,7 +327,6 @@ public class ModManager : Singleton<ModManager>
         if (_loadedMods.TryGetValue(modId, out LuaMod mod))
         {
             mod.Enable();
-            Log.VerboseSuccess($"Enabled mod '{mod.Info.name}'");
         }
     }
 
@@ -342,7 +335,6 @@ public class ModManager : Singleton<ModManager>
         if (_loadedMods.TryGetValue(modId, out LuaMod mod))
         {
             mod.Disable();
-            Log.VerboseSuccess($"Disabled mod '{mod.Info.name}'");
         }
     }
 
@@ -352,13 +344,6 @@ public class ModManager : Singleton<ModManager>
         return mod;
     }
 
-    public List<ModInfo> GetAllModInfo()
-    {
-        return _loadedMods.Values.Select(m => m.Info).ToList();
-    }
-
-    public string GetModsFolderPath()
-    {
-        return GetModsPath();
-    }
+    public List<ModInfo> GetAllModInfo() => _loadedMods.Values.Select(m => m.Info).ToList();
+    public string GetModsFolderPath() => GetModsPath();
 }
