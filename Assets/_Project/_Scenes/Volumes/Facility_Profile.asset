@@ -21,10 +21,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.445
+    m_Value: 0.252
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.2
+    m_Value: 0.44
   rounded:
     m_OverrideState: 0
     m_Value: 0
@@ -108,6 +108,7 @@ MonoBehaviour:
   - {fileID: -4157628714854648937}
   - {fileID: 3334962822433533934}
   - {fileID: -552006997961185847}
+  - {fileID: 7803290581914777734}
 --- !u!114 &3334962822433533934
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -127,6 +128,91 @@ MonoBehaviour:
   iterations:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &7803290581914777734
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76fe4f6e20ec4c4eb5f6d05ceb0ee646, type: 3}
+  m_Name: FPVolumetricFogVolume
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    m_OverrideState: 1
+    m_Value: 1
+  colorMode:
+    m_OverrideState: 1
+    m_Value: 0
+  color:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  tint:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  mipFogMaxMip:
+    m_OverrideState: 1
+    m_Value: 0.5
+  mipFogNear:
+    m_OverrideState: 1
+    m_Value: 0
+  mipFogFar:
+    m_OverrideState: 1
+    m_Value: 1000
+  baseHeight:
+    m_OverrideState: 1
+    m_Value: 0
+  maximumHeight:
+    m_OverrideState: 1
+    m_Value: 1000
+  fogAttenuationDistance:
+    m_OverrideState: 1
+    m_Value: 90
+  enableDirectionalLight:
+    m_OverrideState: 0
+    m_Value: 1
+  enablePointAndSpotLight:
+    m_OverrideState: 1
+    m_Value: 1
+  albedo:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  directionalScatteringIntensity:
+    m_OverrideState: 1
+    m_Value: 0
+  localScatteringIntensity:
+    m_OverrideState: 1
+    m_Value: 14
+  anisotropy:
+    m_OverrideState: 1
+    m_Value: 0
+  depthExtent:
+    m_OverrideState: 1
+    m_Value: 64
+  screenResolutionPercentage:
+    m_OverrideState: 1
+    m_Value: 12.5
+  volumeSliceCount:
+    m_OverrideState: 1
+    m_Value: 128
+  denoiseMode:
+    m_OverrideState: 1
+    m_Value: 3
+  sampleOffsetWeight:
+    m_OverrideState: 0
+    m_Value: 1
+  autoSliceDistribution:
+    m_OverrideState: 0
+    m_Value: 1
+  sliceDistributionUniformity:
+    m_OverrideState: 0
+    m_Value: 0.75
+  blendWeight:
+    m_OverrideState: 0
+    m_Value: 7
 --- !u!114 &8011699939185950215
 MonoBehaviour:
   m_ObjectHideFlags: 3
