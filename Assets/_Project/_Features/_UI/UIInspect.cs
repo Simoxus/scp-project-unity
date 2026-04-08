@@ -2,7 +2,6 @@
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-[System.Serializable]
 public class UIInspect : MonoBehaviour
 {
     [Space]
