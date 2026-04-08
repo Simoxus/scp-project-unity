@@ -308,8 +308,8 @@ public class PlayerFreecam : MonoBehaviour
     {
         if (_player.CameraBrain != null && _freecamCamera != null)
         {
-            _freecamCamera.nearClipPlane = _player.CameraBrain.nearClipPlane;
-            _freecamCamera.farClipPlane = _player.CameraBrain.farClipPlane;
+            _freecamCamera.nearClipPlane = _player.CameraMain.Lens.NearClipPlane;
+            _freecamCamera.farClipPlane = _player.CameraMain.Lens.FarClipPlane;
         }
     }
 
