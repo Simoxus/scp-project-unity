@@ -62,15 +62,13 @@ namespace Facility.Generation
 
         public static Vector2Int RotateCellOffset(Vector2Int offset, int rotation)
         {
-            // Normalize rotation to 0-3 range
             rotation = ((rotation % 4) + 4) % 4;
-
             return rotation switch
             {
-                0 => offset,                                    // 0° - no rotation
-                1 => new Vector2Int(-offset.y, offset.x),      // 90° CCW
-                2 => new Vector2Int(-offset.x, -offset.y),     // 180°
-                3 => new Vector2Int(offset.y, -offset.x),      // 270° CCW (or 90° CW)
+                0 => offset,
+                1 => new Vector2Int(offset.y, -offset.x),
+                2 => new Vector2Int(-offset.x, -offset.y),
+                3 => new Vector2Int(-offset.y, offset.x),
                 _ => offset
             };
         }
