@@ -11,6 +11,7 @@ namespace Facility.Generation
 
         private Dictionary<RoomLayout, List<RoomData>> _roomsByLayout = new Dictionary<RoomLayout, List<RoomData>>();
         private Dictionary<string, RoomData> _roomsByName = new Dictionary<string, RoomData>();
+        private Dictionary<RoomLayout, float> _totalWeightsByLayout = new();
         private bool _isInitialized = false;
 
         public IReadOnlyList<RoomData> NormalRooms => normalRooms;
@@ -47,6 +48,11 @@ namespace Facility.Generation
                 }
             }
 
+            foreach (var kvp in _roomsByLayout)
+            {
+                _totalWeightsByLayout[kvp.Key] = kvp.Value.Sum(r => r.SpawnWeight);
+            }
+
             _isInitialized = true;
         }
 
@@ -80,7 +86,7 @@ namespace Facility.Generation
             Random.InitState(seed);
             var rooms = _roomsByLayout[layout];
 
-            float totalWeight = rooms.Sum(r => r.SpawnWeight);
+            float totalWeight = _totalWeightsByLayout[layout];
             float randomValue = Random.Range(0f, totalWeight);
 
             float currentWeight = 0f;

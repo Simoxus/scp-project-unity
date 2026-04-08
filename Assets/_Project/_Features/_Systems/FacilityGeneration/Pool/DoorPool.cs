@@ -9,6 +9,8 @@ namespace Facility.Generation
     {
         [SerializeField] private List<AssetReferenceGameObject> doorPrefabReferences = new List<AssetReferenceGameObject>();
 
+        public IReadOnlyList<AssetReferenceGameObject> GetAllDoorReferences() => doorPrefabReferences;
+
         public AssetReferenceGameObject GetRandomDoorReference(int seed)
         {
             if (doorPrefabReferences.Count == 0)
