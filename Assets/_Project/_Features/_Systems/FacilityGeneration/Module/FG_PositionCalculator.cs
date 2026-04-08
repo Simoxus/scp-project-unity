@@ -8,12 +8,7 @@ namespace Facility.Generation
         {
             Vector3 finalPosition = basePosition;
 
-            // IMPORTANT: Large rooms already have their pivot at the anchor point (0,0)
-            // The expandRelativeToOrigin just defines which additional cells are occupied
-            // We should NOT apply any automatic centering offset for large rooms
-            // The prefab's pivot is positioned correctly at the doorway/connection point
-
-            // Apply custom offset if present (for edge cases that need manual adjustment)
+            // Apply custom offset if present
             if (roomData.HasCustomOffset)
             {
                 Vector3 rotatedOffset = RotateOffset(roomData.RoomOffset, rotation);
