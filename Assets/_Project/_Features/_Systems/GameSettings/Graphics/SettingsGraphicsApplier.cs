@@ -172,14 +172,19 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
         ApplyAntiAliasingAsync(index).Forget();
     }
 
-    public void ApplyAmbientOcclusion(bool enabled)
+    public void ApplyViewDistance(float value)
     {
-        ApplyAmbientOcclusionAsync(enabled).Forget();
+        ApplyViewDistanceAsync(value).Forget();
     }
 
     public void ApplyRenderShadows(bool enabled)
     {
         ApplyRenderShadowsAsync(enabled).Forget();
+    }
+
+    public void ApplyAmbientOcclusion(bool enabled)
+    {
+        ApplyAmbientOcclusionAsync(enabled).Forget();
     }
 
     public void ApplyBloom(bool enabled)
@@ -262,14 +267,14 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
         if (inBatchMode == false) settingsGraphics.SaveSettings();
     }
 
-    public async UniTask ApplyAmbientOcclusionAsync(bool enabled)
+    public async UniTask ApplyViewDistanceAsync(float value)
     {
         if (Core.Player == null || Core.Player.CameraMain == null)
         {
             await WaitForPlayerAsync(_cts.Token);
         }
 
-        settingsGraphics.ssaoFeature.SetActive(enabled);
+        Core.Player.CameraMain.Lens.FarClipPlane = value;
 
         if (inBatchMode == false) settingsGraphics.SaveSettings();
     }
@@ -285,6 +290,18 @@ public class SettingsGraphicsApplier : BaseSettingsApplier
         UniversalAdditionalCameraData cameraData = cameraBrain.GetUniversalAdditionalCameraData();
 
         cameraData.renderShadows = enabled;
+
+        if (inBatchMode == false) settingsGraphics.SaveSettings();
+    }
+
+    public async UniTask ApplyAmbientOcclusionAsync(bool enabled)
+    {
+        if (Core.Player == null || Core.Player.CameraMain == null)
+        {
+            await WaitForPlayerAsync(_cts.Token);
+        }
+
+        settingsGraphics.ssaoFeature.SetActive(enabled);
 
         if (inBatchMode == false) settingsGraphics.SaveSettings();
     }

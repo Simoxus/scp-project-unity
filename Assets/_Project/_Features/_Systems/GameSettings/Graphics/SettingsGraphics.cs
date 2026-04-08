@@ -29,8 +29,9 @@ public class SettingsGraphics : BaseSettings
     public Slider fieldOfViewSlider;
     public TMP_Dropdown textureQualityDropdown;
     public TMP_Dropdown antiAliasingDropdown;
-    public Toggle ambientOcclusionToggle;
+    public Slider viewDistanceSlider;
     public Toggle renderShadowsToggle;
+    public Toggle ambientOcclusionToggle;
     public Toggle bloomToggle;
     public Toggle vignetteToggle;
 
@@ -71,8 +72,9 @@ public class SettingsGraphics : BaseSettings
         settingsManager.SaveFloat(CATEGORY, "FieldOfView", fieldOfViewSlider.value);
         settingsManager.SaveInt(CATEGORY, "TextureQuality", textureQualityDropdown.value);
         settingsManager.SaveInt(CATEGORY, "AntiAliasing", antiAliasingDropdown.value);
-        settingsManager.SaveBool(CATEGORY, "AmbientOcclusion", ambientOcclusionToggle.isOn);
+        settingsManager.SaveFloat(CATEGORY, "ViewDistance", viewDistanceSlider.value);
         settingsManager.SaveBool(CATEGORY, "RenderShadows", renderShadowsToggle.isOn);
+        settingsManager.SaveBool(CATEGORY, "AmbientOcclusion", ambientOcclusionToggle.isOn);
         settingsManager.SaveBool(CATEGORY, "Bloom", bloomToggle.isOn);
         settingsManager.SaveBool(CATEGORY, "Vignette", vignetteToggle.isOn);
 
@@ -95,15 +97,16 @@ public class SettingsGraphics : BaseSettings
         }
 
         windowModeDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "WindowMode", 0));
-        windowResolutionDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "WindowResolution", windowResolutionDropdown.value));
+        windowResolutionDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "WindowResolution", GetNativeResolutionIndex()));
         renderScaleSlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "RenderScale", 1f));
         vSyncToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "VSync", false));
         framerateDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "Framerate", 0));
         fieldOfViewSlider.value = settingsManager.LoadFloat(CATEGORY, "FieldOfView", 70f); // This literally only applies if you set the value with notification and i have no idea why
         textureQualityDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "TextureQuality", 4));
-        antiAliasingDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "AntiAliasing", 3));
-        ambientOcclusionToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "AmbientOcclusion", true));
+        antiAliasingDropdown.SetValueWithoutNotify(settingsManager.LoadInt(CATEGORY, "AntiAliasing", 2));
+        viewDistanceSlider.SetValueWithoutNotify(settingsManager.LoadFloat(CATEGORY, "ViewDistance", 30f));
         renderShadowsToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "RenderShadows", true));
+        ambientOcclusionToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "AmbientOcclusion", true));
         bloomToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "Bloom", true));
         vignetteToggle.SetIsOnWithoutNotify(settingsManager.LoadBool(CATEGORY, "Vignette", true));
 
@@ -117,8 +120,9 @@ public class SettingsGraphics : BaseSettings
         await applier.ApplyFieldOfViewAsync(fieldOfViewSlider.value);
         applier.ApplyTextureQuality(textureQualityDropdown.value);
         await applier.ApplyAntiAliasingAsync(antiAliasingDropdown.value);
-        await applier.ApplyAmbientOcclusionAsync(ambientOcclusionToggle.isOn);
+        await applier.ApplyViewDistanceAsync(viewDistanceSlider.value);
         await applier.ApplyRenderShadowsAsync(renderShadowsToggle.isOn);
+        await applier.ApplyAmbientOcclusionAsync(ambientOcclusionToggle.isOn);
         applier.ApplyBloom(bloomToggle.isOn);
         applier.ApplyVignette(vignetteToggle.isOn);
 
@@ -153,30 +157,31 @@ public class SettingsGraphics : BaseSettings
         }
     }
 
-    public void SetResolutionToNative()
+    public int GetNativeResolutionIndex()
     {
-        if (availableResolutions == null || availableResolutions.Length == 0) return;
+        if (availableResolutions == null || availableResolutions.Length == 0) return 0;
 
-        int nativeResolutionIndex = 0;
         for (int i = 0; i < availableResolutions.Length; i++)
         {
             if (availableResolutions[i].width == Screen.currentResolution.width &&
                 availableResolutions[i].height == Screen.currentResolution.height)
-            {
-                nativeResolutionIndex = i;
-                break;
-            }
+                return i;
         }
 
-        // Update the dropdown UI value
+        return 0;
+    }
+
+    public void SetResolutionToNative()
+    {
+        int index = GetNativeResolutionIndex();
+
         if (windowResolutionDropdown != null)
         {
-            windowResolutionDropdown.value = nativeResolutionIndex;
+            windowResolutionDropdown.value = index;
             windowResolutionDropdown.RefreshShownValue();
         }
 
-        // Apply the resolution
-        applier.ApplyWindowResolution(nativeResolutionIndex);
+        applier.ApplyWindowResolution(index);
     }
 
     public void PopulateResolutionDropdown()
