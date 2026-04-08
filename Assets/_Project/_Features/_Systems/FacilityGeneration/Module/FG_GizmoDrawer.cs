@@ -200,10 +200,8 @@ namespace Facility.Generation
 
             RoomData roomData = cell.assignedRoom;
 
-            // Use the stored rotation from the cell (calculated during assignment)
+            // Use the stored rotation from the cell
             int rotation = cell.rotation;
-
-            // Get the ROTATED occupied cells
             Vector2Int[] occupiedCells = FG_GridUtility.GetRotatedOccupiedCells(roomData, rotation);
 
             // Calculate bounds from ROTATED occupied cells
