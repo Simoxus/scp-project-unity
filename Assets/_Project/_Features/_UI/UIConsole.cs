@@ -7,35 +7,38 @@ using UnityEngine.UI;
 
 public class UIConsole : MonoBehaviour
 {
+    private const float SCROLL_BOTTOM_THRESHOLD = 0.1f;
+    private const string CMD_CLEAR_CONSOLE = "<CMD_CLEAR_CONSOLE>";
+    private const string INPUT_PREFIX = "> ";
+
     [Space]
-    public Canvas canvas;
+    public Canvas Canvas;
 
     [Header("Tab Buttons")]
-    public Button buttonCommands;
-    public TextMeshProUGUI buttonCommandsText;
-    public Button buttonLogs;
-    public TextMeshProUGUI buttonLogsText;
+    public Button ButtonCommands;
+    public TextMeshProUGUI ButtonCommandsText;
+    public Button ButtonLogs;
+    public TextMeshProUGUI ButtonLogsText;
 
     [Header("Commands Panel")]
-    public GameObject commandsPanel;
-    public TMP_InputField commandInputField;
-    public TMP_Text commandsOutputText;
-    public ScrollRect commandsScrollRect;
-    public TMP_Text autocompleteSuggestionsText;
+    public GameObject CommandsPanel;
+    public TMP_InputField CommandInputField;
+    public TMP_Text CommandsOutputText;
+    public ScrollRect CommandsScrollRect;
+    public TMP_Text AutocompleteSuggestionsText;
 
     [Header("Logs Panel")]
-    public GameObject logsPanel;
-    public Button buttonLogsClear;
-    public TextMeshProUGUI logsOutputText;
-    public ScrollRect logsScrollRect;
+    public GameObject LogsPanel;
+    public Button ButtonLogsClear;
+    public TextMeshProUGUI LogsOutputText;
+    public ScrollRect LogsScrollRect;
 
     [Header("Settings")]
-    public int maxCommandsLines = 100;
-    public int maxLogLines = 200;
+    [SerializeField] private int maxCommandLines = 100;
+    [SerializeField] private int maxLogLines = 200;
 
     // Commands state
-    private const float SCROLL_BOTTOM_THRESHOLD = 0.1f;
-    private string _initialOutputText;
+    private string _initialCommandsText;
     private List<string> _history = new List<string>();
     private int _historyIndex = -1;
     private List<string> _currentSuggestions = new List<string>();
@@ -54,34 +57,24 @@ public class UIConsole : MonoBehaviour
 
     private void Awake()
     {
-        ValidateCanvas();
-        InitializeCommands();
         InitializeLogs();
         InitializeTabs();
+
+        if (CommandsOutputText != null)
+        {
+            _initialCommandsText = CommandsOutputText.text;
+        }
     }
 
     private void OnEnable()
     {
-        // Commands events
         ConsoleManager.OnConsoleMessage += HandleCommandsMessage;
-
-        // Unity log events
         Application.logMessageReceived += HandleUnityLog;
 
-        // Button events
-        if (buttonCommands != null)
-            buttonCommands.onClick.AddListener(ShowCommandsTab);
-        if (buttonLogs != null)
-            buttonLogs.onClick.AddListener(ShowLogsTab);
-        if (buttonLogsClear != null)
-            buttonLogsClear.onClick.AddListener(ClearLogs);
-
-        // Input events
         if (Core.Player != null)
         {
             _inputs = Core.Player.Inputs;
-            if (_inputs != null)
-                _inputs.OnDebugUI += Toggle;
+            _inputs.OnDebugUI += Toggle;
         }
 
         RebuildLogBufferAndDisplayText();
@@ -89,30 +82,17 @@ public class UIConsole : MonoBehaviour
 
     private void OnDisable()
     {
-        // Commands events
         ConsoleManager.OnConsoleMessage -= HandleCommandsMessage;
-
-        // Unity log events
         Application.logMessageReceived -= HandleUnityLog;
 
-        // Button events
-        if (buttonCommands != null)
-            buttonCommands.onClick.RemoveListener(ShowCommandsTab);
-        if (buttonLogs != null)
-            buttonLogs.onClick.RemoveListener(ShowLogsTab);
-        if (buttonLogsClear != null)
-            buttonLogsClear.onClick.RemoveListener(ClearLogs);
+        _inputs.OnDebugUI -= Toggle;
 
-        // Input events
-        if (_inputs != null)
-            _inputs.OnDebugUI -= Toggle;
-
-        if (commandInputField != null)
+        if (CommandInputField != null)
         {
-            commandInputField.DeactivateInputField();
+            CommandInputField.DeactivateInputField();
         }
 
-        ReleasePauseIfNeeded();
+        Core.GameManager.ReleasePauseIfRequested(this);
     }
 
     private void OnDestroy()
@@ -122,7 +102,7 @@ public class UIConsole : MonoBehaviour
 
     private void Update()
     {
-        if (_isVisible && commandInputField != null && commandInputField.isFocused)
+        if (_isVisible && CommandInputField != null && CommandInputField.isFocused)
         {
             HandleCommandsInput();
         }
@@ -130,74 +110,64 @@ public class UIConsole : MonoBehaviour
 
     public void Show()
     {
-        if (canvas == null)
-        {
-            Log.Error("UIConsole: Cannot show UI - Canvas is null");
-            return;
-        }
+        if (Canvas == null) return;
 
-        canvas.enabled = true;
+        Canvas.enabled = true;
         _isVisible = true;
 
-        // Disable other input contexts when console is open
-        if (_inputs != null)
-        {
-            _inputs.DisableGameplayInputs();
-            _inputs.DisableFreecamInputs();
-            _inputs.DisableKeypadInputs();
-        }
+        Core.GameManager.RequestPause(this);
+        _inputs.DisableGameplayInputs();
+        _inputs.DisableFreecamInputs();
+        _inputs.DisableKeypadInputs();
 
+        CommandInputField.interactable = true;
         FocusOnCommandsInput();
-
-        if (Core.GameManager != null)
-            Core.GameManager.RequestPause(this);
     }
 
     public void Hide()
     {
-        if (canvas == null)
-        {
-            Log.Error("UIConsole: Cannot hide UI - Canvas is null");
-            return;
-        }
+        if (Canvas == null) return;
 
-        if (commandInputField != null)
-        {
-            commandInputField.DeactivateInputField();
-            commandInputField.ReleaseSelection();
-        }
-
-        canvas.enabled = false;
+        Canvas.enabled = false;
         _isVisible = false;
 
-        // Re-enable gameplay inputs when console closes (if not paused by something else)
-        if (_inputs != null && Core.GameManager != null && !Core.GameManager.disablePlayerInputs)
+        if (_inputs != null && !Core.GameManager.disablePlayerInputs)
         {
             _inputs.EnableGameplayInputs();
         }
 
-        ReleasePauseIfNeeded();
+        CommandInputField.interactable = false;
+        CommandInputField.DeactivateInputField();
+        CommandInputField.ReleaseSelection();
+
+        Core.GameManager.ReleasePauseIfRequested(this);
     }
 
     public void Toggle()
     {
         if (_isVisible)
+        {
             Hide();
+        }
         else
+        {
             Show();
+        }
     }
 
     public void ForceClose()
     {
         if (IsVisible)
+        {
             Hide();
+        }
     }
 
     public void ShowCommandsTab()
     {
         PlayPressSound();
-        if (commandsPanel != null) commandsPanel.SetActive(true);
-        if (logsPanel != null) logsPanel.SetActive(false);
+        CommandsPanel.SetActive(true);
+        LogsPanel.SetActive(false);
         SetTabActive(true);
         FocusOnCommandsInput();
     }
@@ -205,25 +175,22 @@ public class UIConsole : MonoBehaviour
     public void ShowLogsTab()
     {
         PlayPressSound();
-        if (commandsPanel != null) commandsPanel.SetActive(false);
-        if (logsPanel != null) logsPanel.SetActive(true);
+        CommandsPanel.SetActive(false);
+        LogsPanel.SetActive(true);
         SetTabActive(false);
 
         RebuildLogBufferAndDisplayText();
 
-        if (logsScrollRect != null)
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(logsOutputText.rectTransform);
-            logsScrollRect.verticalNormalizedPosition = 0f;
-        }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(LogsOutputText.rectTransform);
+        LogsScrollRect.verticalNormalizedPosition = 0f;
     }
 
     public void FocusOnCommandsInput()
     {
-        if (commandInputField != null && commandsPanel != null && commandsPanel.activeInHierarchy)
+        if (CommandInputField != null && CommandsPanel != null && CommandsPanel.activeInHierarchy)
         {
-            commandInputField.Select();
-            commandInputField.ActivateInputField();
+            CommandInputField.Select();
+            CommandInputField.ActivateInputField();
         }
     }
 
@@ -232,11 +199,7 @@ public class UIConsole : MonoBehaviour
         PlayPressSound();
         _logLines.Clear();
         RebuildLogBufferAndDisplayText();
-
-        if (logsScrollRect != null)
-        {
-            logsScrollRect.verticalNormalizedPosition = 1f;
-        }
+        LogsScrollRect.verticalNormalizedPosition = 1f;
     }
 
     public List<string> GetLogs()
@@ -244,63 +207,80 @@ public class UIConsole : MonoBehaviour
         return new List<string>(_logLines);
     }
 
-    private void ValidateCanvas()
+    public void OnInputEndEdit(string input)
     {
-        if (canvas == null)
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            canvas = GetComponent<Canvas>();
-            if (canvas == null)
-            {
-                canvas = gameObject.AddComponent<Canvas>();
-                Log.Warning("UIConsole: Canvas was missing and has been added automatically.");
-            }
+            ProcessInputField(input);
+            CommandInputField.ActivateInputField();
+            CommandInputField.text = "";
+        }
+        else
+        {
+            ClearAutocompleteSuggestions();
         }
     }
 
-    private void InitializeCommands()
+    public void PopulateSuggestions(string currentInput)
     {
-        if (commandsOutputText != null)
-            _initialOutputText = commandsOutputText.text;
+        if (AutocompleteSuggestionsText == null) return;
 
-        if (commandInputField != null)
+        _currentSuggestions.Clear();
+        _suggestionIndex = -1;
+
+        if (string.IsNullOrWhiteSpace(currentInput))
         {
-            commandInputField.onEndEdit.AddListener(OnInputEndEdit);
-            commandInputField.onValueChanged.AddListener(OnInputFieldChanged);
+            ClearAutocompleteSuggestions();
+            return;
         }
 
-        ClearAutocompleteSuggestions();
+        string commandWordPartial = currentInput.ToLower().Split(' ')[0];
+
+        _currentSuggestions = ConsoleManager.Instance.GetCommandsForAutocomplete()
+            .Where(kvp => kvp.Key.StartsWith(commandWordPartial))
+            .Select(kvp => kvp.Value.CommandWord.ToLower())
+            .Distinct()
+            .OrderBy(cmd => cmd)
+            .ToList();
+
+        DisplaySuggestions();
+    }
+
+    public void CopyLogsOutputToClipboard()
+    {
+        GUIUtility.systemCopyBuffer = GetLogsPlainOutput();
     }
 
     private void InitializeLogs()
     {
-        if (logsOutputText != null)
+        if (LogsOutputText != null)
         {
-            string initialText = logsOutputText.text;
-            string[] initialLines = initialText.Split(new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] initialLines = LogsOutputText.text.Split(
+                new char[] { '\n', '\r' },
+                System.StringSplitOptions.RemoveEmptyEntries
+            );
             _initialLogLines.AddRange(initialLines);
         }
     }
 
     private void InitializeTabs()
     {
-        // Start with commands tab active
         ShowCommandsTab();
-
-        // Start hidden
         Hide();
     }
 
     private void SetTabActive(bool commandsActive)
     {
-        if (buttonCommandsText != null)
+        if (ButtonCommandsText != null)
         {
-            buttonCommandsText.text = commandsActive ? "<b>COMMANDS</b>" : "COMMANDS";
-            buttonCommandsText.color = commandsActive ? Color.white : Color.gray;
+            ButtonCommandsText.text = commandsActive ? "<b>COMMANDS</b>" : "COMMANDS";
+            ButtonCommandsText.color = commandsActive ? Color.white : Color.gray;
         }
-        if (buttonLogsText != null)
+
+        if (ButtonLogsText != null)
         {
-            buttonLogsText.text = commandsActive ? "LOGS" : "<b>LOGS</b>";
-            buttonLogsText.color = commandsActive ? Color.gray : Color.white;
+            ButtonLogsText.text = commandsActive ? "LOGS" : "<b>LOGS</b>";
+            ButtonLogsText.color = commandsActive ? Color.gray : Color.white;
         }
     }
 
@@ -320,25 +300,6 @@ public class UIConsole : MonoBehaviour
         }
     }
 
-    private void OnInputEndEdit(string input)
-    {
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            ProcessInputField(input);
-            commandInputField.ActivateInputField();
-            commandInputField.text = "";
-        }
-        else
-        {
-            ClearAutocompleteSuggestions();
-        }
-    }
-
-    private void OnInputFieldChanged(string input)
-    {
-        PopulateSuggestions(input);
-    }
-
     private void ProcessInputField(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
@@ -351,19 +312,11 @@ public class UIConsole : MonoBehaviour
         {
             _history.Add(input);
         }
+
         _historyIndex = _history.Count;
 
-        AppendToCommands($"> {input}".AsInput());
-
-        if (Core.ConsoleManager != null)
-        {
-            Core.ConsoleManager.ProcessCommand(input);
-        }
-        else
-        {
-            AppendToCommands("ConsoleManager not found!".AsError());
-        }
-
+        AppendToCommands($"{INPUT_PREFIX}{input}".AsInput());
+        Core.ConsoleManager.ProcessCommand(input);
         ClearAutocompleteSuggestions();
     }
 
@@ -373,138 +326,99 @@ public class UIConsole : MonoBehaviour
 
         if (backward)
         {
-            _historyIndex--;
-            if (_historyIndex < 0)
-                _historyIndex = 0;
+            _historyIndex = Mathf.Max(0, _historyIndex - 1);
         }
         else
         {
             _historyIndex++;
+
             if (_historyIndex >= _history.Count)
             {
-                if (_historyIndex == _history.Count)
-                {
-                    commandInputField.text = "";
-                    ClearAutocompleteSuggestions();
-                    return;
-                }
-                _historyIndex = _history.Count - 1;
+                _historyIndex = _history.Count;
+                CommandInputField.text = "";
+                ClearAutocompleteSuggestions();
+                return;
             }
         }
 
-        if (_historyIndex >= 0 && _historyIndex < _history.Count)
-        {
-            commandInputField.text = _history[_historyIndex];
-            commandInputField.MoveTextEnd(true);
-        }
+        CommandInputField.text = _history[_historyIndex];
+        CommandInputField.MoveTextEnd(true);
         ClearAutocompleteSuggestions();
-    }
-
-    private void PopulateSuggestions(string currentInput)
-    {
-        if (autocompleteSuggestionsText == null || Core.ConsoleManager == null)
-            return;
-
-        _currentSuggestions.Clear();
-        _suggestionIndex = -1;
-
-        if (string.IsNullOrWhiteSpace(currentInput))
-        {
-            ClearAutocompleteSuggestions();
-            return;
-        }
-
-        string lowerInput = currentInput.ToLower();
-        string commandWordPartial = lowerInput.Split(' ')[0];
-
-        // Get matching commands/aliases and map them to their actual CommandWord
-        _currentSuggestions = ConsoleManager.Instance.GetCommandsForAutocomplete()
-            .Where(kvp => kvp.Key.StartsWith(commandWordPartial))
-            .Select(kvp => kvp.Value.CommandWord.ToLower())
-            .Distinct()
-            .OrderBy(cmd => cmd)
-            .ToList();
-
-        DisplaySuggestions();
     }
 
     private void CycleSuggestions()
     {
-        if (_currentSuggestions.Count == 0)
-            return;
+        if (_currentSuggestions.Count == 0) return;
 
         _suggestionIndex = (_suggestionIndex + 1) % _currentSuggestions.Count;
-        string selectedSuggestion = _currentSuggestions[_suggestionIndex];
 
-        commandInputField.text = selectedSuggestion;
-        commandInputField.MoveTextEnd(false);
+        CommandInputField.text = _currentSuggestions[_suggestionIndex];
+        CommandInputField.MoveTextEnd(false);
 
         DisplaySuggestions();
     }
 
     private void DisplaySuggestions()
     {
-        if (autocompleteSuggestionsText == null) return;
-
         if (_currentSuggestions.Count == 0)
         {
             ClearAutocompleteSuggestions();
             return;
         }
 
-        string suggestionsString = "";
+        var sb = new StringBuilder();
         for (int i = 0; i < _currentSuggestions.Count; i++)
         {
             if (i > 0)
-                suggestionsString += "\n";
+            {
+                sb.Append('\n');
+            }
 
-            if (i == _suggestionIndex)
-                suggestionsString += $"<b>{_currentSuggestions[i]}</b>".AsSuccess();
-            else
-                suggestionsString += _currentSuggestions[i];
+            string suggestion = _currentSuggestions[i];
+            sb.Append(i == _suggestionIndex ? $"<b>{suggestion}</b>".AsSuccess() : suggestion);
         }
-        autocompleteSuggestionsText.text = suggestionsString;
+
+        AutocompleteSuggestionsText.text = sb.ToString();
     }
 
     private void ClearAutocompleteSuggestions()
     {
-        if (autocompleteSuggestionsText != null)
-            autocompleteSuggestionsText.text = "";
+        AutocompleteSuggestionsText.text = "";
         _currentSuggestions.Clear();
         _suggestionIndex = -1;
     }
 
     private void AppendToCommands(string message)
     {
-        if (commandsOutputText == null) return;
+        if (CommandsOutputText == null) return;
 
         bool atBottom = false;
-        if (commandsScrollRect != null)
+        if (CommandsScrollRect != null)
         {
-            atBottom = commandsScrollRect.verticalNormalizedPosition <= SCROLL_BOTTOM_THRESHOLD;
+            atBottom = CommandsScrollRect.verticalNormalizedPosition <= SCROLL_BOTTOM_THRESHOLD;
         }
 
-        commandsOutputText.text += message + "\n";
+        CommandsOutputText.text += message + "\n";
 
-        string[] lines = commandsOutputText.text.Split('\n');
-        if (lines.Length > maxCommandsLines)
+        string[] lines = CommandsOutputText.text.Split('\n');
+        if (lines.Length > maxCommandLines)
         {
-            commandsOutputText.text = string.Join("\n", lines.Skip(lines.Length - maxCommandsLines).ToArray());
+            CommandsOutputText.text = string.Join("\n", lines.Skip(lines.Length - maxCommandLines).ToArray());
         }
 
-        if (commandsScrollRect != null && atBottom)
+        if (CommandsScrollRect != null && atBottom)
         {
             Canvas.ForceUpdateCanvases();
-            commandsScrollRect.verticalNormalizedPosition = 0f;
+            CommandsScrollRect.verticalNormalizedPosition = 0f;
         }
     }
 
     private void HandleCommandsMessage(string message)
     {
-        if (message == "<CMD_CLEAR_CONSOLE>")
+        if (message == CMD_CLEAR_CONSOLE)
         {
-            commandsOutputText.text = "";
-            AppendToCommands(_initialOutputText + "Commands cleared.".AsInfo());
+            CommandsOutputText.text = "";
+            AppendToCommands(_initialCommandsText + "Commands cleared.".AsInfo());
         }
         else
         {
@@ -515,16 +429,14 @@ public class UIConsole : MonoBehaviour
     private void HandleUnityLog(string logString, string stackTrace, LogType type)
     {
         string colorTag = GetColorForLogType(type);
-        string formattedLog = $"{colorTag}[{type}] {logString}</color>";
-
-        _logLines.Add(formattedLog);
+        _logLines.Add($"{colorTag}[{type}] {logString}</color>");
 
         while (_logLines.Count > maxLogLines)
         {
             _logLines.RemoveAt(0);
         }
 
-        if (logsPanel != null && logsPanel.activeInHierarchy)
+        if (LogsPanel != null && LogsPanel.activeInHierarchy)
         {
             RebuildLogBufferAndDisplayText();
         }
@@ -534,12 +446,26 @@ public class UIConsole : MonoBehaviour
     {
         Color color = type switch
         {
-            LogType.Error or LogType.Exception => ColorScheme.Error,
+            LogType.Error => ColorScheme.Error,
+            LogType.Exception => ColorScheme.Exception,
             LogType.Warning => ColorScheme.Warning,
             LogType.Assert or LogType.Log => ColorScheme.Info,
             _ => Color.white
         };
         return $"<color={ColorScheme.ToHex(color)}>";
+    }
+
+    private string GetLogsPlainOutput()
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (var line in _logLines)
+        {
+            string plain = System.Text.RegularExpressions.Regex.Replace(line, "<.*?>", "");
+            plain = System.Text.RegularExpressions.Regex.Replace(plain, @"^\[(?!EXCEPTION).*?\]\s*", "");
+            if (!string.IsNullOrWhiteSpace(plain)) sb.AppendLine(plain);
+        }
+
+        return sb.ToString().TrimEnd();
     }
 
     private void RebuildLogBufferAndDisplayText()
@@ -556,21 +482,14 @@ public class UIConsole : MonoBehaviour
             _logBuffer.AppendLine(line);
         }
 
-        if (logsOutputText != null)
+        if (LogsOutputText != null)
         {
-            logsOutputText.text = _logBuffer.ToString();
+            LogsOutputText.text = _logBuffer.ToString();
         }
-    }
-
-    private void ReleasePauseIfNeeded()
-    {
-        if (Core.GameManager != null && Core.GameManager.HasPauseRequest(this))
-            Core.GameManager.ReleasePause(this);
     }
 
     private void PlayPressSound()
     {
-        if (Core.AudioDataAccess?.UI != null)
-            FMODHelper.PlayOneShot(Core.AudioDataAccess.UI.PressSound);
+        FMODHelper.PlayOneShot(Core.AudioDataAccess.UI.PressSound);
     }
 }

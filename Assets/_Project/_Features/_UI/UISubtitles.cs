@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using PrimeTween;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -312,9 +313,9 @@ public class UISubtitles : MonoBehaviour
                 line.SetText(text);
             }
         }
-        catch (System.Exception e)
+        catch (Exception ex)
         {
-            Log.Error($"Failed to load localized subtitle: {e.Message}");
+            Log.Exception(ex);
         }
     }
 

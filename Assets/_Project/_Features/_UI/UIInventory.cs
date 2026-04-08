@@ -37,27 +37,18 @@ public class UIInventory : MonoBehaviour
         if (Core.Player != null)
         {
             _inputs = Core.Player.Inputs;
-            if (_inputs != null)
-                _inputs.OnInventoryUI += Toggle;
+            _inputs.OnInventoryUI += Toggle;
         }
 
-        if (Core.GameManager != null)
-        {
-            Core.GameManager.OnPauseStateChanged += HandlePauseStateChanged;
-        }
+        Core.GameManager.OnPauseStateChanged += HandlePauseStateChanged;
     }
 
     private void OnDisable()
     {
-        if (_inputs != null)
-            _inputs.OnInventoryUI -= Toggle;
+        _inputs.OnInventoryUI -= Toggle;
 
-        if (Core.GameManager != null)
-        {
-            Core.GameManager.OnPauseStateChanged -= HandlePauseStateChanged;
-        }
-
-        ReleasePauseIfNeeded();
+        Core.GameManager.OnPauseStateChanged -= HandlePauseStateChanged;
+        Core.GameManager.ReleasePauseIfRequested(this);
     }
 
     public void Toggle()
@@ -112,7 +103,7 @@ public class UIInventory : MonoBehaviour
             Core.UI.Tooltips.Hide();
 
         ClearAllSlotOutlines();
-        ReleasePauseIfNeeded();
+        Core.GameManager.ReleasePauseIfRequested(this);
 
         if (_wasCursorLocked)
         {
@@ -174,11 +165,5 @@ public class UIInventory : MonoBehaviour
                 inventory.UnequipItem(false);
             }
         }
-    }
-
-    private void ReleasePauseIfNeeded()
-    {
-        if (Core.GameManager != null && Core.GameManager.HasPauseRequest(this))
-            Core.GameManager.ReleasePause(this);
     }
 }

@@ -49,15 +49,13 @@ public class UIPauseMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_inputs != null)
-            _inputs.OnPauseUI += Toggle;
+        _inputs.OnPauseUI += Toggle;
     }
 
     private void OnDisable()
     {
-        if (_inputs != null)
-            _inputs.OnPauseUI -= Toggle;
-        ReleasePauseIfNeeded();
+        _inputs.OnPauseUI -= Toggle;
+        Core.GameManager.ReleasePauseIfRequested(this);
     }
 
     public void Show()
@@ -90,7 +88,7 @@ public class UIPauseMenu : MonoBehaviour
         _isVisible = false;
 
         HideAllPanels();
-        ReleasePauseIfNeeded();
+        Core.GameManager.ReleasePauseIfRequested(this);
     }
 
     public void Hide(bool playSound)
@@ -165,12 +163,6 @@ public class UIPauseMenu : MonoBehaviour
     {
         HideMainPanel();
         HideAllSubmenus();
-    }
-
-    private void ReleasePauseIfNeeded()
-    {
-        if (Core.GameManager != null && Core.GameManager.HasPauseRequest(this))
-            Core.GameManager.ReleasePause(this);
     }
 
     private void PlayButtonSound()
