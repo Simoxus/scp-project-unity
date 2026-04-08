@@ -9,7 +9,6 @@ public class IntroSequence : MonoBehaviour
     [ReadOnly] public bool IntroTriggered;
 
     [Space]
-    [SerializeField] private RoomInstance introStartRoom;
     [SerializeField] private RoomInstance startRoom;
     [SerializeField] private WakeUpCutscene wakeUpCutscene;
     [SerializeField] private DocumentBehavior introDocument;
