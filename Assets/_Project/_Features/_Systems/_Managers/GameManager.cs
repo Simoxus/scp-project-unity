@@ -101,6 +101,14 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public void ReleasePauseIfRequested(object requester)
+    {
+        if (HasPauseRequest(requester))
+        {
+            ReleasePause(requester);
+        }
+    }
+
     public void RequestCursorControl(object requester)
     {
         if (requester == null)
