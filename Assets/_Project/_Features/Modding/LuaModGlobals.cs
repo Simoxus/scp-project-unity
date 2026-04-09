@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ModGlobals
+public static class LuaModGlobals
 {
     public static List<GlobalFunction> GetAll()
     {

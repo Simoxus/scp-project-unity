@@ -44,7 +44,7 @@ public static class ModSandboxSettings
         return _unityBuiltinAPIs.Concat(discovered).ToList();
     }
 
-    public static List<GlobalFunction> GetGlobalFunctions() => ModGlobals.GetAll();
+    public static List<GlobalFunction> GetGlobalFunctions() => LuaModGlobals.GetAll();
 
     public static void ConfigureSandbox(Script script, string modName)
     {
@@ -59,7 +59,7 @@ public static class ModSandboxSettings
         script.Globals["loadstring"] = DynValue.Nil;
         script.Globals["debug"] = DynValue.Nil;
 
-        ModGlobals.Register(script, modName);
+        LuaModGlobals.Register(script, modName);
 
         foreach (var api in GetStaticAPIs())
         {
