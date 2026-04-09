@@ -1,4 +1,4 @@
-function OnInit()
+function OnStart()
     Console.RegisterCommand(
         "hello",
         "Hello i'm a very friendly example command",

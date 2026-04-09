@@ -8,11 +8,14 @@ public class LuaMod
     public Script Script { get; private set; }
     public bool IsEnabled { get; private set; }
 
-    private DynValue _initFunction;
+    private DynValue _awakeFunction;
+    private DynValue _startFunction;
+    private DynValue _onEnableFunction;
+    private DynValue _onDisableFunction;
+    private DynValue _onDestroyFunction;
     private DynValue _updateFunction;
     private DynValue _fixedUpdateFunction;
     private DynValue _lateUpdateFunction;
-    private DynValue _unloadFunction;
 
     private Dictionary<string, DynValue> _eventHandlers = new Dictionary<string, DynValue>();
 
@@ -53,20 +56,55 @@ public class LuaMod
 
     private void CacheFunctions()
     {
-        _initFunction = Script.Globals.Get("OnInit");
+        _awakeFunction = Script.Globals.Get("OnAwake");
+        _startFunction = Script.Globals.Get("OnStart");
+        _onEnableFunction = Script.Globals.Get("OnEnable");
+        _onDisableFunction = Script.Globals.Get("OnDisable");
+        _onDestroyFunction = Script.Globals.Get("OnDestroy");
         _updateFunction = Script.Globals.Get("OnUpdate");
         _fixedUpdateFunction = Script.Globals.Get("OnFixedUpdate");
         _lateUpdateFunction = Script.Globals.Get("OnLateUpdate");
-        _unloadFunction = Script.Globals.Get("OnUnload");
+    }
+
+    public async UniTask Awake()
+    {
+        if (_awakeFunction != null && _awakeFunction.Type == DataType.Function)
+        {
+            try
+            {
+                Script.Call(_awakeFunction);
+                await UniTask.Yield();
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                Log.Exception(ex, message: ex.DecoratedMessage);
+            }
+        }
     }
 
     public async UniTask Initialize()
     {
-        if (_initFunction != null && _initFunction.Type == DataType.Function)
+        if (_startFunction != null && _startFunction.Type == DataType.Function)
         {
             try
             {
-                Script.Call(_initFunction);
+                Script.Call(_startFunction);
+                await UniTask.Yield();
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                Log.Exception(ex, message: ex.DecoratedMessage);
+            }
+        }
+    }
+
+    public async UniTask OnEnable()
+    {
+        if (_onEnableFunction != null && _onEnableFunction.Type == DataType.Function)
+        {
+            try
+            {
+                Script.Call(_onEnableFunction);
                 await UniTask.Yield();
             }
             catch (ScriptRuntimeException ex)
@@ -78,11 +116,23 @@ public class LuaMod
 
     public async UniTask Unload()
     {
-        if (_unloadFunction != null && _unloadFunction.Type == DataType.Function)
+        if (_onDisableFunction != null && _onDisableFunction.Type == DataType.Function)
         {
             try
             {
-                Script.Call(_unloadFunction);
+                Script.Call(_onDisableFunction);
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                Log.Exception(ex, message: ex.DecoratedMessage);
+            }
+        }
+
+        if (_onDestroyFunction != null && _onDestroyFunction.Type == DataType.Function)
+        {
+            try
+            {
+                Script.Call(_onDestroyFunction);
             }
             catch (ScriptRuntimeException ex)
             {
